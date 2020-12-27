@@ -4,6 +4,7 @@ import firebase from 'firebase';
 export class App {
   private app: Framework7;
   private DB: any;
+
   // private uid: string;
 
   constructor() {
@@ -47,45 +48,6 @@ export class App {
 
     this.DB = firebase.initializeApp(firebaseConfig);
     this.authPage();
-
-    // const form = document.querySelector('form');
-    // const emailInput: HTMLFormElement = document.querySelector('#email');
-    // const passwordInput: HTMLFormElement = document.querySelector('#password');
-    // const login: HTMLElement = document.querySelector('#login');
-    //
-    // form.addEventListener('submit', (e) => {
-    //   e.preventDefault();
-    //   const email: string = emailInput.value;
-    //   const password: string = passwordInput.value;
-    //   console.log(email, password);
-    //
-    //   this.DB.auth().createUserWithEmailAndPassword(email, password)
-    //     .then((data: { user: { uid: string; }; }) => {
-    //       const uid: string = data.user.uid;
-    //       this.loginPage(uid);
-    //
-    //     })
-    //     .catch(function(error: { code: any; message: any; }) {
-    //       console.log(error.code);
-    //       console.log(error.message);
-    //     });
-    // });
-    //
-    // login.addEventListener('click', (e) => {
-    //   e.preventDefault();
-    //   const email: string = emailInput.value;
-    //   const password: string = passwordInput.value;
-    //
-    //   if (!email || !password) return;
-    //   this.DB.auth().signInWithEmailAndPassword(email, password)
-    //     .then((data: { user: { uid: string; }; }) => {
-    //       this.uid = data.user.uid;
-    //     })
-    //     .catch(function(error: { code: any; message: any; }) {
-    //       console.log(error.code);
-    //       console.log(error.message);
-    //     });
-    // });
   }
 
   authPage() {
@@ -113,12 +75,11 @@ export class App {
       '              </div>\n' +
       '            </div>\n' +
       '          </li>\n' +
-      '\n' +
       '        </ul>\n' +
       '      </form>' +
       '<div class="block block-strong row">\n' +
-      '  <div class="col"><button class="button" id="login">Get Data</button></div>\n' +
-      '  <div class="col"><button class="button" id="signIn" type="submit" form="my-form">Fill Form</button></div>\n' +
+      '  <div class="col"><button class="button" id="login">Login</button></div>\n' +
+      '  <div class="col"><button class="button" id="signIn" type="submit" form="auth-form">Sign In</button></div>\n' +
       '</div>';
 
     const form = document.querySelector('#auth-form');
@@ -139,12 +100,10 @@ export class App {
         });
     });
 
-
     const login = document.querySelector('#login');
 
     login.addEventListener('click', (e) => {
       e.preventDefault();
-      console.log('login');
       const { email, password } = this._getFormData(form);
 
       if (!email || !password) return;
@@ -153,8 +112,11 @@ export class App {
         .then((data: { user: { uid: string; }; }) => {
           const userRef = firebase.database().ref(`User/${data.user.uid}`);
 
-          userRef.on('value', function(snapshot) {
+          userRef.on('value', (snapshot) => {
+
+            const userData = snapshot.val();
             console.dir('Data from DB: ', snapshot.val());
+            this.userPage(userData);
           }, function(error: { code: string; }) {
             console.log('Error: ' + error.code);
           });
@@ -178,6 +140,16 @@ export class App {
       '                <div class="item-title item-label">Name</div>\n' +
       '                <div class="item-input-wrap">\n' +
       '                  <input type="text" name="name" placeholder="Your name">\n' +
+      '                </div>\n' +
+      '              </div>\n' +
+      '            </div>\n' +
+      '          </li>\n' +
+      '           <li>\n' +
+      '            <div class="item-content item-input">\n' +
+      '              <div class="item-inner">\n' +
+      '                <div class="item-title item-label">Avatar</div>\n' +
+      '                <div class="item-input-wrap">\n' +
+      '                  <input type="file" name="avatar" placeholder="Your avatar" id="avatar">\n' +
       '                </div>\n' +
       '              </div>\n' +
       '            </div>\n' +
@@ -231,7 +203,8 @@ export class App {
 
     const $$ = Dom7;
     $$('.convert-form-to-data').on('click', () => {
-        this.createUser(uid);
+        this.createUser(uid)
+        ;
       },
     );
   }
@@ -240,20 +213,43 @@ export class App {
     const form = document.querySelector('#my-form');
     const formFields = form.querySelectorAll('input, select');
 
+
     const formData = {};
     formFields.forEach(el => {
       formData[(el.name)] = el.value;
     });
 
+    const storageRef = firebase.storage().ref();
     const userRef = firebase.database().ref(`User/${uid}`);
+    const file = document.querySelector('#avatar').files[0];
 
-    // Create user in DB
-    userRef.set(formData);
+    const metadata = {
+      'contentType': file.type,
+    };
+
+    storageRef.child('images/' + file.name).put(file, metadata).then(function(snapshot) {
+      snapshot.ref.getDownloadURL().then((url) => {
+
+        formData['avatar'] = url;
+        console.log('formData', formData);
+
+        userRef.set(formData);
+      });
+
+    });
   }
 
-  // userPage(userData) {
-  //
-  // }
+  userPage(userData: { avatar: any; name: any; language: any; currency: any; theme: any; }) {
+    const { avatar, name, language, currency, theme } = userData;
+    document.querySelector('.page').innerHTML = `
+           <img src="${avatar}" alt="${name}">
+            <p>${name}</p>
+            <p>${language}</p>
+            <p>${currency}</p>
+            <p>${theme}</p>`;
+
+    console.log('userData from userPage()', userData);
+  }
 
   _getFormData(formElement: Element) {
     // const form = document.querySelector(formElement);
@@ -267,3 +263,5 @@ export class App {
     return formData;
   }
 }
+
+
