@@ -1,82 +1,82 @@
 const path = require('path');
-const {SourceMapDevToolPlugin} = require('webpack');
+const { SourceMapDevToolPlugin } = require('webpack');
 
 const testFile = process.argv[4] || '*';
 const testFilesGlob = `./src/**/${testFile}.spec.ts`;
 
 module.exports = config => {
-    config.set({
-        basePath: __dirname,
+  config.set({
+    basePath: __dirname,
 
-        frameworks: ['jasmine'],
+    frameworks: ['jasmine'],
 
-        files: [testFilesGlob],
+    files: [testFilesGlob],
 
-        preprocessors: {
-            [testFilesGlob]: ['webpack', 'sourcemap']
-        },
+    preprocessors: {
+      [testFilesGlob]: ['webpack', 'sourcemap'],
+    },
 
-        browsers: ['Chrome'],
+    browsers: ['Chrome'],
 
-        webpack: {
-            devtool: 'inline-source-map',
+    webpack: {
+      devtool: 'inline-source-map',
 
-            mode: 'production',
+      mode: 'production',
 
-            resolve: {
-                extensions: ['.ts'],
+      resolve: {
+        extensions: ['.ts'],
 
-                modules: [
-                    path.join(__dirname, 'src')
-                ]
-            },
+        modules: [
+          path.join(__dirname, 'src'),
+        ],
+      },
 
-            module: {
-                rules: [{
-                    test: /\.ts$/,
-                    loader: 'ts-loader'
-                }]
-            },
+      module: {
+        rules: [{
+          test: /\.ts$/,
+          loader: 'ts-loader',
+        }],
+      },
 
-            plugins: [
-                new SourceMapDevToolPlugin({
-                    test: /\.(ts|js)($|\?)/
-                })
-            ]
-        },
+      plugins: [
+        new SourceMapDevToolPlugin({
+          test: /\.(ts|js)($|\?)/,
+        }),
+      ],
+    },
 
-        webpackMiddleware: {
-            stats: {
-                color: true,
-                chunks: true
-            }
-        },
+    webpackMiddleware: {
+      stats: {
+        color: true,
+        chunks: true,
+      },
+    },
 
-        client: {
-            captureConsole: false
-        },
+    client: {
+      captureConsole: false,
+    },
 
-        logLevel: config.LOG_INFO,
+    logLevel: config.LOG_INFO,
 
-        mime: {
-            'text/x-typescript': ['ts']
-        },
+    mime: {
+      'text/x-typescript': ['ts'],
+    },
 
-        reporters: ['progress', 'coverage'],
+    reporters: ['progress', 'coverage'],
 
-        port: 9876,
+    port: 9876,
 
-        colors: true,
+    colors: true,
 
-        autoWatch: false,
+    autoWatch: false,
 
-        singleRun: true,
+    singleRun: true,
 
-        concurrency: Infinity,
+    concurrency: Infinity,
 
-        coverageReporter: {
-            type: 'html',
-            dir: 'coverage/'
-        }
-    });
+    coverageReporter: {
+      type: 'html',
+      dir: 'coverage/',
+    },
+  });
 };

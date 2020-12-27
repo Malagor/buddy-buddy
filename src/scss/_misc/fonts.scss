@@ -1,0 +1,137 @@
+//@font-face {
+//  font-style: normal;
+//  font-weight: 300;
+//  font-family: "Roboto";
+//
+//  font-display: swap;
+//  src: url("../../assets/fonts/Roboto/Roboto-Light.eot");
+//  src: url("../../assets/fonts/Roboto/Roboto-Light.eot?#iefix") format("embedded-opentype"),
+//  url("../../assets/fonts/Roboto/Roboto-Light.woff2") format("woff2"),
+//  url("../../assets/fonts/Roboto/Roboto-Light.woff") format("woff"),
+//  url("../../assets/fonts/Roboto/Roboto-Light.ttf") format("truetype");
+//}
+//
+//@font-face {
+//  font-style: normal;
+//  font-weight: bold;
+//  font-family: "Roboto";
+//
+//  font-display: swap;
+//  src: url("../../assets/fonts/Roboto/Roboto-Bold.eot");
+//  src: url("../../assets/fonts/Roboto/Roboto-Bold.eot?#iefix") format("embedded-opentype"),
+//  url("../../assets/fonts/Roboto/Roboto-Bold.woff2") format("woff2"),
+//  url("../../assets/fonts/Roboto/Roboto-Bold.woff") format("woff"),
+//  url("../../assets/fonts/Roboto/Roboto-Bold.ttf") format("truetype");
+//}
+//
+//@font-face {
+//  font-style: normal;
+//  font-weight: 500;
+//  font-family: "Roboto";
+//
+//  font-display: swap;
+//  src: url("../../assets/fonts/Roboto/Roboto-Medium.eot");
+//  src: url("../../assets/fonts/Roboto/Roboto-Medium.eot?#iefix") format("embedded-opentype"),
+//  url("../../assets/fonts/Roboto/Roboto-Medium.woff2") format("woff2"),
+//  url("../../assets/fonts/Roboto/Roboto-Medium.woff") format("woff"),
+//  url("../../assets/fonts/Roboto/Roboto-Medium.ttf") format("truetype");
+//}
+//
+//@font-face {
+//  font-style: normal;
+//  font-weight: normal;
+//  font-family: "Roboto";
+//
+//  font-display: swap;
+//  src: url("../../assets/fonts/Roboto/Roboto-Regular.eot");
+//  src: url("../../assets/fonts/Roboto/Roboto-Regular.eot?#iefix") format("embedded-opentype"),
+//  url("../../assets/fonts/Roboto/Roboto-Regular.woff2") format("woff2"),
+//  url("../../assets/fonts/Roboto/Roboto-Regular.woff") format("woff"),
+//  url("../../assets/fonts/Roboto/Roboto-Regular.ttf") format("truetype");
+//}
+//
+//@font-face {
+//  font-style: normal;
+//  font-weight: bold;
+//  font-family: "Roboto Mono";
+//
+//  font-display: swap;
+//  src: url("../../assets/fonts/RobotoMono/RobotoMono-Bold.eot");
+//  src: url("../../assets/fonts/RobotoMono/RobotoMono-Bold.eot?#iefix") format("embedded-opentype"),
+//  url("../../assets/fonts/RobotoMono/RobotoMono-Bold.woff2") format("woff2"),
+//  url("../../assets/fonts/RobotoMono/RobotoMono-Bold.woff") format("woff"),
+//  url("../../assets/fonts/RobotoMono/RobotoMono-Bold.ttf") format("truetype");
+//}
+
+@font-face {
+  font-family: 'Material Icons';
+  src: url('../assets/fonts/material-icons/MaterialIcons-Regular.eot');
+  src: local('Material Icons'), local('MaterialIcons-Regular'),
+  url('../assets/fonts/material-icons/MaterialIcons-Regular.eot?#iefix') format('embedded-opentype'),
+  url('../assets/fonts/material-icons/MaterialIcons-Regular.woff2') format('woff2'),
+  url('../assets/fonts/material-icons/MaterialIcons-Regular.woff') format('woff'),
+  url('../assets/fonts/material-icons/MaterialIcons-Regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Framework7 Icons';
+  font-style: normal;
+  font-weight: 400;
+  src: url("../assets/fonts/Framework7Icons/Framework7Icons-Regular.eot");
+  src: url("../assets/fonts/Framework7Icons/Framework7Icons-Regular.woff2") format("woff2"),
+  url("../assets/fonts/Framework7Icons/Framework7Icons-Regular.woff") format("woff"),
+  url("../assets/fonts/Framework7Icons/Framework7Icons-Regular.ttf") format("truetype");
+}
+
+.f7-icons, .framework7-icons {
+  font-family: 'Framework7 Icons', sans-serif;
+  font-weight: normal;
+  font-style: normal;
+  font-size: 28px;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-feature-settings: "liga";
+  -moz-font-feature-settings: "liga=1";
+  -moz-font-feature-settings: "liga";
+  font-feature-settings: "liga";
+  text-align: center;
+}
+
+
+//@mixin Roboto($style: regular) {
+//  @if $style == light {
+//    font-weight: 300;
+//    font-family: "Roboto", sans-serif;
+//  }
+//
+//  @if $style == regular {
+//    font-weight: normal;
+//    font-family: "Roboto", sans-serif;
+//  }
+//
+//  @if $style == medium {
+//    font-weight: 500;
+//    font-family: "Roboto", sans-serif;
+//  }
+//
+//  @if $style == bold {
+//    font-weight: bold;
+//    font-family: "Roboto", sans-serif;
+//  }
+//
+//  @if $style == mono-bold {
+//    font-weight: bold;
+//    font-family: "Roboto Mono", monospace;
+//  }
+//}
