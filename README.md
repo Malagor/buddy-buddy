@@ -8,6 +8,8 @@ Deploy: https://buddy-buddy.netlify.app/
 
 Done 25.12.2020 / deadline 25.01.2021
 
+MindMap: https://mm.tt/1733570211?t=8AlOxAN3ej
+
 Authors:
 - [Александр @malagor](https://github.com/malagor) - TeamLead, Frontend developer
 - [Дарья @besovadevka](https://github.com/besovadevka) - Frontend developer
