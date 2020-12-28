@@ -8,7 +8,7 @@
     "build": "npm run clear -s && webpack --progress",
     "lint": "eslint ./**/*.js",
     "clear": "del-cli dist",
-    "comb": "csscomb ./src/modules/",
+    "comb": "csscomb ./src/scss/section/",
     "test": "karma start"
   },
   "author": "Alex Malagor <seo.dnja@gmail.com>",
@@ -79,6 +79,7 @@
     "core-js": "^3.4.7",
     "firebase": "^8.2.1",
     "framework7": "^5.7.14",
+    "normalize.css": "^8.0.1",
     "regenerator-runtime": "^0.13.3"
   }
 }

@@ -12,7 +12,7 @@ export class App {
   private pages: Pages;
 
   constructor() {
-    this.pages = Pages.create('.page');
+    this.pages = Pages.create('main.main');
     this.init();
   }
 
@@ -21,19 +21,6 @@ export class App {
   }
 
   init() {
-    this.app = new Framework7({
-      root: '#app',
-      name: 'Buddy-buddy',
-      // App id
-      id: 'com.myapp.test',
-      panel: {
-        swipe: true,
-      },
-      statusbar: {
-        iosOverlaysWebView: true,
-      },
-    });
-
 
     // Handlers
     this.pages.onSignIn = this.onSignIn.bind(this);
@@ -50,11 +37,11 @@ export class App {
     };
 
     this.DB = firebase.initializeApp(firebaseConfig);
-    // this.pages.auth();
+    this.pages.auth();
   }
 
   loginPage(uid: string) {
-    const page: HTMLElement = document.querySelector('.page');
+    const page: HTMLElement = document.querySelector('main.main');
 
     page.innerHTML = '' +
       '<form class="list" id="my-form">\n' +

@@ -19,75 +19,25 @@
         rel="stylesheet">
 </head>
 <body>
-<!-- App root element -->
-<div id="app">
-  <div class="view tabs">
-    <div data-name="home" class="page">
-
-      <div class="page">
-        <div class="navbar">
-          <div class="navbar-bg"></div>
-          <div class="navbar-inner sliding">
-            <div class="left">
-              <a class="link back">
-                <i class="icon icon-back"></i>
-                <span class="if-not-md">Back</span>
-              </a>
-            </div>
-            <div class="title">Fixed Navbar</div>
-          </div>
-        </div>
-
-        <!-- Additional "tabbar-labels" class -->
-        <div class="toolbar tabbar tabbar-labels toolbar-bottom">
-          <div class="toolbar-inner">
-            <a href="#tab-1" class="tab-link tab-link-active">
-              <!-- Different icons for iOS and MD themes -->
-              <i class="icon f7-icons if-not-md">envelope_fill</i>
-              <i class="icon material-icons md-only">email</i>
-              <!-- Label text -->
-              <span class="tabbar-label">Inbox</span>
-            </a>
-            <a href="#tab-2" class="tab-link">
-              <i class="icon f7-icons if-not-md">today_fill<span class="badge color-red">5</span></i>
-              <i class="icon material-icons md-only">today<span class="badge color-red">5</span></i>
-              <span class="tabbar-label">Calendar</span>
-            </a>
-            <a href="#tab-3" class="tab-link">
-              <i class="icon f7-icons if-not-md">cloud_fill</i>
-              <i class="icon material-icons md-only">file_upload</i>
-              <span class="tabbar-label">Upload</span>
-            </a>
-          </div>
-        </div>
-
-        <div class="tabs">
-          <!-- First tab, active -->
-          <div class="page-content tab tab-active" id="tab-1">
-            <div class="block">
-              <p><b>Tab 1 content</b></p>
-              ...
-            </div>
-          </div>
-          <!-- Second tab -->
-          <div class="page-content tab" id="tab-2">
-            <div class="block">
-              <p><b>Tab 2 content</b></p>
-              ...
-            </div>
-          </div>
-          <!-- Third tab -->
-          <div class="page-content tab" id="tab-3">
-            <div class="block">
-              <p><b>Tab 3 content</b></p>
-              ...
-            </div>
-          </div>
-        </div>
-
-      </div>
-    </div>
+<header class="header">
+  <div class="sidebat-toggle">
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
   </div>
-</div>
+Buddy-buddy
+</header>
+<aside class="sidebar">
+sidebar
+</aside>
+<main class="main">
+
+</main>
+<footer class="footer">
+  <button class="bnt btn__footer active"><i class="material-icons" id="userPageBtn">account_box</i></button>
+  <button class="bnt btn__footer"><i class="material-icons" id="groupPageBtn">groups</i></button>
+  <button class="bnt btn__footer"><i class="material-icons" id="transactionPageBtn">receipt</i></button>
+</footer>
 </body>
 </html>
