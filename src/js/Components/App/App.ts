@@ -1,13 +1,18 @@
 import Framework7, { Dom7 } from 'framework7';
 import firebase from 'firebase';
+// import { DB } from '../../Classes/DB';
+// import { getFormData } from '../../Util/getFormData';
+import { Pages } from '../../Classes/Pages';
 
 export class App {
   private app: Framework7;
   private DB: any;
 
   // private uid: string;
+  private pages: Pages;
 
   constructor() {
+    this.pages = Pages.create('.page');
     this.init();
   }
 
@@ -24,17 +29,15 @@ export class App {
       panel: {
         swipe: true,
       },
-      routes: [
-        {
-          path: '/',
-          url: 'index.html',
-        },
-      ],
       statusbar: {
         iosOverlaysWebView: true,
       },
     });
 
+
+    // Handlers
+    this.pages.onSignIn = this.onSignIn.bind(this);
+    this.pages.onLogin = this.onLogin.bind(this);
 
     const firebaseConfig = {
       apiKey: 'AIzaSyCkKjHtqY5-St5y701m0MRByEzExRkga44',
@@ -47,85 +50,7 @@ export class App {
     };
 
     this.DB = firebase.initializeApp(firebaseConfig);
-    this.authPage();
-  }
-
-  authPage() {
-    const page: HTMLElement = document.querySelector('.page');
-    page.innerHTML = '' +
-      '<form class="list" id="auth-form" method="get">\n' +
-      '        <ul>\n' +
-      '          <li>\n' +
-      '            <div class="item-content item-input">\n' +
-      '              <div class="item-inner">\n' +
-      '                <div class="item-title item-label">E-mail</div>\n' +
-      '                <div class="item-input-wrap">\n' +
-      '                  <input id="email" type="email" name="email" placeholder="E-mail">\n' +
-      '                </div>\n' +
-      '              </div>\n' +
-      '            </div>\n' +
-      '          </li>\n' +
-      '          <li>\n' +
-      '            <div class="item-content item-input">\n' +
-      '              <div class="item-inner">\n' +
-      '                <div class="item-title item-label">Password</div>\n' +
-      '                <div class="item-input-wrap">\n' +
-      '                  <input id="password" type="password" name="password" placeholder="Your password">\n' +
-      '                </div>\n' +
-      '              </div>\n' +
-      '            </div>\n' +
-      '          </li>\n' +
-      '        </ul>\n' +
-      '      </form>' +
-      '<div class="block block-strong row">\n' +
-      '  <div class="col"><button class="button" id="login">Login</button></div>\n' +
-      '  <div class="col"><button class="button" id="signIn" type="submit" form="auth-form">Sign In</button></div>\n' +
-      '</div>';
-
-    const form = document.querySelector('#auth-form');
-    form.addEventListener('submit', (e) => {
-      e.preventDefault();
-
-      const { email, password } = this._getFormData(form);
-
-      this.DB.auth().createUserWithEmailAndPassword(email, password)
-        .then((data: { user: { uid: string; }; }) => {
-          const uid: string = data.user.uid;
-          this.loginPage(uid);
-
-        })
-        .catch(function(error: { code: any; message: any; }) {
-          console.log(error.code);
-          console.log(error.message);
-        });
-    });
-
-    const login = document.querySelector('#login');
-
-    login.addEventListener('click', (e) => {
-      e.preventDefault();
-      const { email, password } = this._getFormData(form);
-
-      if (!email || !password) return;
-
-      this.DB.auth().signInWithEmailAndPassword(email, password)
-        .then((data: { user: { uid: string; }; }) => {
-          const userRef = firebase.database().ref(`User/${data.user.uid}`);
-
-          userRef.on('value', (snapshot) => {
-
-            const userData = snapshot.val();
-            console.dir('Data from DB: ', snapshot.val());
-            this.userPage(userData);
-          }, function(error: { code: string; }) {
-            console.log('Error: ' + error.code);
-          });
-        })
-        .catch(function(error: { code: any; message: any; }) {
-          console.log(error.code);
-          console.log(error.message);
-        });
-    });
+    // this.pages.auth();
   }
 
   loginPage(uid: string) {
@@ -251,16 +176,38 @@ export class App {
     console.log('userData from userPage()', userData);
   }
 
-  _getFormData(formElement: Element) {
-    // const form = document.querySelector(formElement);
-    const formFields = formElement.querySelectorAll('input, select');
+  onSignIn(email: string, password: string) {
+    this.DB.auth().createUserWithEmailAndPassword(email, password)
+      .then((data: { user: { uid: string; }; }) => {
+        const uid: string = data.user.uid;
+        this.loginPage(uid);
 
-    const formData = {};
-    formFields.forEach((el: { name: any; value: any; }) => {
-      formData[(el.name)] = el.value;
-    });
+      })
+      .catch(function(error: { code: any; message: any; }) {
+        console.log(error.code);
+        console.log(error.message);
+      });
+  }
 
-    return formData;
+  onLogin(email: string, password: string) {
+    this.DB.auth().signInWithEmailAndPassword(email, password)
+      .then((data: { user: { uid: string; }; }) => {
+        localStorage.setItem('uid', data.user.uid);
+        const userRef = firebase.database().ref(`User/${data.user.uid}`);
+
+        userRef.on('value', (snapshot) => {
+
+          const userData = snapshot.val();
+          console.dir('Data from DB: ', snapshot.val());
+          this.userPage(userData);
+        }, function(error: { code: string; }) {
+          console.log('Error: ' + error.code);
+        });
+      })
+      .catch(function(error: { code: any; message: any; }) {
+        console.log(error.code);
+        console.log(error.message);
+      });
   }
 }
 
