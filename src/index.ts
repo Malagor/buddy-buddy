@@ -4,12 +4,14 @@
 import { App } from './js/Components/App/App';
 
 import './scss/basic-styles.scss';
+import './js/Pages/stylePages';
 
 App.create();
 
 
 document.addEventListener('click', (e) => {
-  const { target } = e;
+  console.log('click', e);
+  const { target }  = e;
 
   // Sidebar toggle
   const sidebar = document.querySelector('aside.sidebar');

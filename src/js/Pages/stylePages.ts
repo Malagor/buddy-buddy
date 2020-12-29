@@ -1,0 +1,1 @@
+import './AuthPage/authPage.scss';

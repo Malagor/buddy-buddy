@@ -1,6 +1,7 @@
 const path = require('path');
 const HtmlWebPackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+// const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 const ENV = process.env.npm_lifecycle_event;
@@ -67,7 +68,7 @@ const cssLoaders = extra => {
     'css-loader',
     {
       loader: 'postcss-loader',
-      options: {config: { path: './postcss.config.components' } }
+      options: {config: { path: './postcss.config.js' } }
     }
   ];
 
@@ -78,28 +79,7 @@ const cssLoaders = extra => {
   return loaders
 };
 
-const optimization = (/* isProd */) => {
-  // if (isProd) {
-  //   const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
-  //
-  //   res.minimize = true;
-  //   res.minimizer = [
-  //     new UglifyJsPlugin({
-  //       parallel: require('os').cpus().length,
-  //
-  //       uglifyOptions: {
-  //         ie8: false,
-  //
-  //         output: {
-  //           // ecma: 8,
-  //           beautify: false,
-  //           comments: false
-  //         }
-  //       }
-  //     })
-  //   ]
-  // }
-
+const optimization = () => {
   return {
     splitChunks: {
       chunks: 'all'
@@ -109,16 +89,17 @@ const optimization = (/* isProd */) => {
 
 const config = {
   target: "web",
+  // entry: {index: './src/index.js'},
   entry: {
     app: ['babel-polyfill', './src/index.ts']
   },
   output: {
-    path: path.resolve(__dirname, 'public'),
+    path: path.resolve(__dirname, 'dist'),
     filename: filename('js')
   },
   mode: setDMode(),
   devtool: setDevTool(),
-  optimization: optimization(isProd),
+  optimization: optimization(),
   resolve: {
     extensions: ['.js', '.json', '.ts'],
     // alias: {
@@ -242,7 +223,7 @@ const config = {
   ],
 
   devServer: {
-    contentBase: path.join(__dirname, 'public'),
+    contentBase: path.join(__dirname, 'dist'),
     compress: true,
     port: 3000,
     overlay: true,
@@ -250,5 +231,11 @@ const config = {
     clientLogLevel: 'none'
   }
 };
+
+// if (isProd) {
+//   config.plugins.push(
+//     new UglifyJSPlugin(),
+//   );
+// }
 
 module.exports = config;

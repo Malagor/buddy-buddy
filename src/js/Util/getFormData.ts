@@ -1,10 +1,13 @@
-export const getFormData = (formElement: Element) => {
-  // const form = document.querySelector(formElement);
-  const formFields = formElement.querySelectorAll('input, select');
+export const getFormData = (formElement: HTMLFormElement): any => {
 
-  const formData = {};
-  formFields.forEach((el: { name: any; value: any; }) => {
-    formData[(el.name)] = el.value;
+  const formFields: NodeListOf<HTMLFormElement> = formElement.querySelectorAll('input, select');
+
+  const formData: { [key: string]: any } = {};
+
+  formFields.forEach(field => {
+    if (field.type !== 'submit' && field.type !== 'button' && field.type !== 'reset') {
+      formData[field.name] = field.value;
+    }
   });
 
   return formData;

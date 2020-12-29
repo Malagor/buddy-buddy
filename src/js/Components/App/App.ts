@@ -1,18 +1,14 @@
-import Framework7, { Dom7 } from 'framework7';
 import firebase from 'firebase';
-// import { DB } from '../../Classes/DB';
 // import { getFormData } from '../../Util/getFormData';
-import { Pages } from '../../Classes/Pages';
+import { getFormData } from '../../Util/getFormData';
+import { AuthPage } from '../../Pages/AuthPage/AuthPage';
 
 export class App {
-  private app: Framework7;
   private DB: any;
-
-  // private uid: string;
-  private pages: Pages;
+  private authPage: AuthPage;
 
   constructor() {
-    this.pages = Pages.create('main.main');
+    this.authPage = AuthPage.create('main.main');
     this.init();
   }
 
@@ -21,10 +17,9 @@ export class App {
   }
 
   init() {
-
     // Handlers
-    this.pages.onSignIn = this.onSignIn.bind(this);
-    this.pages.onLogin = this.onLogin.bind(this);
+    this.authPage.onSignIn = this.onSignIn.bind(this);
+    this.authPage.onLogin = this.onLogin.bind(this);
 
     const firebaseConfig = {
       apiKey: 'AIzaSyCkKjHtqY5-St5y701m0MRByEzExRkga44',
@@ -37,7 +32,8 @@ export class App {
     };
 
     this.DB = firebase.initializeApp(firebaseConfig);
-    this.pages.auth();
+
+    this.authPage.render();
   }
 
   loginPage(uid: string) {
@@ -113,23 +109,14 @@ export class App {
       '        <div class="col"><a class="button convert-form-to-data" href="#">Save Data</a></div>\n' +
       '      </div>';
 
-    const $$ = Dom7;
-    $$('.convert-form-to-data').on('click', () => {
-        this.createUser(uid)
-        ;
-      },
-    );
+    document.querySelector('.convert-form-to-data').addEventListener('click', ()  => {
+        this.createUser(uid);
+      });
   }
 
   createUser(uid: string) {
-    const form = document.querySelector('#my-form');
-    const formFields = form.querySelectorAll('input, select');
-
-
-    const formData = {};
-    formFields.forEach(el => {
-      formData[(el.name)] = el.value;
-    });
+    const form: HTMLFormElement = document.querySelector('#my-form');
+    const formData: {[k: string]: any} = getFormData(form);
 
     const storageRef = firebase.storage().ref();
     const userRef = firebase.database().ref(`User/${uid}`);
@@ -140,14 +127,18 @@ export class App {
     };
 
     storageRef.child('images/' + file.name).put(file, metadata).then(function(snapshot) {
-      snapshot.ref.getDownloadURL().then((url) => {
-
-        formData['avatar'] = url;
-        console.log('formData', formData);
-
-        userRef.set(formData);
-      });
-
+      snapshot.ref.getDownloadURL()
+        .then((url) => {
+          formData['avatar'] = url;
+        })
+        .then(formData => {
+          console.log('formData', formData);
+          userRef.set(formData);
+        })
+        .catch(error => {
+          console.log(error.code);
+          console.log(error.message);
+        });
     });
   }
 
@@ -164,10 +155,14 @@ export class App {
   }
 
   onSignIn(email: string, password: string) {
+    console.log('onSignIn');
     this.DB.auth().createUserWithEmailAndPassword(email, password)
       .then((data: { user: { uid: string; }; }) => {
         const uid: string = data.user.uid;
-        this.loginPage(uid);
+
+        localStorage.setItem('uid', uid);
+        // this.loginPage.render(uid);
+
 
       })
       .catch(function(error: { code: any; message: any; }) {
@@ -177,6 +172,7 @@ export class App {
   }
 
   onLogin(email: string, password: string) {
+    console.log('onLogin');
     this.DB.auth().signInWithEmailAndPassword(email, password)
       .then((data: { user: { uid: string; }; }) => {
         localStorage.setItem('uid', data.user.uid);
