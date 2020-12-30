@@ -5,7 +5,7 @@ export abstract class Page {
     this.element = document.querySelector(element);
   }
 
-  abstract render(data?: object): void;
+  abstract render(data?: any): void;
 
   protected events(): void {
     throw new Error('Need implement method events()!');
