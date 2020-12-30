@@ -2,21 +2,24 @@ import { AuthPage } from '../../Pages/AuthPage/AuthPage';
 import { RegistrationPage } from '../../Pages/RegistrationPage/RegistrationPage';
 import { DB } from '../../Classes/DB';
 import { Main } from '../../Pages/Main/Main';
+import { Sidebar } from '../../Pages/Sidebar/Sidebar';
 
 export class App {
   private authPage: AuthPage;
   private regPage: RegistrationPage;
   private DB: DB;
   private mainPage: Main;
+  private sidebar: any;
 
   constructor() {
     // DATA BASE
     this.DB = DB.create();
 
     // PAGES
-    this.authPage = AuthPage.create('main.main');
-    this.regPage = RegistrationPage.create('main.main');
-    this.mainPage = Main.create('main.main');
+    this.authPage = AuthPage.create('.main');
+    this.regPage = RegistrationPage.create('.main');
+    this.mainPage = Main.create('.main');
+    this.sidebar = Sidebar.create('aside');
 
     this.init();
   }
@@ -32,9 +35,9 @@ export class App {
 
     this.regPage.onSignIn = this.onSignIn.bind(this);
     this.regPage.goToLoginPage = this.loadLoginPage.bind(this);
-    this.regPage.googleReg = this.onGoogleReg.bind(this);
+    this.regPage.onGoogleReg = this.onGoogleReg.bind(this);
 
-    this.DB.init(this.mainPage.render, this.authPage.render);
+    this.DB.init([this.mainPage.render, this.sidebar.render], [this.authPage.render]);
   }
 
   onSignIn(email: string, password: string, name: string) {

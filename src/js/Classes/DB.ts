@@ -29,17 +29,18 @@ export class DB {
     return new DB(firebaseConfig);
   }
 
-  init(isUserFunc: any, noUserFunc: any) {
+  init(isUserFuncs: any[], noUserFuncs: any[]) {
     this.DBase.auth().onAuthStateChanged((user) => {
       if (user) {
         // User is signed in.
         this.uid = user.uid;
         console.log('Current user.uid = ', user.uid);
-        this.getUserInfo(user.uid, isUserFunc);
+        this.getUserInfo(user.uid, isUserFuncs);
       } else {
         // No user is signed in.
         console.log('No user');
-        noUserFunc();
+        noUserFuncs.forEach(fn => fn());
+        // noUserFunc();
       }
     });
 
@@ -105,12 +106,13 @@ export class DB {
     userRef.set(data);
   }
 
-  getUserInfo(uid: string, callback: any): any {
+  getUserInfo(uid: string, callbacks: any[]): any {
     const ref = this.DBase.database().ref(`User/${uid}`);
 
     ref.on('value', (snapshot) => {
-      console.log(snapshot.val());
-      callback(snapshot.val());
+      // console.log(snapshot.val());
+      callbacks.forEach(fn => fn(snapshot.val()));
+      // callback(snapshot.val());
     }, (error: { code: string; }) => {
       console.log('Error: ' + error.code);
     });
