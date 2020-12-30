@@ -2,12 +2,14 @@ import { AuthPage } from '../../Pages/AuthPage/AuthPage';
 import { RegistrationPage } from '../../Pages/RegistrationPage/RegistrationPage';
 import { DB } from '../../Classes/DB';
 import { Main } from '../../Pages/Main/Main';
+import { TransactionsList } from '../../Pages/TransactionsList/transactionsList';
 
 export class App {
   private authPage: AuthPage;
   private regPage: RegistrationPage;
   private DB: DB;
   private mainPage: Main;
+  private transactionsList: TransactionsList;
 
   constructor() {
     // DATA BASE
@@ -17,6 +19,7 @@ export class App {
     this.authPage = AuthPage.create('main.main');
     this.regPage = RegistrationPage.create('main.main');
     this.mainPage = Main.create('main.main');
+    this.transactionsList = TransactionsList.create('main.main');
 
     this.init();
   }
