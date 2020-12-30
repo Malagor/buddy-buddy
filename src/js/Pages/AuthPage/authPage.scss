@@ -1,23 +1,38 @@
 @import "./src/scss/_misc/mixins";
+@import "./src/scss/_misc/variables";
+
 .app__title {
   text-align: center;
 }
+
 .app__subtitle {
   text-align: center;
   margin-bottom: 1rem;
 }
+
 .auth-form {
   margin: 0 auto;
   width: 90%;
   padding: 2rem 1rem;
-  box-shadow:
-          0 2.8px 2.2px rgba(0, 0, 0, 0.02),
-          0 6.7px 5.3px rgba(0, 0, 0, 0.028),
-          0 12.5px 10px rgba(0, 0, 0, 0.035),
-          0 22.3px 17.9px rgba(0, 0, 0, 0.042),
-          0 41.8px 33.4px rgba(0, 0, 0, 0.05),
-          0 100px 80px rgba(0, 0, 0, 0.07);
+  box-shadow: 0 2.8px 2.2px rgba(0, 0, 0, 0.02),
+  0 6.7px 5.3px rgba(0, 0, 0, 0.028),
+  0 12.5px 10px rgba(0, 0, 0, 0.035),
+  0 22.3px 17.9px rgba(0, 0, 0, 0.042),
+  0 41.8px 33.4px rgba(0, 0, 0, 0.05),
+  0 100px 80px rgba(0, 0, 0, 0.07);
   background: #fff;
+
+  opacity: 0;
+  transition: opacity 0.2s;
+
+  &.show {
+    opacity: 1;
+  }
+}
+
+.form__title {
+  text-align: center;
+  margin-bottom: 1rem;
 }
 
 .logo__wrapper {
@@ -38,4 +53,24 @@
   justify-content: space-around;
   align-items: center;
 }
+.reg-icons__wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.reg-icon{
+  height: rem(40px);
+  width: rem(40px);
+  margin: 0 rem(50px);
+  border: 1px solid black;
+  transition: 0.3s;
+  cursor: pointer;
 
+  &:hover {
+    box-shadow: 0 0 2px black;
+  }
+}
+.reg-icon__google {
+  background-image: url("../../../assets/icons/google-logo.svg.png");
+  background-size: contain;
+}

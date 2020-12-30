@@ -1,5 +1,5 @@
 export abstract class Page {
-  protected element: Element;
+  protected element: HTMLElement;
 
   protected constructor(element: string) {
     this.element = document.querySelector(element);

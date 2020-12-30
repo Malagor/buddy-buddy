@@ -4,20 +4,20 @@ import { show } from '../../Util/show';
 
 const logo = require('../../../assets/icons/team.svg');
 
-export class AuthPage extends Page {
-  onTransitionSignInPage: any;
-  onLogin: any;
+export class RegistrationPage extends Page {
+  onSignIn: any;
+  goToLoginPage: any;
+  googleReg: any;
 
   constructor(element: string) {
     super(element);
   }
 
-  static create(element: string): AuthPage {
-    return new AuthPage(element);
+  static create(element: string) {
+    return new RegistrationPage(element);
   }
 
-  public render = (): void => {
-
+  public render(): void {
     this.element.innerHTML = `
       <div class="logo__wrapper">
       ${logo}
@@ -25,12 +25,16 @@ export class AuthPage extends Page {
       <div class="app__title"><h1>Buddy-Buddy</h1></div>
       <div class="app__subtitle"><p>Your assistant in mutual settlements</p></div>
       <form id="authForm" method="post" class="auth-form">
-      <h2 class="form__title">Login</h2>
+      <h2 class="form__title">Registration</h2>
+      <input id="name" type="text" name="name" placeholder="Your Name">
       <input id="email" type="email" name="email" placeholder="Your Email">
       <input id="password" type="password" name="password" placeholder="Your password">
+      <div class="reg-icons__wrapper">
+        <button class="reg-icon reg-icon__google" id="googleReg"></button>
+      </div>
       <div class="button__wrapper">
-        <button class="btn" id="signIn" type="submit" form="auth-form">Sign In</button>
         <button class="btn" id="login" form="auth-form">Login</button>
+        <button class="btn" id="signIn" type="submit" form="auth-form">Sign In</button>
       </div>
       </form>
       `;
@@ -47,10 +51,13 @@ export class AuthPage extends Page {
     const form: HTMLFormElement = document.querySelector('#authForm');
     const submitBtn = document.getElementById('signIn');
     submitBtn.addEventListener('click', e => {
+      console.log(form);
+      console.log('Event - signIn');
       e.preventDefault();
 
-      const { email, password }: any = getFormData(form);
-      this.onTransitionSignInPage(email, password);
+      const { email, password, name }: any = getFormData(form);
+      console.log(email, password, name);
+      this.onSignIn(email, password, name);
     });
 
     // LOGIN
@@ -61,7 +68,15 @@ export class AuthPage extends Page {
       const { email, password }: any = getFormData(form);
       if (!email || !password) return;
 
-      this.onLogin(email, password);
+      this.goToLoginPage();
+    });
+
+    const google: Element = document.querySelector('#googleReg');
+    google.addEventListener('click', (e) => {
+      console.log('Registration Google');
+      e.preventDefault();
+
+      this.googleReg();
     });
   }
 }

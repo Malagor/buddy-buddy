@@ -1,6 +1,3 @@
-// Resources
-// Main components
-// import 'framework7/css/framework7.bundle.min.css';
 import { App } from './js/Components/App/App';
 
 import './scss/basic-styles.scss';
@@ -10,8 +7,7 @@ App.create();
 
 
 document.addEventListener('click', (e) => {
-  console.log('click', e);
-  const { target }  = e;
+  const { target }: any  = e;
 
   // Sidebar toggle
   const sidebar = document.querySelector('aside.sidebar');
