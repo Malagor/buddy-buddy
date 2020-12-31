@@ -34,11 +34,11 @@ export class DB {
       if (user) {
         // User is signed in.
         this.uid = user.uid;
-        console.log('Current user.uid = ', user.uid);
+        // console.log('Current user.uid = ', user.uid);
         this.getUserInfo(user.uid, isUserFuncs);
       } else {
         // No user is signed in.
-        console.log('No user');
+        // console.log('No user');
         noUserFuncs.forEach(fn => fn());
         // noUserFunc();
       }
@@ -116,6 +116,24 @@ export class DB {
     }, (error: { code: string; }) => {
       console.log('Error: ' + error.code);
     });
+  }
+
+  signOut(callback?: any, arg?: any[]) {
+    this.DBase.auth().signOut()
+      .then(function() {
+        console.log('Signout Succesfull');
+        if (callback) {
+          if (arg) {
+            callback(arg);
+          } else {
+            callback();
+          }
+        }
+      }, function(error) {
+        console.log('Signout Failed');
+        console.log(error.code);
+        console.log(error.message);
+      });
   }
 
   // addTheme(nameTheme: string) {

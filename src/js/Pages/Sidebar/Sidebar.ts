@@ -1,11 +1,23 @@
 import { Page } from '../../Classes/Page';
+import { Modal } from '../../Classes/Modal';
 
 export class Sidebar extends Page {
+  onSignOut: any;
+  private signOutModal: Modal;
+
   constructor(element: string) {
     super(element);
 
+    this.signOutModal = Modal.create();
+    this.signOutModal.render();
+    this.signOutModal.setOkHandler(this.onSignOutHandler);
+
     this.init();
   }
+
+  onSignOutHandler = () => {
+    this.onSignOut();
+    }
 
   static create(element: string): Sidebar {
     return new Sidebar(element);
@@ -16,7 +28,6 @@ export class Sidebar extends Page {
   }
 
   public render = (data: any) => {
-    console.log(this.element);
     this.element.innerHTML = `
         <div class="mdc-drawer__header sidebar">
         <div class="sidebar-avatar__wrapper">
@@ -68,19 +79,21 @@ export class Sidebar extends Page {
       </div>
     `;
 
+    this.events();
     Sidebar.setSidebarInfo(data.avatar, data.name);
-  };
+  }
 
   protected events(): void {
-    super.events();
-
     this.element.addEventListener('click', ev => {
+      console.log(ev);
       const { target }: any = ev;
       console.log('Sideebar');
 
       if (target.closest('#signOut')) {
         console.log('SignOut');
+        // this.onSignOut();
 
+        this.signOutModal.open();
       }
     });
   }

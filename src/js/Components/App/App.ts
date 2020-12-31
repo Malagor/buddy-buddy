@@ -21,6 +21,7 @@ export class App {
     this.mainPage = Main.create('.main');
     this.sidebar = Sidebar.create('aside');
 
+    // COMPONENTS
     this.init();
   }
 
@@ -37,7 +38,13 @@ export class App {
     this.regPage.goToLoginPage = this.loadLoginPage.bind(this);
     this.regPage.onGoogleReg = this.onGoogleReg.bind(this);
 
+    this.sidebar.onSignOut = this.onSignOut.bind(this);
+
     this.DB.init([this.mainPage.render, this.sidebar.render], [this.authPage.render]);
+  }
+
+  onSignOut(): any {
+    this.DB.signOut(this.authPage.render);
   }
 
   onSignIn(email: string, password: string, name: string) {
