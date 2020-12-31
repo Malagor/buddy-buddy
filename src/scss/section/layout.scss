@@ -35,6 +35,11 @@ body {
   display: flex;
   height: 100vh;
 }
+main.main {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 2rem;
+}
 
 .mdc-drawer-app-content {
   position: relative;
