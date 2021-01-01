@@ -1,0 +1,118 @@
+@import "../../../scss/_misc/variables.scss";
+
+main#main-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  align-items: center;
+  height: auto;
+  padding: 0;
+
+  .account__header {
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: center;
+    width: 100%;
+    height: auto;
+
+    gap: 0.5rem;
+    & > img.account__image__scroll_out {
+      width: 100%;
+      box-shadow: 0 0 10px 5px rgba(0, 0, 0, 0.3);
+    }
+  }
+}
+
+.account__nick {
+  z-index: 1;
+  width: auto;
+  height: auto;
+  margin-top: -90px;
+  font-weight: bolder;
+  font-size: 2.25rem;
+  color: rgba(255, 255, 255, 1);
+  text-shadow: 0 2px 3px rgba(0, 0, 0, 1);
+  background-clip: text;
+}
+
+.account__button_change_photo {
+  z-index: 1;
+  width: 5rem;
+  height: 5rem;
+  background-color: black;
+  border: 2px solid white;
+  border-radius: 50%;
+  outline: none;
+  opacity: 0.8;
+
+  &:hover {
+    opacity: 1;
+  }
+  & > .material-icons {
+    font-size: 3rem;
+    color: rgba(255, 255, 255, 1);
+  }
+}
+
+.account__info {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 80%;
+  margin: 2rem 0 4rem 0;
+  padding: 1rem 1.5rem 2rem 1.5rem;
+  background-color: rgba(255, 255, 255, 1);
+  box-shadow: 0 0 10px 5px rgba(0, 0, 0, 0.075);
+
+  gap: 2rem;
+}
+
+.account__info__name {
+  font-size: 2.2rem;
+}
+
+.account__button_edit {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  background: none;
+  border: none;
+  outline: none;
+}
+
+.account__info__list {
+  display: flex;
+  flex-direction: column;
+  align-self: start;
+  width: 100%;
+
+  gap: 1.5rem;
+}
+
+.account__info__list__item {
+  list-style: none;
+  font-size: 1.5rem;
+}
+
+.account__info__list__item:nth-child(4),
+.account__info__list__item:nth-child(5) {
+  text-align: center;
+}
+
+.account__balance {
+  align-self: flex-end;
+  width: auto;
+  margin-right: 1.25rem;
+  margin-bottom: 1.5rem;
+  padding: 0.75rem 1rem;
+  font-size: 2.2rem;
+
+// background-color: rgba(255, 255, 255, 1);
+  border-radius: 26px;
+
+  // box-shadow: 0 0 10px 5px rgba(0, 0, 0, 0.075);
+}
