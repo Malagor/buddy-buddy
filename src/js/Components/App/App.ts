@@ -22,6 +22,7 @@ export class App {
     this.regPage = RegistrationPage.create('.main');
     this.mainPage = Main.create('.main');
     this.sidebar = Sidebar.create('aside');
+    this.transactionsList = TransactionsList.create('.main');
 
     this.init();
   }
@@ -39,7 +40,7 @@ export class App {
     this.regPage.goToLoginPage = this.loadLoginPage.bind(this);
     this.regPage.onGoogleReg = this.onGoogleReg.bind(this);
 
-    this.DB.init([this.mainPage.render, this.sidebar.render], [this.authPage.render]);
+    this.DB.init([this.mainPage.render, this.sidebar.render], [this.transactionsList.render]);
   }
 
   onSignIn(email: string, password: string, name: string) {

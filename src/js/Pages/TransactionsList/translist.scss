@@ -1,0 +1,234 @@
+
+$color-text: #000000;
+$color-bg: rgba(252, 237, 159, 0.3);
+$color-accent-1: #f9de51;
+$color-accent-2: #bbab5c;
+$color-accent-3: #a28c1a;
+$color-accent-4: #fce77d;
+$color-accent-5: #fced9f;
+$color-dark-accent-1: #5f44ab;
+$color-dark-accent-2: #564780;
+$color-dark-accent-3: #2e166f;
+$color-dark-accent-4: #8e75d5;
+$color-dark-accent-5: #a18fd5;
+
+.translist-wrapper {
+  display: flex;
+  flex-direction: column;
+
+  .translist-title {
+    align-self: center;
+    margin-top: rem(10px);
+    font-size: rem(20px);
+  }
+
+  .group-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    align-self: center;
+    width: 70%;
+    max-width: rem(300px);
+    margin-top: rem(10px);
+
+    .group-list {
+      width: 80%;
+      font-size: rem(18px);
+      background-color: transparent;
+      border: none;
+      outline: none;
+
+      .translist-group-item {
+        font-family: "Montserrat";
+      }
+    }
+
+
+
+
+
+    .group-sum {
+      font-size: rem(18px);
+    }
+  }
+
+
+
+  .translist-list {
+    display: flex;
+    flex-direction: column;
+    // width: 100%;
+    margin-top: rem(10px);
+    margin-right: rem(10px);
+    margin-left: rem(10px);
+
+
+    .translist-item {
+      position: relative;
+      width: 100%;
+      min-height: rem(120px);
+      margin-bottom: rem(7px);
+      padding: rem(5px);
+      background-color: #ffffff;
+      // border: 0.1px solid $color-dark-accent-3;
+      border-radius: 3px;
+      box-shadow: 0 2px 5px 2px rgba(13, 13, 13, 0.3);
+      &:hover {
+        background-color: #ffffff;
+        cursor: pointer;
+      }
+
+      .translist-item-descr {
+        font-size: rem(16px);
+      }
+
+      .translist-item-group {
+        font-size: rem(12px);
+      }
+
+      .translist-item-info {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: rem(3px);
+        padding-bottom: rem(5px);
+
+        .translist-item-data {
+          .translist-item-day {
+            font-size: rem(16px);
+          }
+          .translist-item-time {
+            font-size: rem(12px);
+          }
+        }
+
+        .translist-item-user {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          width: 30%;
+          .translist-user-image {
+            width: rem(50px);
+            height: rem(50px);
+            background-color: grey;
+            border-radius: 50%;
+          }
+
+          .translist-user-name {
+            font-size: rem(14px);
+          }
+        }
+
+        .users-wrapper {
+          display: flex;
+          justify-content: flex-start;
+          align-self: flex-start;
+          width: 30%;
+          .translist-item-users {
+            position: relative;
+            // width: 30%;
+            height: rem(60px);
+            // margin-bottom: rem(10px);
+            .translist-user-image {
+              // display: inline-block;
+              width: rem(50px);
+              height: rem(50px);
+              background-color: grey;
+              border-radius: 50%;
+            }
+          }
+        }
+
+
+        .translist-item-sum {
+          font-size: rem(20px);
+        }
+      }
+    }
+
+    .add-list {
+      position: relative;
+      bottom: 100%;
+      &-line {
+        border-top: 0.5px dashed $color-dark-accent-3;
+      }
+
+
+      .add-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 80%;
+        margin: 0 auto;
+        padding: 10px;
+
+        .add-user {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+
+          .translist-user-image {
+            width: rem(50px);
+            height: rem(50px);
+            background-color: grey;
+            border-radius: 50%;
+          }
+
+          .translist-user-name {
+            font-size: rem(14px);
+          }
+        }
+      }
+    }
+
+
+    .translist-item-submit {
+      font-size: rem(12px);
+      color: $color-dark-accent-1;
+      // transition: all 0.5s ease-in-out;
+    }
+  }
+}
+
+.color-plus {
+  color: green;
+}
+
+.color-minus {
+  color: red;
+}
+
+.hidden {
+  display: none;
+}
+
+
+.non-visible {
+  visibility: hidden;
+}
+
+
+.mdc-touch-target-wrapper {
+  position: fixed;
+  right: rem(20px);
+  bottom: rem(20px);
+
+  .newtrans-btn {
+    width: rem(50px);
+    height: rem(50px);
+    background-color: $color-dark-accent-1;
+  }
+}
+
+.trans-submit {
+  background-color: $color-dark-accent-1;
+}
+
+@keyframes openlist {
+  from {
+    height: 0;
+  }
+  to {
+    height: 100%;
+  }
+}
