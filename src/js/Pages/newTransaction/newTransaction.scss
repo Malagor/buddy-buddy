@@ -15,9 +15,120 @@ $color-dark-accent-5: #a18fd5;
   display: flex;
   flex-direction: column;
   width: 100%;
+  max-width: rem(600px);
+  margin-right: auto;
+  margin-left: auto;
 
   .trans-title {
     align-self: center;
     font-size: rem(18px);
   }
+
+  .trans-group-wrapper {
+    display: flex;
+    margin-top: rem(10px);
+
+    .trans-group {
+      width: 50%;
+      max-width: 300px;
+      margin-left: rem(5px);
+      border: none;
+    }
+  }
+
+  .trans-descr {
+    min-height: rem(80px);
+    margin-top: rem(10px);
+    padding-left: rem(5px);
+    border: none;
+  }
+
+  .trans-sum-wrapper {
+    display: flex;
+    margin-top: rem(10px);
+
+    .trans-sum {
+      padding-left: rem(5px);
+      border: none;
+    }
+
+    .trans-currency {
+      margin-left: rem(5px);
+      border: none;
+    }
+  }
+
+  .check-wrapper {
+    display: flex;
+    margin-top: rem(10px);
+    margin-bottom: rem(10px);
+
+    .check {
+      margin-left: rem(5px);
+    }
+  }
+
+  .all-members-wrapper {
+    display: flex;
+    flex-direction: column;
+    padding-top: 10px;
+    // padding-bottom: 10px;
+    border-top: 1px dashed $color-dark-accent-2;
+    border-bottom: 1px dashed $color-dark-accent-2;
+
+    .all-members {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      padding-top: rem(5px);
+      padding-bottom: rem(5px);
+
+      .all-members-user {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-right: rem(5px);
+        margin-left: rem(5px);
+        transition: transform 0.3s ease-out;
+        &:hover {
+          transform: scale(1.05);
+          cursor: pointer;
+        }
+
+        .user-avatar {
+          width: rem(50px);
+          height: rem(50px);
+          background-color: $color-dark-accent-4;
+          border-radius: 50%;
+        }
+
+        .user-checked {
+          border: 3px solid $color-dark-accent-3;
+        }
+      }
+    }
+
+    .all-btn {
+      align-self: center;
+      // width: 150px;
+      // height: 30px;
+      font-size: rem(14px);
+      // background-color: $color-dark-accent-4;
+      // border: none;
+    }
+  }
+
+  .checked-members {
+    padding-top: rem(10px);
+    padding-bottom: rem(10px);
+  }
+}
+
+.create-trans {
+  position: fixed;
+  bottom: 20px;
+  // width: 100%;
+  // max-width: rem(600px);
+  left: 50%;
+  transform: translateX(-50%);
 }
