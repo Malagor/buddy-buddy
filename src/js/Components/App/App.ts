@@ -3,6 +3,7 @@ import { RegistrationPage } from '../../Pages/RegistrationPage/RegistrationPage'
 import { DB } from '../../Classes/DB';
 import { Main } from '../../Pages/Main/Main';
 import { Sidebar } from '../../Pages/Sidebar/Sidebar';
+import { NewTransactionPage } from '../../Pages/newTransaction/newTransaction';
 
 export class App {
   private authPage: AuthPage;
@@ -10,6 +11,7 @@ export class App {
   private DB: DB;
   private mainPage: Main;
   private sidebar: any;
+  private newTransaction: any;
 
   constructor() {
     // DATA BASE
@@ -20,6 +22,7 @@ export class App {
     this.regPage = RegistrationPage.create('.main');
     this.mainPage = Main.create('.main');
     this.sidebar = Sidebar.create('aside');
+    this.newTransaction = NewTransactionPage.create('.main');
 
     // COMPONENTS
     this.init();
@@ -40,7 +43,7 @@ export class App {
 
     this.sidebar.onSignOut = this.onSignOut.bind(this);
 
-    this.DB.init([this.mainPage.render, this.sidebar.render], [this.authPage.render]);
+    this.DB.init([this.mainPage.render, this.sidebar.render], [this.newTransaction.render]);
   }
 
   onSignOut(): any {
