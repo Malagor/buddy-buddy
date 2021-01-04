@@ -1,3 +1,4 @@
+import { groupCollapsed } from 'console';
 import { Page } from '../../Classes/Page';
 
 const data = {
@@ -21,22 +22,36 @@ export class NewTransactionPage extends Page {
       <div class="trans-title">Новая транзакция</div>
       <div class="trans-group-wrapper">
         <div class="trans-group-text">Выберите группу: </div>
-        <select class="trans-group"></select>
+        <div class="trans-group">
+          <input type="text" class="trans-group-current">
+          <div class="trans-group-list hidden"></div>
+        </div>   
       </div>
       <textarea class="trans-descr" placeholder="Описание..."></textarea>
       <div class="trans-sum-wrapper">
         <input class="trans-sum" placeholder="Введите сумму">
-        <select class="trans-currency">
-          <option>$</option>
-          <option>&euro;</option>
-          <option>BYN</option>
-          <option>RU</option>
-        </select>  
+        <div class="currency-wrapper">
+          <input class="trans-currency" value="$">
+          <div class="currency-list hidden">
+            <div class="currency-item">$</div>
+            <div class="currency-item">&euro;</div>
+            <div class="currency-item">BYN</div>
+            <div class="currency-item">RU</div>
+          </div>
+        </div>  
+      
+      
+       
       </div>
+
       <div class="check-wrapper">
-        <div class="check-text">Чек:</div>
-        <input type="file" accept="image/*" class="check">
+        <label class="add-check">
+          <div class="add-check-text">Добавить чек</div>
+          <i class="material-icons">attach_file</i>
+          <input type="file" accept="image/*" class="input-file">
+        </label>
       </div>
+
       <div class="all-members-wrapper">
         <div class="all-members"></div>
         <button class="mdc-button all-btn">
@@ -62,13 +77,14 @@ export class NewTransactionPage extends Page {
       members.append(userElement);
     });
 
-    const groups = document.querySelector('.trans-group')
+    const groupsList: HTMLElement = document.querySelector('.trans-group-list');
     data.groupList.forEach((group) => {
-      const groupItem = document.createElement('option');
+      const groupItem = document.createElement('div');
       groupItem.classList.add('group-item');
       groupItem.innerText = group;
-      groups.append(groupItem);
-    });
+      groupsList.append(groupItem);
+    }); 
+
 
 
 
@@ -78,9 +94,23 @@ export class NewTransactionPage extends Page {
   };
 
   protected events(): void {
-    const membersList = document.querySelector('.checked-members');
-
+    const membersList: HTMLElement = document.querySelector('.checked-members');
     const users = document.querySelectorAll('.all-members-user');
+    const allBtn: HTMLFormElement = document.querySelector('.all-btn');
+    const sumInput: HTMLFormElement = document.querySelector('.trans-sum');
+
+    sumInput.addEventListener('keyup', () => {
+      // change sum for each member
+      const membersSumInputs = document.querySelectorAll('.member-sum');
+      const numbOfmembers: number = membersSumInputs.length;
+      const totalSum: number = +sumInput.value;
+      membersSumInputs.forEach((input) => {
+        input.setAttribute('placeholder',`${(totalSum / numbOfmembers).toFixed(1)}${currencyInput.value}`);
+      });
+
+    });
+
+
     users.forEach((user) => {
       user.addEventListener('click', () => {
         const userAvatar = user.querySelector('.user-avatar');
@@ -95,6 +125,7 @@ export class NewTransactionPage extends Page {
             <div class="user-name">${userName}</div>
           </div>
           <input class="member-sum" type="text">
+          <textarea class="member-comment" type="text" placeholder="Комментарий..."></textarea>
           `;
         membersList.append(memberWrapper); 
         } else {
@@ -105,7 +136,125 @@ export class NewTransactionPage extends Page {
             }
           });
         }
+      // change sum for each member
+        const membersSumInputs: any = document.querySelectorAll('.member-sum');
+        const numbOfmembers: number = membersSumInputs.length;
+        const totalSum: number = +sumInput.value;
+        membersSumInputs.forEach((sumInput) => {
+          sumInput.setAttribute('placeholder',`${(totalSum / numbOfmembers).toFixed(1)}${currencyInput.value}`);
+        });
+
+
+        // console.log(membersSumInputs);
+        // membersSumInputs.forEach((memberSum: HTMLFormElement, i: number) => {
+       
+        //   memberSum.addEventListener('keyup', () => {
+        //   membersSumInputs.splice(i, 1);
+        //   console.log(membersSumInputs);
+    
+        //   // вынести в отдельную функцию
+        //   const numbOfmembers = membersSumInputs.length;
+        //   const totalSum = +sumInput.value;
+        //   membersSumInputs.forEach((sumInput: HTMLFormElement) => {
+        //     sumInput.setAttribute('placeholder',`${(totalSum / numbOfmembers).toFixed(1)}${currencyInput.value}`);
+        //   });
+    
+    
+        //   });
+        // });
+
+
+
       });
     });
+
+    allBtn.addEventListener('click', () => {
+      membersList.innerHTML = '';
+      users.forEach((user) => {
+        const userAvatar = user.querySelector('.user-avatar');
+        const userName = user.querySelector('.user-name').innerHTML;
+        userAvatar.classList.add('user-checked'); 
+        const memberWrapper = document.createElement('div');
+          memberWrapper.classList.add('checked-member-wrapper');
+          memberWrapper.innerHTML = `
+          <div class="member">
+            <div class="user-avatar"></div>
+            <div class="user-name">${userName}</div>
+          </div>
+          <input class="member-sum" type="text">
+          <textarea class="member-comment" type="text" placeholder="Комментарий..."></textarea>
+          `;
+        membersList.append(memberWrapper); 
+      });
+
+    // change sum for each member
+      const membersSumInputs:any = document.querySelectorAll('.member-sum');
+      const numbOfmembers = membersSumInputs.length;
+      const totalSum = +sumInput.value;
+
+      membersSumInputs.forEach((sumInput: HTMLFormElement) => {
+        sumInput.setAttribute('placeholder',`${(totalSum / numbOfmembers).toFixed(1)}${currencyInput.value}`);
+      });
+     
+     
+    });
+
+
+    const inputCheck = document.querySelector('.input-file');
+    const inputWrapper = document.querySelector('.add-check');
+    
+    inputCheck.addEventListener('change', () => {
+      inputWrapper.innerHTML = `<div class="add-check-text">Чек добавлен</div>
+      <i class="material-icons">check</i>
+      <input type="file" accept="image/*" class="input-file">`;
+    });
+
+
+    const inputGroup: HTMLFormElement = document.querySelector('.trans-group-current');
+    const groupsList = document.querySelector('.trans-group-list');
+    const groups = document.querySelectorAll('.group-item');
+  
+    inputGroup.addEventListener('click', () => {
+       groupsList.classList.toggle('hidden');
+    });
+
+    groups.forEach((group) => {
+      group.addEventListener('click', () => {
+        groupsList.classList.add('hidden');
+        inputGroup.value = group.innerHTML;
+      });
+    });
+
+
+    const currencyInput: HTMLFormElement = document.querySelector('.trans-currency');
+    const currencyList: HTMLElement = document.querySelector('.currency-list');
+    const currencyItems = document.querySelectorAll('.currency-item');
+    
+    currencyInput.addEventListener('click', () => {
+      currencyList.classList.toggle('hidden');
+    });
+
+    currencyItems.forEach((item) => {
+      item.addEventListener('click', () => {
+        currencyList.classList.add('hidden');
+        currencyInput.value = item.innerHTML;
+      });
+    });
+
+
+
+    
+    // const membersSumInputs: any = document.querySelectorAll('.member-sum');
+  
+
+    
+
+
+    
+
+
+
+
+
   }
 }
