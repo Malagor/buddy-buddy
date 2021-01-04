@@ -18,7 +18,6 @@ main#main-content {
     & > img {
       transition: all 0.35s linear;
     }
-
     &.account__header__scroll_out {
       flex-direction: column;
       justify-content: flex-end;
@@ -30,7 +29,6 @@ main#main-content {
         width: 100%;
         box-shadow: 0 0 10px 5px rgba(0, 0, 0, 0.3);
       }
-
       & > .account__nick {
         margin-top: -90px;
         font-size: 2.25rem;
@@ -38,36 +36,44 @@ main#main-content {
         text-shadow: 0 2px 3px rgba(0, 0, 0, 1);
         background-clip: text;
       }
+      & > .account__form_change_photo {
+        width: 5rem;
+        height: 5rem;
+        & > .account__button_change_photo > .material-icons {
+          font-size: 3rem;
+        }
+      }
     }
 
     &.account__header__scroll_in {
       position: fixed;
-      justify-content: space-around;
-      height: 130px;
+      height: 100px;
+      padding: 0 0.5rem;
       background-color: rgb(255, 255, 255);
       box-shadow: 0 0 10px 5px rgba(0, 0, 0, 0.3);
       animation: header 0.35s ease-in-out;
-
       & > img {
-        width: 96px;
-        height: width;
+        width: 80px;
         border-radius: 50%;
         box-shadow: 0 0 10px 5px rgba(0, 0, 0, 0.3);
         animation: wid 0.35s linear;
       }
-
       & > .account__nick {
-        margin: 0 5rem 0 -2.5rem;
-        font-size: 2rem;
+        margin-left: 0.65rem;
+        font-size: 1.4rem;
         color: rgb(0, 0, 0);
       }
-
-      & > .account__button_change_photo {
-        margin-top: 125px;
+      & > .account__form_change_photo {
+        align-self: flex-end;
+        width: 3.5rem;
+        height: 3.5rem;
+        margin: 0 0 -1.75rem auto;
+        & > .account__button_change_photo > .material-icons {
+          font-size: 2.2rem;
+        }
       }
-
       & + .account__info {
-        margin-top: 200px;
+        margin-top: 150px;
       }
     }
   }
@@ -79,7 +85,7 @@ main#main-content {
     border-radius: 0;
   }
   100% {
-    width: 96px;
+    width: 80px;
     border-radius: 50%;
   }
 }
@@ -100,23 +106,32 @@ main#main-content {
   font-weight: bolder;
 }
 
-.account__button_change_photo {
+.account__form_change_photo {
   z-index: 1;
-  width: 5rem;
-  height: 5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   background-color: black;
   border: 2px solid white;
   border-radius: 50%;
   outline: none;
-  cursor: pointer;
   opacity: 0.8;
 
   &:hover {
     opacity: 1;
   }
-  & > .material-icons {
-    font-size: 3rem;
-    color: rgba(255, 255, 255, 1);
+
+  & > .account__button_change_photo {
+    cursor: pointer;
+    & > .material-icons {
+      color: rgba(255, 255, 255, 1);
+    }
+  }
+
+  & > .account__input__photo {
+    position: absolute;
+    visibility: hidden;
+    opacity: 0;
   }
 }
 
@@ -124,7 +139,6 @@ main#main-content {
   position: relative;
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
   width: 80%;
   height: 1000px;
@@ -137,7 +151,9 @@ main#main-content {
 }
 
 .account__info__name {
-  font-size: 2.2rem;
+  width: 90%;
+  font-size: 1.5rem;
+  text-align: center;
 }
 
 .account__button_edit {
@@ -177,4 +193,26 @@ main#main-content {
   padding: 0.75rem 1rem;
   font-size: 2.2rem;
   border-radius: 26px;
+}
+
+.account__button {
+  background: none;
+  border: none;
+  outline: none;
+  cursor: pointer;
+}
+
+.account__info__input {
+  width: 80%;
+  background: none;
+  border: 1px solid white;
+  outline: none;
+}
+
+.account__info__input_edit {
+  border-bottom: 1.5px solid black;
+}
+
+.account__info__input_edit:nth-child(1) {
+  text-align: center;
 }
