@@ -2,6 +2,7 @@ import { Page } from '../../Classes/Page';
 import { Modal } from 'bootstrap';
 
 const defAvatar = require('../../../assets/images/default-user-avatar.jpg');
+const logo = require('../../../assets/icons/team.svg');
 
 export class Layout extends Page {
   onMainPage: any;
@@ -19,7 +20,7 @@ export class Layout extends Page {
   render(): void {
     this.element.innerHTML = `
     <header class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow">
-      <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3" href="#">Buddy-Buddy</a>
+      <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3" href="#">${logo} Buddy-Buddy</a>
       <button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
@@ -28,13 +29,14 @@ export class Layout extends Page {
     <div class="container-fluid">
       <div class="row">
         <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
-          <div class="position-sticky pt-3">
+          <div class="position-sticky pt-3 sidebar__header">
             <div class="sidebar-avatar__wrapper">
               <img class="sidebar-avatar__image" src="${defAvatar}" alt="Alex Malagor">
             </div>
             <h3 class="sidebar__user-name">Alex Malagor</h3>
             <h6 class="sidebar__account">@malagor</h6>
           </div>
+          <hr>
           <ul class="nav flex-column">
               <li class="nav-item">
                 <a class="nav-link active" aria-current="page" href="#" id="sidebarMainLink">
@@ -60,13 +62,7 @@ export class Layout extends Page {
                 </a>
               </li>
             </ul>
-
-          <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
-            <hr>
-            <a class="link-secondary" href="#" aria-label="Add a new report">
-              <span data-feather="plus-circle"></span>
-            </a>
-          </h6>
+          <hr>
           <ul class="nav flex-column mb-2">
               <li class="nav-item">
                 <a class="nav-link" href="#" id="sidebarSettingsLink">
