@@ -1,25 +1,28 @@
 import { AuthPage } from '../../Pages/AuthPage/AuthPage';
 import { RegistrationPage } from '../../Pages/RegistrationPage/RegistrationPage';
-import { DB } from '../../Classes/DB';
+import { Database } from '../../Classes/Database';
 import { Main } from '../../Pages/Main/Main';
 import { Sidebar } from '../../Pages/Sidebar/Sidebar';
+import { MyGroups } from '../../Pages/MyGroups/MyGroups';
 
 export class App {
   private authPage: AuthPage;
   private regPage: RegistrationPage;
-  private DB: DB;
+  private database: Database;
   private mainPage: Main;
-  private sidebar: any;
+  private sidebar: Sidebar;
+  private groups: MyGroups;
 
   constructor() {
     // DATA BASE
-    this.DB = DB.create();
+    this.database = Database.create();
 
     // PAGES
     this.authPage = AuthPage.create('.main');
     this.regPage = RegistrationPage.create('.main');
     this.mainPage = Main.create('.main');
     this.sidebar = Sidebar.create('aside');
+    this.groups = MyGroups.create('.main');
 
     // COMPONENTS
     this.init();
@@ -40,19 +43,19 @@ export class App {
 
     this.sidebar.onSignOut = this.onSignOut.bind(this);
 
-    this.DB.init([this.mainPage.render, this.sidebar.render], [this.authPage.render]);
+    this.database.init([this.mainPage.render, this.sidebar.render], [this.authPage.render]);
   }
 
   onSignOut(): any {
-    this.DB.signOut(this.authPage.render);
+    this.database.signOut(this.authPage.render);
   }
 
   onSignIn(email: string, password: string, name: string) {
-    this.DB.createUserByEmeil(email, password, name);
+    this.database.createUserByEmeil(email, password, name);
   }
 
   onGoogleReg() {
-    this.DB.createUserByGoogle();
+    this.database.createUserByGoogle();
   }
 
   registrationUserPage() {

@@ -4,7 +4,7 @@ import { Main } from '../Pages/Main/Main';
 
 const defaultAvatar: string = require('../../assets/images/default-user-avatar.jpg');
 
-export class DB {
+export class Database {
   private DBase: firebase.app.App;
   public uid: string;
   private mainPage: Main;
@@ -26,7 +26,7 @@ export class DB {
       ...obj,
     };
 
-    return new DB(firebaseConfig);
+    return new Database(firebaseConfig);
   }
 
   init(isUserFuncs: any[], noUserFuncs: any[]) {
