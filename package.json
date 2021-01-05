@@ -75,6 +75,7 @@
     "webpack-merge": "^5.7.3"
   },
   "dependencies": {
+    "bootstrap": "^5.0.0-beta1",
     "chart.js": "^2.9.4",
     "core-js": "^3.4.7",
     "firebase": "^8.2.1",

@@ -1,25 +1,28 @@
-import { AuthPage } from '../../Pages/AuthPage/AuthPage';
-import { RegistrationPage } from '../../Pages/RegistrationPage/RegistrationPage';
-import { DB } from '../../Classes/DB';
-import { Main } from '../../Pages/Main/Main';
-import { Sidebar } from '../../Pages/Sidebar/Sidebar';
+import { AuthPage } from '../Pages/AuthPage/AuthPage';
+import { RegistrationPage } from '../Pages/RegistrationPage/RegistrationPage';
+import { DB } from './DB';
+import { Main } from '../Pages/Main/Main';
+import { Sidebar } from '../Pages/Sidebar/Sidebar';
+import { Layout } from '../Pages/Layout/Layout';
 
 export class App {
   private authPage: AuthPage;
   private regPage: RegistrationPage;
-  private DB: DB;
+  private database: DB;
   private mainPage: Main;
-  private sidebar: any;
+  private sidebar: Sidebar;
+  private layout: Layout;
 
   constructor() {
     // DATA BASE
-    this.DB = DB.create();
+    this.database = DB.create();
 
     // PAGES
-    this.authPage = AuthPage.create('.main');
-    this.regPage = RegistrationPage.create('.main');
-    this.mainPage = Main.create('.main');
-    this.sidebar = Sidebar.create('aside');
+    // this.layout = Layout.create('#app');
+    // this.authPage = AuthPage.create('#app');
+    // this.regPage = RegistrationPage.create('#app');
+    // this.mainPage = Main.create('.main');
+    // this.sidebar = Sidebar.create('aside');
 
     // COMPONENTS
     this.init();
@@ -30,37 +33,57 @@ export class App {
   }
 
   init() {
+    console.log('App init');
+    this.database.onUserIsLogin = this.isUserLogin.bind(this);
+    this.database.init();
     // Handlers
-    this.authPage.onLoadSignInPage = this.loadSignInPage.bind(this);
-    // this.authPage.onLogin = this.onLogin.bind(this);
-
-    this.regPage.onSignIn = this.onSignIn.bind(this);
-    this.regPage.goToLoginPage = this.loadLoginPage.bind(this);
-    this.regPage.onGoogleReg = this.onGoogleReg.bind(this);
+    // this.authPage.onLoadSignInPage = this.loadSignInPage.bind(this);
+    // // this.authPage.onLogin = this.onLogin.bind(this);
+    //
+    // this.regPage.onSignIn = this.onSignIn.bind(this);
+    // this.regPage.goToLoginPage = this.loadLoginPage.bind(this);
+    // this.regPage.onGoogleReg = this.onGoogleReg.bind(this);
 
     // SIDEBAR
-    this.sidebar.onMainPage = this.onMainPage.bind(this);
-    this.sidebar.onGroupsPage = this.onGroupsPage.bind(this);
-    this.sidebar.onTransactionsPage = this.onTransactionsPage.bind(this);
-    this.sidebar.onStatisticsPage = this.onStatisticsPage.bind(this);
-    this.sidebar.onSettingsPage = this.onSettingsPage.bind(this);
-    this.sidebar.onHelpPage = this.onHelpPage.bind(this);
-    this.sidebar.onSignOut = this.onSignOut.bind(this);
+    // this.sidebar.onMainPage = this.onMainPage.bind(this);
+    // this.sidebar.onGroupsPage = this.onGroupsPage.bind(this);
+    // this.sidebar.onTransactionsPage = this.onTransactionsPage.bind(this);
+    // this.sidebar.onStatisticsPage = this.onStatisticsPage.bind(this);
+    // this.sidebar.onSettingsPage = this.onSettingsPage.bind(this);
+    // this.sidebar.onHelpPage = this.onHelpPage.bind(this);
+    // this.sidebar.onSignOut = this.onSignOut.bind(this);
 
-    this.DB.init([this.mainPage.render, this.sidebar.render], [this.authPage.render]);
+    // this.database.init([this.mainPage.render, this.sidebar.render], [this.authPage.render]);
+  }
+
+  isUserLogin(state: boolean, uid?: string) {
+    if (state) {
+      console.log(`isUserLogon = ${state}, uid = ${uid}`);
+    } else {
+      console.log(`isUserLogon = ${state}`);
+      this.authPage = AuthPage.create('#app');
+      this.regPage = RegistrationPage.create('#app');
+
+      this.authPage.onLoadSignInPage = this.loadSignInPage.bind(this);
+      this.regPage.onSignIn = this.onSignIn.bind(this);
+      this.regPage.goToLoginPage = this.loadLoginPage.bind(this);
+      this.regPage.onGoogleReg = this.onGoogleReg.bind(this);
+
+      this.authPage.render();
+    }
   }
 
   onSignOut(): any {
-    this.DB.signOut(this.authPage.render);
+    this.database.signOut(this.authPage.render);
   }
 
   onSignIn(email: string, password: string, name: string) {
-    this.DB.createUserByEmeil(email, password, name);
+    this.database.createUserByEmeil(email, password, name);
   }
 
   onMainPage() {
-    const uid: string = this.DB.uid;
-    this.DB.getUserInfo(uid, [this.mainPage.render]);
+    const uid: string = this.database.uid;
+    this.database.getUserInfo(uid, [this.mainPage.render]);
   }
 
   onGroupsPage() {
@@ -84,7 +107,7 @@ export class App {
   }
 
   onGoogleReg() {
-    this.DB.createUserByGoogle();
+    this.database.createUserByGoogle();
   }
 
   loadSignInPage() {

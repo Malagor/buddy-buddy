@@ -13,12 +13,12 @@ export class Sidebar extends Page {
 
   constructor(element: string) {
     super(element);
-
-    this.signOutModal = Modal.create();
-    this.signOutModal.render();
-    this.signOutModal.setOkHandler(this.onSignOutHandler);
-
-    this.init();
+    if (element) {
+      this.signOutModal = Modal.create();
+      this.signOutModal.render();
+      this.signOutModal.setOkHandler(this.onSignOutHandler);
+    }
+    // this.init();
   }
 
   onSignOutHandler = () => {
@@ -31,7 +31,6 @@ export class Sidebar extends Page {
 
   private init() {
     this.element.className = 'mdc-drawer mdc-drawer--dismissible mdc-top-app-bar--fixed-adjust mdc-drawer--modal';
-
   }
 
   public render = (data: any) => {

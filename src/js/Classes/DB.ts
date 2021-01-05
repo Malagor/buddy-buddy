@@ -1,16 +1,19 @@
-import firebase from 'firebase';
+// import firebase from 'firebase';
+import firebase from 'firebase/app';
+import 'firebase/auth';
 import { Main } from '../Pages/Main/Main';
 // import { saveUID, loadUID } from '../Util/saveLoadUid';
 
 const defaultAvatar: string = require('../../assets/images/default-user-avatar.jpg');
 
 export class DB {
-  private DBase: firebase.app.App;
+  private firebase: firebase.app.App;
   public uid: string;
   private mainPage: Main;
+  onUserIsLogin: any;
 
   constructor(dbConfig: Object) {
-    this.DBase = firebase.initializeApp(dbConfig);
+    this.firebase = firebase.initializeApp(dbConfig);
     // this.init();
   }
 
@@ -29,22 +32,44 @@ export class DB {
     return new DB(firebaseConfig);
   }
 
-  init(isUserFuncs: any[], noUserFuncs: any[]) {
-    this.DBase.auth().onAuthStateChanged((user) => {
+  // init(isUserFuncs: any[], noUserFuncs: any[]) {
+  //   this.DBase.auth().onAuthStateChanged((user) => {
+  //     if (user) {
+  //       // User is signed in.
+  //       this.uid = user.uid;
+  //       // console.log('Current user.uid = ', user.uid);
+  //       this.getUserInfo(user.uid, isUserFuncs);
+  //     } else {
+  //       // No user is signed in.
+  //       // console.log('No user');
+  //       noUserFuncs.forEach(fn => fn());
+  //       // noUserFunc();
+  //     }
+  //   });
+  //
+  //   this.mainPage = Main.create('main.main');
+  // }
+  init() {
+    console.log('DB init');
+    this.firebase.auth().onAuthStateChanged((user) => {
       if (user) {
         // User is signed in.
         this.uid = user.uid;
-        // console.log('Current user.uid = ', user.uid);
-        this.getUserInfo(user.uid, isUserFuncs);
+        console.log('Current user.uid = ', this.uid);
+        this.onUserIsLogin(true, this.uid);
+        // this.getUserInfo(user.uid, isUserFuncs);
       } else {
         // No user is signed in.
-        // console.log('No user');
-        noUserFuncs.forEach(fn => fn());
+        this.uid = null;
+        console.log('No user');
+        this.onUserIsLogin(false);
+
+        // noUserFuncs.forEach(fn => fn());
         // noUserFunc();
       }
     });
 
-    this.mainPage = Main.create('main.main');
+    // this.mainPage = Main.create('main.main');
   }
 
   createUserByEmeil(email: string, password: string, nameUser: string = '') {
@@ -59,7 +84,7 @@ export class DB {
       currency: 'BYN',
     };
 
-    this.DBase.auth().createUserWithEmailAndPassword(email, password)
+    this.firebase.auth().createUserWithEmailAndPassword(email, password)
       .then((data: { user: { uid: string; }; }) => {
         const uid: string = data.user.uid;
         // saveUID(uid);
@@ -76,7 +101,7 @@ export class DB {
     provider.addScope('profile');
     provider.addScope('email');
 
-    this.DBase.auth().signInWithPopup(provider).then((result) => {
+    this.firebase.auth().signInWithPopup(provider).then((result) => {
       // console.log('result', result);
 
       const profile: any = result.additionalUserInfo.profile;
@@ -107,7 +132,7 @@ export class DB {
   }
 
   getUserInfo(uid: string, callbacks: any[]): any {
-    const ref = this.DBase.database().ref(`User/${uid}`);
+    const ref = this.firebase.database().ref(`User/${uid}`);
 
     ref.on('value', (snapshot) => {
       // console.log(snapshot.val());
@@ -119,7 +144,7 @@ export class DB {
   }
 
   signOut(callback?: any, arg?: any[]) {
-    this.DBase.auth().signOut()
+    this.firebase.auth().signOut()
       .then(function() {
         console.log('Signout Succesfull');
         if (callback) {
