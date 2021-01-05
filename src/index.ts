@@ -5,7 +5,7 @@ import { App } from './js/Classes/App';
 // import 'material-components-web';
 // import 'material-components-web/dist/material-components-web.min.css';
 
-import 'bootstrap/dist/js/bootstrap.bundle';
+import 'bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 import './scss/basic-styles.scss';

@@ -1,30 +1,18 @@
+import { Database } from './Database';
+import { Layout } from '../Pages/Layout/Layout';
 import { AuthPage } from '../Pages/AuthPage/AuthPage';
 import { RegistrationPage } from '../Pages/RegistrationPage/RegistrationPage';
-import { DB } from './DB';
 import { Main } from '../Pages/Main/Main';
-import { Sidebar } from '../Pages/Sidebar/Sidebar';
-import { Layout } from '../Pages/Layout/Layout';
 
 export class App {
+  private database: Database;
+  private layout: Layout;
   private authPage: AuthPage;
   private regPage: RegistrationPage;
-  private database: DB;
   private mainPage: Main;
-  private sidebar: Sidebar;
-  private layout: Layout;
 
   constructor() {
-    // DATA BASE
-    this.database = DB.create();
-
-    // PAGES
-    // this.layout = Layout.create('#app');
-    // this.authPage = AuthPage.create('#app');
-    // this.regPage = RegistrationPage.create('#app');
-    // this.mainPage = Main.create('.main');
-    // this.sidebar = Sidebar.create('aside');
-
-    // COMPONENTS
+    this.database = Database.create();
     this.init();
   }
 
@@ -33,38 +21,34 @@ export class App {
   }
 
   init() {
-    console.log('App init');
     this.database.onUserIsLogin = this.isUserLogin.bind(this);
     this.database.init();
-    // Handlers
-    // this.authPage.onLoadSignInPage = this.loadSignInPage.bind(this);
-    // // this.authPage.onLogin = this.onLogin.bind(this);
-    //
-    // this.regPage.onSignIn = this.onSignIn.bind(this);
-    // this.regPage.goToLoginPage = this.loadLoginPage.bind(this);
-    // this.regPage.onGoogleReg = this.onGoogleReg.bind(this);
-
-    // SIDEBAR
-    // this.sidebar.onMainPage = this.onMainPage.bind(this);
-    // this.sidebar.onGroupsPage = this.onGroupsPage.bind(this);
-    // this.sidebar.onTransactionsPage = this.onTransactionsPage.bind(this);
-    // this.sidebar.onStatisticsPage = this.onStatisticsPage.bind(this);
-    // this.sidebar.onSettingsPage = this.onSettingsPage.bind(this);
-    // this.sidebar.onHelpPage = this.onHelpPage.bind(this);
-    // this.sidebar.onSignOut = this.onSignOut.bind(this);
-
-    // this.database.init([this.mainPage.render, this.sidebar.render], [this.authPage.render]);
   }
 
   isUserLogin(state: boolean, uid?: string) {
     if (state) {
-      console.log(`isUserLogon = ${state}, uid = ${uid}`);
+      this.layout = Layout.create('#app');
+      this.layout.render();
+
+      // SIDEBAR
+      this.layout.onSignOut = this.onSignOut.bind(this);
+      this.layout.onStatisticsPage = this.onStatisticsPage.bind(this);
+      this.layout.onMainPage = this.onMainPage.bind(this);
+      this.layout.onGroupsPage = this.onGroupsPage.bind(this);
+      this.layout.onTransactionsPage = this.onTransactionsPage.bind(this);
+      this.layout.onSettingsPage = this.onSettingsPage.bind(this);
+      this.layout.onHelpPage = this.onHelpPage.bind(this);
+      this.layout.onSignOut = this.onSignOut.bind(this);
+
+      this.mainPage = Main.create('.main');
+      this.database.getUserInfo(uid, [this.mainPage.render, this.layout.setSidebarData]);
+
     } else {
       console.log(`isUserLogon = ${state}`);
       this.authPage = AuthPage.create('#app');
-      this.regPage = RegistrationPage.create('#app');
-
       this.authPage.onLoadSignInPage = this.loadSignInPage.bind(this);
+
+      this.regPage = RegistrationPage.create('#app');
       this.regPage.onSignIn = this.onSignIn.bind(this);
       this.regPage.goToLoginPage = this.loadLoginPage.bind(this);
       this.regPage.onGoogleReg = this.onGoogleReg.bind(this);
@@ -74,7 +58,8 @@ export class App {
   }
 
   onSignOut(): any {
-    this.database.signOut(this.authPage.render);
+    this.database.signOut();
+    this.database.init();
   }
 
   onSignIn(email: string, password: string, name: string) {
