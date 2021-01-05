@@ -1,5 +1,77 @@
 import { Page } from '../../Classes/Page';
 
+const data = [
+  {
+    title : "Кругосветное путешествие",
+    transactions : [
+      {
+        description: "Поезд Минск-Гродно",
+        data: "12-10-2020",
+        time: "15:20",
+        balance: "-5$",
+        submit: false,
+        users: [
+          {name : "Коля",
+           avatar: "ooooo",
+          }
+        ]
+      },
+      {
+        description: "Поезд Минск-Гродно",
+        data: "12-10-2020",
+        time: "15:20",
+        balance: "-5$",
+        submit: false,
+        users: [
+          {name : "Коля",
+           avatar: "ooooo",
+          }
+        ]
+      },
+      {
+        description: "Поезд Минск-Гродно",
+        data: "12-10-2020",
+        time: "15:20",
+        balance: "15$",
+        users: [
+          {name : "Коля",
+           avatar: "ooooo",
+           cost: "-5$",
+           submit: true,
+          },
+          {name : "Оля",
+           avatar: "ooooo",
+           cost: "-5$",
+           submit: true,
+          },
+          {name : "Петя",
+           avatar: "ooooo",
+           cost: "-5$",
+           submit: true,
+          },
+        ]
+      }
+    ],
+  },
+  {
+    title : "Поход в лес",
+    transactions : [
+      {
+        description: "Поезд Минск-Гродно",
+        data: "12-10-2020",
+        time: "15:20",
+        balance: "-5$",
+        submit: false,
+        users: [
+          {name : "Коля",
+           avatar: "ooooo",
+          }
+        ]
+      },
+    ],
+  },
+];
+
 export class TransactionsList extends Page {
   // onTransitionSignInPage: any;
   // onLogin: any;
@@ -216,26 +288,5 @@ export class TransactionsList extends Page {
           
          })
        });
-
-  //   // SIGN IN
-  //   const form: HTMLFormElement = document.querySelector('#authForm');
-  //   const submitBtn = document.getElementById('signIn');
-  //   submitBtn.addEventListener('click', e => {
-  //     e.preventDefault();
-
-  //     const { email, password }: any = getFormData(form);
-  //     this.onTransitionSignInPage(email, password);
-  //   });
-
-  //   // LOGIN
-  //   const login: Element = document.querySelector('#login');
-  //   login.addEventListener('click', (e) => {
-  //     console.log('Event - Login');
-  //     e.preventDefault();
-  //     const { email, password }: any = getFormData(form);
-  //     if (!email || !password) return;
-
-  //     this.onLogin(email, password);
-  //   });
   }
 }
