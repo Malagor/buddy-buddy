@@ -3,6 +3,7 @@ import { RegistrationPage } from '../../Pages/RegistrationPage/RegistrationPage'
 import { DB } from '../../Classes/DB';
 import { Main } from '../../Pages/Main/Main';
 import { Sidebar } from '../../Pages/Sidebar/Sidebar';
+import { GroupPage } from '../../Pages/GroupsPages/GroupsPage';
 
 export class App {
   private authPage: AuthPage;
@@ -10,6 +11,7 @@ export class App {
   private DB: DB;
   private mainPage: Main;
   private sidebar: any;
+  private groupsPage: GroupPage;
 
   constructor() {
     // DATA BASE
@@ -20,6 +22,7 @@ export class App {
     this.regPage = RegistrationPage.create('.main');
     this.mainPage = Main.create('.main');
     this.sidebar = Sidebar.create('aside');
+    this.groupsPage = GroupPage.create('.main')
 
     this.init();
   }
@@ -58,6 +61,10 @@ export class App {
 
   loadMainPage() {
     this.mainPage.render();
+  }
+
+  loadGroupPage() {
+    this.groupsPage.render();
   }
 
   // createUser(uid: string) {

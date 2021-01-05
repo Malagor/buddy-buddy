@@ -1,8 +1,15 @@
 import { Page } from '../../Classes/Page';
+import { GroupPage } from '../../Pages/GroupsPages/GroupsPage';
 
 export class Sidebar extends Page {
+  onGroupPage: any;
+  private goToGroupPage: GroupPage;
+
   constructor(element: string) {
     super(element);
+
+    this.goToGroupPage = GroupPage.create('main');
+    //this.goToGroupPage.render();
 
     this.init();
   }
@@ -32,7 +39,7 @@ export class Sidebar extends Page {
             <i class="material-icons mdc-list-item__graphic" aria-hidden="true">house</i>
             <span class="mdc-list-item__text">Главная</span>
           </a>
-          <a class="mdc-list-item" href="#">
+          <a class="mdc-list-item" href="#" id="groups">
             <span class="mdc-list-item__ripple"></span>
             <i class="material-icons mdc-list-item__graphic" aria-hidden="true">groups</i>
             <span class="mdc-list-item__text">Группы</span>
@@ -68,11 +75,12 @@ export class Sidebar extends Page {
       </div>
     `;
 
+    this.events();
     Sidebar.setSidebarInfo(data.avatar, data.name);
   };
 
   protected events(): void {
-    super.events();
+    //super.events();
 
     this.element.addEventListener('click', ev => {
       const { target }: any = ev;
@@ -81,6 +89,11 @@ export class Sidebar extends Page {
       if (target.closest('#signOut')) {
         console.log('SignOut');
 
+      }
+
+      if (target.closest('#groups')) {
+        console.log('groups');
+        this.goToGroupPage.render();
       }
     });
   }
