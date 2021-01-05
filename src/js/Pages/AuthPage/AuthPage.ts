@@ -9,7 +9,7 @@ import { MDCFormField } from '@material/form-field';
 
 
 export class AuthPage extends Page {
-  onTransitionSignInPage: any;
+  onLoadSignInPage: any;
   onLogin: any;
 
   constructor(element: string) {
@@ -62,7 +62,6 @@ export class AuthPage extends Page {
       </form>
       `;
 
-
     new MDCTextField(document.querySelector('.email'));
     new MDCTextField(document.querySelector('.password'));
 
@@ -72,12 +71,10 @@ export class AuthPage extends Page {
     show(form, true);
 
     this.events();
-  };
+  }
 
   protected events(): void {
     const textField = new MDCFormField(document.querySelector('.mdc-text-field'));
-    console.log('textField', textField);
-
 
     // SIGN IN
     const form: HTMLFormElement = document.querySelector('#authForm');
@@ -86,7 +83,7 @@ export class AuthPage extends Page {
       e.preventDefault();
 
       const { email, password }: any = getFormData(form);
-      this.onTransitionSignInPage(email, password);
+      this.onLoadSignInPage(email, password);
     });
 
     // LOGIN

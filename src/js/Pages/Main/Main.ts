@@ -12,7 +12,7 @@ export class Main extends Page {
     return new Main(element);
   }
 
-  render = (data?: any): void => {
+  render = (data: any): void => {
     this.element.innerHTML = `
     <div class="mdc-card">
      <div class="account__image"><img src="${data.avatar}" alt="${data.name}"></div>
