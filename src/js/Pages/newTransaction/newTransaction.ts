@@ -5,6 +5,8 @@ const data = {
   groupList: ['Группа1', 'Группа2', 'Группа3'],
   userList: ["Маша", "Саша", "Петя", "Катя", "Вася", "Юля"] 
 }
+
+// const data = [['Группа1', ["Маша", "Саша", "Петя"]], ['Группа2', ["Катя", "Лена", "Коля"]], ['Группа3', ["Ваня", "Юля", "Соня"]] ];
 export class NewTransactionPage extends Page {
  
   constructor(element: string) {
@@ -38,10 +40,7 @@ export class NewTransactionPage extends Page {
             <div class="currency-item">BYN</div>
             <div class="currency-item">RU</div>
           </div>
-        </div>  
-      
-      
-       
+        </div>       
       </div>
 
       <div class="check-wrapper">
@@ -83,7 +82,10 @@ export class NewTransactionPage extends Page {
       groupItem.classList.add('group-item');
       groupItem.innerText = group;
       groupsList.append(groupItem);
-    }); 
+    });
+    
+    
+    
 
 
 
@@ -100,16 +102,8 @@ export class NewTransactionPage extends Page {
     const sumInput: HTMLFormElement = document.querySelector('.trans-sum');
 
     sumInput.addEventListener('keyup', () => {
-      // change sum for each member
-      const membersSumInputs = document.querySelectorAll('.member-sum');
-      const numbOfmembers: number = membersSumInputs.length;
-      const totalSum: number = +sumInput.value;
-      membersSumInputs.forEach((input) => {
-        input.setAttribute('placeholder',`${(totalSum / numbOfmembers).toFixed(1)}${currencyInput.value}`);
-      });
-
+      divideSum();
     });
-
 
     users.forEach((user) => {
       user.addEventListener('click', () => {
@@ -124,7 +118,7 @@ export class NewTransactionPage extends Page {
             <div class="user-avatar"></div>
             <div class="user-name">${userName}</div>
           </div>
-          <input class="member-sum" type="text">
+          <input class="member-sum sum-evenly" type="text">
           <textarea class="member-comment" type="text" placeholder="Комментарий..."></textarea>
           `;
         membersList.append(memberWrapper); 
@@ -136,35 +130,7 @@ export class NewTransactionPage extends Page {
             }
           });
         }
-      // change sum for each member
-        const membersSumInputs: any = document.querySelectorAll('.member-sum');
-        const numbOfmembers: number = membersSumInputs.length;
-        const totalSum: number = +sumInput.value;
-        membersSumInputs.forEach((sumInput) => {
-          sumInput.setAttribute('placeholder',`${(totalSum / numbOfmembers).toFixed(1)}${currencyInput.value}`);
-        });
-
-
-        // console.log(membersSumInputs);
-        // membersSumInputs.forEach((memberSum: HTMLFormElement, i: number) => {
-       
-        //   memberSum.addEventListener('keyup', () => {
-        //   membersSumInputs.splice(i, 1);
-        //   console.log(membersSumInputs);
-    
-        //   // вынести в отдельную функцию
-        //   const numbOfmembers = membersSumInputs.length;
-        //   const totalSum = +sumInput.value;
-        //   membersSumInputs.forEach((sumInput: HTMLFormElement) => {
-        //     sumInput.setAttribute('placeholder',`${(totalSum / numbOfmembers).toFixed(1)}${currencyInput.value}`);
-        //   });
-    
-    
-        //   });
-        // });
-
-
-
+        divideSum();
       });
     });
 
@@ -181,24 +147,13 @@ export class NewTransactionPage extends Page {
             <div class="user-avatar"></div>
             <div class="user-name">${userName}</div>
           </div>
-          <input class="member-sum" type="text">
+          <input class="member-sum sum-evenly" type="text">
           <textarea class="member-comment" type="text" placeholder="Комментарий..."></textarea>
           `;
         membersList.append(memberWrapper); 
       });
-
-    // change sum for each member
-      const membersSumInputs:any = document.querySelectorAll('.member-sum');
-      const numbOfmembers = membersSumInputs.length;
-      const totalSum = +sumInput.value;
-
-      membersSumInputs.forEach((sumInput: HTMLFormElement) => {
-        sumInput.setAttribute('placeholder',`${(totalSum / numbOfmembers).toFixed(1)}${currencyInput.value}`);
-      });
-     
-     
+      divideSum();    
     });
-
 
     const inputCheck = document.querySelector('.input-file');
     const inputWrapper = document.querySelector('.add-check');
@@ -211,7 +166,7 @@ export class NewTransactionPage extends Page {
 
 
     const inputGroup: HTMLFormElement = document.querySelector('.trans-group-current');
-    const groupsList = document.querySelector('.trans-group-list');
+    const groupsList: HTMLElement = document.querySelector('.trans-group-list');
     const groups = document.querySelectorAll('.group-item');
   
     inputGroup.addEventListener('click', () => {
@@ -224,7 +179,6 @@ export class NewTransactionPage extends Page {
         inputGroup.value = group.innerHTML;
       });
     });
-
 
     const currencyInput: HTMLFormElement = document.querySelector('.trans-currency');
     const currencyList: HTMLElement = document.querySelector('.currency-list');
@@ -241,20 +195,68 @@ export class NewTransactionPage extends Page {
       });
     });
 
+    const divideSum = ():void => {
+      let membersSumInputs: any = document.querySelectorAll('.sum-evenly'); 
+      let numbOfmembers: number = membersSumInputs.length;
+      let totalSum: number = +sumInput.value;
+
+      membersSumInputs.forEach((memberSum: HTMLInputElement) => {
+        memberSum.addEventListener('keyup', () => {
+          if(typeof +memberSum.value === 'number') {
+            console.log(true);
+            memberSum.classList.remove('sum-evenly');
+            memberSum.classList.add('not-evenly');
+            membersSumInputs = document.querySelectorAll('.sum-evenly');
+            numbOfmembers = membersSumInputs.length;
+            totalSum = (+sumInput.value) - (+memberSum.value);
+            if (totalSum >= 0) {
+              membersSumInputs.forEach((input: HTMLFormElement) => {
+                input.setAttribute('placeholder',`${(totalSum / numbOfmembers).toFixed(1)}`);
+              });
+            }           
+          }  
+        });
+      });
+
+      const membersSumNotEvenly = document.querySelectorAll('.not-evenly');
+      let addSum: number = 0;
+      membersSumNotEvenly.forEach((input: HTMLInputElement) => {
+        addSum += +input.value; 
+      }); 
+      totalSum = (+sumInput.value) - addSum;
+      if (totalSum >= 0) {
+        membersSumInputs.forEach((input: HTMLFormElement) => {
+          input.setAttribute('placeholder',`${(totalSum / numbOfmembers).toFixed(1)}`);
+        });
+      } 
+    } 
 
 
-    
-    // const membersSumInputs: any = document.querySelectorAll('.member-sum');
-  
-
-    
-
-
-    
-
-
-
-
+   
 
   }
 }
+
+
+
+
+
+
+
+// console.log(membersSumInputs);
+// membersSumInputs.forEach((memberSum: HTMLFormElement, i: number) => {
+
+//   memberSum.addEventListener('keyup', () => {
+//   membersSumInputs.splice(i, 1);
+//   console.log(membersSumInputs);
+
+//   // вынести в отдельную функцию
+//   const numbOfmembers = membersSumInputs.length;
+//   const totalSum = +sumInput.value;
+//   membersSumInputs.forEach((sumInput: HTMLFormElement) => {
+//     sumInput.setAttribute('placeholder',`${(totalSum / numbOfmembers).toFixed(1)}${currencyInput.value}`);
+//   });
+
+
+//   });
+// });
