@@ -1,4 +1,4 @@
-export const groups = [
+export const groupsData = [
   {
     id: 'vfsdfdsfdsf',
     title: 'First Group',

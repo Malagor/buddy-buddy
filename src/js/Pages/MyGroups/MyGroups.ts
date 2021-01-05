@@ -61,6 +61,7 @@ export class MyGroups extends Page {
   protected events(): void {
     const fabRipple = new MDCRipple(document.querySelector('.mdc-fab'));
     fabRipple.listen('click', () => {
+      console.log('Click New group');
       this.onCreateNewGroup();
     });
   }

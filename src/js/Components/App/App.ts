@@ -4,6 +4,7 @@ import { Database } from '../../Classes/Database';
 import { Main } from '../../Pages/Main/Main';
 import { Sidebar } from '../../Pages/Sidebar/Sidebar';
 import { MyGroups } from '../../Pages/MyGroups/MyGroups';
+import { groupsData } from '../../Data/grops';
 
 export class App {
   private authPage: AuthPage;
@@ -49,6 +50,7 @@ export class App {
     this.sidebar.onSettingsPage = this.onSettingsPage.bind(this);
     this.sidebar.onHelpPage = this.onHelpPage.bind(this);
     this.sidebar.onSignOut = this.onSignOut.bind(this);
+    this.groups.onCreateNewGroup = this.onCreateNewGroup.bind(this);
 
     this.database.init([this.mainPage.render, this.sidebar.render], [this.authPage.render]);
   }
@@ -62,12 +64,13 @@ export class App {
   }
 
   onMainPage() {
-    const uid: string = this.DB.uid;
-    this.DB.getUserInfo(uid, [this.mainPage.render]);
+    const uid: string = this.database.uid;
+    this.database.getUserInfo(uid, [this.mainPage.render]);
   }
 
   onGroupsPage() {
     console.log('Load Groups Page!');
+    this.groups.render(groupsData);
   }
 
   onTransactionsPage() {
@@ -96,6 +99,10 @@ export class App {
 
   loadLoginPage() {
     this.authPage.render();
+  }
+
+  onCreateNewGroup() {
+    console.log('Create New Group');
   }
 
   // loadMainPage() {
