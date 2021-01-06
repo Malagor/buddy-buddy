@@ -75,7 +75,7 @@ const dataGroup: any = [
 
 export class GroupPage extends Page {
   onCreateNewGroup: any;
-  onGroup: any;
+  onAddMember: any;
 
   static create(element: string): GroupPage {
     return new GroupPage(element);
