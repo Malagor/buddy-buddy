@@ -1,10 +1,6 @@
 import { Page } from '../../Classes/Page';
 
 export class AccountPage extends Page {
-  constructor(element: string) {
-    super(element);
-  }
-
   static create(element: string): AccountPage {
     return new AccountPage(element);
   }
