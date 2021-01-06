@@ -1,14 +1,16 @@
 @import "./src/scss/_misc/mixins";
 @import "../../../scss/_misc/variables.scss";
 
-main#main-content {
+.account__wrapper {
+  position: absolute;
+  top: rem(56px);
+  left: 0;
   display: flex;
   flex-direction: column;
   justify-content: start;
   align-items: center;
+  width: 100%;
   height: auto;
-  padding: 0;
-
   .account__header {
     z-index: 1;
     display: flex;
@@ -16,7 +18,7 @@ main#main-content {
     width: 100%;
     transition: all 0.35s linear;
 
-    & > .account__image_wrapper {
+    & > .account__image-wrapper {
       position: relative;
       overflow: hidden;
       transition: all 0.35s linear;
@@ -37,7 +39,7 @@ main#main-content {
 
       gap: 0.5rem;
 
-      & > .account__image_wrapper {
+      & > .account__image-wrapper {
         width: 100%;
         background-color: rgba(255, 255, 255, 1);
         box-shadow: 0 0 10px 5px rgba(0, 0, 0, 0.3);
@@ -79,7 +81,7 @@ main#main-content {
       box-shadow: 0 0 10px 5px rgba(0, 0, 0, 0.3);
       animation: header 0.35s ease-in-out;
 
-      & > .account__image_wrapper {
+      & > .account__image-wrapper {
         width: rem(80px);
         height: rem(80px);
         border-radius: 50%;
