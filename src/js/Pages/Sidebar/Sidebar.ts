@@ -9,7 +9,6 @@ export class Sidebar extends Page {
     super(element);
 
     this.goToGroupPage = GroupPage.create('main');
-    //this.goToGroupPage.render();
 
     this.init();
   }
@@ -88,7 +87,6 @@ export class Sidebar extends Page {
 
       if (target.closest('#signOut')) {
         console.log('SignOut');
-
       }
 
       if (target.closest('#groups')) {
