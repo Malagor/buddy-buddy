@@ -2,8 +2,14 @@ import { Page } from '../../Classes/Page';
 import { Modal } from '../../Classes/Modal';
 
 export class Sidebar extends Page {
-  onSignOut: any;
+  public onSignOut: any;
   private signOutModal: Modal;
+  public onMainPage: any;
+  public onGroupsPage: any;
+  public onTransactionsPage: any;
+  public onStatisticsPage: any;
+  public onSettingsPage: any;
+  public onHelpPage: any;
 
   constructor(element: string) {
     super(element);
@@ -17,7 +23,7 @@ export class Sidebar extends Page {
 
   onSignOutHandler = () => {
     this.onSignOut();
-    }
+  }
 
   static create(element: string): Sidebar {
     return new Sidebar(element);
@@ -25,6 +31,7 @@ export class Sidebar extends Page {
 
   private init() {
     this.element.className = 'mdc-drawer mdc-drawer--dismissible mdc-top-app-bar--fixed-adjust mdc-drawer--modal';
+
   }
 
   public render = (data: any) => {
@@ -38,34 +45,34 @@ export class Sidebar extends Page {
       </div>
       <div class="mdc-drawer__content">
         <nav class="mdc-list">
-          <a class="mdc-list-item mdc-list-item--activated" href="#" aria-current="page">
+          <a class="mdc-list-item mdc-list-item--activated" href="#" aria-current="page" id="sidebarMainLink">
             <span class="mdc-list-item__ripple"></span>
             <i class="material-icons mdc-list-item__graphic" aria-hidden="true">house</i>
             <span class="mdc-list-item__text">Главная</span>
           </a>
-          <a class="mdc-list-item" href="#">
+          <a class="mdc-list-item" href="#" id="sidebarGroupsLink">
             <span class="mdc-list-item__ripple"></span>
             <i class="material-icons mdc-list-item__graphic" aria-hidden="true">groups</i>
             <span class="mdc-list-item__text">Группы</span>
           </a>
-          <a class="mdc-list-item" href="#">
+          <a class="mdc-list-item" href="#" id="sidebarTransactionsLink">
             <span class="mdc-list-item__ripple"></span>
             <i class="material-icons mdc-list-item__graphic" aria-hidden="true">receipt_long</i>
             <span class="mdc-list-item__text">Транзакции</span>
           </a>
-          <a class="mdc-list-item" href="#">
+          <a class="mdc-list-item" href="#" id="sidebarStatisticsLink">
             <span class="mdc-list-item__ripple"></span>
             <i class="material-icons mdc-list-item__graphic" aria-hidden="true">bar_chart</i>
             <span class="mdc-list-item__text">Статистика</span>
           </a>
 
           <hr class="mdc-list-divider">
-          <a class="mdc-list-item" href="#">
+          <a class="mdc-list-item" href="#" id="sidebarSettingsLink">
             <span class="mdc-list-item__ripple"></span>
             <i class="material-icons mdc-list-item__graphic" aria-hidden="true">settings</i>
             <span class="mdc-list-item__text">Настройки</span>
           </a>
-          <a class="mdc-list-item" href="#">
+          <a class="mdc-list-item" href="#" id="sidebarHelpLink">
             <span class="mdc-list-item__ripple"></span>
             <i class="material-icons mdc-list-item__graphic" aria-hidden="true">help_outline</i>
             <span class="mdc-list-item__text">Помощь</span>
@@ -85,15 +92,34 @@ export class Sidebar extends Page {
 
   protected events(): void {
     this.element.addEventListener('click', ev => {
-      console.log(ev);
       const { target }: any = ev;
-      console.log('Sideebar');
 
       if (target.closest('#signOut')) {
-        console.log('SignOut');
-        // this.onSignOut();
-
         this.signOutModal.open();
+      }
+
+      if (target.closest('#sidebarMainLink')) {
+        this.onMainPage();
+      }
+
+      if (target.closest('#sidebarGroupsLink')) {
+        this.onGroupsPage();
+      }
+
+      if (target.closest('#sidebarTransactionsLink')) {
+        this.onTransactionsPage();
+      }
+
+      if (target.closest('#sidebarStatisticsLink')) {
+        this.onStatisticsPage();
+      }
+
+      if (target.closest('#sidebarSettingsLink')) {
+        this.onSettingsPage();
+      }
+
+      if (target.closest('#sidebarHelpLink')) {
+        this.onHelpPage();
       }
     });
   }

@@ -31,13 +31,20 @@ export class App {
 
   init() {
     // Handlers
-    this.authPage.onTransitionSignInPage = this.registrationUserPage.bind(this);
+    this.authPage.onLoadSignInPage = this.loadSignInPage.bind(this);
     // this.authPage.onLogin = this.onLogin.bind(this);
 
     this.regPage.onSignIn = this.onSignIn.bind(this);
     this.regPage.goToLoginPage = this.loadLoginPage.bind(this);
     this.regPage.onGoogleReg = this.onGoogleReg.bind(this);
 
+    // SIDEBAR
+    this.sidebar.onMainPage = this.onMainPage.bind(this);
+    this.sidebar.onGroupsPage = this.onGroupsPage.bind(this);
+    this.sidebar.onTransactionsPage = this.onTransactionsPage.bind(this);
+    this.sidebar.onStatisticsPage = this.onStatisticsPage.bind(this);
+    this.sidebar.onSettingsPage = this.onSettingsPage.bind(this);
+    this.sidebar.onHelpPage = this.onHelpPage.bind(this);
     this.sidebar.onSignOut = this.onSignOut.bind(this);
 
     this.DB.init([this.mainPage.render, this.sidebar.render], [this.authPage.render]);
@@ -51,11 +58,36 @@ export class App {
     this.DB.createUserByEmeil(email, password, name);
   }
 
+  onMainPage() {
+    const uid: string = this.DB.uid;
+    this.DB.getUserInfo(uid, [this.mainPage.render]);
+  }
+
+  onGroupsPage() {
+    console.log('Load Groups Page!');
+  }
+
+  onTransactionsPage() {
+    console.log('Load Transactions Page!');
+  }
+
+  onStatisticsPage() {
+    console.log('Load Statistics Page!');
+  }
+
+  onSettingsPage() {
+    console.log('Load Settings Page!');
+  }
+
+  onHelpPage() {
+    console.log('Load Help Page!');
+  }
+
   onGoogleReg() {
     this.DB.createUserByGoogle();
   }
 
-  registrationUserPage() {
+  loadSignInPage() {
     this.regPage.render();
   }
 
@@ -63,9 +95,9 @@ export class App {
     this.authPage.render();
   }
 
-  loadMainPage() {
-    this.mainPage.render();
-  }
+  // loadMainPage() {
+  //   this.mainPage.render();
+  // }
 
   // createUser(uid: string) {
   //   const form: HTMLFormElement = document.querySelector('#my-form');
