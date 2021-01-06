@@ -43,7 +43,7 @@ export class App {
 
     this.sidebar.onSignOut = this.onSignOut.bind(this);
 
-    this.DB.init([this.mainPage.render, this.sidebar.render], [this.newTransaction.render]);
+    this.DB.init([this.mainPage.render, this.sidebar.render], [this.authPage.render]);
   }
 
   onSignOut(): any {
