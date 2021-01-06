@@ -1,31 +1,19 @@
-import { AuthPage } from '../../Pages/AuthPage/AuthPage';
-import { RegistrationPage } from '../../Pages/RegistrationPage/RegistrationPage';
-import { Database } from '../../Classes/Database';
-import { Main } from '../../Pages/Main/Main';
-import { Sidebar } from '../../Pages/Sidebar/Sidebar';
-import { MyGroups } from '../../Pages/MyGroups/MyGroups';
-import { groupsData } from '../../Data/grops';
+import { Database } from './Database';
+import { Layout } from '../Pages/Layout/Layout';
+import { AuthPage } from '../Pages/AuthPage/AuthPage';
+import { RegistrationPage } from '../Pages/RegistrationPage/RegistrationPage';
+import { Main } from '../Pages/Main/Main';
 
 export class App {
+  private database: Database;
+  private layout: Layout;
   private authPage: AuthPage;
   private regPage: RegistrationPage;
-  private database: Database;
   private mainPage: Main;
-  private sidebar: Sidebar;
   private groups: MyGroups;
 
   constructor() {
-    // DATA BASE
     this.database = Database.create();
-
-    // PAGES
-    this.authPage = AuthPage.create('.main');
-    this.regPage = RegistrationPage.create('.main');
-    this.mainPage = Main.create('.main');
-    this.sidebar = Sidebar.create('aside');
-    this.groups = MyGroups.create('.main');
-
-    // COMPONENTS
     this.init();
   }
 
@@ -34,29 +22,45 @@ export class App {
   }
 
   init() {
-    // Handlers
-    this.authPage.onLoadSignInPage = this.loadSignInPage.bind(this);
-    // this.authPage.onLogin = this.onLogin.bind(this);
+    this.database.onUserIsLogin = this.isUserLogin.bind(this);
+    this.database.init();
+  }
 
-    this.regPage.onSignIn = this.onSignIn.bind(this);
-    this.regPage.goToLoginPage = this.loadLoginPage.bind(this);
-    this.regPage.onGoogleReg = this.onGoogleReg.bind(this);
+  isUserLogin(state: boolean, uid?: string) {
+    if (state) {
+      this.layout = Layout.create('#app');
+      this.layout.render();
 
-    // SIDEBAR
-    this.sidebar.onMainPage = this.onMainPage.bind(this);
-    this.sidebar.onGroupsPage = this.onGroupsPage.bind(this);
-    this.sidebar.onTransactionsPage = this.onTransactionsPage.bind(this);
-    this.sidebar.onStatisticsPage = this.onStatisticsPage.bind(this);
-    this.sidebar.onSettingsPage = this.onSettingsPage.bind(this);
-    this.sidebar.onHelpPage = this.onHelpPage.bind(this);
-    this.sidebar.onSignOut = this.onSignOut.bind(this);
-    this.groups.onCreateNewGroup = this.onCreateNewGroup.bind(this);
+      // SIDEBAR
+      this.layout.onSignOut = this.onSignOut.bind(this);
+      this.layout.onStatisticsPage = this.onStatisticsPage.bind(this);
+      this.layout.onMainPage = this.onMainPage.bind(this);
+      this.layout.onGroupsPage = this.onGroupsPage.bind(this);
+      this.layout.onTransactionsPage = this.onTransactionsPage.bind(this);
+      this.layout.onSettingsPage = this.onSettingsPage.bind(this);
+      this.layout.onHelpPage = this.onHelpPage.bind(this);
+      this.layout.onSignOut = this.onSignOut.bind(this);
 
-    this.database.init([this.mainPage.render, this.sidebar.render], [this.authPage.render]);
+      this.mainPage = Main.create('.main');
+      this.database.getUserInfo(uid, [this.mainPage.render, this.layout.setSidebarData]);
+
+    } else {
+      console.log(`isUserLogon = ${state}`);
+      this.authPage = AuthPage.create('#app');
+      this.authPage.onLoadSignInPage = this.loadSignInPage.bind(this);
+
+      this.regPage = RegistrationPage.create('#app');
+      this.regPage.onSignIn = this.onSignIn.bind(this);
+      this.regPage.goToLoginPage = this.loadLoginPage.bind(this);
+      this.regPage.onGoogleReg = this.onGoogleReg.bind(this);
+
+      this.authPage.render();
+    }
   }
 
   onSignOut(): any {
-    this.database.signOut(this.authPage.render);
+    this.database.signOut();
+    this.database.init();
   }
 
   onSignIn(email: string, password: string, name: string) {
