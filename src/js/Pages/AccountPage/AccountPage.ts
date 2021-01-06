@@ -1,4 +1,5 @@
 import { Page } from '../../Classes/Page';
+import { getFormData } from '../../Util/getFormData';
 
 export class AccountPage extends Page {
   static create(element: string): AccountPage {
@@ -60,10 +61,12 @@ export class AccountPage extends Page {
     const inputPhoto: HTMLInputElement = this.element.querySelector(
       '.account__input__photo',
     );
-
-    type newData = {
-      [key: string]: string;
-    };
+    const formPhoto: HTMLFormElement = this.element.querySelector(
+      '.account__form_change_photo',
+    );
+    const formInfo: HTMLFormElement = this.element.querySelector(
+      '.account__form_change_info',
+    );
 
     this.element.parentElement.addEventListener('scroll', (): void => {
       if (this.element.parentElement.scrollTop > 0 && !currentScroll) {
@@ -87,15 +90,10 @@ export class AccountPage extends Page {
 
     inputPhoto.addEventListener('change', (): void => {
       if (inputPhoto.files[0]) {
-        const newData: newData = {};
-        const reader: FileReader = new FileReader();
-        reader.onload = (function (aImg: HTMLImageElement) {
-          return (e: any): void => {
-            aImg.src = e.target.result;
-            return (newData[inputPhoto.name] = e.target.result);
-          };
-        })(this.element.querySelector('.account__image'));
-        reader.readAsDataURL(inputPhoto.files[0]);
+        const newData: {} = getFormData(
+          formPhoto,
+          this.element.querySelector('.account__image'),
+        );
         console.log(
           'Здесь могла быть ваша функция передачи информации в базу данных!',
           newData,
@@ -103,25 +101,22 @@ export class AccountPage extends Page {
       }
     });
 
-    this.element
-      .querySelector('.account__form_change_info')
-      .addEventListener('submit', (e): void => {
-        e.preventDefault();
-        values = [];
-        const newData: newData = {};
-        document
-          .querySelectorAll('.account__info__input')
-          .forEach((item: HTMLInputElement): void => {
-            values.push(item.value);
-            newData[item.name] = item.value;
-          });
-        console.log(
-          'Здесь могла быть ваша функция передачи информации в базу данных!',
-          newData,
-        );
-        submitInfo.classList.add('account__input_submit_no_changes');
-        submitInfo.setAttribute('disabled', 'true');
-      });
+    formInfo.addEventListener('submit', (e): void => {
+      e.preventDefault();
+      values = [];
+      const newData: {} = getFormData(formInfo);
+      document
+        .querySelectorAll('.account__info__input')
+        .forEach((item: HTMLInputElement): void => {
+          values.push(item.value);
+        });
+      console.log(
+        'Здесь могла быть ваша функция передачи информации в базу данных!',
+        newData,
+      );
+      submitInfo.classList.add('account__input_submit_no_changes');
+      submitInfo.setAttribute('disabled', 'true');
+    });
 
     document
       .querySelectorAll('.account__info__input')
