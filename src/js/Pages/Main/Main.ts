@@ -1,4 +1,6 @@
 import { Page } from '../../Classes/Page';
+import { MDCRipple } from '@material/ripple';
+
 
 export class Main extends Page {
   constructor(element: string) {
@@ -10,7 +12,7 @@ export class Main extends Page {
     return new Main(element);
   }
 
-  render = (data?: any): void => {
+  render = (data: any): void => {
     this.element.innerHTML = `
     <div class="mdc-card">
      <div class="account__image"><img src="${data.avatar}" alt="${data.name}"></div>
@@ -80,6 +82,17 @@ export class Main extends Page {
           </span>
         </div>
       </div>
+
+      <div class="mdc-touch-target-wrapper">
+        <button class="mdc-fab  mdc-fab--touch">
+          <div class="mdc-fab__ripple"></div>
+          <span class="material-icons mdc-fab__icon">add</span>
+          <div class="mdc-fab__touch"></div>
+        </button>
+      </div>
     `;
+
+
+    new MDCRipple(document.querySelector('.mdc-fab'));
   }
 }
