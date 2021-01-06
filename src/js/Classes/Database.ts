@@ -1,17 +1,15 @@
 import firebase from 'firebase';
-import { Main } from '../Pages/Main/Main';
-// import { saveUID, loadUID } from '../Util/saveLoadUid';
+import 'firebase/auth';
 
 const defaultAvatar: string = require('../../assets/images/default-user-avatar.jpg');
 
-export class DB {
-  private DBase: firebase.app.App;
+export class Database {
   public uid: string;
-  private mainPage: Main;
+  onUserIsLogin: any;
+  private firebase: firebase.app.App;
 
   constructor(dbConfig: Object) {
-    this.DBase = firebase.initializeApp(dbConfig);
-    // this.init();
+    this.firebase = firebase.initializeApp(dbConfig);
   }
 
   static create(obj?: object) {
@@ -26,25 +24,24 @@ export class DB {
       ...obj,
     };
 
-    return new DB(firebaseConfig);
+    return new Database(firebaseConfig);
   }
 
-  init(isUserFuncs: any[], noUserFuncs: any[]) {
-    this.DBase.auth().onAuthStateChanged((user) => {
+  init() {
+    this.firebase.auth().onAuthStateChanged((user) => {
       if (user) {
         // User is signed in.
         this.uid = user.uid;
-        // console.log('Current user.uid = ', user.uid);
-        this.getUserInfo(user.uid, isUserFuncs);
+        console.log('Current user.uid = ', this.uid);
+        this.onUserIsLogin(true, this.uid);
+        // this.getUserInfo(user.uid, isUserFuncs);
       } else {
         // No user is signed in.
-        // console.log('No user');
-        noUserFuncs.forEach(fn => fn());
-        // noUserFunc();
+        this.uid = null;
+        console.log('No user');
+        this.onUserIsLogin(false);
       }
     });
-
-    this.mainPage = Main.create('main.main');
   }
 
   createUserByEmeil(email: string, password: string, nameUser: string = '') {
@@ -59,7 +56,7 @@ export class DB {
       currency: 'BYN',
     };
 
-    this.DBase.auth().createUserWithEmailAndPassword(email, password)
+    this.firebase.auth().createUserWithEmailAndPassword(email, password)
       .then((data: { user: { uid: string; }; }) => {
         const uid: string = data.user.uid;
         // saveUID(uid);
@@ -76,8 +73,8 @@ export class DB {
     provider.addScope('profile');
     provider.addScope('email');
 
-    this.DBase.auth().signInWithPopup(provider).then((result) => {
-      // console.log('result', result);
+    this.firebase.auth().signInWithPopup(provider).then((result) => {
+      console.log('createUserByGoogle => result:', result);
 
       const profile: any = result.additionalUserInfo.profile;
       const uid = result.user.uid;
@@ -102,15 +99,15 @@ export class DB {
   }
 
   protected _registrationUser(uid: string, data: object) {
-    const userRef = firebase.database().ref(`User/${uid}`);
+    const userRef = this.firebase.database().ref(`User/${uid}`);
     userRef.set(data);
   }
 
   getUserInfo(uid: string, callbacks: any[]): any {
-    const ref = this.DBase.database().ref(`User/${uid}`);
+    const ref = this.firebase.database().ref(`User/${uid}`);
 
     ref.on('value', (snapshot) => {
-      // console.log(snapshot.val());
+      console.log('snapshot', snapshot.val());
       callbacks.forEach(fn => fn(snapshot.val()));
       // callback(snapshot.val());
     }, (error: { code: string; }) => {
@@ -118,17 +115,10 @@ export class DB {
     });
   }
 
-  signOut(callback?: any, arg?: any[]) {
-    this.DBase.auth().signOut()
+  signOut() {
+    this.firebase.auth().signOut()
       .then(function() {
         console.log('Signout Succesfull');
-        if (callback) {
-          if (arg) {
-            callback(arg);
-          } else {
-            callback();
-          }
-        }
       }, function(error) {
         console.log('Signout Failed');
         console.log(error.code);
