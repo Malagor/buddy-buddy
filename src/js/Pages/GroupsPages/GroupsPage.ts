@@ -74,10 +74,8 @@ const dataGroup: any = [
 ];
 
 export class GroupPage extends Page {
-
-  constructor(element: string) {
-    super(element);
-  }
+  onCreateNewGroup: any;
+  onGroup: any;
 
   static create(element: string): GroupPage {
     return new GroupPage(element);
@@ -86,14 +84,15 @@ export class GroupPage extends Page {
   render = (): void => {
     this.element.innerHTML = `
     <div class="title-group">
-      <div class="title-group_name"><h2>Groups</h2></div>
-      <div class="title-group_name"><h2>Balance $5</h2></div>
+      <div class="title-group__text"><h2>Groups</h2></div>
+      <div class="title-group__text"><h2>Balance $5</h2></div>
     </div>
 
-    <div id="open" class="open-group"></div>
-    <div id="closed" class="closed-group">
-      <br>
-      <div class="title-group_name"><h2>Closed groups - pop-up list</h2></div>
+    <div id="openGroup" class="open-group"></div>
+    <div id="closedGroup" class="closed-group">
+
+    <div class="title-group">
+      <div class="title-group__text"><h2>Closed Group</h2></div>
     </div>
 
     <div id="btn-new-group" class="mdc-touch-target-wrapper position-add-button">
@@ -103,11 +102,12 @@ export class GroupPage extends Page {
         <div class="mdc-fab__touch"></div>
       </button>
     </div>
+
     `;
 
     dataGroup.forEach((element: any, index: number) => {
-      const divOpenGroup = document.getElementById('open');
-      const divClosedGroup = document.getElementById('closed');
+      const divOpenGroup = document.getElementById('openGroup');
+      const divClosedGroup = document.getElementById('closedGroup');
 
       const card = document.createElement('div');
       const participantsId = element.userList;
@@ -115,38 +115,52 @@ export class GroupPage extends Page {
       let participantsImg: string[] = [];
       participantsId.forEach((participant: any) => {
         if(participantsImg.length < NUM_OF_IMG_IN_GROUP_CARD) {
-          participantsImg.push(`<img class="mdc-card-wrapper__content__bottom__image" src="${dataGroup[index].styles.icon}" alt="icon${participant}">`);
+          participantsImg.push(`<img class="mdc-card__image--mini" src="${dataGroup[index].styles.icon}" alt="icon${participant}">`);
         }  
       });
       // добавляем троеточие если участников больше чем NUM_OF_IMG_IN_GROUP_CARD
-      if(participantsId.length > NUM_OF_IMG_IN_GROUP_CARD) participantsImg.push(`<img class="mdc-card-wrapper__content__bottom__image" src="https://img1.freepng.ru/20180328/wtq/kisspng-dots-computer-icons-encapsulated-postscript-dots-5abb909a5fb1a5.051672361522241690392.jpg" alt="icon">`);
+      if(participantsId.length > NUM_OF_IMG_IN_GROUP_CARD) participantsImg.push(`<img class="mdc-card__image--mini" src="https://img1.freepng.ru/20180328/wtq/kisspng-dots-computer-icons-encapsulated-postscript-dots-5abb909a5fb1a5.051672361522241690392.jpg" alt="icon">`);
 
       let balanceGroup: string = ''
       if(dataGroup[index].balance < 0) {
-        balanceGroup = `<h3 class="mdc-card-wrapper__content__bottom__balance">Balance $<span class="balance-negative-color">${dataGroup[index].balance}</span></h3>`;
+        balanceGroup = `
+          <h3 class="mdc-card__balance">
+            Balance $
+            <span class="mdc-card__balance--negative">
+              ${dataGroup[index].balance}
+            </span>
+           </h3>
+        `;
       } else if (dataGroup[index].balance >= 0) {
-        balanceGroup = `<h3 class="mdc-card-wrapper__content__bottom__balance">Balance $<span class="balance-positive-color">${dataGroup[index].balance}</span></h3>`;
+        balanceGroup = `
+          <h3 class="mdc-card__balance">
+            Balance $
+            <span class="mdc-card__balance--positive">
+              ${dataGroup[index].balance}
+            </span>
+          </h3>
+        `;
       }
 
       
       card.innerHTML = `
         <div class="mdc-card">
-          <div class="mdc-card-wrapper">
-            <div class="mdc-card-wrapper__logo">
-              <img class="sidebar-avatar__image" src="${dataGroup[index].styles.icon}" alt="iconGroup">
+        <div class="mdc-card__wrapper">
+          <div class="mdc-card__logo">
+            <img class="mdc-card__image" src="${dataGroup[index].styles.icon}" alt="iconGroup">
+          </div>
+          <div class="mdc-card__content">
+            <div class="mdc-card__content-top">
+              <h3 class="mdc-card__title">${dataGroup[index].title}</h3>
+              <h3 class="mdc-card__date">${dataGroup[index].dateCreate}</h3>
             </div>
-            <div class="mdc-card-wrapper__content">
-              <div class="mdc-card-wrapper__content__top">
-                <h3 class="mdc-card-wrapper__content__top__title">${dataGroup[index].title}</h3>
-                <h3 class="mdc-card-wrapper__content__top__date">${dataGroup[index].dateCreate}</h3>
-              </div>
-              <div class="mdc-card-wrapper__content__bottom">
-                <div>${participantsImg.join('')}</div>
-                <h3>${participantsId.length}</h3>
-                ${balanceGroup}
-              </div>
+            <div class="mdc-card__content-bottom">
+              <div>${participantsImg.join('')}</div>
+              <h3>${participantsId.length}</h3>
+              ${balanceGroup}
             </div>
           </div>
+        </div>
         </div>
       `;
 
@@ -164,10 +178,6 @@ export class GroupPage extends Page {
 
     this.element.addEventListener('click', ev => {
       const { target }: any = ev;
-
-      if (target.closest('#btn-new-group')) {
-        console.log('create new group');
-      }
     });
   }
 }

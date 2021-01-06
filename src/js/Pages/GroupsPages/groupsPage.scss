@@ -10,45 +10,41 @@
 .mdc-card {
   margin: rem(10px);
 
-  .mdc-card-wrapper {
+  &__wrapper {
     display: flex;
-
-    .mdc-card-wrapper__logo {
-      margin: rem(10px);
+  }
+  &__logo {
+    margin: rem(10px);
+  }
+  &__content {
+    width: 80%;
+  }
+  &__content-top {
+    display: flex;
+    justify-content: space-between; 
+    margin: 5px;  
+  }
+  &__content-bottom {
+    display: flex;
+    margin: rem(20px) rem(5px) rem(5px) rem(5px);
+    position: relative;
+  }
+  &__image {
+    border-radius: 50%;
+    width: rem(50px);
+    height: rem(50px);
+    
+    &--mini {
+      border-radius: 50%;
+      width: rem(25px);
+      height: rem(25px);
     }
+  }
+  &__balance{
 
-    .mdc-card-wrapper__content {
-      width: 80%;
-
-      .mdc-card-wrapper__content__top {
-        display: flex;
-        justify-content: space-between; 
-        margin: 5px;  
-      }
-
-      .mdc-card-wrapper__content__bottom {
-        display: flex;
-        margin: rem(20px) rem(5px) rem(5px) rem(5px);
-        position: relative;
-
-        .mdc-card-wrapper__content__bottom__text {
-          margin-right: rem(10px);
-        }
-
-        .mdc-card-wrapper__content__bottom__image {
-          border-radius: 50%;
-          width: rem(25px);
-          height: rem(25px);
-        }
-
-        .mdc-card-wrapper__content__bottom__balance {
-          position: absolute;
-          right: 0;
-        }
-      }
+    &--positive {
+      color: red;
     }
-
-
   }
 }
 
