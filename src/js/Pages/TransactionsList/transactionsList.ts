@@ -73,8 +73,6 @@ const data = [
 ];
 
 export class TransactionsList extends Page {
-  // onTransitionSignInPage: any;
-  // onLogin: any;
 
   constructor(element: string) {
     super(element);
@@ -266,16 +264,8 @@ export class TransactionsList extends Page {
         </button>
       </div>
 
-
-
-
-  
-
-
       `;
-    // const newTransactionBtn = document.querySelector('.mdc-touch-target-wrapper');  
-    // newTransactionBtn.getBoundingClientRect().bottom = '100px';
-    // newTransactionBtn.getBoundingClientRect().right= '100px';
+ 
     this.events();
   }
 

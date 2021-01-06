@@ -40,7 +40,7 @@ export class App {
     this.regPage.goToLoginPage = this.loadLoginPage.bind(this);
     this.regPage.onGoogleReg = this.onGoogleReg.bind(this);
 
-    this.DB.init([this.mainPage.render, this.sidebar.render], [this.transactionsList.render]);
+    this.DB.init([this.mainPage.render, this.sidebar.render], [this.authPage.render]);
   }
 
   onSignIn(email: string, password: string, name: string) {
