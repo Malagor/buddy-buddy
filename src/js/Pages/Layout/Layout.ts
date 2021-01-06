@@ -33,7 +33,7 @@ export class Layout extends Page {
             <div class="sidebar-avatar__wrapper">
               <img class="sidebar-avatar__image" src="${defAvatar}" alt="Alex Malagor">
             </div>
-            <h3 class="sidebar__user-name">Alex Malagor</h3>
+            <h3 class="sidebar__user-name"></h3>
             <h6 class="sidebar__account">@malagor</h6>
           </div>
           <hr>

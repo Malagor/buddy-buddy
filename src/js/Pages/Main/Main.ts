@@ -3,7 +3,7 @@ import { Page } from '../../Classes/Page';
 export class Main extends Page {
   static create(element: string): Main {
     const page: Main = new Main(element);
-    page.render.bind(this);
+    page.render = page.render.bind(page);
     return page;
   }
 
