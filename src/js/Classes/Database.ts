@@ -126,6 +126,23 @@ export class Database {
       });
   }
 
+  findUserByName(name: string, func: any) {
+    const ref = this.firebase.database().ref(`User`);
+    ref.orderByChild('name')
+      .equalTo(name)
+      .once('value')
+      .then((snapshot) => {
+        const key = Object.keys(snapshot.val());
+        console.log(key, snapshot.val()[`${key}`]);
+
+        const data = {
+          name: snapshot.val()[`${key}`].name,
+          avatar: snapshot.val()[`${key}`].avatar
+        };
+        func(data);
+    });
+  }
+
   // addTheme(nameTheme: string) {
   //
   // }

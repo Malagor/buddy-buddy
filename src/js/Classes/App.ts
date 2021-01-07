@@ -3,6 +3,9 @@ import { Layout } from '../Pages/Layout/Layout';
 import { AuthPage } from '../Pages/AuthPage/AuthPage';
 import { RegistrationPage } from '../Pages/RegistrationPage/RegistrationPage';
 import { Main } from '../Pages/Main/Main';
+import { MyGroups } from '../Pages/MyGroups/MyGroups';
+
+import { groupsData } from '../Data/grops';
 
 export class App {
   private database: Database;
@@ -10,6 +13,7 @@ export class App {
   private authPage: AuthPage;
   private regPage: RegistrationPage;
   private mainPage: Main;
+  private groups: MyGroups;
 
   constructor() {
     this.database = Database.create();
@@ -26,7 +30,7 @@ export class App {
   }
 
   isUserLogin(state: boolean, uid?: string) {
-    if (state) {
+    if (state) { // user signin
       this.layout = Layout.create('#app');
       this.layout.render();
 
@@ -42,6 +46,10 @@ export class App {
 
       this.mainPage = Main.create('.main');
       this.database.getUserInfo(uid, [this.mainPage.render, this.layout.setSidebarData]);
+
+      this.groups = MyGroups.create('.main');
+      this.groups.onCreateNewGroup = this.onCreateNewGroup.bind(this);
+      this.groups.onAddMember = this.onAddGroupMember.bind(this);
 
     } else {
       console.log(`isUserLogon = ${state}`);
@@ -73,6 +81,7 @@ export class App {
 
   onGroupsPage() {
     console.log('Load Groups Page!');
+    this.groups.render(groupsData);
   }
 
   onTransactionsPage() {
@@ -101,6 +110,14 @@ export class App {
 
   loadLoginPage() {
     this.authPage.render();
+  }
+
+  onCreateNewGroup() {
+    console.log('Create New Group');
+  }
+
+  onAddGroupMember(name: string) {
+    this.database.findUserByName(name, this.groups.addMembersGroup);
   }
 
   // loadMainPage() {
