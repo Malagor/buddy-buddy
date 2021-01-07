@@ -116,8 +116,8 @@ export class App {
     console.log('Create New Group');
   }
 
-  onAddGroupMember(name: string) {
-    this.database.findUserByName(name, this.groups.addMembersGroup);
+  onAddGroupMember(accountName: string) {
+    this.database.findUserByName(accountName, this.groups.addMembersGroup);
   }
 
   // loadMainPage() {

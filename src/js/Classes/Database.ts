@@ -129,10 +129,10 @@ export class Database {
       });
   }
 
-  findUserByName(name: string, func: any) {
+  findUserByName(accountName: string, func: any) {
     const ref = this.firebase.database().ref(`User`);
-    ref.orderByChild('name')
-      .equalTo(name)
+    ref.orderByChild('account')
+      .equalTo(accountName)
       .once('value')
       .then((snapshot) => {
         const key = Object.keys(snapshot.val());
@@ -141,6 +141,7 @@ export class Database {
         const data = {
           name: snapshot.val()[`${key}`].name,
           avatar: snapshot.val()[`${key}`].avatar,
+          account: snapshot.val()[`${key}`].account
         };
         func(data);
       });

@@ -117,10 +117,11 @@ export class MyGroups extends Page {
   }
 
   addMembersGroup(data: any): void {
+    console.log('addMembersGroup - data:', data);
     if (data) {
       const members = document.querySelector('.group-members-avatar');
       members.insertAdjacentHTML('beforeend', `
-    <div class="member">
+    <div class="member" data-account="${data.account}">
       <div class="member__avatar">
         <img src="${data.avatar}" alt="${data.name}">
       </div>
