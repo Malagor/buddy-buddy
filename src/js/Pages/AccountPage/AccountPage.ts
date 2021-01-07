@@ -6,86 +6,152 @@ export class AccountPage extends Page {
     return new AccountPage(element);
   }
 
-  render = (data: any): void => {
+  render = (dt: any): void => {
+    const data: any = this.checkNameAccount(dt);
     this.element.innerHTML = `
-    <div class="account__wrapper">
-      <div class="account__header account__header__scroll_out">
-        <div class="account__image-wrapper">
-          <img src="${data.avatar}" alt="${data.name}" class="account__image account__image__scroll_out">
+    <div class="account__wrapper d-flex align-items-center position-absolute w-100 flex-column">
+      <div class="account__header account__header--scroll-out d-flex align-items-center w-100">
+        <div class="account__image-wrapper position-relative overflow-hidden">
+          <img src="${data.avatar}" alt="${
+      data.name && data.surname
+    }" class="account__image position-absolute top-50 start-50 translate-middle">
         </div>
         <p class="account__nick">@${data.id}</p>
-        <form action=#" enctype="multipart/form-data" method="post" class="account__form_change_photo">
-          <label for="file" class="account__button_change_photo">
+        <form action=#" enctype="multipart/form-data" method="post" class="account__form-change-photo d-flex justify-content-center align-items-center">
+          <label for="file" class="account__button-change-photo d-flex justify-content-center align-items-center">
             <i class="material-icons">monochrome_photos</i>
           </label>
-          <input type="file" name="avatar" id="file" class="account__input__photo">
+          <input type="file" name="avatar" id="file" class="account__input-photo position-absolute invisible">
         </form>      
       </div>
-      <div class="account__info">
-        <form action=#" enctype="multipart/form-data" method="post" class="account__form_change_info">
-          <input type="text" value="${data.name}" name="name" class="account__info__input account__info__name" placeholder="Name Surname" required>
-          <ul class="account__info__list">
-          <li class="account__info__list__item">
-            <input type="email" value="user@mail.ru" name="email" class="account__info__input" placeholder="E-mail" required>
-          </li>
-          <li class="account__info__list__item">
-            <input type="date" value="21/05/1999" name="date" class="account__info__input" required placeholder="DD/MM/YYYY">
-          </li>
-          <li class="account__info__list__item">
-            <input type="submit" value="Save" class="account__input_submit account__input_submit_off account__input_submit_no_changes" disabled>
-          </li>
-        </form>  
-        <li class="account__info__list__item">
-          <button type="button" class="account__button_groups account__button">
-            My groups
-          </button>
-        </li>
-        <li class="account__info__list__item">
-          <button type="button" class="account__button_settings account__button">
-            Settings
-          </button>
-          </li>
-        </ul>
-      </div>
-      <p class="account__balance">Balance</p>
+
+      <div class="account__info d-flex align-items-center flex-column account--width-80">
+        <form class="account__form-change-info">
+          <div class="input-group flex-nowrap">
+            <div class="input-group-prepend">
+              <span class="input-group-text" id="addon-wrapping">@</span>
+            </div>
+            <input type="text" name="id" value="${
+              data.id
+            }" class="form-control account__info__input account__info__input-id" placeholder="Username" aria-label="Username" aria-describedby="addon-wrapping" required>
+          </div>
+          <div class="form-group row">
+            <label for="surname" class="col-sm-2 col-form-label text-center">Name and Surname</label>
+            <div class="input-group">       
+              <input type="text" name="name" aria-label="Last name" value="${
+                data.name
+              }" class="form-control account__info__input" required>
+              <input type="text" name="surname" aria-label="First name" value="${
+                data.surname
+              }" class="form-control account__info__input" id="surname">
+            </div>
+          </div>
+          <div class="form-group row">
+            <label for="inputEmail3" class="col-sm-2 col-form-label">Email</label>
+            <div class="col-sm-10">
+              <input type="email" name="email" value="${
+                data.email
+              }" class="form-control account__info__input" id="inputEmail3" required>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label for="inputPassword3" class="col-sm-2 col-form-label">Date</label>
+            <div class="col-sm-10">
+              <input type="date" name="date" value="${
+                data.date
+              }" class="form-control account__info__input" id="inputPassword3">
+            </div>
+          </div>
+          <fieldset class="form-group">
+            <div class="row">
+              <legend class="col-form-label col-sm-2 pt-0 ps-0">Gender</legend>
+              <div class="col-sm-10">
+                <div class="form-check">
+                  <input class="form-check-input account__info__input account__info__input-male" name="gender" type="radio" id="gridRadios1" value="M">
+                  <label class="form-check-label" for="gridRadios1">
+                    Male
+                  </label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input account__info__input account__info__input-female" name="gender" type="radio" id="gridRadios2" value="F">
+                  <label class="form-check-label" for="gridRadios2">
+                    Female
+                  </label>
+                </div>
+              </div>
+            </div>
+          </fieldset>
+          <div class="form-group row">
+            <div class="col-sm-10 d-flex">
+              <button type="submit" class="account__input-submit btn btn-dark mx-auto" disabled>Save</button>
+            </div>
+          </div>
+        </form>
     </div>
+    <button type="button" class="btn btn-secondary btn-lg btn-block account--width-80 mb-2">My groups</button>
+    <button type="button" class="btn btn-secondary btn-lg btn-block account--width-80">Settings</button>      
+    <p class="account__balance align-self-end">Balance</p>
       `;
+    this.checkGenderAccount(data);
     this.events();
   };
+
+  protected checkNameAccount(data: any): {} | void {
+    const dt = { ...data };
+    if (!dt.gender) dt.gender = '';
+    if (dt.surname) return;
+    if (dt.name.indexOf(' ') !== -1 && !dt.surname) {
+      dt.surname = dt.name.slice(dt.name.indexOf(' '));
+      dt.name = dt.name.slice(0, dt.name.indexOf(' '));
+    }
+    return dt;
+  }
+
+  protected checkGenderAccount(dt: any): void {
+    const male = this.element.querySelector('.account__info__input-male');
+    const female = this.element.querySelector('.account__info__input-female');
+    if (dt.gender === 'M') {
+      male.setAttribute('checked', 'true');
+    } else if (dt.gender === 'F') {
+      female.setAttribute('checked', 'true');
+    }
+  }
 
   protected events(): void {
     let currentScroll: number;
     let values: string[] = [];
     const header: HTMLElement = this.element.querySelector('.account__header');
     const submitInfo: HTMLElement = this.element.querySelector(
-      '.account__input_submit',
+      '.account__input-submit',
     );
     const inputPhoto: HTMLInputElement = this.element.querySelector(
-      '.account__input__photo',
+      '.account__input-photo',
     );
     const formPhoto: HTMLFormElement = this.element.querySelector(
-      '.account__form_change_photo',
+      '.account__form-change-photo',
     );
     const formInfo: HTMLFormElement = this.element.querySelector(
-      '.account__form_change_info',
+      '.account__form-change-info',
+    );
+    const idValue: HTMLInputElement = this.element.querySelector(
+      '.account__nick',
     );
 
-    this.element.parentElement.addEventListener('scroll', (): void => {
-      if (this.element.parentElement.scrollTop > 0 && !currentScroll) {
-        currentScroll = this.element.parentElement.scrollTop;
-        this.element.parentElement.style.overflow = 'hidden';
-        header.classList.remove('account__header__scroll_out');
-        header.classList.add('account__header__scroll_in');
+    window.addEventListener('scroll', (): void => {
+      if (window.pageYOffset > 0 && !currentScroll) {
+        currentScroll = window.pageYOffset;
+        document.body.style.overflow = 'hidden';
+        header.classList.remove('account__header--scroll-out');
+        header.classList.add('account__header--scroll-in');
         setTimeout((): void => {
-          this.element.parentElement.style.overflow = '';
+          document.body.style.overflow = '';
         }, 350);
       } else if (
-        currentScroll > this.element.parentElement.scrollTop &&
-        this.element.parentElement.scrollTop < 200
+        currentScroll > window.pageYOffset &&
+        window.pageYOffset < 200
       ) {
-        header.classList.add('account__header__scroll_out');
-        header.classList.remove('account__header__scroll_in');
-        this.element.parentElement.scrollIntoView();
+        header.classList.add('account__header--scroll-out');
+        header.classList.remove('account__header--scroll-in');
         currentScroll = 0;
       }
     });
@@ -103,33 +169,46 @@ export class AccountPage extends Page {
       }
     });
 
+    const checkRadio = (item: any): any => {
+      const array = [];
+      if (item.type === 'radio') {
+        if (item.hasAttribute('checked')) {
+          array.push(item.value);
+        }
+      } else {
+        array.push(item.value);
+      }
+      return array;
+    };
+
     formInfo.addEventListener('submit', (e): void => {
       e.preventDefault();
-      values = [];
-      const newData: {} = getFormData(formInfo);
+      const newData: any = getFormData(formInfo);
       document
         .querySelectorAll('.account__info__input')
         .forEach((item: HTMLInputElement): void => {
-          values.push(item.value);
+          values = checkRadio(item);
+          newData.gender = '';
+          if (item.checked && item.type === 'radio') {
+            newData.gender = item.value;
+          }
         });
       console.log(
         'Здесь могла быть ваша функция передачи информации в базу данных!',
         newData,
       );
-      submitInfo.classList.add('account__input_submit_no_changes');
+      idValue.textContent = `@${newData.id}`;
       submitInfo.setAttribute('disabled', 'true');
     });
 
     document
       .querySelectorAll('.account__info__input')
       .forEach((item: HTMLInputElement, index: number): void => {
-        values.push(item.value);
+        values = checkRadio(item);
         item.addEventListener('input', () => {
           if (values[index] !== item.value) {
-            submitInfo.classList.remove('account__input_submit_no_changes');
             submitInfo.removeAttribute('disabled');
           } else {
-            submitInfo.classList.add('account__input_submit_no_changes');
             submitInfo.setAttribute('disabled', 'true');
           }
         });
