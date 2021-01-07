@@ -1,77 +1,7 @@
 import { Page } from '../../Classes/Page';
+import { formatDate } from './formatDate';
 const NUM_OF_IMG_IN_GROUP_CARD: number = 3;
 
-// DATA SERVER
-const dataGroup: any = [
-  {
-    id: '1',
-    title: 'Title',
-    description: 'Description...',
-    dateCreate: '12/12/12',
-    dateClose: null,
-    styles: {
-      color: 'red',
-      icon: 'https://i1.sndcdn.com/avatars-000549236160-xswcpb-t500x500.jpg',
-      background: 'gray'
-    },
-    userList: [
-      '1', '2', '3'
-    ],
-    state: true,
-    balance: '-2'
-  },
-  {
-    id: '2',
-    title: 'Title2',
-    description: 'Description2...',
-    dateCreate: '12/12/12',
-    dateClose: null,
-    styles: {
-      color: 'red',
-      icon: 'https://i1.sndcdn.com/avatars-000549236160-xswcpb-t500x500.jpg',
-      background: 'gray'
-    },
-    userList: [
-      '1', '2'
-    ],
-    state: true,
-    balance: '+7'
-  },
-  {
-    id: '3',
-    title: 'Title3',
-    description: 'Description3...',
-    dateCreate: '12/12/12',
-    dateClose: null,
-    styles: {
-      color: 'red',
-      icon: 'https://i1.sndcdn.com/avatars-000549236160-xswcpb-t500x500.jpg',
-      background: 'gray'
-    },
-    userList: [
-      '1', '2', '3', '4', '5', '6'
-    ],
-    state: true,
-    balance: '0'
-  },
-  {
-    id: '4',
-    title: 'Title4',
-    description: 'Description4...',
-    dateCreate: '12/12/12',
-    dateClose: null,
-    styles: {
-      color: 'red',
-      icon: 'https://i1.sndcdn.com/avatars-000549236160-xswcpb-t500x500.jpg',
-      background: 'gray'
-    },
-    userList: [
-      '1', '2', '3', '4', '5'
-    ],
-    state: false,
-    balance: null
-  },
-];
 
 export class GroupPage extends Page {
   onCreateNewGroup: any;
@@ -81,103 +11,211 @@ export class GroupPage extends Page {
     return new GroupPage(element);
   }
 
-  render = (): void => {
+  render = (data: any): void => {
+    if(data) {
+      this.createGroupList(data)
+    } else {
+      this.createNullList()
+    }
+  
+    this.events();
+  }
+
+  modal() {
+    return `
+    <div class="modal fade" id="addNewGroupModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false">
+      <div class="modal-dialog modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Create New Group</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <form class="form-floating row g-3" id="newGroupForm">
+              <div class="form-floating col-12">
+                <input type="text" class="form-control" id="formTitle" name="title" placeholder="Title">
+                <label for="formTitle" class="form-label">Title</label>
+              </div>
+              <div class="form-floating col-12">
+                <textarea class="form-control" id="formDesc" rows="4" name="description" placeholder="Description"></textarea>
+                <label for="formDesc" class="form-label">Description</label>
+              </div>
+              <div class="input-group col-12">
+<!--                <select class="form-select" aria-label="Default select example" id="formMembers">-->
+<!--                  <option selected>Open this select menu</option>-->
+<!--                  <option value="1">One</option>-->
+<!--                  <option value="2">Two</option>-->
+<!--                  <option value="3">Three</option>-->
+<!--                </select>-->
+                <span class="input-group-text" id="basic-addon1">@</span>
+                <input type="text" class="form-control" id="formMembers" placeholder="Members" aria-label="Username" aria-describedby="basic-addon1">
+<!--                <label for="formMembers">Members</label>-->
+                <button type="button" class="btn btn-primary" id="addNewGroupMember"><span class="material-icons">person_search</span></button>
+              </div>
+               <div class="col-12 group-members-avatar"></div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary" id="createGroupBtn">Create New Group</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    `;
+  }
+
+  createGroupList(data: any) {
     this.element.innerHTML = `
-    <div class="title-group">
-      <div class="title-group__text"><h2>Groups</h2></div>
-      <div class="title-group__text"><h2>Balance $5</h2></div>
-    </div>
+      <div class="container">
+        <div class="row justify-content-between">
+          <div class="col-6">
+            <h2>Groups</h2>
+          </div>
+          <div class="col-6">
+            <h2>Balance $5</h2>
+          </div>
+        </div>
 
-    <div id="openGroup" class="open-group"></div>
-    <div id="closedGroup" class="closed-group">
+        <div id="openGroup" class="open-group"></div>
+        <div id="closedGroup" class="closed-group closed-group-hidden">  
 
-    <div class="title-group">
-      <div class="title-group__text"><h2>Closed Group</h2></div>
-    </div>
+          <div class="accordion" id="accordionExample">
+            <div class="accordion-item">
+              <h2 class="accordion-header" id="headingOne">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                  Closed Group
+                </button>
+              </h2>
+              <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                <div id="closedGroupBoxCard" class="accordion-body">  
+                </div>
+              </div>
+            </div>
+          </div>
 
-    <div id="btn-new-group" class="mdc-touch-target-wrapper position-add-button">
-      <button class="mdc-fab mdc-fab--mini mdc-fab--touch">
-        <div class="mdc-fab__ripple"></div>
-          <span class="material-icons mdc-fab__icon">add</span>
-        <div class="mdc-fab__touch"></div>
+        </div>
+
+      </div>
+
+      <button type="button" class="btn btn-success add-new-group" data-bs-toggle="modal" data-bs-target="#addNewGroupModal">
+        <i class="material-icons add-new-group__icon">add</i>
       </button>
-    </div>
 
+      ${this.modal()}
     `;
 
-    dataGroup.forEach((element: any, index: number) => {
+    data.forEach((element: any) => {
       const divOpenGroup = document.getElementById('openGroup');
       const divClosedGroup = document.getElementById('closedGroup');
+      const closedGroupBoxCard = document.getElementById('closedGroupBoxCard');
+ 
 
-      const card = document.createElement('div');
+      const cardGroup = document.createElement('div');
       const participantsId = element.userList;
 
       let participantsImg: string[] = [];
       participantsId.forEach((participant: any) => {
         if(participantsImg.length < NUM_OF_IMG_IN_GROUP_CARD) {
-          participantsImg.push(`<img class="mdc-card__image--mini" src="${dataGroup[index].styles.icon}" alt="icon${participant}">`);
+          participantsImg.push(`<img class="card-group__img-avatar--mini" src="${element.style.icon}" alt="icon${participant}">`);
         }  
       });
-      // добавляем троеточие если участников больше чем NUM_OF_IMG_IN_GROUP_CARD
-      if(participantsId.length > NUM_OF_IMG_IN_GROUP_CARD) participantsImg.push(`<img class="mdc-card__image--mini" src="https://img1.freepng.ru/20180328/wtq/kisspng-dots-computer-icons-encapsulated-postscript-dots-5abb909a5fb1a5.051672361522241690392.jpg" alt="icon">`);
+      if(participantsId.length > NUM_OF_IMG_IN_GROUP_CARD) participantsImg.push(`<span>...</span>`);
 
       let balanceGroup: string = ''
-      if(dataGroup[index].balance < 0) {
+      if(element.balance < 0) {
         balanceGroup = `
-          <h3 class="mdc-card__balance">
-            Balance $
-            <span class="mdc-card__balance--negative">
-              ${dataGroup[index].balance}
-            </span>
-           </h3>
+          <h5 class="card-group__balance">
+            $<span class="card-group__balance--negative">${element.balance}</span>
+          </h5>
         `;
-      } else if (dataGroup[index].balance >= 0) {
+      } else if (element.balance >= 0) {
         balanceGroup = `
-          <h3 class="mdc-card__balance">
-            Balance $
-            <span class="mdc-card__balance--positive">
-              ${dataGroup[index].balance}
-            </span>
-          </h3>
+          <h5 class="card-group__balance">
+            $<span class="card-group__balance--positive">${element.balance}</span>
+          </h5>
         `;
       }
+    
+      cardGroup.innerHTML = `
+        <div class="card mb-3 card-group">
+          <div class="row g-0 col">
+            <div class="col-3 card-group__box-logo-group">
+              <img class="card-group__img-avatar" src="${element.style.icon}" alt="icon-group">
+            </div>
 
-      
-      card.innerHTML = `
-        <div class="mdc-card">
-        <div class="mdc-card__wrapper">
-          <div class="mdc-card__logo">
-            <img class="mdc-card__image" src="${dataGroup[index].styles.icon}" alt="iconGroup">
-          </div>
-          <div class="mdc-card__content">
-            <div class="mdc-card__content-top">
-              <h3 class="mdc-card__title">${dataGroup[index].title}</h3>
-              <h3 class="mdc-card__date">${dataGroup[index].dateCreate}</h3>
+            <div class="col-9 card-group__box-content">
+
+              <div class="row col">
+                <div class="col-7">
+                  <h5>${element.title}</h5>
+                </div>
+                <div class="col-5">
+                  <h5>${formatDate(element.dateCreate)}</h5>
+                </div>
+              </div>
+                
+              <div class="row col">
+                <div class="col-7">
+                  ${participantsImg.join('')} ${participantsId.length}
+                </div>
+                <div class="col-5">
+                  ${balanceGroup}
+                </div>
+              </div>
+
             </div>
-            <div class="mdc-card__content-bottom">
-              <div>${participantsImg.join('')}</div>
-              <h3>${participantsId.length}</h3>
-              ${balanceGroup}
-            </div>
+
           </div>
-        </div>
         </div>
       `;
 
-      if(element.state) {
-        divOpenGroup.appendChild(card);
-      } else if (!element.state) {
-        divClosedGroup.appendChild(card);
+      if(!element.dateClose) {
+        divOpenGroup.appendChild(cardGroup);
+      } else if (element.dateClose) {
+        closedGroupBoxCard.appendChild(cardGroup);
+        divClosedGroup.classList.remove('')
       }
     });
-
-    this.events();
   }
-  
-  protected events(): void {
 
-    this.element.addEventListener('click', ev => {
-      const { target }: any = ev;
+  createNullList() {
+    this.element.innerHTML = `
+      <div class="container">
+        <div class="row justify-content-between">
+          <div class="col-6">
+            <h2>Groups</h2>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">No groups yet.</h5>
+            <p class="card-text">Would you like to create the first group?</p>
+          </div>
+        </div>
+      </div>
+
+      <button type="button" class="btn btn-success add-new-group" data-bs-toggle="modal" data-bs-target="#addNewGroupModal">
+        <i class="material-icons add-new-group__icon">add</i>
+      </button>
+
+      ${this.modal()}
+    `;
+  }
+
+  protected events(): void {
+    const addGroupBtn = document.querySelector('#createGroupBtn');
+    addGroupBtn.addEventListener('click', () => {
+
+    });
+
+    const addGroupMember = document.querySelector('#addNewGroupMember');
+    addGroupMember.addEventListener('click', (ev) => {
+      ev.preventDefault();
+      console.log('Add new Member');
+      const member: HTMLFormElement = document.querySelector('#formMembers');
+      this.onAddMember(member.value);
     });
   }
 }

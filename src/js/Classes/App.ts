@@ -4,8 +4,7 @@ import { AuthPage } from '../Pages/AuthPage/AuthPage';
 import { RegistrationPage } from '../Pages/RegistrationPage/RegistrationPage';
 import { Main } from '../Pages/Main/Main';
 import { GroupPage } from '../Pages/GroupsPages/GroupsPage';
-//import { MyGroups } from '../Pages/MyGroups/MyGroups';
-import { groupsData } from '../Data/grops';
+import { groupsData } from '../Data/groups';
 
 export class App {
   private database: Database;
@@ -14,7 +13,6 @@ export class App {
   private regPage: RegistrationPage;
   private mainPage: Main;
   private groupsPage: GroupPage;
-  //private groups: MyGroups;
   
   constructor() {
     this.database = Database.create();
@@ -49,8 +47,8 @@ export class App {
       this.database.getUserInfo(uid, [this.mainPage.render, this.layout.setSidebarData]);
 
       this.groupsPage = GroupPage.create('.main')
-      //this.groupsPage.onCreateNewGroup = this.onCreateNewGroup.bind(this);
-      //this.groupsPage.onAddMember = this.onAddGroupMember.bind(this);
+      this.groupsPage.onCreateNewGroup = this.onCreateNewGroup.bind(this);
+      this.groupsPage.onAddMember = this.onAddGroupMember.bind(this);
 
     } else {
       console.log(`isUserLogon = ${state}`);
@@ -82,8 +80,7 @@ export class App {
 
   onGroupsPage() {
     console.log('Load Groups Page!');
-    this.groupsPage.render()
-    //this.groups.render(groupsData);
+    this.groupsPage.render(groupsData)
   }
 
   onTransactionsPage() {

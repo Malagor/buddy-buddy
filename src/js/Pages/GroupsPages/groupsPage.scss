@@ -1,62 +1,54 @@
 @import "./src/scss/_misc/mixins";
 @import "./src/scss/_misc/variables";
 
-.title-group {
-    display: flex;
-    justify-content: space-between;
-    margin: rem(15px);
-}
+.card-group {
+  margin: auto;
 
-.mdc-card {
-  margin: rem(10px);
-
-  &__wrapper {
-    display: flex;
-  }
-  &__logo {
-    margin: rem(10px);
-  }
-  &__content {
-    width: 80%;
-  }
-  &__content-top {
-    display: flex;
-    justify-content: space-between; 
-    margin: 5px;  
-  }
-  &__content-bottom {
-    display: flex;
-    margin: rem(20px) rem(5px) rem(5px) rem(5px);
-    position: relative;
-  }
-  &__image {
+  &__img-avatar {
+    width: rem(60px);
+    height: rem(60px);
     border-radius: 50%;
-    width: rem(50px);
-    height: rem(50px);
-    
+
     &--mini {
-      border-radius: 50%;
       width: rem(25px);
       height: rem(25px);
+      border-radius: 50%;
     }
   }
-  &__balance{
 
-    &--positive {
+  &__balance {
+
+    &--negative {
       color: red;
     }
   }
+
+  &__box-logo-group {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  &__box-content {
+    display: flex;
+    flex-direction: column;
+  }
 }
 
-.balance-negative-color{
-  color: red;
+.add-new-group{
+  width: rem(50px);
+  height: rem(50px);
+  border-radius: 50%;
+
+  position: fixed;
+  right: 40px;
+  bottom: 40px;
+
+  &__icon {
+    margin: 4px 0 0 -2px;
+  }
 }
 
-
-
-.position-add-button {
-  z-index: 10;
-  position: absolute;
-  right: 15px;
-  bottom: 15px; 
+.closed-group-hidden {
+  display: none;
 }
