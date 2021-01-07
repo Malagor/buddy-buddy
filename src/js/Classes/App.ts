@@ -3,6 +3,7 @@ import { Layout } from '../Pages/Layout/Layout';
 import { AuthPage } from '../Pages/AuthPage/AuthPage';
 import { RegistrationPage } from '../Pages/RegistrationPage/RegistrationPage';
 import { Main } from '../Pages/Main/Main';
+import { TransactionsList } from '../Pages/TransactionsList/transactionsList';
 
 export class App {
   private database: Database;
@@ -10,6 +11,7 @@ export class App {
   private authPage: AuthPage;
   private regPage: RegistrationPage;
   private mainPage: Main;
+  private transactionsList: TransactionsList;
 
   constructor() {
     this.database = Database.create();
@@ -43,6 +45,8 @@ export class App {
       this.mainPage = Main.create('.main');
       this.database.getUserInfo(uid, [this.mainPage.render, this.layout.setSidebarData]);
 
+      this.transactionsList = TransactionsList.create('.main');
+
     } else {
       console.log(`isUserLogon = ${state}`);
       this.authPage = AuthPage.create('#app');
@@ -54,6 +58,7 @@ export class App {
       this.regPage.onGoogleReg = this.onGoogleReg.bind(this);
 
       this.authPage.render();
+      
     }
   }
 
@@ -76,6 +81,7 @@ export class App {
   }
 
   onTransactionsPage() {
+    this.transactionsList.render();
     console.log('Load Transactions Page!');
   }
 
