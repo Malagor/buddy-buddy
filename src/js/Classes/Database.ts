@@ -1,7 +1,10 @@
 import firebase from 'firebase';
 import 'firebase/auth';
+import { default as CyrillicToTranslit } from 'cyrillic-to-translit-js/CyrillicToTranslit';
 
 const defaultAvatar: string = require('../../assets/images/default-user-avatar.jpg');
+
+const cyrillicToTranslit = new CyrillicToTranslit();
 
 export class Database {
   public uid: string;
@@ -78,10 +81,10 @@ export class Database {
 
       const profile: any = result.additionalUserInfo.profile;
       const uid = result.user.uid;
-      // saveUID(uid);
-
+      // saveUID(uid)
       const userData = {
         name: profile.name,
+        account: this._createAccountName(profile.name),
         avatar: profile.picture,
         groupList: JSON.stringify([]),
         language: profile.locale.toUpperCase(),
@@ -107,7 +110,7 @@ export class Database {
     const ref = this.firebase.database().ref(`User/${uid}`);
 
     ref.on('value', (snapshot) => {
-      console.log('snapshot', snapshot.val());
+      console.log('snapshot "getUserInfo" -  User Data:', snapshot.val());
       callbacks.forEach(fn => fn(snapshot.val()));
       // callback(snapshot.val());
     }, (error: { code: string; }) => {
@@ -137,10 +140,17 @@ export class Database {
 
         const data = {
           name: snapshot.val()[`${key}`].name,
-          avatar: snapshot.val()[`${key}`].avatar
+          avatar: snapshot.val()[`${key}`].avatar,
         };
         func(data);
-    });
+      });
+  }
+
+  _createAccountName(name: string): string {
+    let accountName: string = cyrillicToTranslit.transform(name).toLowerCase();
+    accountName += (Math.floor(Math.random() * (999 + 1)) + 1).toString();
+    accountName = accountName.replace(' ', '');
+    return accountName;
   }
 
   // addTheme(nameTheme: string) {
