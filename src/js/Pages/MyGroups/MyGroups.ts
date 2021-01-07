@@ -117,8 +117,9 @@ export class MyGroups extends Page {
   }
 
   addMembersGroup(data: any): void {
-    const members = document.querySelector('.group-members-avatar');
-    members.insertAdjacentHTML('beforeend', `
+    if (data) {
+      const members = document.querySelector('.group-members-avatar');
+      members.insertAdjacentHTML('beforeend', `
     <div class="member">
       <div class="member__avatar">
         <img src="${data.avatar}" alt="${data.name}">
@@ -126,6 +127,9 @@ export class MyGroups extends Page {
       <div class="member__name">${data.name}</div>
     </div>
     `);
+      const input: HTMLFormElement = document.querySelector('#formMembers');
+      input.value = '';
+    }
   }
 }
 

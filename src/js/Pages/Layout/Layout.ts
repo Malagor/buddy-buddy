@@ -164,11 +164,13 @@ export class Layout extends Page {
   setSidebarData(data: any): void {
     const menuAvatar: Element = document.querySelector('.sidebar-avatar__image');
     const menuUserName: Element = document.querySelector('.sidebar__user-name');
+    const menuUserAccount: Element = document.querySelector('.sidebar__account');
 
     menuAvatar.setAttribute('src', data.avatar);
     menuAvatar.setAttribute('alt', data.name);
 
     menuUserName.textContent = data.name;
+    menuUserAccount.textContent = '@' + data.account;
   }
 }
 
