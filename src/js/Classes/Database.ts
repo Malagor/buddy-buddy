@@ -47,11 +47,12 @@ export class Database {
     });
   }
 
-  createUserByEmeil(email: string, password: string, nameUser: string = '') {
-
+  createUserByEmail(email: string, password: string, nameUser: string = '', errorHandleFunction: any) {
+    console.log(email + ' : ' + password + ' : ' + nameUser);
     const userData = {
       name: nameUser,
       avatar: defaultAvatar,
+      account: this._createAccountName(nameUser),
       theme: 'Light',
       groupList: JSON.stringify([]),
       currentGroup: '',
@@ -68,10 +69,11 @@ export class Database {
       .catch(function(error: { code: any; message: any; }) {
         console.log(error.code);
         console.log(error.message);
+        errorHandleFunction(error.message);
       });
   }
 
-  createUserByGoogle(): void {
+  createUserByGoogle(errorHandleFunction: any): void {
     let provider = new firebase.auth.GoogleAuthProvider();
     provider.addScope('profile');
     provider.addScope('email');
@@ -98,7 +100,17 @@ export class Database {
     }).catch(function(error) {
       console.log(error.code);
       console.log(error.message);
+      errorHandleFunction(error.message);
     });
+  }
+
+  loginUserByEmail(email: string, password: string, errorHandleFunction: any): void {
+    firebase.auth().signInWithEmailAndPassword(email, password)
+      .catch(function(error) {
+        console.log(error.code);
+        console.log(error.message);
+        errorHandleFunction(error.message);
+      });
   }
 
   protected _registrationUser(uid: string, data: object) {
