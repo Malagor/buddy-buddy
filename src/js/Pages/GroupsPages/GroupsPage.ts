@@ -12,12 +12,26 @@ export class GroupPage extends Page {
   }
 
   render = (data: any): void => {
-    if(data) {
-      this.createGroupList(data)
-    } else {
-      this.createNullList()
-    }
-  
+    let html = `
+      <div class="container">
+        <div class="row justify-content-between">
+          <div class="col-6">
+            <h2>Groups</h2>
+          </div>
+    `;
+
+    html += this.createGroupList(data);
+
+    html += `
+    <button type="button" class="btn btn-success add-new-group" data-bs-toggle="modal" data-bs-target="#addNewGroupModal">
+      <i class="material-icons add-new-group__icon">add</i>
+    </button>
+    `;
+
+    html += `</div>`;
+
+    html += this.modal();
+    this.element.innerHTML = html;
     this.events();
   }
 
@@ -66,19 +80,90 @@ export class GroupPage extends Page {
   }
 
   createGroupList(data: any) {
-    this.element.innerHTML = `
-      <div class="container">
-        <div class="row justify-content-between">
-          <div class="col-6">
-            <h2>Groups</h2>
-          </div>
-          <div class="col-6">
-            <h2>Balance $5</h2>
-          </div>
-        </div>
+    let HTMLGroups = ''
 
-        <div id="openGroup" class="open-group"></div>
-        <div id="closedGroup" class="closed-group closed-group-hidden">  
+    if(data){
+      let openGroupHTMLCard = '';
+      let closedGroupHTMLCard = '';
+
+      data.forEach((element: any) => {
+        const participantsId = element.userList;
+    
+        let participantsImg: string[] = [];
+        participantsId.forEach((participant: any) => {
+          if(participantsImg.length < NUM_OF_IMG_IN_GROUP_CARD) {
+            participantsImg.push(`<img class="card-group__img-avatar--mini" src="${element.style.icon}" alt="icon${participant}">`);
+          }  
+        });
+        if(participantsId.length > NUM_OF_IMG_IN_GROUP_CARD) participantsImg.push(`<span>+${participantsId.length - NUM_OF_IMG_IN_GROUP_CARD}</span>`);
+    
+        let balanceGroup: string = ''
+        if(element.balance < 0) {
+          balanceGroup = `
+            <h5 class="card-group__balance">
+              ${element.balance ? element.currency: ''}<span class="card-group__balance--negative">${element.balance ? element.balance: formatDate(element.dateCreate)}</span>
+            </h5>
+          `;
+        } else if (element.balance >= 0) {
+          balanceGroup = `
+            <h5 class="card-group__balance">
+              ${element.balance ? element.currency: ''}<span class="card-group__balance--positive">${element.balance ? element.balance: formatDate(element.dateCreate)}</span>
+            </h5>
+          `;
+        }
+      
+        const groupCard = `
+          <div class="card mb-3 card-group">
+            <div class="row g-0 col">
+              <div class="col-3 card-group__box-logo-group">
+                <img class="card-group__img-avatar" src="${element.style.icon}" alt="icon-group">
+              </div>
+    
+              <div class="col-9 card-group__box-content">
+    
+                <div class="row col">
+                  <div class="col-7">
+                    <h5>${element.title}</h5>
+                  </div>
+                  <div class="col-5">
+                    <h5>${formatDate(element.dateCreate)}</h5>
+                  </div>
+                </div>
+                  
+                <div class="row col">
+                  <div class="col-7">
+                    ${participantsImg.join('')}
+                  </div>
+                  <div class="col-5">
+                    ${balanceGroup}
+                  </div>
+                </div>
+    
+              </div>
+    
+            </div>
+          </div>
+        `;
+        
+        if(!element.dateClose) {
+          openGroupHTMLCard += groupCard;
+        } else if (element.dateClose) {
+          closedGroupHTMLCard += groupCard;
+        }
+      });
+
+      HTMLGroups += `
+        <div class="col-6">
+          <h2>Balance $5</h2> 
+        </div>
+      `;
+      HTMLGroups += `</div>`;
+
+      HTMLGroups += `
+        <div id="openGroup" class="open-group">
+          ${openGroupHTMLCard}        
+        </div>
+        <div id="closedGroup" class="closed-group ">  
 
           <div class="accordion" id="accordionExample">
             <div class="accordion-item">
@@ -88,126 +173,33 @@ export class GroupPage extends Page {
                 </button>
               </h2>
               <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
-                <div id="closedGroupBoxCard" class="accordion-body">  
+                <div id="closedGroupBoxCard" class="accordion-body">
+                  ${closedGroupHTMLCard}
                 </div>
               </div>
             </div>
           </div>
 
-        </div>
-
-      </div>
-
-      <button type="button" class="btn btn-success add-new-group" data-bs-toggle="modal" data-bs-target="#addNewGroupModal">
-        <i class="material-icons add-new-group__icon">add</i>
-      </button>
-
-      ${this.modal()}
-    `;
-
-    data.forEach((element: any) => {
-      const divOpenGroup = document.getElementById('openGroup');
-      const divClosedGroup = document.getElementById('closedGroup');
-      const closedGroupBoxCard = document.getElementById('closedGroupBoxCard');
- 
-
-      const cardGroup = document.createElement('div');
-      const participantsId = element.userList;
-
-      let participantsImg: string[] = [];
-      participantsId.forEach((participant: any) => {
-        if(participantsImg.length < NUM_OF_IMG_IN_GROUP_CARD) {
-          participantsImg.push(`<img class="card-group__img-avatar--mini" src="${element.style.icon}" alt="icon${participant}">`);
-        }  
-      });
-      if(participantsId.length > NUM_OF_IMG_IN_GROUP_CARD) participantsImg.push(`<span>...</span>`);
-
-      let balanceGroup: string = ''
-      if(element.balance < 0) {
-        balanceGroup = `
-          <h5 class="card-group__balance">
-            $<span class="card-group__balance--negative">${element.balance}</span>
-          </h5>
-        `;
-      } else if (element.balance >= 0) {
-        balanceGroup = `
-          <h5 class="card-group__balance">
-            $<span class="card-group__balance--positive">${element.balance}</span>
-          </h5>
-        `;
-      }
-    
-      cardGroup.innerHTML = `
-        <div class="card mb-3 card-group">
-          <div class="row g-0 col">
-            <div class="col-3 card-group__box-logo-group">
-              <img class="card-group__img-avatar" src="${element.style.icon}" alt="icon-group">
-            </div>
-
-            <div class="col-9 card-group__box-content">
-
-              <div class="row col">
-                <div class="col-7">
-                  <h5>${element.title}</h5>
-                </div>
-                <div class="col-5">
-                  <h5>${formatDate(element.dateCreate)}</h5>
-                </div>
-              </div>
-                
-              <div class="row col">
-                <div class="col-7">
-                  ${participantsImg.join('')} ${participantsId.length}
-                </div>
-                <div class="col-5">
-                  ${balanceGroup}
-                </div>
-              </div>
-
-            </div>
-
-          </div>
         </div>
       `;
-
-      if(!element.dateClose) {
-        divOpenGroup.appendChild(cardGroup);
-      } else if (element.dateClose) {
-        closedGroupBoxCard.appendChild(cardGroup);
-        divClosedGroup.classList.remove('')
-      }
-    });
-  }
-
-  createNullList() {
-    this.element.innerHTML = `
-      <div class="container">
-        <div class="row justify-content-between">
-          <div class="col-6">
-            <h2>Groups</h2>
-          </div>
-        </div>
-
-        <div class="card">
+    } else {
+      HTMLGroups += `</div>`;
+      HTMLGroups += `
+      <div class="card">
           <div class="card-body">
             <h5 class="card-title">No groups yet.</h5>
             <p class="card-text">Would you like to create the first group?</p>
           </div>
         </div>
       </div>
-
-      <button type="button" class="btn btn-success add-new-group" data-bs-toggle="modal" data-bs-target="#addNewGroupModal">
-        <i class="material-icons add-new-group__icon">add</i>
-      </button>
-
-      ${this.modal()}
-    `;
+      `;
+    }
+    return HTMLGroups;
   }
 
   protected events(): void {
     const addGroupBtn = document.querySelector('#createGroupBtn');
     addGroupBtn.addEventListener('click', () => {
-
     });
 
     const addGroupMember = document.querySelector('#addNewGroupMember');

@@ -21,6 +21,10 @@
     &--negative {
       color: red;
     }
+
+    &--positive {
+      color: green;
+    }
   }
 
   &__box-logo-group {
@@ -36,13 +40,13 @@
 }
 
 .add-new-group{
-  width: rem(50px);
-  height: rem(50px);
-  border-radius: 50%;
-
   position: fixed;
-  right: 40px;
-  bottom: 40px;
+  right: rem(40px);
+  bottom: rem(40px);
+
+  width: rem(51px);
+  height: rem(51px);
+  border-radius: 50%;
 
   &__icon {
     margin: 4px 0 0 -2px;

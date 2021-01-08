@@ -13,7 +13,8 @@ export const groupsData = [
     userList: ['vsdvdfs', 'dfsadsafs', 'dsafdsafdsa'],
     transactionList: ['sdafsdafsd', 'dsafdsafsad'],
     state: true,
-    balance: '15'
+    balance: '15',
+    currency: '$'
   },
   {
     id: 'vfsdfdsfdsf',
@@ -29,7 +30,8 @@ export const groupsData = [
     userList: ['vsdvdfs', 'dfsadsafs', 'dsafdsafdsa', 'dsafsdafsa', 'dsafsdafsa', 'dsafsdafsa', 'dsafsdafsa'],
     transactionList: ['sdafsdafsd', 'dsafdsafsad', 'sdafsdafsadf', 'dsfasdfasdf'],
     state: true,
-    balance: '-5'
+    balance: '-5',
+    currency: '$'
   },
   {
     id: 'vfsdfdsfdsf',
@@ -45,7 +47,8 @@ export const groupsData = [
     userList: ['vsdvdfs', 'dfsadsafs'],
     transactionList: ['sdafsdafsd', 'dsafdsafsad', 'sdafsdafsadf', 'dsfasdfasdf', 'dsfasdfasdf', 'dsfasdfasdf'],
     state: true,
-    balance: '5' 
+    balance: '5',
+    currency: '$' 
   },
   {
     id: 'vfsdfdsfdsf',
@@ -61,7 +64,8 @@ export const groupsData = [
     userList: ['vsdvdfs', 'dfsadsafs', 'dsafdsafdsa'],
     transactionList: ['sdafsdafsd', 'dsafdsafsad'],
     state: true,
-    balance: '15'
+    balance: '',
+    currency: '$'
   },
   {
     id: 'vfsdfdsfdsf',
@@ -77,6 +81,7 @@ export const groupsData = [
     userList: ['vsdvdfs', 'dfsadsafs', 'dsafdsafdsa'],
     transactionList: ['sdafsdafsd', 'dsafdsafsad'],
     state: true,
-    balance: '15'
+    balance: '',
+    currency: '$'
   },
 ];
