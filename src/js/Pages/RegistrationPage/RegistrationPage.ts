@@ -1,5 +1,6 @@
 import { Page } from '../../Classes/Page';
 import { getFormData } from '../../Util/getFormData';
+import { currentYear } from '../../Util/currentYear';
 const logo = require('../../../assets/icons/team.svg');
 
 export class RegistrationPage extends Page {
@@ -24,17 +25,18 @@ export class RegistrationPage extends Page {
         </div>
         <h2 class="h3 mb-3 fw-normal">Registration</h2>
           <div class="form-floating mb-3 w-75">
-            <input type="text" class="form-control" id="floatingInput" placeholder="name">
+            <input type="text" class="form-control" id="floatingInput" placeholder="name" name="name">
             <label for="floatingInput">Name</label>
           </div>
           <div class="form-floating mb-3 w-75">
-            <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com">
+            <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com" name="email">
             <label for="floatingInput">Email address</label>
           </div>
           <div class="form-floating mb-3 w-75">
-            <input type="password" class="form-control" id="floatingPassword" placeholder="Password">
+            <input type="password" class="form-control" id="floatingPassword" placeholder="Password" name="password">
             <label for="floatingPassword">Password</label>
           </div>
+          <div class="error-message w-75 mb-3"></div>
           <div class="d-grid gap-5 d-md-block mb-3 reg-icons__wrapper">
             <button class="reg-icon reg-icon__google" id="googleReg"></button>
           </div>
@@ -42,7 +44,7 @@ export class RegistrationPage extends Page {
             <button class="btn btn-lg btn-link" type="button" id="login">Login</button>
             <button class="btn btn-lg btn-primary" type="submit" id="signIn">Sign in</button>
           </div>
-        <p class="mt-5 mb-3 text-muted">&copy; 2020-2021</p>
+        <p class="mt-5 mb-3 text-muted">&copy; 2020-${currentYear().toString(10)}</p>
       </form>
       `;
 
@@ -81,5 +83,10 @@ export class RegistrationPage extends Page {
 
       this.onGoogleReg();
     });
+  }
+
+  showErrorMessage = (message: string) => {
+    const error = this.element.querySelector('.error-message');
+    error.textContent = message;
   }
 }
