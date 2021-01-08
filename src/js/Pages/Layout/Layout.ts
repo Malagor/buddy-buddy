@@ -136,26 +136,32 @@ export class Layout extends Page {
       // }
 
       if (target.closest('#sidebarMainLink')) {
+        ev.preventDefault();
         this.onMainPage();
       }
 
       if (target.closest('#sidebarGroupsLink')) {
+        ev.preventDefault();
         this.onGroupsPage();
       }
 
       if (target.closest('#sidebarTransactionsLink')) {
+        ev.preventDefault();
         this.onTransactionsPage();
       }
 
       if (target.closest('#sidebarStatisticsLink')) {
+        ev.preventDefault();
         this.onStatisticsPage();
       }
 
       if (target.closest('#sidebarSettingsLink')) {
+        ev.preventDefault();
         this.onSettingsPage();
       }
 
       if (target.closest('#sidebarHelpLink')) {
+        ev.preventDefault();
         this.onHelpPage();
       }
     });

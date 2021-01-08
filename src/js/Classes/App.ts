@@ -5,7 +5,7 @@ import { RegistrationPage } from '../Pages/RegistrationPage/RegistrationPage';
 import { Main } from '../Pages/Main/Main';
 import { MyGroups } from '../Pages/MyGroups/MyGroups';
 
-import { groupsData } from '../Data/grops';
+import { IGroupData } from '../Interfaces/IGroupData';
 
 export class App {
   private database: Database;
@@ -87,8 +87,9 @@ export class App {
   }
 
   onGroupsPage() {
-    console.log('Load Groups Page!');
-    this.groups.render(groupsData);
+    this.groups.render();
+    this.database.getGroupList(this.groups.addGroupToList);
+    // this.groups.render(groupsData);
   }
 
   onTransactionsPage() {
@@ -119,13 +120,22 @@ export class App {
     this.authPage.render();
   }
 
-  onCreateNewGroup() {
-    console.log('Create New Group');
+  onCreateNewGroup(data: IGroupData) {
+    const userArray: string[] = data.userList;
+    const userId = this.database.uid;
+    // check self in Users List
+    if (!userArray.includes(userId)) {
+      userArray.push(userId);
+      data.userList = userArray;
+    }
+
+    this.database.createNewGroup(data);
   }
 
   onAddGroupMember(accountName: string) {
     this.database.findUserByName(accountName, this.groups.addMembersGroup);
   }
+
 
   // loadMainPage() {
   //   this.mainPage.render();

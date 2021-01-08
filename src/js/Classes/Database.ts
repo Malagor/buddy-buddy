@@ -1,6 +1,7 @@
 import firebase from 'firebase';
 import 'firebase/auth';
 import { default as CyrillicToTranslit } from 'cyrillic-to-translit-js/CyrillicToTranslit';
+import { IGroupData } from '../Interfaces/IGroupData';
 
 const defaultAvatar: string = require('../../assets/images/default-user-avatar.jpg');
 
@@ -78,34 +79,40 @@ export class Database {
     provider.addScope('profile');
     provider.addScope('email');
 
-    this.firebase.auth().signInWithPopup(provider).then((result) => {
-      console.log('createUserByGoogle => result:', result);
+    this.firebase
+      .auth()
+      .signInWithPopup(provider)
+      .then((result) => {
+        console.log('createUserByGoogle => result:', result);
 
-      const profile: any = result.additionalUserInfo.profile;
-      const uid = result.user.uid;
-      // saveUID(uid)
-      const userData = {
-        name: profile.name,
-        account: this._createAccountName(profile.name),
-        avatar: profile.picture,
-        groupList: JSON.stringify([]),
-        language: profile.locale.toUpperCase(),
-        currentGroup: '',
-        theme: 'Light',
-        currency: 'BYN',
-      };
+        const profile: any = result.additionalUserInfo.profile;
+        const uid = result.user.uid;
+        // saveUID(uid)
+        const userData = {
+          name: profile.name,
+          account: this._createAccountName(profile.name),
+          avatar: profile.picture,
+          groupList: JSON.stringify([]),
+          language: profile.locale.toUpperCase(),
+          currentGroup: '',
+          theme: 'Light',
+          currency: 'BYN',
+        };
 
-      this._registrationUser(uid, userData);
+        this._registrationUser(uid, userData);
 
-    }).catch(function(error) {
-      console.log(error.code);
-      console.log(error.message);
-      errorHandleFunction(error.message);
-    });
+      })
+      .catch(function(error) {
+        console.log(error.code);
+        console.log(error.message);
+        errorHandleFunction(error.message);
+      });
   }
 
   loginUserByEmail(email: string, password: string, errorHandleFunction: any): void {
-    firebase.auth().signInWithEmailAndPassword(email, password)
+    this.firebase
+      .auth()
+      .signInWithEmailAndPassword(email, password)
       .catch(function(error) {
         console.log(error.code);
         console.log(error.message);
@@ -114,24 +121,30 @@ export class Database {
   }
 
   protected _registrationUser(uid: string, data: object) {
-    const userRef = this.firebase.database().ref(`User/${uid}`);
-    userRef.set(data);
+    this.firebase
+      .database()
+      .ref(`User/${uid}`)
+      .set(data);
+
   }
 
   getUserInfo(uid: string, callbacks: any[]): any {
-    const ref = this.firebase.database().ref(`User/${uid}`);
-
-    ref.on('value', (snapshot) => {
-      console.log('snapshot "getUserInfo" -  User Data:', snapshot.val());
-      callbacks.forEach(fn => fn(snapshot.val()));
-      // callback(snapshot.val());
-    }, (error: { code: string; }) => {
-      console.log('Error: ' + error.code);
-    });
+    this.firebase
+      .database()
+      .ref(`User/${uid}`)
+      .on('value', (snapshot) => {
+        console.log('snapshot "getUserInfo" -  User Data:', snapshot.val());
+        callbacks.forEach(fn => fn(snapshot.val()));
+        // callback(snapshot.val());
+      }, (error: { code: string; }) => {
+        console.log('Error: ' + error.code);
+      });
   }
 
   signOut() {
-    this.firebase.auth().signOut()
+    this.firebase
+      .auth()
+      .signOut()
       .then(function() {
         console.log('Signout Succesfull');
       }, function(error) {
@@ -142,8 +155,10 @@ export class Database {
   }
 
   findUserByName(accountName: string, func: any) {
-    const ref = this.firebase.database().ref(`User`);
-    ref.orderByChild('account')
+    this.firebase
+      .database()
+      .ref(`User`)
+      .orderByChild('account')
       .equalTo(accountName)
       .once('value')
       .then((snapshot) => {
@@ -153,7 +168,8 @@ export class Database {
         const data = {
           name: snapshot.val()[`${key}`].name,
           avatar: snapshot.val()[`${key}`].avatar,
-          account: snapshot.val()[`${key}`].account
+          account: snapshot.val()[`${key}`].account,
+          key: key,
         };
         func(data);
       });
@@ -165,6 +181,54 @@ export class Database {
     accountName = accountName.replace(' ', '');
     return accountName;
   }
+
+  createNewGroup(data: IGroupData) {
+    console.log('createNewGroup - data\n', data);
+    this.firebase
+      .database()
+      .ref('Groups')
+      .push(data)
+      .then(group => {
+        const groupKey = group.key;
+        const users = data.userList;
+        users.forEach(userId => {
+          const user = this.firebase.database().ref('User').child(userId);
+          const userGroup = user.child('groupList');
+          userGroup.transaction(groupList => {
+            const groups = groupList;
+            let arrGroup: string[];
+            if (groups) {
+              arrGroup = JSON.parse(groupList);
+            } else {
+              arrGroup = [];
+            }
+            arrGroup.push(groupKey);
+            return JSON.stringify(arrGroup);
+          });
+        });
+      })
+      .catch(error => {
+        console.log(error.code);
+        console.log(error.message);
+      });
+  }
+
+  getGroupList(renderGroups: any): void {
+
+    this.firebase
+      .database()
+      .ref('Groups')
+      .on('child_added', (snapshot) => {
+        const users: string[] = snapshot.val().userList;
+        if (users.includes(this.uid)) {
+          renderGroups(snapshot.val());
+        }
+      }, (error: { code: string; message: any; }) => {
+        console.log('Error:\n ' + error.code);
+        console.log(error.message);
+      });
+  }
+
 
   // addTheme(nameTheme: string) {
   //
