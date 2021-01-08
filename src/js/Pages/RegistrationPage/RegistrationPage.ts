@@ -1,5 +1,6 @@
 import { Page } from '../../Classes/Page';
 import { getFormData } from '../../Util/getFormData';
+import { currentYear } from '../../Util/currentYear';
 const logo = require('../../../assets/icons/team.svg');
 
 export class RegistrationPage extends Page {
@@ -42,7 +43,7 @@ export class RegistrationPage extends Page {
             <button class="btn btn-lg btn-link" type="button" id="login">Login</button>
             <button class="btn btn-lg btn-primary" type="submit" id="signIn">Sign in</button>
           </div>
-        <p class="mt-5 mb-3 text-muted">&copy; 2020-2021</p>
+        <p class="mt-5 mb-3 text-muted">&copy; 2020-${currentYear().toString(10)}</p>
       </form>
       `;
 

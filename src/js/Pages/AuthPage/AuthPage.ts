@@ -1,5 +1,6 @@
 import { Page } from '../../Classes/Page';
 import { getFormData } from '../../Util/getFormData';
+import { currentYear } from '../../Util/currentYear';
 
 const logo = require('../../../assets/icons/team.svg');
 
@@ -13,10 +14,12 @@ export class AuthPage extends Page {
   }
 
   static create(element: string): AuthPage {
-    return new AuthPage(element);
+    const page: AuthPage = new AuthPage(element);
+    page.render = page.render.bind(page);
+    return page;
   }
 
-  render = (): void => {
+  render(): void {
     this.element.innerHTML = `
       <form id="authForm" class="position-absolute top-50 start-50 translate-middle auth-form">
         <h1 class="h3 mb-3 fw-normal">Buddy-buddy</h1>
@@ -39,7 +42,7 @@ export class AuthPage extends Page {
             <button class="btn btn-lg btn-link" type="button" id="signIn">Sign in</button>
             <button class="btn btn-lg btn-primary" type="submit" id="login">Login</button>
           </div>
-        <p class="mt-5 mb-3 text-muted">&copy; 2020-2021</p>
+        <p class="mt-5 mb-3 text-muted">&copy; 2020-${currentYear().toString(10)}</p>
       </form>
     `;
 
