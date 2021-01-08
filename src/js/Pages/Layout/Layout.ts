@@ -42,8 +42,13 @@ export class Layout extends Page {
           <hr>
           <ul class="nav flex-column">
               <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="#" id="sidebarMainLink">
+                <a class="nav-link" aria-current="page" href="#" id="sidebarMainLink">
                   <i class="material-icons">house</i><span>Главная</span>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="#" id="sidebarMainLink">
+                  <i class="material-icons">account_box</i><span>Аккаунт</span>
                 </a>
               </li>
               <li class="nav-item">
@@ -170,8 +175,7 @@ export class Layout extends Page {
       }
     });
 
-
-    document.querySelector('#sidebarMenu').addEventListener('click', ev => {
+    document.querySelector('#sidebarMenu').addEventListener('click', (ev) => {
       const { target }: any = ev;
 
       // if (target.closest('#signOut')) {
@@ -205,9 +209,13 @@ export class Layout extends Page {
   }
 
   setSidebarData(data: any): void {
-    const menuAvatar: Element = document.querySelector('.sidebar-avatar__image');
+    const menuAvatar: Element = document.querySelector(
+      '.sidebar-avatar__image',
+    );
     const menuUserName: Element = document.querySelector('.sidebar__user-name');
-    const menuUserAccount: Element = document.querySelector('.sidebar__account');
+    const menuUserAccount: Element = document.querySelector(
+      '.sidebar__account',
+    );
 
     menuAvatar.setAttribute('src', data.avatar);
     menuAvatar.setAttribute('alt', data.name);
@@ -216,4 +224,3 @@ export class Layout extends Page {
     menuUserAccount.textContent = '@' + data.account;
   }
 }
-
