@@ -8,8 +8,10 @@
     "build": "npm run clear -s && webpack --progress",
     "lint": "eslint ./**/*.js",
     "clear": "del-cli dist",
-    "comb": "csscomb ./src/scss/section/",
-    "test": "karma start"
+    "comb": "csscomb ./src/",
+    "test": "karma start",
+    "tslint": "tslint ./src/**/*.ts",
+    "combolint": "npm run tslint & npm run comb"
   },
   "author": "Alex Malagor <seo.dnja@gmail.com>",
   "repository": {
