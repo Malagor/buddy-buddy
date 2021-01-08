@@ -1,5 +1,6 @@
 import { Page } from '../../Classes/Page';
 import { Modal } from 'bootstrap';
+import { currentYear } from '../../Util/currentYear';
 
 const defAvatar = require('../../../assets/images/default-user-avatar.jpg');
 const logo = require('../../../assets/icons/team.svg');
@@ -91,35 +92,42 @@ export class Layout extends Page {
         </main>
       </div>
     </div>
-    <footer class="fixed-bottom bg-dark text-white d-none d-md-block">
-      <div class="footer__content">
-        <div class="footer__title">
+    <footer class="fixed-bottom bg-dark text-white d-none d-md-block footer ">
+      <div class="footer__content row align-items-center">
+        <div class="footer__title col-3">
           ${logo}
           <p><span>Buddy-Buddy</span></p>
         </div>
-        <div class="footer__authors">
-          <div class="footer__author">
-            <a href="https://github.com/Malagor" class="footer__author__link" target="_blank">
-              <p>Malagor</p>
-              <p class="footer__github">${githubLogo}</p>
-            </a>
-          </div>
-          <div class="footer__author">
-            <a href="https://github.com/besovadevka" class="footer__author__link" target="_blank">
-              <p>besovadevka</p>
-              <p class="footer__github">${githubLogo}</p>
-            </a>
-          </div>
-          <div class="footer__author">
-            <a href="https://github.com/gryzun33" class="footer__author__link" target="_blank">
-              <p>gryzun33</p>
-              <p class="footer__github">${githubLogo}</p>
-            </a>
+        <div class="footer__authors col-6">
+          <div class="row w-100">
+            <div class="footer__author col-6 col-lg-3">
+              <a href="https://github.com/Malagor" class="footer__author__link" target="_blank">
+                <p>Malagor</p>
+                <p class="footer__github">${githubLogo}</p>
+              </a>
+            </div>
+            <div class="footer__author col-6 col-lg-3">
+              <a href="https://github.com/besovadevka" class="footer__author__link" target="_blank">
+                <p>besovadevka</p>
+                <p class="footer__github">${githubLogo}</p>
+              </a>
+            </div>
+            <div class="footer__author col-6 col-lg-3">
+              <a href="https://github.com/gryzun33" class="footer__author__link" target="_blank">
+                <p>gryzun33</p>
+                <p class="footer__github">${githubLogo}</p>
+              </a>
+            </div>
+            <div class="footer__author col-6 col-lg-3">
+              <a href="https://github.com/Andrei107Q" class="footer__author__link" target="_blank">
+                <p>Andrei107Q</p>
+                <p class="footer__github">${githubLogo}</p>
+              </a>
+            </div>
           </div>
         </div>
-        <div class="footer__school">
-          <p>© 2020</p>
-          <p>|</p>
+        <div class="footer__school col-3">
+          <p>© 2020-${currentYear()}</p>
           <a href="https://rs.school/js/" class="footer__course__link" target="_blank">${rssLogo}</a>
         </div>
       </div>
