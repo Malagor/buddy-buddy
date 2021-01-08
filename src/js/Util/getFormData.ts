@@ -28,5 +28,7 @@ export const getFormData = (
     }
   });
 
+  console.log('getFormData - formData:', formData);
+
   return formData;
 };
