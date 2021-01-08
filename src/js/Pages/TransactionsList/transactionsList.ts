@@ -1,14 +1,14 @@
+import { INSPECT_MAX_BYTES } from 'buffer';
 import { Page } from '../../Classes/Page';
-import { data } from './dataList';
-
 
 export class TransactionsList extends Page {
+  onTransactionSubmit: any;
 
   static create(element: string): TransactionsList {
     return new TransactionsList(element);
   }
 
-  public render = (): void => {
+  public render = (data? : any): void => {
 
     this.element.innerHTML = `
       <div class="trans-wrapper container d-flex flex-column">
@@ -16,14 +16,16 @@ export class TransactionsList extends Page {
         <div class="container d-flex flex-row align-items-center">
           <select class="form-select w-75 groups" aria-label="Default select example">
           </select>
-          <div class="user-balance text-center w-25 text-success">${data.balance}${data.currency}</div>   
+          <div class="user-balance text-center w-25">${data.balance}${data.currency}</div>   
         </div>
-        <div class="trans-list container">
+        <div class="trans-list container overflow-auto">
         </div>        
       </div>
       <button class="new-trans-btn"><span class="material-icons">add_circle</span></button>     
     `;
-    if (+data.balance < 0) {
+    if (+data.balance >= 0) {
+      document.querySelector('.user-balance').classList.add('text-success');
+    } else {
       document.querySelector('.user-balance').classList.add('text-danger');
     }
 
@@ -37,15 +39,15 @@ export class TransactionsList extends Page {
     });
 
     const list: HTMLElement = document.querySelector('.trans-list');
-    data.transactions.forEach((item) => {
+    data.transactions.forEach((item: any, num: number) => {
       const transItem = document.createElement('div'); 
       transItem.classList.add('trans-item', 'card', 'mb-1', 'container');
       transItem.innerHTML = `
-      <button class="trans-item__btn">ПОДТВЕРДИТЬ</button>
-      <div class="trans-item__header row col">
-        <div class="trans-item__descr fw-bolder">${item.description}</div> 
+      <button class="trans-item__btn"></button>
+      <div class="trans-item__header row">
+        <div class="trans-item__descr fw-bolder col-8 text-truncate">${item.description}</div> 
       </div>
-      <div class="trans-item__info row col">
+      <div class="trans-item__info row">
         <div class="date col-4 col-sm-3 align-self-start">
           <div class="day">${item.day}</div>
           <div class="time">${item.time}</div>
@@ -53,9 +55,54 @@ export class TransactionsList extends Page {
         <div class="trans-users col-5 col-sm-6 d-flex align-self-center justify-content-center"></div>
         <div class="cost col-3 align-self-center text-success">${item.cost}${item.currency}</div>
       </div>`;
+
+      if (item.users.length > 1) {
+        transItem.setAttribute('data-bs-toggle', 'collapse');
+        transItem.setAttribute('data-bs-target', `#addlist-${num}`);
+        transItem.innerHTML += `
+          <div class="collapse" id="addlist-${num}">
+          <div class="add-list conatiner card card-body overflow-auto">
+          </div>
+        </div>
+        `;
+        const addList = transItem.querySelector('.add-list');
+        item.users.forEach((user: any) => {
+          const addHTML = `
+            <div class="add-user row align-items-center">
+              <div class="col-3 d-flex flex-column">
+                <div class="add-user__image">
+                  <img src="#" alt="#">
+                </div>
+                <div class="add-user__name">${user.name}</div>
+              </div>
+              <div class="add-user__cost col-2 col-sm-3 text-danger">${user.cost}${user.currency}</div>
+              <div class="add-user__submit col-2 col-sm-3"></div>
+              <div class="add-user__comment col-5 col-sm-3 text-secondary">${user.comment}</div>
+            </div>
+          `;
+          addList.insertAdjacentHTML("beforeend", addHTML);
+        });
+        
+        const addBtnsSubmit = addList.querySelectorAll('.add-user__submit');
+        addBtnsSubmit.forEach((btn, i) => {
+          if (item.users[i].submit) {
+            btn.innerHTML = '<span class="material-icons text-success">check</span>';
+          } else {
+            btn.innerHTML = '<span class="material-icons text-danger">remove</span>';
+          }    
+        })
+      }
+
       list.append(transItem);
+
+      const btnSubmit = transItem.querySelector('.trans-item__btn');
+      if(data.transactions.submit) {
+        btnSubmit.innerHTML = `<span class="material-icons">check</span>`;
+      } else {
+        btnSubmit.innerHTML = 'ПОДТВЕРДИТЬ';
+      }
       if (+item.cost > 0) {
-        transItem.querySelector('.trans-item__btn').classList.add('invisible');
+        btnSubmit.classList.add('invisible');
       } else {
         transItem.querySelector('.cost').classList.add('text-danger');
       }
@@ -93,9 +140,10 @@ export class TransactionsList extends Page {
 
   protected events(): void {
     const btnsSubmit  = document.querySelectorAll('.trans-item__btn');
-    btnsSubmit.forEach((btn) => {
+    btnsSubmit.forEach((btn, i) => {
       btn.addEventListener('click', () => {
         btn.innerHTML = `<span class="material-icons">check</span>`;
+        this.onTransactionSubmit(i);
       });
     });       
   }

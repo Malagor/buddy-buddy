@@ -7,6 +7,8 @@ import { TransactionsList } from '../Pages/TransactionsList/transactionsList';
 import { MyGroups } from '../Pages/MyGroups/MyGroups';
 
 import { groupsData } from '../Data/grops';
+import { dataTransList } from '../Data/dataTransList';
+
 
 export class App {
   private database: Database;
@@ -50,6 +52,7 @@ export class App {
       this.database.getUserInfo(uid, [this.mainPage.render, this.layout.setSidebarData]);
 
       this.transactionsList = TransactionsList.create('.main');
+      this.transactionsList.onTransactionSubmit = this.onTransactionSubmit.bind(this);
       this.groups = MyGroups.create('.main');
       this.groups.onCreateNewGroup = this.onCreateNewGroup.bind(this);
       this.groups.onAddMember = this.onAddGroupMember.bind(this);
@@ -96,7 +99,7 @@ export class App {
   }
 
   onTransactionsPage() {
-    this.transactionsList.render();
+    this.transactionsList.render(dataTransList);
     console.log('Load Transactions Page!');
   }
 
@@ -130,6 +133,11 @@ export class App {
 
   onAddGroupMember(name: string) {
     this.database.findUserByName(name, this.groups.addMembersGroup);
+  }
+
+  onTransactionSubmit(i: number) {
+    dataTransList.transactions[i].submit = true;
+    console.log ('submit transaction');
   }
 
   // loadMainPage() {
