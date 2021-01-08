@@ -8,7 +8,7 @@
     "build": "npm run clear -s && webpack --progress",
     "lint": "eslint ./**/*.js",
     "clear": "del-cli dist",
-    "comb": "csscomb ./src/scss/section/",
+    "comb": "csscomb ./src/",
     "test": "karma start"
   },
   "author": "Alex Malagor <seo.dnja@gmail.com>",
