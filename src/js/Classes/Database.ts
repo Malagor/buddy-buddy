@@ -101,6 +101,14 @@ export class Database {
     });
   }
 
+  loginUserByEmail(email: string, password: string): void {
+    firebase.auth().signInWithEmailAndPassword(email, password)
+      .catch(function(error) {
+        console.log(error.code);
+        console.log(error.message);
+      });
+  }
+
   protected _registrationUser(uid: string, data: object) {
     const userRef = this.firebase.database().ref(`User/${uid}`);
     userRef.set(data);

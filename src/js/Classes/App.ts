@@ -56,6 +56,7 @@ export class App {
       this.authPage = AuthPage.create('#app');
       this.authPage.onLoadSignInPage = this.loadSignInPage.bind(this);
       this.authPage.onGoogleReg = this.onGoogleReg.bind(this);
+      this.authPage.onLogin = this.onLogin.bind(this);
 
 
       this.regPage = RegistrationPage.create('#app');
@@ -72,8 +73,12 @@ export class App {
     this.database.init();
   }
 
-  onSignIn(email: string, password: string, name: string) {
+  onSignIn(email: string, password: string, name: string): void {
     this.database.createUserByEmeil(email, password, name);
+  }
+
+  onLogin(email: string, password: string): void {
+    this.database.loginUserByEmail(email, password);
   }
 
   onMainPage() {
