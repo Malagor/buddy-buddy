@@ -1,7 +1,10 @@
 import firebase from 'firebase';
 import 'firebase/auth';
+import { default as CyrillicToTranslit } from 'cyrillic-to-translit-js/CyrillicToTranslit';
 
 const defaultAvatar: string = require('../../assets/images/default-user-avatar.jpg');
+
+const cyrillicToTranslit = new CyrillicToTranslit();
 
 export class Database {
   public uid: string;
@@ -44,11 +47,12 @@ export class Database {
     });
   }
 
-  createUserByEmeil(email: string, password: string, nameUser: string = '') {
-
+  createUserByEmail(email: string, password: string, nameUser: string = '', errorHandleFunction: any) {
+    console.log(email + ' : ' + password + ' : ' + nameUser);
     const userData = {
       name: nameUser,
       avatar: defaultAvatar,
+      account: this._createAccountName(nameUser),
       theme: 'Light',
       groupList: JSON.stringify([]),
       currentGroup: '',
@@ -65,10 +69,11 @@ export class Database {
       .catch(function(error: { code: any; message: any; }) {
         console.log(error.code);
         console.log(error.message);
+        errorHandleFunction(error.message);
       });
   }
 
-  createUserByGoogle(): void {
+  createUserByGoogle(errorHandleFunction: any): void {
     let provider = new firebase.auth.GoogleAuthProvider();
     provider.addScope('profile');
     provider.addScope('email');
@@ -78,10 +83,10 @@ export class Database {
 
       const profile: any = result.additionalUserInfo.profile;
       const uid = result.user.uid;
-      // saveUID(uid);
-
+      // saveUID(uid)
       const userData = {
         name: profile.name,
+        account: this._createAccountName(profile.name),
         avatar: profile.picture,
         groupList: JSON.stringify([]),
         language: profile.locale.toUpperCase(),
@@ -95,7 +100,17 @@ export class Database {
     }).catch(function(error) {
       console.log(error.code);
       console.log(error.message);
+      errorHandleFunction(error.message);
     });
+  }
+
+  loginUserByEmail(email: string, password: string, errorHandleFunction: any): void {
+    firebase.auth().signInWithEmailAndPassword(email, password)
+      .catch(function(error) {
+        console.log(error.code);
+        console.log(error.message);
+        errorHandleFunction(error.message);
+      });
   }
 
   protected _registrationUser(uid: string, data: object) {
@@ -107,7 +122,7 @@ export class Database {
     const ref = this.firebase.database().ref(`User/${uid}`);
 
     ref.on('value', (snapshot) => {
-      console.log('snapshot', snapshot.val());
+      console.log('snapshot "getUserInfo" -  User Data:', snapshot.val());
       callbacks.forEach(fn => fn(snapshot.val()));
       // callback(snapshot.val());
     }, (error: { code: string; }) => {
@@ -137,10 +152,17 @@ export class Database {
 
         const data = {
           name: snapshot.val()[`${key}`].name,
-          avatar: snapshot.val()[`${key}`].avatar
+          avatar: snapshot.val()[`${key}`].avatar,
         };
         func(data);
-    });
+      });
+  }
+
+  _createAccountName(name: string): string {
+    let accountName: string = cyrillicToTranslit.transform(name).toLowerCase();
+    accountName += (Math.floor(Math.random() * (999 + 1)) + 1).toString();
+    accountName = accountName.replace(' ', '');
+    return accountName;
   }
 
   // addTheme(nameTheme: string) {

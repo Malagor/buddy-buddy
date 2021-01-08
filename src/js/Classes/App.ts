@@ -3,6 +3,7 @@ import { Layout } from '../Pages/Layout/Layout';
 import { AuthPage } from '../Pages/AuthPage/AuthPage';
 import { RegistrationPage } from '../Pages/RegistrationPage/RegistrationPage';
 import { Main } from '../Pages/Main/Main';
+import { AccountPage } from '../Pages/AccountPage/AccountPage';
 import { GroupPage } from '../Pages/GroupsPages/GroupsPage';
 import { groupsData } from '../Data/groups';
 
@@ -12,8 +13,9 @@ export class App {
   private authPage: AuthPage;
   private regPage: RegistrationPage;
   private mainPage: Main;
+  private accountPage: AccountPage;
   private groupsPage: GroupPage;
-  
+
   constructor() {
     this.database = Database.create();
     this.init();
@@ -29,7 +31,8 @@ export class App {
   }
 
   isUserLogin(state: boolean, uid?: string) {
-    if (state) { // user signin
+    if (state) {
+      // user signin
       this.layout = Layout.create('#app');
       this.layout.render();
 
@@ -43,8 +46,12 @@ export class App {
       this.layout.onHelpPage = this.onHelpPage.bind(this);
       this.layout.onSignOut = this.onSignOut.bind(this);
 
+      this.accountPage = AccountPage.create('.main');
       this.mainPage = Main.create('.main');
-      this.database.getUserInfo(uid, [this.mainPage.render, this.layout.setSidebarData]);
+      this.database.getUserInfo(uid, [
+        this.accountPage.render,
+        this.layout.setSidebarData,
+      ]);
 
       this.groupsPage = GroupPage.create('.main')
       this.groupsPage.onCreateNewGroup = this.onCreateNewGroup.bind(this);
@@ -54,6 +61,8 @@ export class App {
       console.log(`isUserLogon = ${state}`);
       this.authPage = AuthPage.create('#app');
       this.authPage.onLoadSignInPage = this.loadSignInPage.bind(this);
+      this.authPage.onGoogleReg = this.onGoogleReg.bind(this);
+      this.authPage.onLogin = this.onLogin.bind(this);
 
       this.regPage = RegistrationPage.create('#app');
       this.regPage.onSignIn = this.onSignIn.bind(this);
@@ -69,8 +78,21 @@ export class App {
     this.database.init();
   }
 
-  onSignIn(email: string, password: string, name: string) {
-    this.database.createUserByEmeil(email, password, name);
+  onSignIn(email: string, password: string, name: string): void {
+    this.database.createUserByEmail(
+      email,
+      password,
+      name,
+      this.regPage.showErrorMessage,
+    );
+  }
+
+  onLogin(email: string, password: string): void {
+    this.database.loginUserByEmail(
+      email,
+      password,
+      this.authPage.showErrorMessage,
+    );
   }
 
   onMainPage() {
@@ -100,7 +122,7 @@ export class App {
   }
 
   onGoogleReg() {
-    this.database.createUserByGoogle();
+    this.database.createUserByGoogle(this.regPage.showErrorMessage);
   }
 
   loadSignInPage() {
@@ -198,5 +220,3 @@ export class App {
   //   langBase3.set(lang3);
   // }
 }
-
-
