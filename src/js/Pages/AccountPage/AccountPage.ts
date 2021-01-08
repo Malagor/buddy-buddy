@@ -16,7 +16,7 @@ export class AccountPage extends Page {
       data.name && data.surname
     }" class="account__image position-absolute top-50 start-50 translate-middle">
         </div>
-        <p class="account__nick">@${data.id}</p>
+        <p class="account__nick">@${data.account}</p>
         <form action=#" enctype="multipart/form-data" method="post" class="account__form-change-photo d-flex justify-content-center align-items-center">
           <label for="file" class="account__button-change-photo d-flex justify-content-center align-items-center">
             <i class="material-icons">monochrome_photos</i>
@@ -32,7 +32,7 @@ export class AccountPage extends Page {
               <span class="input-group-text" id="addon-wrapping">@</span>
             </div>
             <input type="text" name="id" value="${
-              data.id
+              data.account
             }" class="form-control account__info__input account__info__input-id" placeholder="Username" aria-label="Username" aria-describedby="addon-wrapping" required>
           </div>
           <div class="form-group row account--margin-adaptive">
@@ -193,7 +193,7 @@ export class AccountPage extends Page {
         'Здесь могла быть ваша функция передачи информации в базу данных!',
         newData,
       );
-      idValue.textContent = `@${newData.id}`;
+      idValue.textContent = `@${newData.account}`;
       submitInfo.setAttribute('disabled', 'true');
     });
 
