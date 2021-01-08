@@ -3,10 +3,9 @@ import { Layout } from '../Pages/Layout/Layout';
 import { AuthPage } from '../Pages/AuthPage/AuthPage';
 import { RegistrationPage } from '../Pages/RegistrationPage/RegistrationPage';
 import { Main } from '../Pages/Main/Main';
-import { MyGroups } from '../Pages/MyGroups/MyGroups';
 import { AccountPage } from '../Pages/AccountPage/AccountPage';
-
-import { groupsData } from '../Data/grops';
+import { GroupPage } from '../Pages/GroupsPages/GroupsPage';
+import { groupsData } from '../Data/groups';
 
 export class App {
   private database: Database;
@@ -14,8 +13,8 @@ export class App {
   private authPage: AuthPage;
   private regPage: RegistrationPage;
   private mainPage: Main;
-  private groups: MyGroups;
   private accountPage: AccountPage;
+  private groupsPage: GroupPage;
 
   constructor() {
     this.database = Database.create();
@@ -54,9 +53,10 @@ export class App {
         this.layout.setSidebarData,
       ]);
 
-      this.groups = MyGroups.create('.main');
-      this.groups.onCreateNewGroup = this.onCreateNewGroup.bind(this);
-      this.groups.onAddMember = this.onAddGroupMember.bind(this);
+      this.groupsPage = GroupPage.create('.main')
+      this.groupsPage.onCreateNewGroup = this.onCreateNewGroup.bind(this);
+      this.groupsPage.onAddMember = this.onAddGroupMember.bind(this);
+
     } else {
       console.log(`isUserLogon = ${state}`);
       this.authPage = AuthPage.create('#app');
@@ -102,7 +102,7 @@ export class App {
 
   onGroupsPage() {
     console.log('Load Groups Page!');
-    this.groups.render(groupsData);
+    this.groupsPage.render(groupsData)
   }
 
   onTransactionsPage() {
@@ -144,6 +144,10 @@ export class App {
   // loadMainPage() {
   //   this.mainPage.render();
   // }
+
+  loadGroupPage() {
+    this.groupsPage.render();
+  }
 
   // createUser(uid: string) {
   //   const form: HTMLFormElement = document.querySelector('#my-form');
