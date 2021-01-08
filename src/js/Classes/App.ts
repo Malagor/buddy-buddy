@@ -74,7 +74,7 @@ export class App {
   }
 
   onSignIn(email: string, password: string, name: string): void {
-    this.database.createUserByEmeil(email, password, name);
+    this.database.createUserByEmail(email, password, name);
   }
 
   onLogin(email: string, password: string): void {

@@ -47,11 +47,12 @@ export class Database {
     });
   }
 
-  createUserByEmeil(email: string, password: string, nameUser: string = '') {
-
+  createUserByEmail(email: string, password: string, nameUser: string = '') {
+    console.log(email + ' : ' + password + ' : ' + nameUser);
     const userData = {
       name: nameUser,
       avatar: defaultAvatar,
+      account: this._createAccountName(nameUser),
       theme: 'Light',
       groupList: JSON.stringify([]),
       currentGroup: '',

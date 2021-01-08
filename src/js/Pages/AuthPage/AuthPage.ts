@@ -28,11 +28,11 @@ export class AuthPage extends Page {
         </div>
         <h2 class="h3 mb-3 fw-normal">Login</h2>
           <div class="form-floating mb-3 w-75">
-            <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com">
+            <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com" name="email">
             <label for="floatingInput">Email address</label>
           </div>
           <div class="form-floating mb-3 w-75">
-            <input type="password" class="form-control" id="floatingPassword" placeholder="Password">
+            <input type="password" class="form-control" id="floatingPassword" placeholder="Password" name="password">
             <label for="floatingPassword">Password</label>
           </div>
           <div class="d-grid gap-5 d-md-block mb-3 reg-icons__wrapper">
