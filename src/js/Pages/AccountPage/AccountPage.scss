@@ -2,12 +2,24 @@
 @import "../../../scss/_misc/variables.scss";
 
 .account__wrapper {
+  position: absolute;
   top: rem(49px);
   left: 0;
+
+@include tablets {
+    position: relative;
+    margin-top: -1.5rem;
+  }
+
+@include laptop {
+    position: relative;
+    margin-top: -1.5rem;
+  }
 }
 
 .account__header {
   z-index: 1;
+  width: 100%;
 }
 
 .account__image-wrapper {
@@ -23,10 +35,60 @@
   justify-content: flex-end;
   height: auto;
 
+@include tablets {
+    position: relative;
+    z-index: 1;
+    flex-direction: row;
+    width: 80%;
+    height: rem(100px);
+    padding: 0 1.5rem;
+    background-color: rgba(255, 255, 255, 1);
+    box-shadow: 0 0 10px 5px rgba(0, 0, 0, 0.075);
+    animation: none;
+
+    & + .account__info {
+      margin-top: 0;
+    }
+  }
+
+@include laptop {
+    position: relative;
+    z-index: 1;
+    flex-direction: row;
+    width: 80%;
+    height: rem(100px);
+    padding: 0 2rem;
+    background-color: rgba(255, 255, 255, 1);
+    box-shadow: 0 0 10px 5px rgba(0, 0, 0, 0.075);
+    animation: none;
+
+    & + .account__info {
+      margin-top: 0;
+    }
+  }
+
   & > .account__image-wrapper {
     width: 100%;
     background-color: rgba(255, 255, 255, 1);
     box-shadow: 0 0 10px 5px rgba(0, 0, 0, 0.3);
+
+@include tablets {
+      width: rem(80px);
+      height: rem(80px);
+      border-radius: 50%;
+      box-shadow: none;
+      transition: none;
+      animation: none;
+    }
+
+@include laptop {
+      width: rem(80px);
+      height: rem(80px);
+      border-radius: 50%;
+      box-shadow: none;
+      transition: none;
+      animation: none;
+    }
 
     &::after {
       content: "";
@@ -36,6 +98,18 @@
 
     & > .account__image {
       width: 100%;
+
+@include tablets {
+        width: rem(80px);
+        transition: none;
+        animation: none;
+      }
+
+@include laptop {
+        width: rem(80px);
+        transition: none;
+        animation: none;
+      }
     }
   }
 
@@ -45,6 +119,20 @@
     color: rgba(255, 255, 255, 1);
     text-shadow: 0 2px 3px rgba(0, 0, 0, 1);
     background-clip: text;
+
+@include tablets {
+      margin: auto 0 auto 0.65rem;
+      font-size: 1.4rem;
+      color: rgba(0, 0, 0, 1);
+      text-shadow: none;
+    }
+
+@include laptop {
+      margin: auto 0 auto 0.65rem;
+      font-size: 1.4rem;
+      color: rgba(0, 0, 0, 1);
+      text-shadow: none;
+    }
   }
 
   & > .account__form-change-photo {
@@ -52,8 +140,32 @@
     height: 4rem;
     margin-top: -0.6rem;
 
+@include tablets {
+      align-self: center;
+      width: 3.5rem;
+      height: 3.5rem;
+      margin: 0 0 -1.75rem auto;
+      margin-bottom: 0;
+    }
+
+@include laptop {
+      align-self: center;
+      width: 3.5rem;
+      height: 3.5rem;
+      margin: 0 0 -1.75rem auto;
+      margin-bottom: 0;
+    }
+
     & > .account__button-change-photo > .material-icons {
       font-size: 2.75rem;
+
+@include tablets {
+        font-size: 2.2rem;
+      }
+
+@include laptop {
+        font-size: 2.2rem;
+      }
     }
   }
 }
@@ -65,8 +177,24 @@
   height: rem(100px);
   padding: 0 0.5rem;
   background-color: rgba(255, 255, 255, 1);
-  box-shadow: 0 0 10px 5px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 0 10px 5px rgba(0, 0, 0, 0.075);
   animation: header 0.35s ease-in-out;
+
+@include tablets {
+    position: relative;
+    z-index: 1;
+    width: 80% !important;
+    padding: 0 1.5rem;
+    animation: none;
+  }
+
+@include laptop {
+    position: relative;
+    z-index: 1;
+    width: 80% !important;
+    padding: 0 2rem;
+    animation: none;
+  }
 
   & > .account__image-wrapper {
     width: rem(80px);
@@ -74,9 +202,25 @@
     border-radius: 50%;
     animation: wid 0.35s linear;
 
+@include tablets {
+      animation: none;
+    }
+
+@include laptop {
+      animation: none;
+    }
+
     & > .account__image {
       width: rem(80px);
       animation: wid 0.4s linear;
+
+@include tablets {
+        animation: none;
+      }
+
+@include laptop {
+        animation: none;
+      }
     }
   }
 
@@ -92,6 +236,16 @@
     height: 3.5rem;
     margin: 0 0 -1.75rem auto;
 
+@include tablets {
+      align-self: center;
+      margin-bottom: 0;
+    }
+
+@include laptop {
+      align-self: center;
+      margin-bottom: 0;
+    }
+
     & > .account__button-change-photo > .material-icons {
       font-size: 2.2rem;
     }
@@ -99,9 +253,16 @@
 
   & + .account__info {
     margin-top: rem(120px);
+
+@include tablets {
+      margin-top: 0;
+    }
+
+@include laptop {
+      margin-top: 0;
+    }
   }
 }
-
 
 @keyframes wid {
   0% {
@@ -167,8 +328,46 @@
   padding: 0.75rem 1rem;
   font-size: 2.2rem;
   border-radius: rem(26px);
+
+@include tablets {
+    margin-top: 0;
+  }
+
+@include laptop {
+    margin-top: 0;
+  }
 }
 
 .account--width-80 {
   width: 80%;
+}
+
+.account--width-adaptive {
+  @include tablets {
+    width: 100%;
+  }
+
+@include laptop {
+    width: 100%;
+  }
+}
+
+.account--margin-adaptive {
+  @include tablets {
+    margin-bottom: 1rem;
+  }
+
+@include laptop {
+    margin-bottom: 1rem;
+  }
+}
+
+.account--display-adaptive {
+  @include tablets {
+    display: none;
+  }
+
+@include laptop {
+    display: none;
+  }
 }

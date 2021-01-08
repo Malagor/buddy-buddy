@@ -9,8 +9,8 @@ export class AccountPage extends Page {
   render = (dt: any): void => {
     const data: any = this.checkNameAccount(dt);
     this.element.innerHTML = `
-    <div class="account__wrapper d-flex align-items-center position-absolute w-100 flex-column">
-      <div class="account__header account__header--scroll-out d-flex align-items-center w-100">
+    <div class="account__wrapper d-flex align-items-center flex-column">
+      <div class="account__header account__header--scroll-out d-flex align-items-center">
         <div class="account__image-wrapper position-relative overflow-hidden">
           <img src="${data.avatar}" alt="${
       data.name && data.surname
@@ -35,28 +35,28 @@ export class AccountPage extends Page {
               data.id
             }" class="form-control account__info__input account__info__input-id" placeholder="Username" aria-label="Username" aria-describedby="addon-wrapping" required>
           </div>
-          <div class="form-group row">
-            <label for="surname" class="col-sm-2 col-form-label text-center">Name and Surname</label>
+          <div class="form-group row account--margin-adaptive">
+            <label for="surname" class="col-sm-2 col-form-label text-center account--width-adaptive">Name and Surname</label>
             <div class="input-group">       
               <input type="text" name="name" aria-label="Last name" value="${
                 data.name
-              }" class="form-control account__info__input" required>
+              }" class="form-control account__info__input" placeholder="Name" required>
               <input type="text" name="surname" aria-label="First name" value="${
                 data.surname
-              }" class="form-control account__info__input" id="surname">
+              }" class="form-control account__info__input" placeholder="Surname" id="surname">
             </div>
           </div>
-          <div class="form-group row">
+          <div class="form-group row account--margin-adaptive">
             <label for="inputEmail3" class="col-sm-2 col-form-label">Email</label>
             <div class="col-sm-10">
               <input type="email" name="email" value="${
                 data.email
-              }" class="form-control account__info__input" id="inputEmail3" required>
+              }" class="form-control account__info__input" placeholder="E-mail" id="inputEmail3" required>
             </div>
           </div>
-          <div class="form-group row">
-            <label for="inputPassword3" class="col-sm-2 col-form-label">Date</label>
-            <div class="col-sm-10">
+          <div class="form-group row account--margin-adaptive">
+            <label for="inputPassword3" class="col-sm-2 col-form-label" placeholder="Birthday">Day of Birth</label>
+            <div class="col-sm-10 align-self-center">
               <input type="date" name="date" value="${
                 data.date
               }" class="form-control account__info__input" id="inputPassword3">
@@ -82,14 +82,14 @@ export class AccountPage extends Page {
             </div>
           </fieldset>
           <div class="form-group row">
-            <div class="col-sm-10 d-flex">
+            <div class="col-sm-10 d-flex account--width-adaptive">
               <button type="submit" class="account__input-submit btn btn-dark mx-auto" disabled>Save</button>
             </div>
           </div>
         </form>
     </div>
-    <button type="button" class="btn btn-secondary btn-lg btn-block account--width-80 mb-2">My groups</button>
-    <button type="button" class="btn btn-secondary btn-lg btn-block account--width-80">Settings</button>      
+    <button type="button" class="btn btn-secondary btn-lg btn-block account--width-80 mb-2 account--display-adaptive">My groups</button>
+    <button type="button" class="btn btn-secondary btn-lg btn-block account--width-80 account--display-adaptive">Settings</button>      
     <p class="account__balance align-self-end">Balance</p>
       `;
     this.checkGenderAccount(data);
@@ -140,12 +140,8 @@ export class AccountPage extends Page {
     window.addEventListener('scroll', (): void => {
       if (window.pageYOffset > 0 && !currentScroll) {
         currentScroll = window.pageYOffset;
-        document.body.style.overflow = 'hidden';
         header.classList.remove('account__header--scroll-out');
         header.classList.add('account__header--scroll-in');
-        setTimeout((): void => {
-          document.body.style.overflow = '';
-        }, 350);
       } else if (
         currentScroll > window.pageYOffset &&
         window.pageYOffset < 200
