@@ -11,7 +11,8 @@
     "comb": "csscomb ./src/",
     "test": "karma start",
     "tslint": "tslint ./src/**/*.ts",
-    "combolint": "npm run tslint & npm run comb"
+    "tslint-fix": "tslint ./src/**/*.ts --fix",
+    "combolint": "npm run tslint --fix & npm run comb"
   },
   "author": "Alex Malagor <seo.dnja@gmail.com>",
   "repository": {
