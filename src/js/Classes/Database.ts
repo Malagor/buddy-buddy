@@ -47,7 +47,7 @@ export class Database {
     });
   }
 
-  createUserByEmail(email: string, password: string, nameUser: string = '') {
+  createUserByEmail(email: string, password: string, nameUser: string = '', errorHandleFunction: any) {
     console.log(email + ' : ' + password + ' : ' + nameUser);
     const userData = {
       name: nameUser,
@@ -69,10 +69,11 @@ export class Database {
       .catch(function(error: { code: any; message: any; }) {
         console.log(error.code);
         console.log(error.message);
+        errorHandleFunction(error.message);
       });
   }
 
-  createUserByGoogle(): void {
+  createUserByGoogle(errorHandleFunction: any): void {
     let provider = new firebase.auth.GoogleAuthProvider();
     provider.addScope('profile');
     provider.addScope('email');
@@ -99,14 +100,16 @@ export class Database {
     }).catch(function(error) {
       console.log(error.code);
       console.log(error.message);
+      errorHandleFunction(error.message);
     });
   }
 
-  loginUserByEmail(email: string, password: string): void {
+  loginUserByEmail(email: string, password: string, errorHandleFunction: any): void {
     firebase.auth().signInWithEmailAndPassword(email, password)
       .catch(function(error) {
         console.log(error.code);
         console.log(error.message);
+        errorHandleFunction(error.message);
       });
   }
 

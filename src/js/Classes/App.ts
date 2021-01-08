@@ -74,11 +74,11 @@ export class App {
   }
 
   onSignIn(email: string, password: string, name: string): void {
-    this.database.createUserByEmail(email, password, name);
+    this.database.createUserByEmail(email, password, name, this.regPage.showErrorMessage);
   }
 
   onLogin(email: string, password: string): void {
-    this.database.loginUserByEmail(email, password);
+    this.database.loginUserByEmail(email, password, this.authPage.showErrorMessage);
   }
 
   onMainPage() {
@@ -108,7 +108,7 @@ export class App {
   }
 
   onGoogleReg() {
-    this.database.createUserByGoogle();
+    this.database.createUserByGoogle(this.regPage.showErrorMessage);
   }
 
   loadSignInPage() {

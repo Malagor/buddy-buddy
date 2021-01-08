@@ -35,6 +35,7 @@ export class AuthPage extends Page {
             <input type="password" class="form-control" id="floatingPassword" placeholder="Password" name="password">
             <label for="floatingPassword">Password</label>
           </div>
+          <div class="error-message w-75 mb-3"></div>
           <div class="d-grid gap-5 d-md-block mb-3 reg-icons__wrapper">
             <button class="reg-icon reg-icon__google" id="googleReg"></button>
           </div>
@@ -80,5 +81,10 @@ export class AuthPage extends Page {
 
       this.onGoogleReg();
     });
+  }
+
+  showErrorMessage = (message: string) => {
+    const error = this.element.querySelector('.error-message');
+    error.textContent = message;
   }
 }
