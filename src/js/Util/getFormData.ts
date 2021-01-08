@@ -10,5 +10,7 @@ export const getFormData = (formElement: HTMLFormElement): any => {
     }
   });
 
+  console.log('getFormData - formData:', formData);
+
   return formData;
 };
