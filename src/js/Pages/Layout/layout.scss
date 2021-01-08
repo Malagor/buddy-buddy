@@ -143,3 +143,112 @@ body {
 main.main {
   padding-top: 2rem;
 }
+
+
+footer.footer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 0 rem(16px);
+
+  grid-area: footer;
+}
+
+.footer__title,
+.footer__content,
+.footer__school,
+.footer__author__link {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.footer__title > p {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  height: rem(20px);
+  @media screen and (max-width: 768px) {
+    align-items: center;
+    height: rem(18px);
+  }
+}
+
+.footer__main-icon {
+  width: rem(20px);
+  height: rem(20px);
+  @media screen and (max-width: 768px) {
+    width: rem(18px);
+    height: rem(18px);
+  }
+}
+
+.footer__title,
+.footer__school {
+  gap: rem(8px);
+  @media screen and (max-width: 992px) {
+    font-size: 1rem;
+  }
+  @media screen and (max-width: 768px) {
+    font-size: 0.7rem;
+  }
+}
+
+.footer__content {
+  justify-content: space-between;
+  width: 100%;
+}
+
+.footer__authors {
+  display: flex;
+
+  gap: rem(64px);
+  @media screen and (max-width: 992px) {
+    gap: rem(45px);
+  }
+  @media screen and (max-width: 768px) {
+    gap: rem(28px);
+  }
+  @media screen and (max-width: 550px) {
+    gap: rem(20px);
+  }
+}
+
+.footer__author__link {
+  font-size: rem(14.4px);
+  color: rgba(255, 255, 255, 1);
+  text-decoration: none;
+  opacity: 0.7;
+
+  gap: 0.3rem;
+  &:hover {
+    opacity: 1;
+  }
+
+  @media screen and (max-width: 768px) {
+    font-size: 0.7rem;
+  }
+}
+
+.footer__github > svg {
+  width: rem(15px);
+  height: rem(15px);
+
+  fill: rgba(255, 255, 255, 1);
+  @media screen and (max-width: 768px) {
+    width: rem(13px);
+    height: rem(13px);
+  }
+}
+
+.footer__course__link > svg {
+  width: rem(50px);
+  height: rem(30px);
+
+  fill: rgba(255, 255, 255, 1);
+  @media screen and (max-width: 768px) {
+    width: rem(40px);
+    height: rem(23px);
+  }
+}

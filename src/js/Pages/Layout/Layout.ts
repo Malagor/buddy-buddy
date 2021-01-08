@@ -3,6 +3,8 @@ import { Modal } from 'bootstrap';
 
 const defAvatar = require('../../../assets/images/default-user-avatar.jpg');
 const logo = require('../../../assets/icons/team.svg');
+const githubLogo = require('../../../assets/icons/github.svg');
+const rssLogo = require('../../../assets/icons/rs_school_js.svg');
 
 export class Layout extends Page {
   onMainPage: any;
@@ -85,10 +87,43 @@ export class Layout extends Page {
             </ul>
         </nav>
         </div>
-        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 main">
+        <main class="col-md-9 ms-sm-auto justify-content-md-center col-lg-10 px-md-4 main">
         </main>
       </div>
     </div>
+    <footer class="fixed-bottom bg-dark text-white d-none d-md-block">
+      <div class="footer__content">
+        <div class="footer__title">
+          ${logo}
+          <p><span>Buddy-Buddy</span></p>
+        </div>
+        <div class="footer__authors">
+          <div class="footer__author">
+            <a href="https://github.com/Malagor" class="footer__author__link" target="_blank">
+              <p>Malagor</p>
+              <p class="footer__github">${githubLogo}</p>
+            </a>
+          </div>
+          <div class="footer__author">
+            <a href="https://github.com/besovadevka" class="footer__author__link" target="_blank">
+              <p>besovadevka</p>
+              <p class="footer__github">${githubLogo}</p>
+            </a>
+          </div>
+          <div class="footer__author">
+            <a href="https://github.com/gryzun33" class="footer__author__link" target="_blank">
+              <p>gryzun33</p>
+              <p class="footer__github">${githubLogo}</p>
+            </a>
+          </div>
+        </div>
+        <div class="footer__school">
+          <p>© 2020</p>
+          <p>|</p>
+          <a href="https://rs.school/js/" class="footer__course__link" target="_blank">${rssLogo}</a>
+        </div>
+      </div>
+    </footer>
 
     <div class="modal fade"  id="singOutModal" tabindex="-1">
       <div class="modal-dialog modal-dialog-centered">
