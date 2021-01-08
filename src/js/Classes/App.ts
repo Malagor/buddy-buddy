@@ -55,6 +55,8 @@ export class App {
       console.log(`isUserLogon = ${state}`);
       this.authPage = AuthPage.create('#app');
       this.authPage.onLoadSignInPage = this.loadSignInPage.bind(this);
+      this.authPage.onGoogleReg = this.onGoogleReg.bind(this);
+
 
       this.regPage = RegistrationPage.create('#app');
       this.regPage.onSignIn = this.onSignIn.bind(this);
