@@ -32,34 +32,34 @@ export class AccountPage extends Page {
               <span class="input-group-text" id="addon-wrapping">@</span>
             </div>
             <input type="text" name="id" value="${
-              data.id
-            }" class="form-control account__info__input account__info__input-id" placeholder="Username" aria-label="Username" aria-describedby="addon-wrapping" required>
+      data.id
+    }" class="form-control account__info__input account__info__input-id" placeholder="Username" aria-label="Username" aria-describedby="addon-wrapping" required>
           </div>
           <div class="form-group row account--margin-adaptive">
             <label for="surname" class="col-sm-2 col-form-label text-center account--width-adaptive">Name and Surname</label>
             <div class="input-group">
               <input type="text" name="name" aria-label="Last name" value="${
-                data.name
-              }" class="form-control account__info__input" placeholder="Name" required>
+      data.name
+    }" class="form-control account__info__input" placeholder="Name" required>
               <input type="text" name="surname" aria-label="First name" value="${
-                data.surname
-              }" class="form-control account__info__input" placeholder="Surname" id="surname">
+      data.surname
+    }" class="form-control account__info__input" placeholder="Surname" id="surname">
             </div>
           </div>
           <div class="form-group row account--margin-adaptive">
             <label for="inputEmail3" class="col-sm-2 col-form-label">Email</label>
             <div class="col-sm-10">
               <input type="email" name="email" value="${
-                data.email
-              }" class="form-control account__info__input" placeholder="E-mail" id="inputEmail3" required>
+      data.email
+    }" class="form-control account__info__input" placeholder="E-mail" id="inputEmail3" required>
             </div>
           </div>
           <div class="form-group row account--margin-adaptive">
             <label for="inputPassword3" class="col-sm-2 col-form-label" >Day of Birth</label>
             <div class="col-sm-10 align-self-center">
               <input type="date" name="date" value="${
-                data.date
-              }" class="form-control account__info__input" id="inputPassword3" placeholder="Birthday">
+      data.date
+    }" class="form-control account__info__input" id="inputPassword3" placeholder="Birthday">
             </div>
           </div>
           <fieldset class="form-group">
@@ -142,10 +142,7 @@ export class AccountPage extends Page {
         currentScroll = window.pageYOffset;
         header.classList.remove('account__header--scroll-out');
         header.classList.add('account__header--scroll-in');
-      } else if (
-        currentScroll > window.pageYOffset &&
-        window.pageYOffset < 200
-      ) {
+      } else if (currentScroll > window.pageYOffset && window.pageYOffset < 100) {
         header.classList.add('account__header--scroll-out');
         header.classList.remove('account__header--scroll-in');
         currentScroll = 0;
