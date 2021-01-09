@@ -10,22 +10,22 @@ export class AccountPage extends Page {
     const data: any = this.checkNameAccount(dt);
     this.element.innerHTML = `
     <div class="account__wrapper d-flex align-items-center flex-column">
-      <div class="account__header account__header--scroll-out d-flex align-items-center">
-        <div class="account__image-wrapper position-relative overflow-hidden">
-          <img src="${data.avatar}" alt="${
+      <div class="account__info d-flex align-items-center flex-column account--width-80">
+        <div class="account__header d-flex align-items-center">
+          <div class="account__image-wrapper position-relative overflow-hidden">
+            <img src="${data.avatar}" alt="${
       data.name && data.surname
     }" class="account__image position-absolute top-50 start-50 translate-middle">
+          </div>
+          <p class="account__nick">@${data.account}</p>
+          <form action=#" enctype="multipart/form-data" method="post" class="account__form-change-photo d-flex justify-content-center align-items-center">
+            <label for="file" class="account__button-change-photo d-flex justify-content-center align-items-center">
+              <i class="material-icons">monochrome_photos</i>
+            </label>
+            <input type="file" name="avatar" id="file" class="account__input-photo position-absolute invisible">
+          </form>
         </div>
-        <p class="account__nick">@${data.account}</p>
-        <form action=#" enctype="multipart/form-data" method="post" class="account__form-change-photo d-flex justify-content-center align-items-center">
-          <label for="file" class="account__button-change-photo d-flex justify-content-center align-items-center">
-            <i class="material-icons">monochrome_photos</i>
-          </label>
-          <input type="file" name="avatar" id="file" class="account__input-photo position-absolute invisible">
-        </form>
-      </div>
 
-      <div class="account__info d-flex align-items-center flex-column account--width-80">
         <form class="account__form-change-info">
           <div class="input-group flex-nowrap">
             <div class="input-group-prepend">
@@ -64,7 +64,7 @@ export class AccountPage extends Page {
           </div>
           <fieldset class="form-group">
             <div class="row">
-              <legend class="col-form-label col-sm-2 pt-0 ps-0">Gender</legend>
+              <legend class="col-form-label col-sm-2 pt-0">Gender</legend>
               <div class="col-sm-10">
                 <div class="form-check">
                   <input class="form-check-input account__info__input account__info__input-male" name="gender" type="radio" id="gridRadios1" value="M">
@@ -87,9 +87,7 @@ export class AccountPage extends Page {
             </div>
           </div>
         </form>
-    </div>
-    <button type="button" class="btn btn-secondary btn-lg btn-block account--width-80 mb-2 account--display-adaptive">My groups</button>
-    <button type="button" class="btn btn-secondary btn-lg btn-block account--width-80 mb-2 account--display-adaptive">Settings</button>      
+    </div>     
     <p class="account__balance">Balance</p>
       `;
     this.checkGenderAccount(data);
@@ -136,21 +134,6 @@ export class AccountPage extends Page {
     const idValue: HTMLInputElement = this.element.querySelector(
       '.account__nick',
     );
-
-    window.addEventListener('scroll', (): void => {
-      if (window.pageYOffset > 0 && !currentScroll) {
-        currentScroll = window.pageYOffset;
-        header.classList.remove('account__header--scroll-out');
-        header.classList.add('account__header--scroll-in');
-      } else if (
-        currentScroll > window.pageYOffset &&
-        window.pageYOffset < 100
-      ) {
-        header.classList.add('account__header--scroll-out');
-        header.classList.remove('account__header--scroll-in');
-        currentScroll = 0;
-      }
-    });
 
     inputPhoto.addEventListener('change', (): void => {
       if (inputPhoto.files[0]) {
