@@ -6,6 +6,8 @@ import { Main } from '../Pages/Main/Main';
 import { AccountPage } from '../Pages/AccountPage/AccountPage';
 import { GroupPage } from '../Pages/GroupsPages/GroupsPage';
 import { groupsData } from '../Data/groups';
+import { TransactionsList } from '../Pages/TransactionsList/transactionsList';
+import { dataTransList } from '../Data/dataTransList';
 
 export class App {
   private database: Database;
@@ -15,6 +17,7 @@ export class App {
   private mainPage: Main;
   private accountPage: AccountPage;
   private groupsPage: GroupPage;
+  private transactionsList: TransactionsList;
 
   constructor() {
     this.database = Database.create();
@@ -56,6 +59,8 @@ export class App {
       this.groupsPage = GroupPage.create('.main')
       this.groupsPage.onCreateNewGroup = this.onCreateNewGroup.bind(this);
       this.groupsPage.onAddMember = this.onAddGroupMember.bind(this);
+      this.transactionsList = TransactionsList.create('.main');
+      this.transactionsList.onTransactionSubmit = this.onTransactionSubmit.bind(this);
 
     } else {
       console.log(`isUserLogon = ${state}`);
@@ -70,6 +75,7 @@ export class App {
       this.regPage.onGoogleReg = this.onGoogleReg.bind(this);
 
       this.authPage.render();
+      
     }
   }
 
@@ -106,6 +112,7 @@ export class App {
   }
 
   onTransactionsPage() {
+    this.transactionsList.render(dataTransList);
     console.log('Load Transactions Page!');
   }
 
@@ -139,6 +146,11 @@ export class App {
 
   onAddGroupMember(name: string) {
     this.database.findUserByName(name, this.groups.addMembersGroup);
+  }
+
+  onTransactionSubmit(i: number) {
+    dataTransList.transactions[i].submit = true;
+    console.log ('submit transaction');
   }
 
   // loadMainPage() {
