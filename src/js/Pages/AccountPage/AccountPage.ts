@@ -31,7 +31,7 @@ export class AccountPage extends Page {
             <div class="input-group-prepend">
               <span class="input-group-text" id="addon-wrapping">@</span>
             </div>
-            <input type="text" name="id" value="${
+            <input type="text" name="account" value="${
               data.account
             }" class="form-control account__info__input account__info__input-id" placeholder="Username" aria-label="Username" aria-describedby="addon-wrapping" required>
           </div>
