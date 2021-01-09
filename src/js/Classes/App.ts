@@ -52,6 +52,7 @@ export class App {
       this.layout.onSettingsPage = this.onSettingsPage.bind(this);
       this.layout.onHelpPage = this.onHelpPage.bind(this);
       this.layout.onSignOut = this.onSignOut.bind(this);
+      this.layout.onAccountPage = this.onAccountPage.bind(this);
 
       this.accountPage = AccountPage.create('.main');
 
