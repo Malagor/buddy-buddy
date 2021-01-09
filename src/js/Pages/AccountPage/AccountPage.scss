@@ -9,12 +9,12 @@
 
 @include tablets {
     position: relative;
-    margin-top: -3rem;
+    margin-top: -2.5rem;
   }
 
 @include laptop {
     position: relative;
-    margin-top: -3rem;
+    margin-top: -2.5rem;
   }
 }
 
@@ -265,12 +265,10 @@
 
 @include tablets {
       margin-top: 0;
-      margin-bottom: 1rem;
     }
 
 @include laptop {
       margin-top: 0;
-      margin-bottom: 1rem;
     }
   }
 }
@@ -328,14 +326,14 @@
 }
 
 .account__info {
-  margin: 2rem 0;
+  margin: 2rem 0 1.5rem;
   padding: 1.5rem;
   background-color: rgba(255, 255, 255, 1);
   box-shadow: 0 0 10px 5px rgba(0, 0, 0, 0.075);
 }
 
 .account__balance {
-  margin: 1.5rem 0.5rem 1.5rem 0;
+  margin: 0 0.5rem 1.5rem 0;
   padding: 0.75rem 1rem;
   font-size: 2rem;
   border-radius: rem(26px);
@@ -346,6 +344,11 @@
   }
 
 @include laptop {
+    margin: 0 0 5rem;
+    padding: 0;
+  }
+
+@include desktop {
     margin: 0 0 5rem;
     padding: 0;
   }
