@@ -22,7 +22,7 @@ export class AccountPage extends Page {
             <i class="material-icons">monochrome_photos</i>
           </label>
           <input type="file" name="avatar" id="file" class="account__input-photo position-absolute invisible">
-        </form>      
+        </form>
       </div>
 
       <div class="account__info d-flex align-items-center flex-column account--width-80">
@@ -37,7 +37,7 @@ export class AccountPage extends Page {
           </div>
           <div class="form-group row account--margin-adaptive">
             <label for="surname" class="col-sm-2 col-form-label text-center account--width-adaptive">Name and Surname</label>
-            <div class="input-group">       
+            <div class="input-group">
               <input type="text" name="name" aria-label="Last name" value="${
                 data.name
               }" class="form-control account__info__input" placeholder="Name" required>
@@ -55,11 +55,11 @@ export class AccountPage extends Page {
             </div>
           </div>
           <div class="form-group row account--margin-adaptive">
-            <label for="inputPassword3" class="col-sm-2 col-form-label" placeholder="Birthday">Day of Birth</label>
+            <label for="inputPassword3" class="col-sm-2 col-form-label" >Day of Birth</label>
             <div class="col-sm-10 align-self-center">
               <input type="date" name="date" value="${
                 data.date
-              }" class="form-control account__info__input" id="inputPassword3">
+              }" class="form-control account__info__input" id="inputPassword3" placeholder="Birthday">
             </div>
           </div>
           <fieldset class="form-group">
@@ -89,12 +89,12 @@ export class AccountPage extends Page {
         </form>
     </div>
     <button type="button" class="btn btn-secondary btn-lg btn-block account--width-80 mb-2 account--display-adaptive">My groups</button>
-    <button type="button" class="btn btn-secondary btn-lg btn-block account--width-80 account--display-adaptive">Settings</button>      
+    <button type="button" class="btn btn-secondary btn-lg btn-block account--width-80 account--display-adaptive">Settings</button>
     <p class="account__balance align-self-end">Balance</p>
       `;
     this.checkGenderAccount(data);
     this.events();
-  };
+  }
 
   protected checkNameAccount(data: any): {} | void {
     const dt = { ...data };

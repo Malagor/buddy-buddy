@@ -15,6 +15,7 @@ export class Layout extends Page {
   onSettingsPage: any;
   onHelpPage: any;
   onSignOut: any;
+  onAccountPage: any;
 
   static create(el: string) {
     return new Layout(el);
@@ -29,7 +30,7 @@ export class Layout extends Page {
       </button>
     </header>
 
-    <div class="container-fluid">
+    <div class="container">
       <div class="row">
         <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
           <div class="position-sticky pt-3 sidebar__header">
@@ -47,7 +48,7 @@ export class Layout extends Page {
                 </a>
               </li>
               <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="#" id="sidebarMainLink">
+                <a class="nav-link active" aria-current="page" href="#" id="sidebarAccountLink">
                   <i class="material-icons">account_box</i><span>Аккаунт</span>
                 </a>
               </li>
@@ -184,6 +185,9 @@ export class Layout extends Page {
 
       if (target.closest('#sidebarMainLink')) {
         this.onMainPage();
+      }
+      if (target.closest('#sidebarAccountLink')) {
+        this.onAccountPage();
       }
 
       if (target.closest('#sidebarGroupsLink')) {

@@ -80,47 +80,47 @@ export class GroupPage extends Page {
   }
 
   createGroupList(data: any) {
-    let HTMLGroups = ''
+    let HTMLGroups = '';
 
-    if(data){
+    if (data) {
       let openGroupHTMLCard = '';
       let closedGroupHTMLCard = '';
 
       data.forEach((element: any) => {
         const participantsId = element.userList;
-    
+
         let participantsImg: string[] = [];
         participantsId.forEach((participant: any) => {
-          if(participantsImg.length < NUM_OF_IMG_IN_GROUP_CARD) {
+          if (participantsImg.length < NUM_OF_IMG_IN_GROUP_CARD) {
             participantsImg.push(`<img class="card-group__img-avatar--mini" src="${element.style.icon}" alt="icon${participant}">`);
-          }  
+          }
         });
-        if(participantsId.length > NUM_OF_IMG_IN_GROUP_CARD) participantsImg.push(`<span>+${participantsId.length - NUM_OF_IMG_IN_GROUP_CARD}</span>`);
-    
-        let balanceGroup: string = ''
-        if(element.balance < 0) {
+        if (participantsId.length > NUM_OF_IMG_IN_GROUP_CARD) participantsImg.push(`<span>+${participantsId.length - NUM_OF_IMG_IN_GROUP_CARD}</span>`);
+
+        let balanceGroup: string = '';
+        if (element.balance < 0) {
           balanceGroup = `
             <h5 class="card-group__balance">
-              ${element.balance ? element.currency: ''}<span class="card-group__balance--negative">${element.balance ? element.balance: formatDate(element.dateCreate)}</span>
+              ${element.balance ? element.currency : ''}<span class="card-group__balance--negative">${element.balance ? element.balance : formatDate(element.dateCreate)}</span>
             </h5>
           `;
         } else if (element.balance >= 0) {
           balanceGroup = `
             <h5 class="card-group__balance">
-              ${element.balance ? element.currency: ''}<span class="card-group__balance--positive">${element.balance ? element.balance: formatDate(element.dateCreate)}</span>
+              ${element.balance ? element.currency : ''}<span class="card-group__balance--positive">${element.balance ? element.balance : formatDate(element.dateCreate)}</span>
             </h5>
           `;
         }
-      
+
         const groupCard = `
           <div class="card mb-3 card-group">
             <div class="row g-0 col">
               <div class="col-3 card-group__box-logo-group">
                 <img class="card-group__img-avatar" src="${element.style.icon}" alt="icon-group">
               </div>
-    
+
               <div class="col-9 card-group__box-content">
-    
+
                 <div class="row col">
                   <div class="col-7">
                     <h5>${element.title}</h5>
@@ -129,7 +129,7 @@ export class GroupPage extends Page {
                     <h5>${formatDate(element.dateCreate)}</h5>
                   </div>
                 </div>
-                  
+
                 <div class="row col">
                   <div class="col-7">
                     ${participantsImg.join('')}
@@ -138,14 +138,14 @@ export class GroupPage extends Page {
                     ${balanceGroup}
                   </div>
                 </div>
-    
+
               </div>
-    
+
             </div>
           </div>
         `;
-        
-        if(!element.dateClose) {
+
+        if (!element.dateClose) {
           openGroupHTMLCard += groupCard;
         } else if (element.dateClose) {
           closedGroupHTMLCard += groupCard;
@@ -154,16 +154,16 @@ export class GroupPage extends Page {
 
       HTMLGroups += `
         <div class="col-6">
-          <h2>Balance $5</h2> 
+          <h2>Balance $5</h2>
         </div>
       `;
       HTMLGroups += `</div>`;
 
       HTMLGroups += `
         <div id="openGroup" class="open-group">
-          ${openGroupHTMLCard}        
+          ${openGroupHTMLCard}
         </div>
-        <div id="closedGroup" class="closed-group ">  
+        <div id="closedGroup" class="closed-group ">
 
           <div class="accordion" id="accordionExample">
             <div class="accordion-item">
