@@ -90,7 +90,7 @@ export class AccountPage extends Page {
     </div>
     <button type="button" class="btn btn-secondary btn-lg btn-block account--width-80 mb-2 account--display-adaptive">My groups</button>
     <button type="button" class="btn btn-secondary btn-lg btn-block account--width-80 account--display-adaptive">Settings</button>      
-    <p class="account__balance align-self-end">Balance</p>
+    <p class="account__balance">Balance</p>
       `;
     this.checkGenderAccount(data);
     this.events();
