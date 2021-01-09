@@ -1,8 +1,8 @@
 header.header {
   position: relative;
   display: flex;
-  justify-content: center;
-  //align-items: center;
+<<<<<<< HEAD
+  justify-content: center;//align-items: center;
   //background: #dddddd;
   //box-shadow: 0 1px 5px black;
 
@@ -46,3 +46,9 @@ header.header {
 //    }
 //  }
 //}
+=======
+  justify-content: center;
+
+  grid-area: header;
+}
+>>>>>>> develop

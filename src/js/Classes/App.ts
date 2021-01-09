@@ -3,9 +3,11 @@ import { Layout } from '../Pages/Layout/Layout';
 import { AuthPage } from '../Pages/AuthPage/AuthPage';
 import { RegistrationPage } from '../Pages/RegistrationPage/RegistrationPage';
 import { Main } from '../Pages/Main/Main';
-import { MyGroups } from '../Pages/MyGroups/MyGroups';
-
-import { groupsData } from '../Data/grops';
+import { AccountPage } from '../Pages/AccountPage/AccountPage';
+import { GroupPage } from '../Pages/GroupsPages/GroupsPage';
+import { groupsData } from '../Data/groups';
+import { TransactionsList } from '../Pages/TransactionsList/transactionsList';
+import { dataTransList } from '../Data/dataTransList';
 
 export class App {
   private database: Database;
@@ -13,7 +15,9 @@ export class App {
   private authPage: AuthPage;
   private regPage: RegistrationPage;
   private mainPage: Main;
-  private groups: MyGroups;
+  private accountPage: AccountPage;
+  private groupsPage: GroupPage;
+  private transactionsList: TransactionsList;
 
   constructor() {
     this.database = Database.create();
@@ -30,7 +34,8 @@ export class App {
   }
 
   isUserLogin(state: boolean, uid?: string) {
-    if (state) { // user signin
+    if (state) {
+      // user signin
       this.layout = Layout.create('#app');
       this.layout.render();
 
@@ -38,23 +43,34 @@ export class App {
       this.layout.onSignOut = this.onSignOut.bind(this);
       this.layout.onStatisticsPage = this.onStatisticsPage.bind(this);
       this.layout.onMainPage = this.onMainPage.bind(this);
+      this.layout.onAccountPage = this.onAccountPage.bind(this);
       this.layout.onGroupsPage = this.onGroupsPage.bind(this);
       this.layout.onTransactionsPage = this.onTransactionsPage.bind(this);
       this.layout.onSettingsPage = this.onSettingsPage.bind(this);
       this.layout.onHelpPage = this.onHelpPage.bind(this);
       this.layout.onSignOut = this.onSignOut.bind(this);
 
-      this.mainPage = Main.create('.main');
-      this.database.getUserInfo(uid, [this.mainPage.render, this.layout.setSidebarData]);
+      this.accountPage = AccountPage.create('.main');
 
-      this.groups = MyGroups.create('.main');
-      this.groups.onCreateNewGroup = this.onCreateNewGroup.bind(this);
-      this.groups.onAddMember = this.onAddGroupMember.bind(this);
+      this.mainPage = Main.create('.main');
+      this.database.getUserInfo(uid, [
+        this.accountPage.render,
+        this.layout.setSidebarData,
+      ]);
+
+      this.groupsPage = GroupPage.create('.main');
+      this.groupsPage.onCreateNewGroup = this.onCreateNewGroup.bind(this);
+      // this.groupsPage.onAddMember = this.onAddGroupMember.bind(this);
+
+      this.transactionsList = TransactionsList.create('.main');
+      this.transactionsList.onTransactionSubmit = this.onTransactionSubmit.bind(this);
 
     } else {
       console.log(`isUserLogon = ${state}`);
       this.authPage = AuthPage.create('#app');
       this.authPage.onLoadSignInPage = this.loadSignInPage.bind(this);
+      this.authPage.onGoogleReg = this.onGoogleReg.bind(this);
+      this.authPage.onLogin = this.onLogin.bind(this);
 
       this.regPage = RegistrationPage.create('#app');
       this.regPage.onSignIn = this.onSignIn.bind(this);
@@ -70,8 +86,21 @@ export class App {
     this.database.init();
   }
 
-  onSignIn(email: string, password: string, name: string) {
-    this.database.createUserByEmeil(email, password, name);
+  onSignIn(email: string, password: string, name: string): void {
+    this.database.createUserByEmail(
+      email,
+      password,
+      name,
+      this.regPage.showErrorMessage,
+    );
+  }
+
+  onLogin(email: string, password: string): void {
+    this.database.loginUserByEmail(
+      email,
+      password,
+      this.authPage.showErrorMessage,
+    );
   }
 
   onMainPage() {
@@ -79,13 +108,17 @@ export class App {
     this.database.getUserInfo(uid, [this.mainPage.render]);
   }
 
+  onAccountPage() {
+    const uid: string = this.database.uid;
+    this.database.getUserInfo(uid, [this.accountPage.render]);
+  }
+
   onGroupsPage() {
-    console.log('Load Groups Page!');
-    this.groups.render(groupsData);
+    this.groupsPage.render(groupsData);
   }
 
   onTransactionsPage() {
-    console.log('Load Transactions Page!');
+    this.transactionsList.render(dataTransList);
   }
 
   onStatisticsPage() {
@@ -101,7 +134,7 @@ export class App {
   }
 
   onGoogleReg() {
-    this.database.createUserByGoogle();
+    this.database.createUserByGoogle(this.regPage.showErrorMessage);
   }
 
   loadSignInPage() {
@@ -116,12 +149,21 @@ export class App {
     console.log('Create New Group');
   }
 
-  onAddGroupMember(name: string) {
-    this.database.findUserByName(name, this.groups.addMembersGroup);
+  // onAddGroupMember(name: string) {
+  //   this.database.findUserByName(name, this.groupsPage.addMembersGroup);
+  // }
+
+  onTransactionSubmit(i: number) {
+    dataTransList.transactions[i].submit = true;
+    console.log('submit transaction');
   }
 
   // loadMainPage() {
   //   this.mainPage.render();
+  // }
+
+  // loadGroupPage() {
+  //   this.groupsPage.render();
   // }
 
   // createUser(uid: string) {
@@ -195,5 +237,3 @@ export class App {
   //   langBase3.set(lang3);
   // }
 }
-
-
