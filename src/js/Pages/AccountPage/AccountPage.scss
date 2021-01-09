@@ -5,13 +5,13 @@
   position: absolute;
   top: rem(49px);
   left: 0;
+  right: 0;
 
-@include tablets {
+  @include tablets {
     position: relative;
     margin-top: -1.5rem;
   }
-
-@include laptop {
+  @include laptop {
     position: relative;
     margin-top: -1.5rem;
   }
@@ -35,7 +35,7 @@
   justify-content: flex-end;
   height: auto;
 
-@include tablets {
+  @include tablets {
     position: relative;
     z-index: 1;
     flex-direction: row;
@@ -50,8 +50,7 @@
       margin-top: 0;
     }
   }
-
-@include laptop {
+  @include laptop {
     position: relative;
     z-index: 1;
     flex-direction: row;
@@ -72,7 +71,7 @@
     background-color: rgba(255, 255, 255, 1);
     box-shadow: 0 0 10px 5px rgba(0, 0, 0, 0.3);
 
-@include tablets {
+    @include tablets {
       width: rem(80px);
       height: rem(80px);
       border-radius: 50%;
@@ -80,8 +79,7 @@
       transition: none;
       animation: none;
     }
-
-@include laptop {
+    @include laptop {
       width: rem(80px);
       height: rem(80px);
       border-radius: 50%;
@@ -99,13 +97,12 @@
     & > .account__image {
       width: 100%;
 
-@include tablets {
+      @include tablets {
         width: rem(80px);
         transition: none;
         animation: none;
       }
-
-@include laptop {
+      @include laptop {
         width: rem(80px);
         transition: none;
         animation: none;
@@ -118,16 +115,15 @@
     font-size: 2.1rem;
     color: rgba(255, 255, 255, 1);
     text-shadow: 0 2px 3px rgba(0, 0, 0, 1);
-    background-clip: text;
+    //background-clip: text;
 
-@include tablets {
+    @include tablets {
       margin: auto 0 auto 0.65rem;
       font-size: 1.4rem;
       color: rgba(0, 0, 0, 1);
       text-shadow: none;
     }
-
-@include laptop {
+    @include laptop {
       margin: auto 0 auto 0.65rem;
       font-size: 1.4rem;
       color: rgba(0, 0, 0, 1);
@@ -140,30 +136,26 @@
     height: 4rem;
     margin-top: -0.6rem;
 
-@include tablets {
+    @include tablets {
       align-self: center;
       width: 3.5rem;
       height: 3.5rem;
-      margin: 0 0 -1.75rem auto;
-      margin-bottom: 0;
+      margin: 0 0 0 auto;
     }
-
-@include laptop {
+    @include laptop {
       align-self: center;
       width: 3.5rem;
       height: 3.5rem;
-      margin: 0 0 -1.75rem auto;
-      margin-bottom: 0;
+      //margin: 0 0 -1.75rem auto;
     }
 
     & > .account__button-change-photo > .material-icons {
       font-size: 2.75rem;
 
-@include tablets {
+      @include tablets {
         font-size: 2.2rem;
       }
-
-@include laptop {
+      @include laptop {
         font-size: 2.2rem;
       }
     }
@@ -180,15 +172,14 @@
   box-shadow: 0 0 10px 5px rgba(0, 0, 0, 0.075);
   animation: header 0.35s ease-in-out;
 
-@include tablets {
+  @include tablets {
     position: relative;
     z-index: 1;
     width: 80% !important;
     padding: 0 1.5rem;
     animation: none;
   }
-
-@include laptop {
+  @include laptop {
     position: relative;
     z-index: 1;
     width: 80% !important;
@@ -202,11 +193,10 @@
     border-radius: 50%;
     animation: wid 0.35s linear;
 
-@include tablets {
+    @include tablets {
       animation: none;
     }
-
-@include laptop {
+    @include laptop {
       animation: none;
     }
 
@@ -214,11 +204,10 @@
       width: rem(80px);
       animation: wid 0.4s linear;
 
-@include tablets {
+      @include tablets {
         animation: none;
       }
-
-@include laptop {
+      @include laptop {
         animation: none;
       }
     }
@@ -236,12 +225,11 @@
     height: 3.5rem;
     margin: 0 0 -1.75rem auto;
 
-@include tablets {
+    @include tablets {
       align-self: center;
       margin-bottom: 0;
     }
-
-@include laptop {
+    @include laptop {
       align-self: center;
       margin-bottom: 0;
     }
@@ -254,11 +242,10 @@
   & + .account__info {
     margin-top: rem(120px);
 
-@include tablets {
+    @include tablets {
       margin-top: 0;
     }
-
-@include laptop {
+    @include laptop {
       margin-top: 0;
     }
   }
@@ -329,11 +316,10 @@
   font-size: 2.2rem;
   border-radius: rem(26px);
 
-@include tablets {
+  @include tablets {
     margin-top: 0;
   }
-
-@include laptop {
+  @include laptop {
     margin-top: 0;
   }
 }
@@ -346,8 +332,7 @@
   @include tablets {
     width: 100%;
   }
-
-@include laptop {
+  @include laptop {
     width: 100%;
   }
 }
@@ -356,8 +341,7 @@
   @include tablets {
     margin-bottom: 1rem;
   }
-
-@include laptop {
+  @include laptop {
     margin-bottom: 1rem;
   }
 }
@@ -366,8 +350,7 @@
   @include tablets {
     display: none;
   }
-
-@include laptop {
+  @include laptop {
     display: none;
   }
 }

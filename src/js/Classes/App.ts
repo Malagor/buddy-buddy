@@ -7,6 +7,10 @@ import { MyGroups } from '../Pages/MyGroups/MyGroups';
 import { AccountPage } from '../Pages/AccountPage/AccountPage';
 
 import { IGroupData } from '../Interfaces/IGroupData';
+import { GroupPage } from '../Pages/GroupsPages/GroupsPage';
+import { groupsData } from '../Data/groups';
+import { TransactionsList } from '../Pages/TransactionsList/transactionsList';
+import { dataTransList } from '../Data/dataTransList';
 
 export class App {
   private database: Database;
@@ -16,6 +20,8 @@ export class App {
   private mainPage: Main;
   private groups: MyGroups;
   private accountPage: AccountPage;
+  private groupsPage: GroupPage;
+  private transactionsList: TransactionsList;
 
   constructor() {
     this.database = Database.create();
@@ -48,15 +54,24 @@ export class App {
       this.layout.onSignOut = this.onSignOut.bind(this);
 
       this.accountPage = AccountPage.create('.main');
+
       this.mainPage = Main.create('.main');
       this.database.getUserInfo(uid, [
         this.accountPage.render,
         this.layout.setSidebarData,
       ]);
 
+      this.groupsPage = GroupPage.create('.main');
+      this.groupsPage.onCreateNewGroup = this.onCreateNewGroup.bind(this);
+      // this.groupsPage.onAddMember = this.onAddGroupMember.bind(this);
+
       this.groups = MyGroups.create('.main');
       this.groups.onCreateNewGroup = this.onCreateNewGroup.bind(this);
       this.groups.onAddMember = this.onAddGroupMember.bind(this);
+
+      this.transactionsList = TransactionsList.create('.main');
+      this.transactionsList.onTransactionSubmit = this.onTransactionSubmit.bind(this);
+
     } else {
       console.log(`isUserLogon = ${state}`);
       this.authPage = AuthPage.create('#app');
@@ -100,14 +115,19 @@ export class App {
     this.database.getUserInfo(uid, [this.mainPage.render]);
   }
 
+  onAccountPage() {
+    const uid: string = this.database.uid;
+    this.database.getUserInfo(uid, [this.accountPage.render]);
+  }
+
   onGroupsPage() {
+    // this.groupsPage.render(groupsData);
     this.groups.render();
     this.database.getGroupList(this.groups.addGroupToList);
-    // this.groups.render(groupsData);
   }
 
   onTransactionsPage() {
-    console.log('Load Transactions Page!');
+    this.transactionsList.render(dataTransList);
   }
 
   onStatisticsPage() {
@@ -146,6 +166,15 @@ export class App {
     this.database.createNewGroup(data);
   }
 
+  // onAddGroupMember(name: string) {
+  //   this.database.findUserByName(name, this.groupsPage.addMembersGroup);
+  // }
+
+  onTransactionSubmit(i: number) {
+    dataTransList.transactions[i].submit = true;
+    console.log('submit transaction');
+  }
+
   onAddGroupMember(accountName: string) {
     this.database.findUserByName(accountName, this.groups.addMembersGroup);
   }
@@ -153,6 +182,10 @@ export class App {
 
   // loadMainPage() {
   //   this.mainPage.render();
+  // }
+
+  // loadGroupPage() {
+  //   this.groupsPage.render();
   // }
 
   // createUser(uid: string) {
