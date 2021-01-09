@@ -14,7 +14,6 @@ html {
 }
 
 body {
-
   font-family: "Montserrat", sans-serif;
   background: $color-bg;
 }
@@ -34,7 +33,7 @@ body {
   left: 0;
   z-index: 100; /* Behind the navbar */
   padding: rem(53px) 0 0; /* Height of navbar */
-  box-shadow: inset -1px 0 0 rgba(0, 0, 0, .1);
+  box-shadow: inset -1px 0 0 rgba(0, 0, 0, 0.1);
 }
 
 
@@ -42,14 +41,14 @@ body {
   position: relative;
   top: 0;
   height: calc(100vh - 48px);
-  padding-top: .5rem;
+  padding-top: 0.5rem;
   overflow-x: hidden;
   overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
 }
 
 .sidebar .nav-link {
   font-weight: 500;
-  color: #333;
+  color: #333333;
 }
 
 .sidebar .nav-link .feather {
@@ -67,13 +66,13 @@ body {
 }
 
 .sidebar-heading {
-  font-size: .75rem;
+  font-size: 0.75rem;
   text-transform: uppercase;
 }
 
 .sidebar__header {
-  padding-left: rem(18px);
   margin-bottom: 1rem;
+  padding-left: rem(18px);
 }
 .sidebar-avatar__image {
   width: rem(60px);
@@ -87,31 +86,32 @@ body {
  */
 
 .navbar-brand {
-  padding-top: .75rem;
-  padding-bottom: .75rem;
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem;
   font-size: 1rem;
-  background-color: rgba(0, 0, 0, .25);
-  box-shadow: inset -1px 0 0 rgba(0, 0, 0, .25);
+  background-color: rgba(0, 0, 0, 0.25);
+  box-shadow: inset -1px 0 0 rgba(0, 0, 0, 0.25);
 
   svg {
     height: 2rem;
-    fill: white;
     margin-right: 2rem;
+
+    fill: white;
   }
 }
 
 .navbar .navbar-toggler {
-  top: .25rem;
+  top: 0.25rem;
   right: 1rem;
 }
 
 .navbar .form-control {
-  padding: .75rem 1rem;
+  padding: 0.75rem 1rem;
   border-width: 0;
   border-radius: 0;
 }
 
-.nav-item{
+.nav-item {
   transition: 0.3s;
   &:hover {
     background: $color-accent-1;
@@ -129,17 +129,144 @@ body {
 
 
 .form-control-dark {
-  color: #fff;
-  background-color: rgba(255, 255, 255, .1);
-  border-color: rgba(255, 255, 255, .1);
+  color: #ffffff;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.1);
 }
 
 .form-control-dark:focus {
   border-color: transparent;
-  box-shadow: 0 0 0 3px rgba(255, 255, 255, .25);
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.25);
 }
 
 // main
 main.main {
   padding-top: 2rem;
+}
+
+
+footer.footer {
+  height: 4rem;
+  //display: flex;
+  //flex-direction: column;
+  //justify-content: center;
+  //align-items: center;
+  //padding: 0 rem(16px);
+  //
+  //grid-area: footer;
+  p {
+    margin: 0;
+  }
+}
+
+.footer__title,
+.footer__content,
+.footer__school,
+.footer__author__link {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.footer__title p,
+.footer__school p {
+  margin-bottom: 0;
+  //display: flex;
+  //justify-content: center;
+  //align-items: flex-end;
+  //height: rem(20px);
+  //@media screen and (max-width: 768px) {
+  //  align-items: center;
+  //  height: rem(18px);
+  //}
+}
+
+.footer__main-icon {
+  width: rem(20px);
+  height: rem(20px);
+  //@media screen and (max-width: 768px) {
+  //  width: rem(18px);
+  //  height: rem(18px);
+  //}
+}
+
+.footer__title,
+.footer__school {
+  //align-items: center;
+  //gap: rem(8px);
+  @media screen and (max-width: 992px) {
+    font-size: 1rem;
+  }
+  @media screen and (max-width: 768px) {
+    font-size: 0.7rem;
+  }
+}
+
+.footer__title svg {
+  height: 2rem;
+  margin-right: 1rem;
+
+  fill: white;
+}
+
+.footer__content {
+  //justify-content: space-between;
+  width: 100%;
+  height: 100%;
+}
+
+.footer__authors {
+  display: flex;
+  align-items: center;
+
+  gap: rem(64px);
+  @media screen and (max-width: 992px) {
+    gap: rem(45px);
+  }
+  @media screen and (max-width: 768px) {
+    gap: rem(28px);
+  }
+  @media screen and (max-width: 550px) {
+    gap: rem(20px);
+  }
+}
+
+.footer__author__link {
+  justify-content: flex-start;
+  font-size: rem(14.4px);
+  color: rgba(255, 255, 255, 1);
+  text-decoration: none;
+  opacity: 0.7;
+
+  gap: 0.3rem;
+  &:hover {
+    opacity: 1;
+  }
+
+  @media screen and (max-width: 768px) {
+    font-size: 0.7rem;
+  }
+}
+
+.footer__github > svg {
+  width: rem(15px);
+  height: rem(15px);
+
+  fill: rgba(255, 255, 255, 1);
+  @media screen and (max-width: 768px) {
+    width: rem(13px);
+    height: rem(13px);
+  }
+}
+
+.footer__course__link > svg {
+  width: rem(50px);
+  height: rem(30px);
+  margin-left: 1rem;
+
+  fill: rgba(255, 255, 255, 1);
+  @media screen and (max-width: 768px) {
+    width: rem(40px);
+    height: rem(23px);
+  }
 }
