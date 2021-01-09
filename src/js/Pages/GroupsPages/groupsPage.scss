@@ -1,0 +1,58 @@
+@import "./src/scss/_misc/mixins";
+@import "./src/scss/_misc/variables";
+
+.card-group {
+  margin: auto;
+
+  &__img-avatar {
+    width: rem(60px);
+    height: rem(60px);
+    border-radius: 50%;
+
+    &--mini {
+      width: rem(25px);
+      height: rem(25px);
+      border-radius: 50%;
+    }
+  }
+
+  &__balance {
+
+    &--negative {
+      color: red;
+    }
+
+    &--positive {
+      color: green;
+    }
+  }
+
+  &__box-logo-group {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  &__box-content {
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+.add-new-group{
+  position: fixed;
+  right: rem(40px);
+  bottom: rem(40px);
+
+  width: rem(51px);
+  height: rem(51px);
+  border-radius: 50%;
+
+  &__icon {
+    margin: 4px 0 0 -2px;
+  }
+}
+
+.closed-group-hidden {
+  display: none;
+}
