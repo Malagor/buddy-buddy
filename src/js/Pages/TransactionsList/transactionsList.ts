@@ -1,4 +1,3 @@
-import { INSPECT_MAX_BYTES } from 'buffer';
 import { Page } from '../../Classes/Page';
 
 export class TransactionsList extends Page {
@@ -8,7 +7,7 @@ export class TransactionsList extends Page {
     return new TransactionsList(element);
   }
 
-  public render = (data? : any): void => {
+  public render = (data?: any): void => {
 
     this.element.innerHTML = `
       <div class="trans-wrapper container d-flex flex-column">
@@ -16,12 +15,12 @@ export class TransactionsList extends Page {
         <div class="container d-flex flex-row align-items-center">
           <select class="form-select w-75 groups" aria-label="Default select example">
           </select>
-          <div class="user-balance text-center w-25">${data.balance}${data.currency}</div>   
+          <div class="user-balance text-center w-25">${data.balance}${data.currency}</div>
         </div>
         <div class="trans-list container overflow-auto">
-        </div>        
+        </div>
       </div>
-      <button class="new-trans-btn"><span class="material-icons">add_circle</span></button>     
+      <button class="new-trans-btn"><span class="material-icons">add_circle</span></button>
     `;
     if (+data.balance >= 0) {
       document.querySelector('.user-balance').classList.add('text-success');
@@ -34,18 +33,18 @@ export class TransactionsList extends Page {
       const groupElement = document.createElement('option');
       groupElement.classList.add('groups__item');
       groupElement.value = group;
-      groupElement.innerText = group;  
+      groupElement.innerText = group;
       groups.append(groupElement);
     });
 
     const list: HTMLElement = document.querySelector('.trans-list');
     data.transactions.forEach((item: any, num: number) => {
-      const transItem = document.createElement('div'); 
+      const transItem = document.createElement('div');
       transItem.classList.add('trans-item', 'card', 'mb-1', 'container');
       transItem.innerHTML = `
       <button class="trans-item__btn"></button>
       <div class="trans-item__header row">
-        <div class="trans-item__descr fw-bolder col-8 text-truncate">${item.description}</div> 
+        <div class="trans-item__descr fw-bolder col-8 text-truncate">${item.description}</div>
       </div>
       <div class="trans-item__info row">
         <div class="date col-4 col-sm-3 align-self-start">
@@ -80,23 +79,23 @@ export class TransactionsList extends Page {
               <div class="add-user__comment col-5 col-sm-3 text-secondary">${user.comment}</div>
             </div>
           `;
-          addList.insertAdjacentHTML("beforeend", addHTML);
+          addList.insertAdjacentHTML('beforeend', addHTML);
         });
-        
+
         const addBtnsSubmit = addList.querySelectorAll('.add-user__submit');
         addBtnsSubmit.forEach((btn, i) => {
           if (item.users[i].submit) {
             btn.innerHTML = '<span class="material-icons text-success">check</span>';
           } else {
             btn.innerHTML = '<span class="material-icons text-danger">remove</span>';
-          }    
-        })
+          }
+        });
       }
 
       list.append(transItem);
 
       const btnSubmit = transItem.querySelector('.trans-item__btn');
-      if(data.transactions.submit) {
+      if (data.transactions.submit) {
         btnSubmit.innerHTML = `<span class="material-icons">check</span>`;
       } else {
         btnSubmit.innerHTML = 'ПОДТВЕРДИТЬ';
@@ -114,11 +113,11 @@ export class TransactionsList extends Page {
         userWrapper.classList.add('user', 'd-flex', 'flex-column', 'align-items-center');
         userWrapper.innerHTML = `
           <div class="user__avatar"></div>
-          <div class="user__name">${item.users[i].name}</div> 
+          <div class="user__name">${item.users[i].name}</div>
         `;
         userWrapper.style.left = `${-(i * 15)}px`;
         usersList.append(userWrapper);
-        i += 1;        
+        i += 1;
       }
 
       if (item.users.length > 1) {
@@ -133,19 +132,19 @@ export class TransactionsList extends Page {
         addNumb.style.left = `${-(i * 10)}px`;
         usersList.append(addNumb);
       }
-    }); 
+    });
 
     this.events();
   }
 
   protected events(): void {
-    const btnsSubmit  = document.querySelectorAll('.trans-item__btn');
+    const btnsSubmit = document.querySelectorAll('.trans-item__btn');
     btnsSubmit.forEach((btn, i) => {
       btn.addEventListener('click', () => {
         btn.innerHTML = `<span class="material-icons">check</span>`;
         this.onTransactionSubmit(i);
       });
-    });       
+    });
   }
 }
 

@@ -17,7 +17,6 @@
   }
 
   &__balance {
-
     &--negative {
       color: red;
     }
@@ -39,11 +38,10 @@
   }
 }
 
-.add-new-group{
+.add-new-group {
   position: fixed;
   right: rem(40px);
   bottom: rem(40px);
-
   width: rem(51px);
   height: rem(51px);
   border-radius: 50%;
