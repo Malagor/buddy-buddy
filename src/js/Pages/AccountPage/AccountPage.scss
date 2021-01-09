@@ -5,8 +5,8 @@
   position: absolute;
   top: rem(56px);
   right: 0;
-  left: 0;
   width: 100%;
+
 @include tablets {
     position: relative;
     margin-top: -2.5rem;
