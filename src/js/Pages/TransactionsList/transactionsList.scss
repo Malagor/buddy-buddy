@@ -1,22 +1,5 @@
-
-$color-text: #000000;
-$color-bg: rgba(252, 237, 159, 0.3);
-$color-accent-1: #f9de51;
-$color-accent-2: #bbab5c;
-$color-accent-3: #a28c1a;
-$color-accent-4: #fce77d;
-$color-accent-5: #fced9f;
-$color-dark-accent-1: #5f44ab;
-$color-dark-accent-2: #564780;
-$color-dark-accent-3: #2e166f;
-$color-dark-accent-4: #8e75d5;
-$color-dark-accent-5: #a18fd5;
-
-@mixin phones {
-  @media screen and (min-width: 480px) {
-    @content;
-  }
-}
+@import "./src/scss/_misc/variables";
+@import "./src/scss/_misc/mixins";
 
 .trans-wrapper {
   max-width: rem(720px);

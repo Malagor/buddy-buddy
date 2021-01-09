@@ -43,6 +43,7 @@ export class App {
       this.layout.onSignOut = this.onSignOut.bind(this);
       this.layout.onStatisticsPage = this.onStatisticsPage.bind(this);
       this.layout.onMainPage = this.onMainPage.bind(this);
+      this.layout.onAccountPage = this.onAccountPage.bind(this);
       this.layout.onGroupsPage = this.onGroupsPage.bind(this);
       this.layout.onTransactionsPage = this.onTransactionsPage.bind(this);
       this.layout.onSettingsPage = this.onSettingsPage.bind(this);
@@ -50,15 +51,17 @@ export class App {
       this.layout.onSignOut = this.onSignOut.bind(this);
 
       this.accountPage = AccountPage.create('.main');
+
       this.mainPage = Main.create('.main');
       this.database.getUserInfo(uid, [
         this.accountPage.render,
         this.layout.setSidebarData,
       ]);
 
-      this.groupsPage = GroupPage.create('.main')
+      this.groupsPage = GroupPage.create('.main');
       this.groupsPage.onCreateNewGroup = this.onCreateNewGroup.bind(this);
-      this.groupsPage.onAddMember = this.onAddGroupMember.bind(this);
+      // this.groupsPage.onAddMember = this.onAddGroupMember.bind(this);
+
       this.transactionsList = TransactionsList.create('.main');
       this.transactionsList.onTransactionSubmit = this.onTransactionSubmit.bind(this);
 
@@ -75,7 +78,6 @@ export class App {
       this.regPage.onGoogleReg = this.onGoogleReg.bind(this);
 
       this.authPage.render();
-      
     }
   }
 
@@ -106,14 +108,17 @@ export class App {
     this.database.getUserInfo(uid, [this.mainPage.render]);
   }
 
+  onAccountPage() {
+    const uid: string = this.database.uid;
+    this.database.getUserInfo(uid, [this.accountPage.render]);
+  }
+
   onGroupsPage() {
-    console.log('Load Groups Page!');
-    this.groupsPage.render(groupsData)
+    this.groupsPage.render(groupsData);
   }
 
   onTransactionsPage() {
     this.transactionsList.render(dataTransList);
-    console.log('Load Transactions Page!');
   }
 
   onStatisticsPage() {
@@ -144,22 +149,22 @@ export class App {
     console.log('Create New Group');
   }
 
-  onAddGroupMember(name: string) {
-    this.database.findUserByName(name, this.groups.addMembersGroup);
-  }
+  // onAddGroupMember(name: string) {
+  //   this.database.findUserByName(name, this.groupsPage.addMembersGroup);
+  // }
 
   onTransactionSubmit(i: number) {
     dataTransList.transactions[i].submit = true;
-    console.log ('submit transaction');
+    console.log('submit transaction');
   }
 
   // loadMainPage() {
   //   this.mainPage.render();
   // }
 
-  loadGroupPage() {
-    this.groupsPage.render();
-  }
+  // loadGroupPage() {
+  //   this.groupsPage.render();
+  // }
 
   // createUser(uid: string) {
   //   const form: HTMLFormElement = document.querySelector('#my-form');

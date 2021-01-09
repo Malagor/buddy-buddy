@@ -3,6 +3,7 @@
 //@import "~bootstrap/scss/variables";
 
 html {
+  min-height: 100vh;
   font-size: 14px;
 
   @include tablets {
@@ -14,10 +15,15 @@ html {
 }
 
 body {
+  min-height: 100vh;
   font-family: "Montserrat", sans-serif;
   background: $color-bg;
 }
 
+#app {
+  width: 100%;
+  height: 100%;
+}
 /*
  * Sidebar
  */

@@ -48,7 +48,7 @@ export const groupsData = [
     transactionList: ['sdafsdafsd', 'dsafdsafsad', 'sdafsdafsadf', 'dsfasdfasdf', 'dsfasdfasdf', 'dsfasdfasdf'],
     state: true,
     balance: '5',
-    currency: '$' 
+    currency: '$'
   },
   {
     id: 'vfsdfdsfdsf',
