@@ -1,6 +1,8 @@
 import { Page } from '../../Classes/Page';
 import { IGroupData } from '../../Interfaces/IGroupData';
 
+import { Modal } from 'bootstrap';
+
 export class MyGroups extends Page {
   onCreateNewGroup: any;
   onAddMember: any;
@@ -16,7 +18,8 @@ export class MyGroups extends Page {
   render(): void {
     let html = '<div class="groups">';
     html += `
-    <button type="button" class="btn btn-success add-new-group" data-bs-toggle="modal" data-bs-target="#addNewGroupModal">
+<!--    <button type="button" class="btn btn-success add-new-group" data-bs-toggle="modal" data-bs-target="#addNewGroupModal">-->
+    <button type="button" class="btn btn-success add-new-group">
       <i class="material-icons">add</i>
     </button>
     `;
@@ -36,14 +39,14 @@ export class MyGroups extends Page {
     const localDate: string = date.toLocaleString();
     if (group) {
       const html = `
-        <div class="card group">
-          <div class="card__content">
-               <div><span><strong>Title</strong> </span><span>${group.title}</span></div>
-               <div><span><strong>Description</strong> </span><span>${group.description}</span></div>
-               <div><span><strong>Create Date</strong> </span><span>${localDate}</span></div>
-               <div><span><strong>User list</strong> </span><span>${group.userList}</span></div>
+          <div class="card group">
+            <div class="card__content">
+                 <div><span><strong>Title</strong> </span><span>${group.title}</span></div>
+                 <div><span><strong>Description</strong> </span><span>${group.description}</span></div>
+                 <div><span><strong>Create Date</strong> </span><span>${localDate}</span></div>
+                 <div><span><strong>User list</strong> </span><span>${group.userList}</span></div>
+            </div>
           </div>
-        </div>
         `;
 
       list.insertAdjacentHTML('afterbegin', html);
@@ -94,6 +97,12 @@ export class MyGroups extends Page {
   }
 
   protected events(): void {
+    const modal = new Modal(document.getElementById('addNewGroupModal'));
+
+    const btnAddNewGroup = document.querySelector('.add-new-group');
+    btnAddNewGroup.addEventListener('click', () => {
+      modal.show();
+    });
 
     // Set focus in Input when modal is open
     const myModal = document.getElementById('addNewGroupModal');
@@ -132,6 +141,7 @@ export class MyGroups extends Page {
         style: null,
       };
       this.onCreateNewGroup(groupData);
+      modal.hide();
     };
 
     const addGroupMember = document.querySelector('#addNewGroupMember');

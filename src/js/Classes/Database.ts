@@ -38,7 +38,6 @@ export class Database {
         this.uid = user.uid;
         console.log('Current user.uid = ', this.uid);
         this.onUserIsLogin(true, this.uid);
-        // this.getUserInfo(user.uid, isUserFuncs);
       } else {
         // No user is signed in.
         this.uid = null;
@@ -55,8 +54,6 @@ export class Database {
       avatar: defaultAvatar,
       account: this._createAccountName(nameUser),
       theme: 'Light',
-      groupList: JSON.stringify([]),
-      currentGroup: '',
       language: 'RU',
       currency: 'BYN',
     };
@@ -92,9 +89,7 @@ export class Database {
           name: profile.name,
           account: this._createAccountName(profile.name),
           avatar: profile.picture,
-          groupList: JSON.stringify([]),
           language: profile.locale.toUpperCase(),
-          currentGroup: '',
           theme: 'Light',
           currency: 'BYN',
         };
@@ -125,14 +120,13 @@ export class Database {
       .database()
       .ref(`User/${uid}`)
       .set(data);
-
   }
 
   getUserInfo(uid: string, callbacks: any[]): any {
     this.firebase
       .database()
       .ref(`User/${uid}`)
-      .on('value', (snapshot) => {
+      .once('value', (snapshot) => {
         console.log('snapshot "getUserInfo" -  User Data:', snapshot.val());
         callbacks.forEach(fn => fn(snapshot.val()));
         // callback(snapshot.val());
@@ -195,15 +189,14 @@ export class Database {
           const user = this.firebase.database().ref('User').child(userId);
           const userGroup = user.child('groupList');
           userGroup.transaction(groupList => {
-            const groups = groupList;
-            let arrGroup: string[];
-            if (groups) {
-              arrGroup = JSON.parse(groupList);
+            if (groupList) {
+              groupList.push(groupKey);
+              return groupList;
             } else {
-              arrGroup = [];
+              let arrGroup: string[] = [];
+              arrGroup.push(groupKey);
+              return arrGroup;
             }
-            arrGroup.push(groupKey);
-            return JSON.stringify(arrGroup);
           });
         });
       })

@@ -8,7 +8,6 @@ import { AccountPage } from '../Pages/AccountPage/AccountPage';
 
 import { IGroupData } from '../Interfaces/IGroupData';
 import { GroupPage } from '../Pages/GroupsPages/GroupsPage';
-import { groupsData } from '../Data/groups';
 import { TransactionsList } from '../Pages/TransactionsList/transactionsList';
 import { dataTransList } from '../Data/dataTransList';
 
@@ -58,7 +57,7 @@ export class App {
 
       this.mainPage = Main.create('.main');
       this.database.getUserInfo(uid, [
-        this.accountPage.render,
+        this.mainPage.render,
         this.layout.setSidebarData,
       ]);
 
