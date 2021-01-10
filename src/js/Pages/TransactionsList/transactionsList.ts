@@ -37,15 +37,6 @@ export class TransactionsList extends Page {
       document.querySelector('.user-balance').classList.add('text-danger');
     }
 
-    // const groups: HTMLElement = document.querySelector('.groups');
-    // data.groupList.forEach((group: string) => {
-    //   const groupElement = document.createElement('option');
-    //   groupElement.classList.add('groups__item');
-    //   groupElement.value = group;
-    //   groupElement.innerText = group;
-    //   groups.append(groupElement);
-    // });
-
     const list: HTMLElement = document.querySelector('.trans-list');
     data.transactions.forEach((item: any, num: number) => {
       const transItem = document.createElement('div');
@@ -150,17 +141,17 @@ export class TransactionsList extends Page {
     this.events();
   }
 
-  addGroupList = (dataDB: any):void => {
-    console.log('dataX', dataDB);
-    const groups: HTMLElement = document.querySelector('.groups');
-    dataDB.forEach((group: string) => {
-      const groupElement = document.createElement('option');
-      groupElement.classList.add('groups__item');
-      groupElement.value = group;
-      groupElement.innerText = group;
-      groups.append(groupElement);
-    });
-  }; 
+  // addGroupList = (dataDB: any):void => {
+  //   console.log('dataX', dataDB);
+  //   const groups: HTMLElement = document.querySelector('.groups');
+  //   dataDB.forEach((group: string) => {
+  //     const groupElement = document.createElement('option');
+  //     groupElement.classList.add('groups__item');
+  //     groupElement.value = group;
+  //     groupElement.innerText = group;
+  //     groups.append(groupElement);
+  //   });
+  // }; 
 
 
 

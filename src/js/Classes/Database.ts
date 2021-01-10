@@ -189,20 +189,5 @@ export class Database {
   //
   // }
 
-  getGroupList(renderGroups: any): void {
-    console.log ('getGroupList');
-    this.firebase
-      .database()
-      .ref(`User/${this.uid}/name`)
-      .once('value', (snapshot) => {
-        console.log ('snapshot', snapshot.val());
-        const list: string = snapshot.val();
-       
-        renderGroups(snapshot.val());
-      
-      }, (error: { code: string; message: any; }) => {
-        console.log('Error:\n ' + error.code);
-        console.log(error.message);
-      });
-  }
+ 
 }

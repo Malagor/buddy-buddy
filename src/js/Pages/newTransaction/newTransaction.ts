@@ -233,10 +233,6 @@ export class NewTransaction extends Page {
 
 
 
-
-
-
-
 const divideSum = ():void => {
   const sumInput: HTMLFormElement = document.querySelector('.total-sum');
   const membersSumInputs = document.querySelectorAll('.checked-member__sum');
@@ -300,6 +296,9 @@ const divideSum = ():void => {
     });
   }     
 }
+
+
+
 
 
 
