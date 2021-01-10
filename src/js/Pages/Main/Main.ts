@@ -47,8 +47,8 @@ export class Main extends Page {
   }
 
   renderSlider(elem: HTMLElement, dt: any): any {
-    if (dt.groupList === '[]') {
-      elem.innerHTML = `
+    // if (dt.groupList === '[]') {
+    elem.innerHTML = `
       <div class="card">
         <div class="card-body d-flex align-items-center flex-column">
           <h6 class="card-title">No groups yet.</h6>
@@ -56,12 +56,12 @@ export class Main extends Page {
         </div>
       </div>
       `;
-    }
+    // }
   }
 
   renderTransactions(elem: HTMLElement, dt: any): any {
-    if (dt.groupList === '[]') {
-      elem.innerHTML = `
+    // if (dt.groupList === '[]') {
+    elem.innerHTML = `
       <div class="card">
         <div class="card-body d-flex align-items-center flex-column justify-content-center">
           <h6 class="card-title">No transactions yet.</h6>
@@ -69,7 +69,7 @@ export class Main extends Page {
         </div>
       </div>
       `;
-    }
+    // }
   }
 
   render(data: any): void {
@@ -139,33 +139,3 @@ export class Main extends Page {
     );
   }
 }
-
-// <div class="container">
-//       <div class="card">
-//         <div class="card-body">
-//           <div class="row">
-//             <div class="col-12 col-md-4">
-//               <div class="account__image">
-//                 <img src="${data.avatar}" alt="${data.name}">
-//               </div>
-//             </div>
-//             <div class="col-12 col-md-8">
-//               <div class="row">
-//                 <div class="col-12 col-sm-6">
-//                   <div>Name</div>
-//                   <div>${data.name}</div>
-//                   <div>Language</div>
-//                   <div>${data.language}</div>
-//                 </div>
-//                 <div class="col-12 col-sm-6">
-//                   <div>Currency</div>
-//                   <div>${data.currency}</div>
-//                   <div>Theme</div>
-//                   <div>${data.theme}</div>
-//                 </div>
-//               </div>
-//             </div>
-//           </div>
-//         </div>
-//       </div>
-//     </div>
