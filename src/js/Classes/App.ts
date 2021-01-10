@@ -3,9 +3,11 @@ import { Layout } from '../Pages/Layout/Layout';
 import { AuthPage } from '../Pages/AuthPage/AuthPage';
 import { RegistrationPage } from '../Pages/RegistrationPage/RegistrationPage';
 import { Main } from '../Pages/Main/Main';
+import { MyGroups } from '../Pages/MyGroups/MyGroups';
 import { AccountPage } from '../Pages/AccountPage/AccountPage';
+
+import { IGroupData } from '../Interfaces/IGroupData';
 import { GroupPage } from '../Pages/GroupsPages/GroupsPage';
-import { groupsData } from '../Data/groups';
 import { TransactionsList } from '../Pages/TransactionsList/transactionsList';
 import { dataTransList } from '../Data/dataTransList';
 
@@ -15,6 +17,7 @@ export class App {
   private authPage: AuthPage;
   private regPage: RegistrationPage;
   private mainPage: Main;
+  private groups: MyGroups;
   private accountPage: AccountPage;
   private groupsPage: GroupPage;
   private transactionsList: TransactionsList;
@@ -43,24 +46,28 @@ export class App {
       this.layout.onSignOut = this.onSignOut.bind(this);
       this.layout.onStatisticsPage = this.onStatisticsPage.bind(this);
       this.layout.onMainPage = this.onMainPage.bind(this);
-      this.layout.onAccountPage = this.onAccountPage.bind(this);
       this.layout.onGroupsPage = this.onGroupsPage.bind(this);
       this.layout.onTransactionsPage = this.onTransactionsPage.bind(this);
       this.layout.onSettingsPage = this.onSettingsPage.bind(this);
       this.layout.onHelpPage = this.onHelpPage.bind(this);
       this.layout.onSignOut = this.onSignOut.bind(this);
+      this.layout.onAccountPage = this.onAccountPage.bind(this);
 
       this.accountPage = AccountPage.create('.main');
 
       this.mainPage = Main.create('.main');
       this.database.getUserInfo(uid, [
-        this.accountPage.render,
+        this.mainPage.render,
         this.layout.setSidebarData,
       ]);
 
       this.groupsPage = GroupPage.create('.main');
       this.groupsPage.onCreateNewGroup = this.onCreateNewGroup.bind(this);
       // this.groupsPage.onAddMember = this.onAddGroupMember.bind(this);
+
+      this.groups = MyGroups.create('.main');
+      this.groups.onCreateNewGroup = this.onCreateNewGroup.bind(this);
+      this.groups.onAddMember = this.onAddGroupMember.bind(this);
 
       this.transactionsList = TransactionsList.create('.main');
       this.transactionsList.onTransactionSubmit = this.onTransactionSubmit.bind(this);
@@ -114,7 +121,9 @@ export class App {
   }
 
   onGroupsPage() {
-    this.groupsPage.render(groupsData);
+    // this.groupsPage.render(groupsData);
+    this.groups.render();
+    this.database.getGroupList(this.groups.addGroupToList);
   }
 
   onTransactionsPage() {
@@ -147,8 +156,16 @@ export class App {
     this.authPage.render();
   }
 
-  onCreateNewGroup() {
-    console.log('Create New Group');
+  onCreateNewGroup(data: IGroupData) {
+    const userArray: string[] = data.userList;
+    const userId = this.database.uid;
+    // check self in Users List
+    if (!userArray.includes(userId)) {
+      userArray.push(userId);
+      data.userList = userArray;
+    }
+
+    this.database.createNewGroup(data);
   }
 
   // onAddGroupMember(name: string) {
@@ -159,6 +176,11 @@ export class App {
     dataTransList.transactions[i].submit = true;
     console.log('submit transaction');
   }
+
+  onAddGroupMember(accountName: string) {
+    this.database.findUserByName(accountName, this.groups.addMembersGroup);
+  }
+
 
   // loadMainPage() {
   //   this.mainPage.render();
