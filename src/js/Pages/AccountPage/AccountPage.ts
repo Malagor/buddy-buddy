@@ -15,7 +15,7 @@ export class AccountPage extends Page {
         <div class="account__header account__header--account d-flex align-items-center">
           <div class="account__image-wrapper position-relative overflow-hidden">
             <img src="${data.avatar}" alt="${
-      data.name && data.surname
+      data.name
     }" class="account__image position-absolute top-50 start-50 translate-middle">
           </div>
           <p class="account__nick">@${data.account}</p>
@@ -37,21 +37,18 @@ export class AccountPage extends Page {
             }" class="form-control account__info__input account__info__input-id" placeholder="Username" aria-label="Username" aria-describedby="addon-wrapping" required>
           </div>
           <div class="form-group row account--margin-adaptive">
-            <label for="surname" class="col-sm-2 col-form-label text-center account--width-adaptive">Name and Surname</label>
-            <div class="input-group">
+            <label for="surname" class="col-sm-2 col-form-label text-center account--width-adaptive">Name</label>
+            <div class="input-group account--margin-adaptive">
               <input type="text" name="name" aria-label="Last name" value="${
                 data.name
               }" class="form-control account__info__input" placeholder="Name" required>
-              <input type="text" name="surname" aria-label="First name" value="${
-                data.surname
-              }" class="form-control account__info__input" placeholder="Surname" id="surname">
             </div>
           </div>
           <div class="form-group row account--margin-adaptive">
             <label for="inputEmail3" class="col-sm-2 col-form-label">Email</label>
             <div class="col-sm-10">
               <input type="email" name="email" value="${
-                data.email
+                data.email || ''
               }" class="form-control account__info__input" placeholder="E-mail" id="inputEmail3" required>
             </div>
           </div>
@@ -100,11 +97,6 @@ export class AccountPage extends Page {
   protected checkNameAccount(data: any): {} | void {
     const dt = { ...data };
     if (!dt.gender) dt.gender = '';
-    if (dt.surname) return;
-    if (dt.name.indexOf(' ') !== -1 && !dt.surname) {
-      dt.surname = dt.name.slice(dt.name.indexOf(' '));
-      dt.name = dt.name.slice(0, dt.name.indexOf(' '));
-    }
     return dt;
   }
 
@@ -119,9 +111,7 @@ export class AccountPage extends Page {
   }
 
   protected events(): void {
-    let currentScroll: number;
     let values: string[] = [];
-    const header: HTMLElement = this.element.querySelector('.account__header');
     const submitInfo: HTMLElement = this.element.querySelector(
       '.account__input-submit',
     );
