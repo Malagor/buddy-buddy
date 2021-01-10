@@ -119,6 +119,8 @@ export class App {
 
   onTransactionsPage() {
     this.transactionsList.render(dataTransList);
+    this.database.getGroupList(this.transactionsList.addGroupList);
+    
   }
 
   onStatisticsPage() {

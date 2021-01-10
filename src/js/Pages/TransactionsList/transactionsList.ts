@@ -1,7 +1,9 @@
 import { Page } from '../../Classes/Page';
+import { NewTransaction } from '../newTransaction/newTransaction';
 
 export class TransactionsList extends Page {
   onTransactionSubmit: any;
+  private newTrans: NewTransaction;
 
   static create(element: string): TransactionsList {
     return new TransactionsList(element);
@@ -20,7 +22,14 @@ export class TransactionsList extends Page {
         <div class="trans-list container overflow-auto">
         </div>
       </div>
-      <button class="new-trans-btn"><span class="material-icons">add_circle</span></button>
+      <button class="new-trans-btn" data-bs-toggle="modal" data-bs-target="#new-trans-modal">
+         <span class="material-icons">add_circle</span>
+      </button>
+      <div class="modal fade" id="new-trans-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-wrapper modal-dialog modal-dialog-centered">
+         
+        </div>
+      </div>
     `;
     if (+data.balance >= 0) {
       document.querySelector('.user-balance').classList.add('text-success');
@@ -28,14 +37,14 @@ export class TransactionsList extends Page {
       document.querySelector('.user-balance').classList.add('text-danger');
     }
 
-    const groups: HTMLElement = document.querySelector('.groups');
-    data.groupList.forEach((group: string) => {
-      const groupElement = document.createElement('option');
-      groupElement.classList.add('groups__item');
-      groupElement.value = group;
-      groupElement.innerText = group;
-      groups.append(groupElement);
-    });
+    // const groups: HTMLElement = document.querySelector('.groups');
+    // data.groupList.forEach((group: string) => {
+    //   const groupElement = document.createElement('option');
+    //   groupElement.classList.add('groups__item');
+    //   groupElement.value = group;
+    //   groupElement.innerText = group;
+    //   groups.append(groupElement);
+    // });
 
     const list: HTMLElement = document.querySelector('.trans-list');
     data.transactions.forEach((item: any, num: number) => {
@@ -134,8 +143,29 @@ export class TransactionsList extends Page {
       }
     });
 
+
+    this.newTrans = NewTransaction.create('.modal-wrapper');
+    this.newTrans.render();
+
     this.events();
   }
+
+  addGroupList = (dataDB: any):void => {
+    console.log('dataX', dataDB);
+    const groups: HTMLElement = document.querySelector('.groups');
+    dataDB.forEach((group: string) => {
+      const groupElement = document.createElement('option');
+      groupElement.classList.add('groups__item');
+      groupElement.value = group;
+      groupElement.innerText = group;
+      groups.append(groupElement);
+    });
+  }; 
+
+
+
+
+
 
   protected events(): void {
     const btnsSubmit = document.querySelectorAll('.trans-item__btn');

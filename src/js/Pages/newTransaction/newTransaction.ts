@@ -1,158 +1,189 @@
-// import { groupCollapsed } from 'console';
 import { Page } from '../../Classes/Page';
 
-// const data = {
-//   groupList: ['Группа1', 'Группа2', 'Группа3'],
-//   userList: ["Маша", "Саша", "Петя", "Катя", "Вася", "Юля"] 
-// }
-const currentGroup = 'Группа1';
-const data = [{groupName: 'Группа1', 
-              userList: [{name: "Маша", 
-                            ID: "12345", 
+let currentGroup = 'группа2';
+const datafail = [{title: "группа1",
+                ID: "1-1",
+                userList: [{name: "Маша", 
+                            ID: "1", 
                             image: "URL"},
                             {name: "Паша", 
-                             ID: "12345", 
+                             ID: "2", 
                             image: "URL"}, 
                             {name: "Саша", 
-                            ID: "12345", 
+                            ID: "3", 
                             image: "URL"}]},
-              {groupName: 'Группа2', 
+              {title: 'группа2',
+               ID: "2-2", 
                userList: [{name: "Соня", 
-                          userID: "12345", 
+                          userID: "4", 
                           image: "URL"},
                           {name: "Петя", 
-                          userID: "12345", 
+                          userID: "5", 
                           image: "URL"}, 
                           {name: "Коля", 
-                          userID: "12345", 
+                          userID: "6", 
                           image: "URL"}]}, 
-              {groupName: 'Группа3', 
+              {title: 'группа3',
+               ID: "3-3",
                userList: [{name: "Оля", 
-                        userID: "12345", 
+                        userID: "7", 
                         image: "URL"},
                         {name: "Лена", 
-                        userID: "12345", 
+                        userID: "8", 
                         image: "URL"}, 
                         {name: "Катя", 
-                        userID: "12345", 
+                        userID: "9", 
                         image: "URL"}]},                           
                           ];
 
-
-// const data = [['Группа1', ["Маша", "Саша", "Петя"]], ['Группа2', ["Катя", "Лена", "Коля"]], ['Группа3', ["Ваня", "Юля", "Соня"]] ];
-export class NewTransactionPage extends Page {
+const userList = [
+  {ID: '111', name: "Оля", avatar: "#"},
+  {ID: '222', name: "Коля", avatar: "#"},
+  {ID: '333', name: "Маша", avatar: "#"},
+  {ID: '444', name: "Саша", avatar: "#"},
+  {ID: '555', name: "Паша", avatar: "#"},
+  {ID: '666', name: "Лена", avatar: "#"},
+];                       
+export class NewTransaction extends Page {
  
   constructor(element: string) {
     super(element);
   }
 
-  static create(element: string): NewTransactionPage {
-    return new NewTransactionPage(element);
+  static create(element: string): NewTransaction {
+    return new NewTransaction(element);
   }
 
   render = (): void => {
    
     this.element.innerHTML = `
-    <div class="trans-wrapper"> 
-      <div class="trans-title">Новая транзакция</div>
-      <div class="trans-group-wrapper">
-        <div class="trans-group-text">Выберите группу: </div>
-        <div class="trans-group">
-          <input type="text" class="trans-group-current" name="current-group" value=${currentGroup}>
-          <div class="trans-group-list hidden"></div>
-        </div>   
-      </div>
-      <textarea class="trans-descr" placeholder="Описание..." name="description"></textarea>
-      <div class="trans-sum-wrapper">
-        <input class="trans-sum" placeholder="Введите сумму" name="totalsum">
-        <div class="currency-wrapper">
-          <input class="trans-currency" value="$" name="currency">
-          <div class="currency-list hidden">
-            <div class="currency-item">$</div>
-            <div class="currency-item">&euro;</div>
-            <div class="currency-item">BYN</div>
-            <div class="currency-item">RU</div>
-          </div>
-        </div>       
-      </div>
-
-      <div class="check-wrapper">
-        <label class="add-check">
-          <div class="add-check-text">Добавить чек</div>
-          <i class="material-icons">attach_file</i>
-          <input type="file" accept="image/*" class="input-file" name="check">
-        </label>
-      </div>
-
-      <div class="all-members-wrapper">
-        <div class="all-members"></div>
-        <button class="mdc-button all-btn">
-          <div class="mdc-button__ripple"></div>
-          <span class="mdc-button__label">ВЫБРАТЬ ВСЕХ</span>
-        </button>
-      </div>
-      <div class="checked-members"></div>   
-    </div>
-    <button class="mdc-button mdc-button--raised create-trans">
-      <span class="mdc-button__label">СОЗДАТЬ ТРАНЗАКЦИЮ</span>
-    </button>
-    `;
+      <div class="new-trans modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Новая транзакция</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
     
-    const groupsList: HTMLElement = document.querySelector('.trans-group-list');
-    data.forEach((group) => {
-        const groupItem = document.createElement('div');
-        groupItem.classList.add('group-item');
-        groupItem.innerText = group.groupName;
-        groupsList.append(groupItem);
-      });
+          <div class="input-group mb-2">
+            <span class="input-group-text">Группа</span>
+            <select class="new-trans__groups-list form-select"></select>
+          </div>
 
-    const members = document.querySelector('.all-members');
-    const index = data.findIndex((group) => group.groupName === currentGroup);
-    data[index].userList.forEach((user: any) => {
-      const userElement = document.createElement('div');
-      userElement.classList.add('all-members-user');
-      userElement.innerHTML = `
-        <div class="user-avatar"></div>
-        <div class="user-name">${user.name}</div>
-      `;
-      members.append(userElement);
-    });  
+          <div class="input-group mb-2">
+            <span class="input-group-text">Описание</span>
+            <textarea class="new-trans__descr form-control"></textarea>
+          </div>
+
+          <div class="input-group mb-2">
+            <span class="input-group-text w-30">Общая сумма</span>
+            <input type="text" class="total-sum form-control w-50">
+            <select class="new-trans__currency-list form-select w-20"></select>
+          </div>
+
+          <div class="add-check input-group mb-2">
+            <label class="add-check__wrapper">
+              <div class="add-check__text">Добавить чек</div>
+              <i class="material-icons">attach_file</i>
+              <input type="file" accept="image/*" class="add-check__file" name="check">
+            </label>
+          </div>
+
+          <div class="new-trans__members">
+            <div class="new-trans__members-list d-flex flex-wrap justify-content-center"></div>
+            <div class="d-flex justify-content-center">
+              <button type="button" class="all-btn btn btn-secondary btn-sm">Выбрать всех</button>
+            </div> 
+          </div>
+          
+          <div class="checked-members"></div>
+
+        </div>
+            
+        <div class="modal-footer">
+          <button type="button" class="new-trans__create-btn btn btn-primary w-100" data-bs-dismiss="modal">Создать транзакцию</button>
+        </div>
+      </div>
+    `;
+
+    this.addGroupsList(datafail);
+    this.addMembersOfGroup(userList);  
 
     this.events();
-  };
+  }
+
+  addGroupsList = (dataX: any) => {
+    const groups: HTMLInputElement = document.querySelector('.new-trans__groups-list');
+    dataX.forEach((group: any) => {
+      const groupElement = document.createElement('option');
+      groups.value = currentGroup;
+      if(group.title === currentGroup) {
+        groupElement.setAttribute('selected', '');
+      }
+      groupElement.classList.add('new-trans__groups-item');
+      groupElement.setAttribute('group-id', `${group.ID}`)
+      groupElement.value = group.title;
+      groupElement.innerText = group.title;
+      groups.append(groupElement);
+    });
+  }
+
+  addMembersOfGroup = (dataX: any) => {
+   const members = document.querySelector('.new-trans__members-list'); 
+   dataX.forEach((user: any) => {
+    const userElement = document.createElement('div');
+      userElement.classList.add('member', 'd-flex', 'flex-column', 'align-items-center');
+      userElement.setAttribute('user-id', `${user.ID}`);
+      userElement.innerHTML = `
+        <div class="member__avatar">
+          <img src="${user.avatar}" alt="#">
+        </div>
+        <div class="member__name">${user.name}</div>
+      `;
+      members.append(userElement);
+   });
+  }
 
   protected events(): void {
-    const membersList: HTMLElement = document.querySelector('.checked-members');
+    const groups: HTMLInputElement = document.querySelector('.new-trans__groups-list');
+    const ckeckedMembersList: HTMLElement = document.querySelector('.checked-members');
     const allBtn: HTMLFormElement = document.querySelector('.all-btn');
-    const sumInput: HTMLFormElement = document.querySelector('.trans-sum');
+    const sumInput: HTMLFormElement = document.querySelector('.total-sum');
+    const allMembers = document.querySelectorAll('.member'); 
 
-    sumInput.addEventListener('keyup', () => {
-      divideSum();
+    groups.addEventListener('change', () => {
+      currentGroup = groups.value;
     });
 
-    const onClickUser = () => {
-      const users = document.querySelectorAll('.all-members-user');
-      users.forEach((user) => {
+    
+
+    sumInput.addEventListener('keyup', () => {
+      if (typeof +sumInput.value === 'number') {
+        divideSum();
+      }
+    });
+
+    allMembers.forEach((user) => {
         user.addEventListener('click', () => {
-          const userAvatar = user.querySelector('.user-avatar');
-          const userName = user.querySelector('.user-name').innerHTML;
-          userAvatar.classList.toggle('user-checked');
-          if (userAvatar.classList.contains('user-checked')) {
-            const memberWrapper = document.createElement('div');
-            memberWrapper.classList.add('checked-member-wrapper');
-            memberWrapper.innerHTML = `
-            <div class="member">
-              <div class="user-avatar"></div>
-              <div class="user-name">${userName}</div>
+          const userAvatar = user.querySelector('.member__avatar');
+          const userName = user.querySelector('.member__name').innerHTML;
+          const userID = user.getAttribute('user-id');
+          userAvatar.classList.toggle('checked');
+          if (userAvatar.classList.contains('checked')) {
+            const checkedUserHTML = `
+            <div class="checked-member-wrapper d-flex align-items-center justify-content-between">
+              <div class="checked-member d-flex flex-column align-items-center">
+                <div class="checked-member__avatar"></div>
+                <div class="checked-member__name" user-id=${userID}>${userName}</div>
+              </div>          
+              <input class="checked-member__sum checked-member__sum--evenly form-control form-control-sm" type="text">          
+              <textarea class="checked-member__comment form-control" placeholder="Комментарий"></textarea>          
             </div>
-            <input class="member-sum sum-evenly" type="text">
-            <textarea class="member-comment" type="text" placeholder="Комментарий..."></textarea>
             `;
-          membersList.append(memberWrapper); 
+            ckeckedMembersList.insertAdjacentHTML('beforeend', checkedUserHTML);
           } else {
-            const members = document.querySelectorAll('.checked-member-wrapper');
-            members.forEach((memb) => {
-              if(memb.querySelector('.user-name').innerHTML === userName) {
+            const checkedMembers = document.querySelectorAll('.checked-member-wrapper');
+            checkedMembers.forEach((memb) => {
+              if(memb.querySelector('.checked-member__name').innerHTML === userName) {
                 memb.remove();
               }
             });
@@ -160,126 +191,118 @@ export class NewTransactionPage extends Page {
           divideSum();
         });
       });
-    }
-
-    onClickUser();
+  
     
     allBtn.addEventListener('click', () => {
-      const users = document.querySelectorAll('.all-members-user');
-      membersList.innerHTML = '';
-      users.forEach((user) => {
-        const userAvatar = user.querySelector('.user-avatar');
-        const userName = user.querySelector('.user-name').innerHTML;
-        userAvatar.classList.add('user-checked'); 
-        const memberWrapper = document.createElement('div');
-          memberWrapper.classList.add('checked-member-wrapper');
-          memberWrapper.innerHTML = `
-          <div class="member">
-            <div class="user-avatar"></div>
-            <div class="user-name">${userName}</div>
-          </div>
-          <input class="member-sum sum-evenly" type="text">
-          <textarea class="member-comment" type="text" placeholder="Комментарий..."></textarea>
-          `;
-        membersList.append(memberWrapper); 
+      ckeckedMembersList.innerHTML = '';
+      allMembers.forEach((user) => {
+        const userAvatar = user.querySelector('.member__avatar');
+        const userName = user.querySelector('.member__name').innerHTML;
+        const userID = user.getAttribute('user-id');
+        userAvatar.classList.add('checked');
+        const checkedUserHTML = `
+            <div class="checked-member-wrapper d-flex align-items-center justify-content-between">
+              <div class="checked-member d-flex flex-column align-items-center">
+                <div class="checked-member__avatar"></div>
+                <div class="checked-member__name" user-id=${userID}>${userName}</div>
+              </div>
+              <input class="checked-member__sum checked-member__sum--evenly form-control form-control-sm" type="text">
+              <textarea class="checked-member__comment form-control" placeholder="Комментарий"></textarea>
+            </div>
+            `;
+        ckeckedMembersList.insertAdjacentHTML('beforeend', checkedUserHTML);    
+
       });
+   
       divideSum();    
     });
 
-    const inputCheck = document.querySelector('.input-file');
-    const inputWrapper = document.querySelector('.add-check');
-    
+    const inputCheck = document.querySelector('.add-check__file');
+    const inputCheckWrapper = document.querySelector('.add-check__wrapper');
+
     inputCheck.addEventListener('change', () => {
-      inputWrapper.innerHTML = `<div class="add-check-text">Чек добавлен</div>
+      inputCheckWrapper.innerHTML = `<div class="add-check__text">Чек добавлен</div>
       <i class="material-icons">check</i>
-      <input type="file" accept="image/*" class="input-file">`;
+      <input type="file" accept="image/*" class="add-check__file" name="check">`;
     });
-
-
-    const inputGroup: HTMLFormElement = document.querySelector('.trans-group-current');
-    const groupsList: HTMLElement = document.querySelector('.trans-group-list');
-    const groups = document.querySelectorAll('.group-item');
-  
-    inputGroup.addEventListener('click', () => {
-       groupsList.classList.toggle('hidden');
-    });
-
-    groups.forEach((group) => {
-      group.addEventListener('click', () => {
-        groupsList.classList.add('hidden');
-        inputGroup.value = group.innerHTML;
-
-
-        const members = document.querySelector('.all-members');
-        members.innerHTML = '';
-        membersList.innerHTML = '';
-        const index = data.findIndex((group) => group.groupName === inputGroup.value);
-        data[index].userList.forEach((user: any) => {
-          const userElement = document.createElement('div');
-          userElement.classList.add('all-members-user');
-          userElement.innerHTML = `
-            <div class="user-avatar"></div>
-            <div class="user-name">${user.name}</div>
-          `;
-          members.append(userElement);
-        });
-        onClickUser();
-      });
-    });
-
-    const currencyInput: HTMLFormElement = document.querySelector('.trans-currency');
-    const currencyList: HTMLElement = document.querySelector('.currency-list');
-    const currencyItems = document.querySelectorAll('.currency-item');
-    
-    currencyInput.addEventListener('click', () => {
-      currencyList.classList.toggle('hidden');
-    });
-
-    currencyItems.forEach((item) => {
-      item.addEventListener('click', () => {
-        currencyList.classList.add('hidden');
-        currencyInput.value = item.innerHTML;
-      });
-    });
-
-  }
+  }  
 }
 
 
 
+
+
+
+
+
+
+
 const divideSum = ():void => {
-  const sumInput: HTMLFormElement = document.querySelector('.trans-sum');
-  let membersSumInputs: any = document.querySelectorAll('.sum-evenly'); 
-  let numbOfmembers: number = membersSumInputs.length;
-  let totalSum: number = +sumInput.value;
+  const sumInput: HTMLFormElement = document.querySelector('.total-sum');
+  const membersSumInputs = document.querySelectorAll('.checked-member__sum');
+  let membersSumEvenly: any = document.querySelectorAll('.checked-member__sum--evenly');
+  let membersSumNotEvenly: any = document.querySelectorAll('.checked-member__sum--notevenly'); 
+  let numbOfmembers: number = membersSumEvenly.length;
 
   membersSumInputs.forEach((memberSum: HTMLInputElement) => {
     memberSum.addEventListener('keyup', () => {
-      if(typeof +memberSum.value === 'number') {
-        console.log(true);
-        memberSum.classList.remove('sum-evenly');
-        memberSum.classList.add('not-evenly');
-        membersSumInputs = document.querySelectorAll('.sum-evenly');
-        numbOfmembers = membersSumInputs.length;
-        totalSum = (+sumInput.value) - (+memberSum.value);
-        if (totalSum >= 0) {
-          membersSumInputs.forEach((input: HTMLFormElement) => {
-            input.setAttribute('placeholder',`${(totalSum / numbOfmembers).toFixed(1)}`);
-          });
-        }           
-      }  
+      console.log ('suminput', +memberSum.value);
+      if(typeof +memberSum.value === 'number' && +memberSum.value > 0) {
+        memberSum.classList.remove('checked-member__sum--evenly');
+        memberSum.classList.add('checked-member__sum--notevenly');     
+      } else if (+memberSum.value === 0)  {
+        console.log('here');
+        memberSum.classList.add('checked-member__sum--evenly');
+        memberSum.classList.remove('checked-member__sum--notevenly');
+          
+      } else return;
+
+      membersSumEvenly = document.querySelectorAll('.checked-member__sum--evenly');
+      numbOfmembers = membersSumEvenly.length;
+      membersSumNotEvenly = document.querySelectorAll('.checked-member__sum--notevenly');
+
+      let sumNotEvenly: number = 0;
+      membersSumNotEvenly.forEach((input: any) => {
+        sumNotEvenly += +input.value;
+      });
+      const totalSum = (+sumInput.value) - sumNotEvenly; 
+
+      if (totalSum >= 0) {
+        membersSumEvenly.forEach((input: HTMLFormElement) => {
+          input.setAttribute('placeholder',`${(totalSum / numbOfmembers).toFixed(1)}`);
+        });
+      } else {
+        membersSumInputs.forEach((input: HTMLFormElement) => {
+          input.setAttribute('placeholder','0.0');
+        });
+      }                     
     });
   });
 
-  const membersSumNotEvenly = document.querySelectorAll('.not-evenly');
-  let addSum: number = 0;
-  membersSumNotEvenly.forEach((input: HTMLInputElement) => {
-    addSum += +input.value; 
-  }); 
-  totalSum = (+sumInput.value) - addSum;
+
+  membersSumEvenly = document.querySelectorAll('.checked-member__sum--evenly');
+  numbOfmembers = membersSumEvenly.length;
+  membersSumNotEvenly = document.querySelectorAll('.checked-member__sum--notevenly');
+
+  let sumNotEvenly: number = 0;
+  membersSumNotEvenly.forEach((input: any) => {
+    sumNotEvenly += +input.value;
+  });
+  const totalSum = (+sumInput.value) - sumNotEvenly; 
+
   if (totalSum >= 0) {
-    membersSumInputs.forEach((input: HTMLFormElement) => {
+    membersSumEvenly.forEach((input: HTMLFormElement) => {
       input.setAttribute('placeholder',`${(totalSum / numbOfmembers).toFixed(1)}`);
     });
-  } 
-} 
+  } else {
+    membersSumInputs.forEach((input: HTMLFormElement) => {
+      input.setAttribute('placeholder','0.0');
+    });
+  }     
+}
+
+
+
+
+
+
