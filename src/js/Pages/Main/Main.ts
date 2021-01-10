@@ -39,6 +39,7 @@ export class Main extends Page {
         <th scope="row">${i + 1}</th>
         <td>${dt[i].Cur_Abbreviation}</td>
         <td>${dt[i].Cur_OfficialRate}</td>
+        <td>${dt[i].Cur_OfficialRate * (data.balance || 0)}</td>
       </tr>
       `;
     }
@@ -90,7 +91,9 @@ export class Main extends Page {
           </h3>
         </div>
         <div class="main__currency d-flex align-items-center flex-column account--width-80">
-          <p class="account__balance">Balance 250$</p>
+          <p class="account__balance">Balance ${data.balance || 0} ${
+      data.currency
+    }</p>
         </div>
         <div class="main__currency d-flex align-items-center flex-column account--width-85 main--border">
           <p class="main__currency__current d-flex align-items-center align-self-start">
@@ -108,6 +111,7 @@ export class Main extends Page {
                 <th scope="col">#</th>
                 <th scope="col">Currency</th>
                 <th scope="col">National Bank</th>
+                <th scope="col">Balance</th>
               </tr>
             </thead>
             <tbody>
