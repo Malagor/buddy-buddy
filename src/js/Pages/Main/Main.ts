@@ -64,7 +64,8 @@ export class Main extends Page {
       elem.innerHTML = `
       <div class="card">
         <div class="card-body d-flex align-items-center flex-column justify-content-center">
-          <h6 class="card-title  mb-0">No transactions yet.</h6>
+          <h6 class="card-title">No transactions yet.</h6>
+          <button type="button" class="btn btn-secondary btn-sm">Create transaction $$$</button>
         </div>
       </div>
       `;
@@ -75,7 +76,7 @@ export class Main extends Page {
     this.element.innerHTML = `
     <div class="account__wrapper d-flex align-items-center flex-column">
       <div class="account__info d-flex align-items-center flex-column w-100">
-        <div class="account__header account--padding d-flex align-items-center">
+        <div class="account__header account__header--main d-flex align-items-center">
           <p class="account__nick">@${data.account}</p>
         </div>
         <div class="main__currency d-flex align-items-center flex-column w-100">

@@ -1,41 +1,7 @@
 @import "./src/scss/_misc/mixins";
 @import "../../../scss/_misc/variables.scss";
 
-.account__wrapper {
-  height: 90%;
-  margin-top: -5rem;
-  padding: 3rem 0 0;
-
-@include phones {
-    padding: 4rem 0 1rem;
-  }
-
-@include tablets {
-    padding: 4.5rem 0 5.5rem;
-  }
-
-@include laptop {
-    padding: 4.5rem 0 5.5rem;
-  }
-
-@include desktop {
-    padding: 4.5rem 0 5.5rem;
-  }
-}
-
-.account__info {
-  margin: 1rem 0 1rem;
-  padding: 0 0 1.5rem;
-  overflow: hidden;
-  background-color: rgba(255, 255, 255, 1);
-  border-radius: rem(15px);
-  box-shadow: 0 0 10px 5px rgba(0, 0, 0, 0.075);
-}
-
-.account__header {
-  position: relative;
-  z-index: 1;
-  width: 100%;
+.account__header--main {
   height: rem(50px);
   margin-bottom: 1rem;
   padding: 0 1.5rem;
@@ -50,105 +16,7 @@
   }
 
 @include desktop {
-    padding: 0 10%;
-  }
-}
-
-.account__image-wrapper {
-  width: rem(80px);
-  height: rem(80px);
-  border-radius: 50%;
-
-  & > .account__image {
-    width: rem(80px);
-  }
-}
-
-.account__nick {
-  z-index: 1;
-  margin: auto 0 auto 0.65rem;
-  font-weight: bolder;
-  font-size: 1.2rem;
-  color: rgba(0, 0, 0, 1);
-
-@include tablets {
-    font-size: 1.4rem;
-  }
-
-@include laptop {
-    font-size: 1.5rem;
-  }
-
-@include desktop {
-    font-size: 1.5rem;
-  }
-}
-
-.account__form-change-info {
-  width: 80%;
-}
-
-.account__balance {
-  margin: 0 0.5rem 1.5rem 0;
-  padding: 0.75rem 1rem;
-  font-size: 1.8rem;
-  border-radius: rem(26px);
-
-@include tablets {
-    margin: 0 0 5rem;
-    padding: 0;
-  }
-
-@include laptop {
-    margin: 0 0 5rem;
-    padding: 0;
-  }
-
-@include desktop {
-    margin: 0 0 5rem;
-    padding: 0;
-  }
-}
-
-.account--width-80 {
-  width: 80%;
-}
-
-.account--width-85 {
-  width: 85%;
-}
-
-.account--padding {
-  @include desktop {
-    padding-left: 1rem;
-  }
-}
-
-.account--width-adaptive {
-  @include phones {
-    width: 100%;
-  }
-
-@include tablets {
-    width: 100%;
-  }
-
-@include laptop {
-    width: 100%;
-  }
-}
-
-.account--margin-adaptive {
-  @include phones {
-    margin-bottom: 1rem;
-  }
-
-@include tablets {
-    margin-bottom: 1rem;
-  }
-
-@include laptop {
-    margin-bottom: 1rem;
+    padding: 0 1rem;
   }
 }
 
