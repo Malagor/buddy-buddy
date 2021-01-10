@@ -46,26 +46,53 @@ export class Main extends Page {
     return result;
   }
 
+  renderSlider(elem: HTMLElement, dt: any): any {
+    if (dt.groupList === '[]') {
+      elem.innerHTML = `
+      <div class="card">
+        <div class="card-body d-flex align-items-center flex-column">
+          <h6 class="card-title">No groups yet.</h6>
+          <button type="button" class="btn btn-secondary btn-sm">Go to group's page</button>
+        </div>
+      </div>
+      `;
+    }
+  }
+
+  renderTransactions(elem: HTMLElement, dt: any): any {
+    if (dt.groupList === '[]') {
+      elem.innerHTML = `
+      <div class="card">
+        <div class="card-body d-flex align-items-center flex-column justify-content-center">
+          <h6 class="card-title  mb-0">No transactions yet.</h6>
+        </div>
+      </div>
+      `;
+    }
+  }
+
   render(data: any): void {
     this.element.innerHTML = `
     <div class="account__wrapper d-flex align-items-center flex-column">
-      <div class="account__info d-flex align-items-center flex-column account--width-80">
-        <div class="account__header d-flex align-items-center">
-          <div class="account__image-wrapper position-relative overflow-hidden">
-            <img src="${data.avatar}" alt="${
-      data.name && data.surname
-    }" class="account__image position-absolute top-50 start-50 translate-middle">
-          </div>
+      <div class="account__info d-flex align-items-center flex-column w-100">
+        <div class="account__header account--padding d-flex align-items-center">
           <p class="account__nick">@${data.account}</p>
         </div>
-        <h3 class="main__name">
-          <span>${data.name}</span>
-        </h3>
-        <div class="main__currency d-flex align-items-center flex-column account--width-80">
-          <p class="account__balance align-self-end">Balance 250$</p>
+        <div class="main__currency d-flex align-items-center flex-column w-100">
+          <div class="account__image-wrapper position-relative overflow-hidden">
+          <img src="${data.avatar}" alt="${
+      data.name && data.surname
+    }" class="account__image position-absolute top-50 start-50 translate-middle">
+        </div>
+          <h3 class="main__name">
+            <span>${data.name}</span>
+          </h3>
         </div>
         <div class="main__currency d-flex align-items-center flex-column account--width-80">
-          <p class="main__currency__current d-flex align-items-center">
+          <p class="account__balance">Balance 250$</p>
+        </div>
+        <div class="main__currency d-flex align-items-center flex-column account--width-85 main--border">
+          <p class="main__currency__current d-flex align-items-center align-self-start">
             <span>Current currency:</span>
             <select class="form-select w-auto" aria-label="Default select example">
               <option value="BYN" selected>BYN</option>
@@ -86,41 +113,29 @@ export class Main extends Page {
             </tbody>
           </table>
         </div>
-        <div class="main__currency d-flex align-items-center flex-column account--width-80">
+        <div class="main__currency d-flex align-items-center flex-column account--width-85 main--border">
           <p class="main__currency__current align-self-start">
             <span>My groups</span>
           </p>
-          <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
-            <ol class="carousel-indicators">
-              <li data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active"></li>
-              <li data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1"></li>
-              <li data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2"></li>
-            </ol>
-            <div class="carousel-inner">
-              <div class="carousel-item active">
-                
-              </div>
-              <div class="carousel-item">
-                <img src="..." class="d-block w-100" alt="...">
-              </div>
-              <div class="carousel-item">
-                <img src="..." class="d-block w-100" alt="...">
-              </div>
-            </div>
-            <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-bs-slide="prev">
-              <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-              <span class="visually-hidden">Previous</span>
-            </a>
-            <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-bs-slide="next">
-              <span class="carousel-control-next-icon" aria-hidden="true"></span>
-              <span class="visually-hidden">Next</span>
-            </a>
+          <div class="main__group-slider d-flex align-items-center justify-content-center flex-column w-100 main__card">
+          </div>
+        </div>
+        <div class="main__currency d-flex align-items-center flex-column account--width-85 main--border">
+          <p class="main__currency__current align-self-start">
+            <span>Group's transactions</span>
+          </p>
+          <div class="main__group-transactions d-flex align-items-center justify-content-center flex-column w-100 main__card">
           </div>
         </div>
       </div>
     </div>    
     `;
     this.getDataForCurrency(this.element.querySelector('tbody'));
+    this.renderSlider(this.element.querySelector('.main__group-slider'), data);
+    this.renderTransactions(
+      this.element.querySelector('.main__group-transactions'),
+      data,
+    );
   }
 }
 

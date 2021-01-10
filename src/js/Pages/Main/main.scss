@@ -4,14 +4,31 @@
 .account__wrapper {
   height: 90%;
   margin-top: -5rem;
-  padding-top: 4.5rem;
-  background-color: rgb(255, 255, 255);
+  padding: 3rem 0 0;
+
+@include phones {
+    padding: 4rem 0 1rem;
+  }
+
+@include tablets {
+    padding: 4.5rem 0 5.5rem;
+  }
+
+@include laptop {
+    padding: 4.5rem 0 5.5rem;
+  }
+
+@include desktop {
+    padding: 4.5rem 0 5.5rem;
+  }
 }
 
 .account__info {
-  margin: 1rem 0 1.5rem;
+  margin: 1rem 0 1rem;
   padding: 0 0 1.5rem;
+  overflow: hidden;
   background-color: rgba(255, 255, 255, 1);
+  border-radius: rem(15px);
   box-shadow: 0 0 10px 5px rgba(0, 0, 0, 0.075);
 }
 
@@ -19,10 +36,10 @@
   position: relative;
   z-index: 1;
   width: 100%;
-  height: rem(120px);
-  margin-bottom: 3.5rem;
-  padding: 0 0.5rem;
-  background-color: rgba(0, 0, 0, 0.05);
+  height: rem(50px);
+  margin-bottom: 1rem;
+  padding: 0 1.5rem;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
 
 @include tablets {
     padding: 0 1.5rem;
@@ -35,15 +52,15 @@
 @include desktop {
     padding: 0 10%;
   }
+}
 
-  & > .account__image-wrapper {
+.account__image-wrapper {
+  width: rem(80px);
+  height: rem(80px);
+  border-radius: 50%;
+
+  & > .account__image {
     width: rem(80px);
-    height: rem(80px);
-    border-radius: 50%;
-
-    & > .account__image {
-      width: rem(80px);
-    }
   }
 }
 
@@ -63,11 +80,9 @@
   }
 
 @include desktop {
-    font-size: 1.6rem;
+    font-size: 1.5rem;
   }
 }
-
-
 
 .account__form-change-info {
   width: 80%;
@@ -99,6 +114,16 @@
   width: 80%;
 }
 
+.account--width-85 {
+  width: 85%;
+}
+
+.account--padding {
+  @include desktop {
+    padding-left: 1rem;
+  }
+}
+
 .account--width-adaptive {
   @include phones {
     width: 100%;
@@ -128,6 +153,16 @@
 }
 
 .main__currency {
+  & > .account__image-wrapper {
+    width: rem(80px);
+    height: rem(80px);
+    border-radius: 50%;
+
+    & > .account__image {
+      width: rem(80px);
+    }
+  }
+
   & > .account__balance {
     margin-bottom: 1rem;
     font-size: 1.35rem;
@@ -136,4 +171,36 @@
   & > .main__currency__current {
     gap: 0.5rem;
   }
+}
+
+.main__card {
+  padding: 0.5rem;
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.main__group-slider {
+  height: 9rem;
+
+@include phones {
+    height: 10.5rem;
+  }
+
+@include tablets {
+    height: 10rem;
+  }
+
+@include laptop {
+    height: 12rem;
+  }
+
+@include desktop {
+    height: 12rem;
+  }
+}
+
+.main--border {
+  margin-bottom: 1rem;
+  padding: 0.5rem;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  border-radius: rem(10px);
 }
