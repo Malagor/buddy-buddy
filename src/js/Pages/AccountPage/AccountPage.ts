@@ -7,6 +7,7 @@ export class AccountPage extends Page {
   }
 
   render = (dt: any): void => {
+    console.log('Рендер Аккаунта');
     const data: any = this.checkNameAccount(dt);
     this.element.innerHTML = `
     <div class="account__wrapper d-flex align-items-center flex-column">
