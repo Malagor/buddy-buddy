@@ -11,8 +11,8 @@ export class AccountPage extends Page {
     const data: any = this.checkNameAccount(dt);
     this.element.innerHTML = `
     <div class="account__wrapper d-flex align-items-center flex-column">
-      <div class="account__info d-flex align-items-center flex-column account--width-80">
-        <div class="account__header d-flex align-items-center">
+      <div class="account__info d-flex align-items-center flex-column w-100">
+        <div class="account__header account__header--account d-flex align-items-center">
           <div class="account__image-wrapper position-relative overflow-hidden">
             <img src="${data.avatar}" alt="${
       data.name && data.surname
@@ -88,8 +88,10 @@ export class AccountPage extends Page {
             </div>
           </div>
         </form>
+        <p class="account__balance d-flex align-items-center justify-content-center">Balance</p>
+        </div>
     </div>     
-    <p class="account__balance">Balance</p>
+    
       `;
     this.checkGenderAccount(data);
     this.events();

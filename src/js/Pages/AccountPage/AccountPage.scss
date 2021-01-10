@@ -4,14 +4,31 @@
 .account__wrapper {
   height: 90%;
   margin-top: -5rem;
-  padding-top: 4.5rem;
-  background-color: rgb(255, 255, 255);
+  padding: 3rem 0 0;
+
+@include phones {
+    padding: 4rem 0 1rem;
+  }
+
+@include tablets {
+    padding: 4.5rem 0 5.5rem;
+  }
+
+@include laptop {
+    padding: 4.5rem 0 5.5rem;
+  }
+
+@include desktop {
+    padding: 4.5rem 0 5.5rem;
+  }
 }
 
 .account__info {
-  margin: 1rem 0 1.5rem;
+  margin: 1rem 0 1rem;
   padding: 0 0 1.5rem;
+  overflow: hidden;
   background-color: rgba(255, 255, 255, 1);
+  border-radius: rem(15px);
   box-shadow: 0 0 10px 5px rgba(0, 0, 0, 0.075);
 }
 
@@ -19,6 +36,32 @@
   position: relative;
   z-index: 1;
   width: 100%;
+
+  & > .account__form-change-photo {
+    position: absolute;
+    right: 1rem;
+    bottom: 0;
+    width: 3rem;
+    height: 3rem;
+    margin-bottom: -1.5rem;
+
+    & > .account__button-change-photo > .material-icons {
+      font-size: 2rem;
+    }
+  }
+}
+
+.account__image-wrapper {
+  width: rem(80px);
+  height: rem(80px);
+  border-radius: 50%;
+
+  & > .account__image {
+    width: rem(80px);
+  }
+}
+
+.account__header--account {
   height: rem(120px);
   margin-bottom: 3.5rem;
   padding: 0 0.5rem;
@@ -36,26 +79,9 @@
     padding: 0 10%;
   }
 
-  & > .account__image-wrapper {
-    width: rem(80px);
-    height: rem(80px);
-    border-radius: 50%;
-
-    & > .account__image {
-      width: rem(80px);
-    }
-  }
-
-  & > .account__form-change-photo {
-    position: absolute;
-    right: 1rem;
-    bottom: 0;
-    width: 3rem;
-    height: 3rem;
-    margin-bottom: -1.5rem;
-
-    & > .account__button-change-photo > .material-icons {
-      font-size: 2rem;
+  .account__nick {
+    @include desktop {
+      font-size: 1.6rem;
     }
   }
 }
@@ -76,7 +102,7 @@
   }
 
 @include desktop {
-    font-size: 1.6rem;
+    font-size: 1.5rem;
   }
 }
 
@@ -110,29 +136,16 @@
 }
 
 .account__balance {
-  margin: 0 0.5rem 1.5rem 0;
-  padding: 0.75rem 1rem;
+  margin: 1.5rem 0 0;
   font-size: 1.8rem;
-  border-radius: rem(26px);
-
-@include tablets {
-    margin: 0 0 5rem;
-    padding: 0;
-  }
-
-@include laptop {
-    margin: 0 0 5rem;
-    padding: 0;
-  }
-
-@include desktop {
-    margin: 0 0 5rem;
-    padding: 0;
-  }
 }
 
 .account--width-80 {
   width: 80%;
+}
+
+.account--width-85 {
+  width: 85%;
 }
 
 .account--width-adaptive {
