@@ -16,6 +16,7 @@ export class Layout extends Page {
   onHelpPage: any;
   onSignOut: any;
   onAccountPage: any;
+  onMessagesPage: any;
 
   static create(el: string) {
     return new Layout(el);
@@ -43,7 +44,7 @@ export class Layout extends Page {
           <hr>
           <ul class="nav flex-column">
               <li class="nav-item">
-                <a class="nav-link" aria-current="page" href="#" id="sidebarMainLink">
+                <a class="nav-link sidebarMainLink" aria-current="page" href="#">
                   <i class="material-icons">house</i><span class="nav-link__text">Главная</span>
                 </a>
               </li>
@@ -53,19 +54,19 @@ export class Layout extends Page {
                 </a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="#" id="sidebarGroupsLink">
+                <a class="nav-link sidebarGroupsLink" href="#">
                   <i class="material-icons">groups</i><span class="nav-link__text">Группы</span>
                   <span class="badge bg-danger"></span>
                 </a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="#" id="sidebarTransactionsLink">
+                <a class="nav-link sidebarTransactionsLink" href="#">
                   <i class="material-icons">receipt_long</i><span class="nav-link__text">Транзакции</span>
                   <span class="badge bg-danger"></span>
                 </a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="#" id="sidebarMessageLink">
+                <a class="nav-link sidebarMessagesLink" href="#">
                  <i class="material-icons">speaker_notes</i><span class="nav-link__text">Сообщения</span>
                  <span class="badge bg-danger"></span>
                 </a>
@@ -148,14 +149,14 @@ export class Layout extends Page {
       <div class="footer__content row align-items-center">
         <div class="footer__title col-3">
           <div class="nav-item">
-            <a class="nav-link" aria-current="page" href="#" id="sidebarMainLink">
+            <a class="nav-link sidebarMainLink" aria-current="page" href="#">
               <i class="material-icons">house</i><span class="d-none d-sm-block nav-link__text">Главная</span>
             </a>
           </div>
         </div>
         <div class="footer__title col-3">
           <div class="nav-item">
-            <a class="nav-link" href="#" id="sidebarGroupsLink">
+            <a class="nav-link sidebarGroupsLink" href="#">
               <i class="material-icons">groups</i><span class="d-none d-sm-block nav-link__text">Группы</span>
               <span class="badge bg-danger"></span>
             </a>
@@ -163,7 +164,7 @@ export class Layout extends Page {
         </div>
         <div class="footer__title col-3">
           <div class="nav-item">
-            <a class="nav-link" href="#" id="sidebarTransactionsLink">
+            <a class="nav-link sidebarTransactionsLink" href="#">
               <i class="material-icons">receipt_long</i><span class="d-none d-sm-block nav-link__text">Транзакции</span>
               <span class="badge bg-danger"></span>
             </a>
@@ -171,7 +172,7 @@ export class Layout extends Page {
         </div>
         <div class="footer__school col-3">
           <div class="nav-item">
-            <a class="nav-link" href="#" id="sidebarMessageLink">
+            <a class="nav-link sidebarMessagesLink" href="#">
              <i class="material-icons">speaker_notes</i><span class="d-none d-sm-block nav-link__text">Сообщения</span>
              <span class="badge bg-danger"></span>
             </a>
@@ -217,14 +218,14 @@ export class Layout extends Page {
       }
     });
 
-    document.querySelector('#sidebarMenu').addEventListener('click', (ev) => {
+    document.body.addEventListener('click', (ev) => {
       const { target }: any = ev;
 
       // if (target.closest('#signOut')) {
       //   this.onSignOut();
       // }
 
-      if (target.closest('#sidebarMainLink')) {
+      if (target.closest('.sidebarMainLink')) {
         ev.preventDefault();
         this.onMainPage();
       }
@@ -232,14 +233,19 @@ export class Layout extends Page {
         this.onAccountPage();
       }
 
-      if (target.closest('#sidebarGroupsLink')) {
+      if (target.closest('.sidebarGroupsLink')) {
         ev.preventDefault();
         this.onGroupsPage();
       }
 
-      if (target.closest('#sidebarTransactionsLink')) {
+      if (target.closest('.sidebarTransactionsLink')) {
         ev.preventDefault();
         this.onTransactionsPage();
+      }
+
+      if (target.closest('.sidebarMessagesLink')) {
+        ev.preventDefault();
+        this.onMessagesPage();
       }
 
       if (target.closest('#sidebarStatisticsLink')) {
