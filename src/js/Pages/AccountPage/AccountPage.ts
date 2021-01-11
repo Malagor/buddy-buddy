@@ -11,7 +11,7 @@ export class AccountPage extends Page {
     const data: any = this.checkNameAccount(dt);
     this.element.innerHTML = `
     <div class="block__wrapper d-flex align-items-center flex-column">
-      <div class="block__info d-flex align-items-center flex-column w-100">
+      <div class="block__content d-flex align-items-center flex-column w-100">
         <div class="block__header block__header--account d-flex align-items-center">
           <div class="block__image-wrapper position-relative">
             <img src="${data.avatar}" alt="${
