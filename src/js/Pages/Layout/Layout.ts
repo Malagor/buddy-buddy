@@ -49,7 +49,7 @@ export class Layout extends Page {
                 </a>
               </li>
               <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="#" id="sidebarAccountLink">
+                <a class="nav-link active" aria-current="page" href="#" id="sidebarAccountLink" data-target=".navbar-collapse.in">
                   <i class="material-icons">account_box</i><span class="nav-link__text">Аккаунт</span>
                 </a>
               </li>
@@ -228,39 +228,48 @@ export class Layout extends Page {
       if (target.closest('.sidebarMainLink')) {
         ev.preventDefault();
         this.onMainPage();
+        Layout.closeMobileMenu();
       }
       if (target.closest('#sidebarAccountLink')) {
+        ev.preventDefault();
         this.onAccountPage();
+        Layout.closeMobileMenu();
       }
 
       if (target.closest('.sidebarGroupsLink')) {
         ev.preventDefault();
         this.onGroupsPage();
+        Layout.closeMobileMenu();
       }
 
       if (target.closest('.sidebarTransactionsLink')) {
         ev.preventDefault();
         this.onTransactionsPage();
+        Layout.closeMobileMenu();
       }
 
       if (target.closest('.sidebarMessagesLink')) {
         ev.preventDefault();
         this.onMessagesPage();
+        Layout.closeMobileMenu();
       }
 
       if (target.closest('#sidebarStatisticsLink')) {
         ev.preventDefault();
         this.onStatisticsPage();
+        Layout.closeMobileMenu();
       }
 
       if (target.closest('#sidebarSettingsLink')) {
         ev.preventDefault();
         this.onSettingsPage();
+        Layout.closeMobileMenu();
       }
 
       if (target.closest('#sidebarHelpLink')) {
         ev.preventDefault();
         this.onHelpPage();
+        Layout.closeMobileMenu();
       }
     });
   }
@@ -279,5 +288,13 @@ export class Layout extends Page {
 
     menuUserName.textContent = data.name;
     menuUserAccount.textContent = '@' + data.account;
+  }
+
+  static closeMobileMenu() {
+    const toggleMenu: HTMLElement = document.querySelector('.navbar-toggler');
+    const display = window.getComputedStyle(toggleMenu).display;
+    if (display !== 'none') {
+      toggleMenu.click();
+    }
   }
 }
