@@ -206,15 +206,36 @@ export class Database {
       });
   }
 
-  getGroupList(renderGroups: any): void {
+  getGroupList(callbacks: any): void {
+    const arrayUsersInfo: any = [];
 
     this.firebase
       .database()
       .ref('Groups')
       .on('child_added', (snapshot) => {
         const users: string[] = snapshot.val().userList;
+
         if (users.includes(this.uid)) {
-          renderGroups(snapshot.val());
+          const dataGroup = snapshot.val(); 
+          const dataUserListGroup = dataGroup.userList;
+
+          this.firebase
+          .database()
+          .ref('User')
+          .once('value', (snapshot) => {
+            const snapshotUser = snapshot.val()
+            const userList = Object.keys(snapshotUser) // all users in DB
+            
+            const arrayUserImg: any = [];
+            userList.forEach(user => {
+              if(dataUserListGroup.includes(user)) {
+                arrayUserImg.push(snapshotUser[user].avatar)
+              } 
+            })
+
+            callbacks({'dataGroup': dataGroup, 'arrayUserImg': arrayUserImg})
+          })
+
         }
       }, (error: { code: string; message: any; }) => {
         console.log('Error:\n ' + error.code);

@@ -123,7 +123,9 @@ export class App {
   onGroupsPage() {
     // this.groupsPage.render(groupsData);
     this.groups.render();
-    this.database.getGroupList(this.groups.addGroupToList);
+    //this.database.getGroupList(this.groups.addGroupToList);
+    this.database.getGroupList(this.groups.createGroupList);
+
   }
 
   onTransactionsPage() {

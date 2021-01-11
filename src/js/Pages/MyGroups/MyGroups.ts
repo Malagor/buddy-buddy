@@ -16,7 +16,32 @@ export class MyGroups extends Page {
 
 
   render(): void {
-    let html = '<div class="groups">';
+    let html = `
+      <div id="contentGroup" class="container">
+        <div class="row justify-content-between">
+          <div class="col-6">
+            <h2>Groups</h2>
+          </div>
+        </div>
+    `;
+
+    //html += this.createGroupList(data);
+    
+
+
+    html += `
+    <button type="button" class="btn btn-success add-new-group" data-bs-toggle="modal" data-bs-target="#addNewGroupModal">
+      <i class="material-icons add-new-group__icon">add</i>
+    </button>
+    `;
+
+    html += `</div>`;
+
+    html += this.modal();
+    this.element.innerHTML = html;
+    this.events();
+
+/*     let html = '<div class="groups">';
     html += `
 <!--    <button type="button" class="btn btn-success add-new-group" data-bs-toggle="modal" data-bs-target="#addNewGroupModal">-->
     <button type="button" class="btn btn-success add-new-group">
@@ -30,8 +55,200 @@ export class MyGroups extends Page {
 
     this.element.innerHTML = html;
 
-    this.events();
+    this.events(); */
   }
+
+  protected createGroupList(data: any) {
+    const container = document.getElementById('contentGroup');
+    //console.log(data.arrayUserImg)
+    //console.log(data.dataGroup)
+    
+    if(!data.dataGroup.dateClose) {
+      container.insertAdjacentHTML('beforeend', createCardGroup(data));
+    } else {
+
+    }
+
+    
+    //console.log(createCardGroup(data))
+
+    function createCardGroup(data: any, balanceGroup: number | null = null) {
+
+      const NUM_OF_IMG_IN_GROUP_CARD: number = 3;
+      const date: Date = new Date(data.dataGroup.dateCreate);
+      const dataCreateGroup: string = date.toLocaleString();
+      const listImgUsers = data.arrayUserImg;
+      //console.log('groupList', groupList)
+
+  
+      const participantsImg: string[] = [];
+      listImgUsers.forEach((imgUser: any) => {
+        if(participantsImg.length < 3) {
+          participantsImg.push(`<img class="card-group__img-avatar--mini" src="${imgUser}" alt="icon">`)
+        } 
+      });
+      if (listImgUsers.length > NUM_OF_IMG_IN_GROUP_CARD) {
+        participantsImg.push('+')
+        participantsImg.push(String(listImgUsers.length))
+      } 
+      //console.log(participantsImg)
+  
+      const groupCard = `
+        <div class="card mb-3 card-group">
+          <div class="row g-0 col">
+            <div class="col-3 card-group__box-logo-group">
+              <img class="card-group__img-avatar" src="${data.dataGroup.Styles.Icon}" alt="icon-group">
+            </div>
+  
+            <div class="col-9 card-group__box-content">
+  
+              <div class="row col">
+                <div class="col-7">
+                  <h5>${data.dataGroup.title}</h5>
+                </div>
+                <div class="col-5">
+                  <h5>${dataCreateGroup.slice(0, 10)}</h5>
+                </div>
+              </div>
+  
+              <div class="row col">
+                <div class="col-7">
+                  ${participantsImg.join('')}
+                </div>
+                <div class="col-5">
+                  ${balanceGroup}
+                </div>
+              </div>
+  
+            </div>
+  
+          </div>
+        </div>
+      `;
+  
+      return groupCard
+    }
+
+   /*  const NUM_OF_IMG_IN_GROUP_CARD: number = 3;
+
+    let HTMLGroups = '';
+
+    if (data) {
+      let openGroupHTMLCard = '';
+      let closedGroupHTMLCard = '';
+
+      data.forEach((element: any) => {
+        const participantsId = element.userList;
+
+        this.createCardGroup(element)
+
+        let participantsImg: string[] = [];
+        participantsId.forEach((participant: any) => {
+          if (participantsImg.length < NUM_OF_IMG_IN_GROUP_CARD) {
+            participantsImg.push(`<img class="card-group__img-avatar--mini" src="${element.style.icon}" alt="icon${participant}">`);
+          }
+        });
+        if (participantsId.length > NUM_OF_IMG_IN_GROUP_CARD) participantsImg.push(`<span>+${participantsId.length - NUM_OF_IMG_IN_GROUP_CARD}</span>`);
+
+        let balanceGroup: string = '';
+        if (element.balance < 0) {
+          balanceGroup = `
+            <h5 class="card-group__balance">
+              ${element.balance ? element.currency : ''}<span class="card-group__balance--negative">${element.balance ? element.balance : formatDate(element.dateCreate)}</span>
+            </h5>
+          `;
+        } else if (element.balance >= 0) {
+          balanceGroup = `
+            <h5 class="card-group__balance">
+              ${element.balance ? element.currency : ''}<span class="card-group__balance--positive">${element.balance ? element.balance : formatDate(element.dateCreate)}</span>
+            </h5>
+          `;
+        }
+
+        const groupCard = `
+          <div class="card mb-3 card-group">
+            <div class="row g-0 col">
+              <div class="col-3 card-group__box-logo-group">
+                <img class="card-group__img-avatar" src="${element.style.icon}" alt="icon-group">
+              </div>
+
+              <div class="col-9 card-group__box-content">
+
+                <div class="row col">
+                  <div class="col-7">
+                    <h5>${element.title}</h5>
+                  </div>
+                  <div class="col-5">
+                    <h5>${formatDate(element.dateCreate)}</h5>
+                  </div>
+                </div>
+
+                <div class="row col">
+                  <div class="col-7">
+                    ${participantsImg.join('')}
+                  </div>
+                  <div class="col-5">
+                    ${balanceGroup}
+                  </div>
+                </div>
+
+              </div>
+
+            </div>
+          </div>
+        `;
+
+        if (!element.dateClose) {
+          openGroupHTMLCard += groupCard;
+        } else if (element.dateClose) {
+          closedGroupHTMLCard += groupCard;
+        }
+      });
+
+      HTMLGroups += `
+        <div class="col-6">
+          <h2>Balance $5</h2>
+        </div>
+      `;
+      HTMLGroups += `</div>`;
+
+      HTMLGroups += `
+        <div id="openGroup" class="open-group">
+          ${openGroupHTMLCard}
+        </div>
+        <div id="closedGroup" class="closed-group ">
+
+          <div class="accordion" id="accordionExample">
+            <div class="accordion-item">
+              <h2 class="accordion-header" id="headingOne">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                  Closed Group
+                </button>
+              </h2>
+              <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                <div id="closedGroupBoxCard" class="accordion-body">
+                  ${closedGroupHTMLCard}
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      `;
+    } else {
+      HTMLGroups += `</div>`;
+      HTMLGroups += `
+      <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">No groups yet.</h5>
+            <p class="card-text">Would you like to create the first group?</p>
+          </div>
+        </div>
+      </div>
+      `;
+    }
+    return HTMLGroups; */
+  } 
 
   addGroupToList(group: any) {
     const list = this.element.querySelector('.groups');
