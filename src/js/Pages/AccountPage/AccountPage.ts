@@ -28,7 +28,7 @@ export class AccountPage extends Page {
         </div>
 
         <form class="account__form-change-info">
-          <div class="input-group flex-nowrap">
+          <div class="input-group flex-nowrap account--margin-adaptive">
             <div class="input-group-prepend">
               <span class="input-group-text" id="addon-wrapping">@</span>
             </div>
