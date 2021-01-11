@@ -44,51 +44,56 @@ export class Layout extends Page {
           <ul class="nav flex-column">
               <li class="nav-item">
                 <a class="nav-link" aria-current="page" href="#" id="sidebarMainLink">
-                  <i class="material-icons">house</i><span>Главная</span>
+                  <i class="material-icons">house</i><span class="nav-link__text">Главная</span>
                 </a>
               </li>
               <li class="nav-item">
                 <a class="nav-link active" aria-current="page" href="#" id="sidebarAccountLink">
-                  <i class="material-icons">account_box</i><span>Аккаунт</span>
+                  <i class="material-icons">account_box</i><span class="nav-link__text">Аккаунт</span>
                 </a>
               </li>
               <li class="nav-item">
                 <a class="nav-link" href="#" id="sidebarGroupsLink">
-                  <i class="material-icons">groups</i>
-            <span>Группы</span>
+                  <i class="material-icons">groups</i><span class="nav-link__text">Группы</span>
+                  <span class="badge bg-danger">9</span>
                 </a>
               </li>
               <li class="nav-item">
                 <a class="nav-link" href="#" id="sidebarTransactionsLink">
-                  <i class="material-icons">receipt_long</i>
-            <span>Транзакции</span>
+                  <i class="material-icons">receipt_long</i><span class="nav-link__text">Транзакции</span>
+                  <span class="badge bg-danger">2</span>
                 </a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="#" id="sidebarStatisticsLink">
-                 <i class="material-icons">bar_chart</i>
-            <span>Статистика</span>
+                <a class="nav-link" href="#" id="sidebarMessageLink">
+                 <i class="material-icons">speaker_notes</i><span class="nav-link__text">Сообщения</span>
+                 <span class="badge bg-danger">1</span>
                 </a>
               </li>
             </ul>
           <hr>
           <ul class="nav flex-column mb-2">
               <li class="nav-item">
+                <a class="nav-link" href="#" id="sidebarStatisticsLink">
+                 <i class="material-icons">bar_chart</i><span class="nav-link__text">Статистика</span>
+                </a>
+              </li>
+              <li class="nav-item">
                 <a class="nav-link" href="#" id="sidebarSettingsLink">
                   <i class="material-icons">settings</i>
-            <span>Настройки</span>
+            <span class="nav-link__text">Настройки</span>
                 </a>
               </li>
               <li class="nav-item">
                 <a class="nav-link" href="#" id="sidebarHelpLink">
                   <i class="material-icons">help_outline</i>
-            <span>Помощь</span>
+            <span class="nav-link__text">Помощь</span>
                 </a>
               </li>
               <li class="nav-item">
                 <a class="nav-link" href="#" id="signOut" data-bs-toggle="modal" data-bs-target="#singOutModal">
                   <i class="material-icons">power_settings_new</i>
-            <span>Выход</span>
+            <span class="nav-link__text">Выход</span>
                 </a>
               </li>
             </ul>
@@ -135,6 +140,42 @@ export class Layout extends Page {
         <div class="footer__school col-3">
           <p>© 2020-${currentYear()}</p>
           <a href="https://rs.school/js/" class="footer__course__link" target="_blank">${rssLogo}</a>
+        </div>
+      </div>
+    </footer>
+
+    <footer class="fixed-bottom d-block d-md-none bg-light footer footer--mobile">
+      <div class="footer__content row align-items-center">
+        <div class="footer__title col-3">
+          <div class="nav-item">
+            <a class="nav-link" aria-current="page" href="#" id="sidebarMainLink">
+              <i class="material-icons">house</i><span class="d-none d-sm-block nav-link__text">Главная</span>
+            </a>
+          </div>
+        </div>
+        <div class="footer__title col-3">
+          <div class="nav-item">
+            <a class="nav-link" href="#" id="sidebarGroupsLink">
+              <i class="material-icons">groups</i><span class="d-none d-sm-block nav-link__text">Группы</span>
+              <span class="badge bg-danger">9</span>
+            </a>
+          </div>
+        </div>
+        <div class="footer__title col-3">
+          <div class="nav-item">
+            <a class="nav-link" href="#" id="sidebarTransactionsLink">
+              <i class="material-icons">receipt_long</i><span class="d-none d-sm-block nav-link__text">Транзакции</span>
+              <span class="badge bg-danger">2</span>
+            </a>
+          </div>
+        </div>
+        <div class="footer__school col-3">
+          <div class="nav-item">
+            <a class="nav-link" href="#" id="sidebarMessageLink">
+             <i class="material-icons">speaker_notes</i><span class="d-none d-sm-block nav-link__text">Сообщения</span>
+             <span class="badge bg-danger">1</span>
+            </a>
+          </div>
         </div>
       </div>
     </footer>
