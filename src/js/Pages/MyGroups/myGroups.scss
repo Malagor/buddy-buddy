@@ -1,0 +1,33 @@
+@import "./src/scss/_misc/mixins";
+@import "../../../scss/_misc/variables.scss";
+
+
+.card-group {
+  margin: auto;
+
+  &__img-avatar {
+    width: rem(60px);
+    height: rem(60px);
+    border-radius: 50%;
+
+    &--mini {
+      width: rem(25px);
+      height: rem(25px);
+      border-radius: 50%;
+    }
+  }
+
+  &__balance {
+    &--negative {
+      color: red;
+    }
+
+    &--positive {
+      color: green;
+    }
+  }
+}
+
+.closed-group-hidden {
+  display: none;
+}
