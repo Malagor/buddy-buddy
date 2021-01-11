@@ -52,7 +52,7 @@ export class AccountPage extends Page {
             <div class="col-sm-10">
               <input type="email" name="email" value="${
                 data.email || ''
-              }" class="form-control account__info__input" placeholder="E-mail" id="inputEmail3" required>
+              }" class="form-control account__info__input" placeholder="E-mail" id="inputEmail3">
             </div>
           </div>
           <div class="form-group row block--margin-adaptive">
