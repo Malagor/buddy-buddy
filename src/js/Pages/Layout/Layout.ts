@@ -55,19 +55,19 @@ export class Layout extends Page {
               <li class="nav-item">
                 <a class="nav-link" href="#" id="sidebarGroupsLink">
                   <i class="material-icons">groups</i><span class="nav-link__text">Группы</span>
-                  <span class="badge bg-danger">9</span>
+                  <span class="badge bg-danger"></span>
                 </a>
               </li>
               <li class="nav-item">
                 <a class="nav-link" href="#" id="sidebarTransactionsLink">
                   <i class="material-icons">receipt_long</i><span class="nav-link__text">Транзакции</span>
-                  <span class="badge bg-danger">2</span>
+                  <span class="badge bg-danger"></span>
                 </a>
               </li>
               <li class="nav-item">
                 <a class="nav-link" href="#" id="sidebarMessageLink">
                  <i class="material-icons">speaker_notes</i><span class="nav-link__text">Сообщения</span>
-                 <span class="badge bg-danger">1</span>
+                 <span class="badge bg-danger"></span>
                 </a>
               </li>
             </ul>
@@ -157,7 +157,7 @@ export class Layout extends Page {
           <div class="nav-item">
             <a class="nav-link" href="#" id="sidebarGroupsLink">
               <i class="material-icons">groups</i><span class="d-none d-sm-block nav-link__text">Группы</span>
-              <span class="badge bg-danger">9</span>
+              <span class="badge bg-danger"></span>
             </a>
           </div>
         </div>
@@ -165,7 +165,7 @@ export class Layout extends Page {
           <div class="nav-item">
             <a class="nav-link" href="#" id="sidebarTransactionsLink">
               <i class="material-icons">receipt_long</i><span class="d-none d-sm-block nav-link__text">Транзакции</span>
-              <span class="badge bg-danger">2</span>
+              <span class="badge bg-danger"></span>
             </a>
           </div>
         </div>
@@ -173,7 +173,7 @@ export class Layout extends Page {
           <div class="nav-item">
             <a class="nav-link" href="#" id="sidebarMessageLink">
              <i class="material-icons">speaker_notes</i><span class="d-none d-sm-block nav-link__text">Сообщения</span>
-             <span class="badge bg-danger">1</span>
+             <span class="badge bg-danger"></span>
             </a>
           </div>
         </div>
