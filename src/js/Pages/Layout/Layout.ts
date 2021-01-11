@@ -228,7 +228,9 @@ export class Layout extends Page {
       if (target.closest('.sidebarMainLink')) {
         ev.preventDefault();
         this.onMainPage();
-        Layout.closeMobileMenu();
+        if (!target.closest('.footer')) {
+          Layout.closeMobileMenu();
+        }
       }
       if (target.closest('#sidebarAccountLink')) {
         ev.preventDefault();
@@ -239,19 +241,25 @@ export class Layout extends Page {
       if (target.closest('.sidebarGroupsLink')) {
         ev.preventDefault();
         this.onGroupsPage();
-        Layout.closeMobileMenu();
+        if (!target.closest('.footer')) {
+          Layout.closeMobileMenu();
+        }
       }
 
       if (target.closest('.sidebarTransactionsLink')) {
         ev.preventDefault();
         this.onTransactionsPage();
-        Layout.closeMobileMenu();
+        if (!target.closest('.footer')) {
+          Layout.closeMobileMenu();
+        }
       }
 
       if (target.closest('.sidebarMessagesLink')) {
         ev.preventDefault();
         this.onMessagesPage();
-        Layout.closeMobileMenu();
+        if (!target.closest('.footer')) {
+          Layout.closeMobileMenu();
+        }
       }
 
       if (target.closest('#sidebarStatisticsLink')) {
