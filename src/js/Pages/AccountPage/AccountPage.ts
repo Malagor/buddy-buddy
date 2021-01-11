@@ -85,7 +85,9 @@ export class AccountPage extends Page {
             </div>
           </div>
         </form>
-        <p class="account__balance d-flex align-items-center justify-content-center">Balance</p>
+        <p class="account__balance d-flex align-items-center justify-content-center">Balance ${
+          data.balance || 0
+        } ${data.currency}</p>
         </div>
     </div>     
     
