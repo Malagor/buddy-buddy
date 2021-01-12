@@ -148,7 +148,7 @@ export class Database {
       });
   }
 
-  findUserByName(accountName: string, func: any) {
+  findUserByName(accountName: string, func: any, errorFunc?: any) {
     this.firebase
       .database()
       .ref(`User`)
@@ -166,6 +166,14 @@ export class Database {
           key: key,
         };
         func(data);
+      })
+      .catch(error => {
+        console.log('Error retrieving user data');
+        console.log(error.code);
+        console.log(error.message);
+        if (errorFunc) {
+          errorFunc(`Error retrieving user data.`);
+        }
       });
   }
 
@@ -217,6 +225,74 @@ export class Database {
           renderGroups(snapshot.val());
         }
       }, (error: { code: string; message: any; }) => {
+        console.log('Error:\n ' + error.code);
+        console.log(error.message);
+      });
+  }
+
+  getMessageList(renderMessage: any): void {
+    this.firebase
+      .database()
+      .ref('Messages')
+      .on('child_added', (snapshot) => {
+        const messageObj = snapshot.val();
+        console.log('message', messageObj.message);
+        const { fromUser, toUser } = messageObj;
+        if (fromUser === this.uid || toUser === this.uid) {
+
+          const fromUserData = this.firebase
+            .database()
+            .ref(`User/${fromUser}`)
+            .once('value', snapshot => {
+              return snapshot;
+            });
+
+          const toUserData = this.firebase
+            .database()
+            .ref(`User/${toUser}`)
+            .once('value', snapshot => {
+              return snapshot;
+            });
+
+          const users = Promise.all([fromUserData, toUserData])
+            .then(data => {
+              const res =  {
+                fromUser: data[0],
+                toUser: data[1]
+              };
+              console.log('messageObj.message', messageObj.message);
+
+              return res;
+            });
+
+          users.then(users => {
+            const {toUser} = users;
+
+            const messageData = {
+              avatar: toUser.val().avatar,
+              message: messageObj.message,
+              date: messageObj.date,
+              key: toUser.key,
+              name: toUser.val().name,
+            };
+
+            renderMessage(messageData);
+          });
+        }
+      }, (error: { code: string; message: any; }) => {
+        console.log('Error:\n ' + error.code);
+        console.log(error.message);
+      });
+  }
+
+  createNewMessage(data: any): void {
+    data.fromUser = this.uid;
+
+    this.firebase
+      .database()
+      .ref('Messages')
+      .push(data)
+      .catch((error: { code: string; message: any; }) => {
         console.log('Error:\n ' + error.code);
         console.log(error.message);
       });
