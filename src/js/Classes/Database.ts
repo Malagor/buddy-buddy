@@ -237,8 +237,10 @@ export class Database {
       .on('child_added', (snapshot) => {
         const messageObj = snapshot.val();
         const messageId = snapshot.key;
-        console.log('message', messageObj.message);
         const { fromUser, toUser } = messageObj;
+
+        // console.log('message', messageObj.message);
+
         if (fromUser === this.uid || toUser === this.uid) {
 
           const fromUserData = this.firebase
@@ -257,26 +259,39 @@ export class Database {
 
           const users = Promise.all([fromUserData, toUserData])
             .then(data => {
-              const res =  {
+              return {
                 fromUser: data[0],
-                toUser: data[1]
+                toUser: data[1],
               };
-              console.log('messageObj.message', messageObj.message);
-
-              return res;
             });
 
           users.then(users => {
-            const {toUser} = users;
+            const { fromUser, toUser } = users;
+
+            const direction: boolean = toUser.key === this.uid;
+            let key: string;
+            let name: string;
+            let avatar: string;
+
+            if (direction) {
+              key = fromUser.key;
+              name = fromUser.val().name;
+              avatar = fromUser.val().avatar;
+            } else {
+              key = toUser.key;
+              name = toUser.val().name;
+              avatar = toUser.val().avatar;
+            }
 
             const messageData = {
               messageId,
               message: messageObj.message,
               date: messageObj.date,
               status: messageObj.status,
-              key: toUser.key,
-              avatar: toUser.val().avatar,
-              name: toUser.val().name,
+              key,
+              avatar,
+              name,
+              direction
             };
 
             renderMessage(messageData);

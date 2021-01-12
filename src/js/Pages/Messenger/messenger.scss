@@ -7,8 +7,9 @@
 .message__header {
   width: 100%;
   display: grid;
-  grid-template-columns: 5rem 1fr 5rem;
+  grid-template-columns: 3rem 1fr 5rem;
   align-items: center;
+  grid-gap: 1rem;
 
 }
 

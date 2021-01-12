@@ -9,6 +9,7 @@ interface IMessage {
   date: Date;
   message: string;
   status: boolean;
+  direction: boolean;
 }
 
 export class Messenger extends Page {
@@ -27,7 +28,7 @@ export class Messenger extends Page {
           <div class="block__header account__header--main d-flex align-items-center">
             <p class="block__nick">Messenger</p>
           </div>
-          <div class=" message-list account--width-85">
+          <div class="message-list w-75 d-flex flex-column">
           </div>
         <button type="button" class="btn btn-primary d-flex align-items-center justify-content-center message__addBtn"><span class="material-icons">add</span></button>
       </div>
@@ -42,12 +43,9 @@ export class Messenger extends Page {
   protected events(): void {
 
     const addMessageBtn = document.querySelector('.message__addBtn');
-
+    const modal = new Modal(this.element.querySelector('#messageModal'));
     addMessageBtn.addEventListener('click', () => {
-      // const { target }: any = ev;
-      // if (target.closest('.message__addBtn')) {
         console.log('ShowModal');
-        const modal = new Modal(this.element.querySelector('#messageModal'));
         modal.show();
       // }
     });
@@ -76,7 +74,7 @@ export class Messenger extends Page {
         status: false
       };
       this.sendNewMessage(messageData);
-      const modal = new Modal(this.element.querySelector('#messageModal'));
+      // const modal = new Modal(this.element.querySelector('#messageModal'));
       modal.hide();
     };
 
@@ -90,6 +88,7 @@ export class Messenger extends Page {
   }
 
   printMessage(data: IMessage): void {
+    console.log('data.direction', data.direction);
     const dateOptions = {
       year: '2-digit',
       month: '2-digit',
@@ -100,15 +99,18 @@ export class Messenger extends Page {
     const date: Date = new Date(data.date);
     const localeDate: string = date.toLocaleString('ru-RU', dateOptions);
 
-    console.log(data);
     let stateClass: string = '';
-    if (data.status === false) {
+    if (data.status === false && data.direction) {
       stateClass = 'message--not-read';
+    }
+    let directionClass: string = 'align-self-end';
+    if (data.direction) {
+      directionClass = 'align-self-start';
     }
     const messageList = this.element.querySelector('.message-list');
 
-    messageList.insertAdjacentHTML('beforeend', `
-      <div class="message d-flex flex-column align-items-center main--border ${stateClass}" data-message-id="${data.messageId}">
+    let html = `
+      <div class="message d-flex flex-column align-items-center main--border ${directionClass} ${stateClass} col-10" data-message-id="${data.messageId}">
         <div class="message__header align-self-start">
           <div class="message__avatar-wrapper">
             <img src="${data.avatar}" alt="${data.name}">
@@ -118,12 +120,19 @@ export class Messenger extends Page {
         </div>
         <div class="main__currency__current align-self-start mt-1">
           <span>${data.message}</span>
-        </div>
+        </div>`;
+
+    if (data.direction) {
+      html += `
         <div class="main__currency__current align-self-end mt-2">
-          <button type="button" class="btn btn-outline-primary btn-sm" data-user-uid="${data.key}">Answer</button>
+        <button type="button" class="btn btn-outline-primary btn-sm" data-user-uid="${data.key}">Answer</button>
         </div>
-      </div>
-    `);
+        `;
+    }
+
+    html += `</div>`;
+
+    messageList.insertAdjacentHTML('afterbegin', html);
   }
 
   modal(): string {
