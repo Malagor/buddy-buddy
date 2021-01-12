@@ -7,7 +7,7 @@ export class Main extends Page {
     return page;
   }
 
-  getDataForCurrency(el: HTMLElement): any | void {
+  getDataForCurrency(el: HTMLElement): void {
     fetch('https://www.nbrb.by/api/exrates/rates?periodicity=0')
       .then((response) => {
         return response.json();
@@ -17,7 +17,7 @@ export class Main extends Page {
       });
   }
 
-  createCurrTable(data: any): any {
+  createCurrTable(data: any): string {
     const currencies: string[] = ['EUR', 'USD', 'RUB'];
     const dt: any = [];
     data.map((item: any) => {
@@ -49,7 +49,7 @@ export class Main extends Page {
     return result;
   }
 
-  renderSlider(elem: HTMLElement, dt: any): any {
+  renderSlider(elem: HTMLElement, dt: any): void {
     // if (dt.groupList === '[]') {
     elem.innerHTML = `
       <div class="card">
@@ -62,7 +62,7 @@ export class Main extends Page {
     // }
   }
 
-  renderTransactions(elem: HTMLElement, dt: any): any {
+  renderTransactions(elem: HTMLElement, dt: any): void {
     // if (dt.groupList === '[]') {
     elem.innerHTML = `
       <div class="card">
