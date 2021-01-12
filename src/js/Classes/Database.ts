@@ -252,8 +252,7 @@ export class Database {
     .database()
     .ref('Currency')
     .on('child_added', (snapshot) => {
-      console.log ('currency', snapshot.val())
-      renderCurrencyList(snapshot.val());
+      renderCurrencyList(snapshot.key, snapshot.val().icon);
     }, (error: { code: string; message: any; }) => {
       console.log('Error:\n ' + error.code);
       console.log(error.message);

@@ -113,9 +113,9 @@ export class NewTransaction extends Page {
       this._clickOnMember(userElement);   
   }
 
-  addCurrencyList = (data: any) => {
+  addCurrencyList = (currID: string, icon: string) => {
     const currencySelect: HTMLFormElement = document.querySelector('.new-trans__currency-list');
-    const optionHTML = `<option value=${data.icon}>${data.icon}</option>`;
+    const optionHTML = `<option value=${currID}>${icon}</option>`;
     currencySelect.insertAdjacentHTML('beforeend', optionHTML);
   }
 
