@@ -10,6 +10,7 @@ import { IGroupData } from '../Interfaces/IGroupData';
 import { GroupPage } from '../Pages/GroupsPages/GroupsPage';
 import { TransactionsList } from '../Pages/TransactionsList/transactionsList';
 import { dataTransList } from '../Data/dataTransList';
+import { INotification, Notifications } from './Notifications';
 
 export class App {
   private database: Database;
@@ -21,6 +22,7 @@ export class App {
   private accountPage: AccountPage;
   private groupsPage: GroupPage;
   private transactionsList: TransactionsList;
+  private notifications: Notifications;
 
   constructor() {
     this.database = Database.create();
@@ -55,8 +57,8 @@ export class App {
       this.layout.onMessagesPage = this.onMessagesPage.bind(this);
 
       this.accountPage = AccountPage.create('.main');
-
       this.mainPage = Main.create('.main');
+
       this.database.getUserInfo(uid, [
         this.mainPage.render,
         this.layout.setSidebarData,
@@ -72,6 +74,23 @@ export class App {
 
       this.transactionsList = TransactionsList.create('.main');
       this.transactionsList.onTransactionSubmit = this.onTransactionSubmit.bind(this);
+
+      // Notifications Init
+      setTimeout(() => {
+        const groupsEl: NodeListOf<Element> = document.querySelectorAll('.sidebarGroupsLink .badge');
+        const transactionsEl: NodeListOf<Element> = document.querySelectorAll('.sidebarTransactionsLink .badge');
+        const messagesEl: NodeListOf<Element> = document.querySelectorAll('.sidebarMessagesLink .badge');
+
+        const notiData: INotification = {
+          groupsEl,
+          transactionsEl,
+          messagesEl,
+        };
+
+        this.notifications = Notifications.create(notiData);
+
+        this.database.countNewMessage(this.notifications.sentMessageNotification);
+      }, 2000);
 
     } else {
       console.log(`isUserLogon = ${state}`);

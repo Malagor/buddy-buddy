@@ -222,6 +222,34 @@ export class Database {
       });
   }
 
+  // countGroupsInvite(callback: any): void {
+  //
+  // }
+  // countTransactionInvite(callback: any): void {
+  //
+  // }
+
+  countNewMessage(callback: any): void {
+    let countMessage: number = 0;
+
+    this.firebase
+      .database()
+      .ref('Messages')
+      .on('child_added', (snapshot) => {
+        const toUser: string = snapshot.val().toUser;
+        const status: boolean = snapshot.val().status;
+
+        if (toUser === this.uid && status === false) {
+          countMessage += 1;
+          callback(countMessage);
+        }
+
+      }, (error: { code: string; message: any; }) => {
+        console.log('Error:\n ' + error.code);
+        console.log(error.message);
+      });
+  }
+
 
   // addTheme(nameTheme: string) {
   //
