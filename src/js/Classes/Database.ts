@@ -298,14 +298,14 @@ export class Database {
 
             renderMessage(messageData);
 
-            // this.firebase
-            //   .database()
-            //   .ref(`Messages/${messageId}`)
-            //   .child('status')
-            //   .transaction(curStatus => {
-            //     curStatus = true;
-            //     return curStatus;
-            //   });
+            this.firebase
+              .database()
+              .ref(`Messages/${messageId}`)
+              .child('status')
+              .transaction(curStatus => {
+                curStatus = true;
+                return curStatus;
+              });
           });
         }
       }, (error: { code: string; message: any; }) => {
