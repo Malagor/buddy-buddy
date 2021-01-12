@@ -130,11 +130,10 @@ export class App {
   onTransactionsPage() {
     this.transactionsList.render(dataTransList);
     this.transactionsList.newTrans.onCreateTransaction = this.onCreateTransaction.bind(this);
-
-
+    this.transactionsList.newTrans.onShowMembersOfGroup = this.onShowMembersOfGroup.bind(this);
     this.database.getCurrencyList(this.transactionsList.newTrans.addCurrencyList);
     this.database.getGroupsListForTransaction(this.transactionsList.newTrans.addGroupList);
-    this.database.getMembersOfGroup(this.transactionsList.newTrans.addMembersOfGroup);
+    this.database.getMembersOfGroupFirst(this.transactionsList.newTrans.addMembersOfGroup);
 
   }
 
@@ -193,6 +192,10 @@ export class App {
 
   onCreateTransaction(data: any) {
     this.database.setDataTransaction(data);
+  }
+
+  onShowMembersOfGroup(groupID: string) {
+    this.database.getMembersOfGroup(this.transactionsList.newTrans.addMembersOfGroup, groupID);
   }
 
 

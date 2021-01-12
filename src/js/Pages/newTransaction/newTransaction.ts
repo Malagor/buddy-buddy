@@ -2,8 +2,10 @@ import { Page } from '../../Classes/Page';
 import { divideSum } from './divideSum';
 import { Modal } from 'bootstrap';
 import { addMemberHTML } from './addMemberHTML';
+import { clearAllInputs } from './clearAllInputs';
 export class NewTransaction extends Page {
   onCreateTransaction: any;
+  onShowMembersOfGroup: any;
 
   constructor(element: string) {
     super(element);
@@ -14,32 +16,43 @@ export class NewTransaction extends Page {
   }
 
   render = (): void => {
+ 
 
     this.element.innerHTML = `
       <div class="new-trans modal-content">
         <div class="modal-header">
           <h5 class="modal-title">Новая транзакция</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          <button type="button" class="btn-close new-trans__close-modal" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
+        <form class="all-forms">
 
-          <div class="input-group mb-2">
-            <span class="input-group-text">Группа</span>
-            <select class="new-trans__groups-list form-select"></select>
+          <div class="form-group row block--margin-adaptive">
+            <label for="group" class="col-sm-2 col-form-label">Группа</label>
+            <div class="col-sm-10">
+              <select id="group"class="new-trans__groups-list form-select"></select>
+            </div>
           </div>
 
-          <div class="input-group mb-2">
-            <span class="input-group-text">Описание</span>
-            <textarea class="new-trans__descr form-control"></textarea>
+
+          <div class="form-group row block--margin-adaptive align-items-center">
+            <label for="descr" class="col-sm-2 col-form-label">Описание</label>
+            <div class="col-sm-10">
+              <textarea id="descr" class="new-trans__descr input-required form-control" required></textarea>
+            </div>
           </div>
 
-          <div class="input-group mb-2">
-            <span class="input-group-text w-30">Общая сумма</span>
-            <input type="text" class="total-sum form-control w-50">
-            <select class="new-trans__currency-list form-select w-20"></select>
+          <div class="form-group row block--margin-adaptive mb-3">
+            <label class="col-sm-2 col-form-label">Сумма</label>
+            <div class="new-trans__currency-group col-sm-10">            
+              <input type="text" class="new-trans__total-sum input-required form-control w-75" required pattern="\d[0-9]\.?\d[0-9]">
+              <select class="new-trans__currency-list form-select w-25"></select>
+            </div>
           </div>
 
-          <div class="add-check d-flex align-items-center mb-2">
+         
+
+          <div class="add-check d-flex align-items-center mb-3">
             <div class="add-check__wrapper input-group">
               <label class="add-check__label" for="input-file">
                 <div class="add-check__text">Добавить чек</div>
@@ -62,9 +75,6 @@ export class NewTransaction extends Page {
             </div> 
 
           </div>
-
-         
-    
          
           <div class="new-trans__members">
             <div class="new-trans__members-list d-flex flex-wrap justify-content-start"></div>        
@@ -75,12 +85,13 @@ export class NewTransaction extends Page {
 
         </div>
 
+        </form> 
+          
         <div class="modal-footer">
-          <button type="button" class="new-trans__create-btn btn btn-primary w-100" data-bs-dismiss="modal">Создать транзакцию</button>
+          <button type="button" class="new-trans__create-btn btn btn-primary w-100" data-bs-dismiss="modal" disabled>Создать транзакцию</button>
         </div>
       </div>
     `;
-
 
     this.events();
   }
@@ -88,7 +99,6 @@ export class NewTransaction extends Page {
   addGroupList = (groupID: string, groupTitle: string, currentGroup: string) => {
     const groups: HTMLInputElement = document.querySelector('.new-trans__groups-list');
     const groupElement = document.createElement('option');
-  
     if (groupTitle === currentGroup) {
       groupElement.setAttribute('selected', '');
     }
@@ -110,7 +120,8 @@ export class NewTransaction extends Page {
         <div class="member__name">${userName}</div>
       `;
       members.append(userElement);   
-      this._clickOnMember(userElement);   
+      this._clickOnMember(userElement);
+        
   }
 
   addCurrencyList = (currID: string, icon: string) => {
@@ -127,8 +138,8 @@ export class NewTransaction extends Page {
       userAvatar.classList.toggle('checked');
       if (userAvatar.classList.contains('checked')) {
         const checkedUserHTML = addMemberHTML(userID, userName, userAvatar.innerHTML);
-        const ckeckedMembersList: HTMLElement = document.querySelector('.checked-members');
-        ckeckedMembersList.insertAdjacentHTML('beforeend', checkedUserHTML);
+        const checkedMembersList: HTMLElement = document.querySelector('.checked-members');
+        checkedMembersList.insertAdjacentHTML('beforeend', checkedUserHTML);
       } else {
         const checkedMembers = document.querySelectorAll('.checked-member-wrapper');
         checkedMembers.forEach((memb) => {
@@ -138,24 +149,24 @@ export class NewTransaction extends Page {
         });
       }
       divideSum();
+      checkData();
     });  
   } 
 
   getDataforCreateTransaction = () => {
-
     const group: HTMLFormElement= document.querySelector('.new-trans__groups-list');
     const descr: HTMLFormElement = document.querySelector('.new-trans__descr');
-    const totalSum: HTMLFormElement = document.querySelector('.total-sum');
+    const totalSum: HTMLFormElement = document.querySelector('.new-trans__total-sum');
     const currency: HTMLFormElement = document.querySelector('.new-trans__currency-list');
     const inputCheck: HTMLFormElement = document.querySelector('.add-check__file');
     const currentDate  = +(new Date());
-    
     const userList: Array<any> = [];
     const checkedMembers = document.querySelectorAll('.checked-member-wrapper');
     checkedMembers.forEach((memb: HTMLElement) => {
       const user = {
         userID: memb.getAttribute('user-id'),
-        cost: memb.querySelector('.checked-member__sum').value || memb.querySelector('.checked-member__sum').getAttribute('placeholder'),
+        cost: memb.querySelector('.checked-member__sum').value || 
+              memb.querySelector('.checked-member__sum').getAttribute('placeholder'),
         comment: memb.querySelector('.checked-member__comment').value,
         state: 'pending',
       };
@@ -167,7 +178,7 @@ export class NewTransaction extends Page {
       totalCost: totalSum.value,
       groupID: group.value,
       descripion: descr.value,
-      tillSlip: inputCheck.files[0],
+      tillSlip: inputCheck.files[0] ? inputCheck.files[0] : false,
       currency: currency.value,
       toUserList: userList,
     } 
@@ -177,10 +188,16 @@ export class NewTransaction extends Page {
     const groups: HTMLFormElement = document.querySelector('.new-trans__groups-list');
     const ckeckedMembersList: HTMLElement = document.querySelector('.checked-members');
     const allBtn: HTMLFormElement = document.querySelector('.all-btn');
-    const sumInput: HTMLFormElement = document.querySelector('.total-sum');
+    const sumInput: HTMLFormElement = document.querySelector('.new-trans__total-sum');
+    
    
     groups.addEventListener('change', () => {
-      console.log (groups.value);
+      // console.log ('groups.value', groups.value);
+
+      const members = document.querySelector('.new-trans__members-list');
+      members.innerHTML = '';
+      this.onShowMembersOfGroup(groups.value);
+
     });
 
     sumInput.addEventListener('keyup', () => {
@@ -201,6 +218,7 @@ export class NewTransaction extends Page {
         ckeckedMembersList.insertAdjacentHTML('beforeend', checkedUserHTML);
       });
       divideSum();
+      checkData();
     });
 
     const inputCheck: HTMLFormElement = document.querySelector('.add-check__file');
@@ -225,13 +243,12 @@ export class NewTransaction extends Page {
       e.preventDefault();
       const data = this.getDataforCreateTransaction();
       this.onCreateTransaction(data);
-      console.log ('data', data);
+      clearAllInputs();
     });
 
     const checkModal = new Modal(document.querySelector('.add-check__modal'));
     const btnOpenCheck: HTMLElement = document.querySelector('.add-check__icon-wrapper');
     const btnCloseCheck: HTMLElement = document.querySelector('.add-check__close-modal');
-
     btnOpenCheck.addEventListener('click',() => {
       checkModal.show();
     });
@@ -240,6 +257,42 @@ export class NewTransaction extends Page {
       checkModal.hide();
     });
 
+
+    const newTransModal = new Modal(document.querySelector('.new-trans__modal'));
+    const btnCloseNewTrans: HTMLElement = document.querySelector('.new-trans__close-modal');
+
+    btnCloseNewTrans.addEventListener('click', () => {
+      newTransModal.hide();
+      clearAllInputs();
+    });
+
   }
 }
+
+
+
+
+const checkData = ():void => {
+  const createTransBtn = document.querySelector('.new-trans__create-btn');
+  const descrInput: HTMLFormElement = document.querySelector('.new-trans__descr');
+  const sumInput: HTMLFormElement = document.querySelector('.new-trans__total-sum');
+  const sumInputs: NodeListOf<HTMLFormElement> = document.querySelectorAll('.checked-member__sum');
+
+  const inputsRequired: NodeListOf<HTMLFormElement> = document.querySelectorAll('.input-required');
+  inputsRequired.forEach((input: HTMLFormElement) => {
+    input.addEventListener('input', () => {
+      console.log (+sumInput.value);
+      console.log (descrInput.value.length);
+  
+      if (+sumInput.value > 0 && descrInput.value.length > 0 ) {
+        console.log ('true');
+        createTransBtn.removeAttribute('disabled');
+      } else {
+        console.log ('false');
+        createTransBtn.setAttribute('disabled', 'true');
+      }
+    });
+  })
+};
+
  

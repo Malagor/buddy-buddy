@@ -12,6 +12,19 @@ $color-text: #000000;
 }
 
 .new-trans {
+  &__currency-group {
+    display: flex;
+    align-items: stretch;
+  }
+
+  &__total-sum {
+    border-radius: 0.25rem 0 0 0.25rem;
+  }
+
+  &__currency-list {
+    border-radius: 0 0.25rem 0.25rem 0;
+  }
+
   &__members {
     padding: rem(5px);
     border-top: 1px solid #ced4da;
@@ -67,6 +80,7 @@ $color-text: #000000;
 }
 
 .add-check {
+  height: rem(40px);
   &__wrapper {
     width: rem(120px);
     height: rem(30px);
@@ -103,9 +117,11 @@ $color-text: #000000;
   }
 
   &__icon-wrapper {
-    width: rem(50px);
-    height: rem(50px);
-    padding-left: rem(10px);
+    width: rem(40px);
+    height: rem(40px);
+    margin-left: rem(10px);
+    border: 1px solid gray;
+    border-radius: 5px;
     &:hover {
       cursor: pointer;
     }

@@ -282,7 +282,7 @@ export class Database {
       });
   }
 
-  getMembersOfGroup(renderMembers: any) {
+  getMembersOfGroupFirst(renderMembers: any) {
     this.firebase
       .database()
       .ref(`User/${this.uid}`)
@@ -304,6 +304,26 @@ export class Database {
             })
           })        
       
+      }, (error: { code: string; message: any; }) => {
+        console.log('Error:\n ' + error.code);
+        console.log(error.message);
+      });
+  }
+
+  getMembersOfGroup(renderMembers: any, groupID:string) {
+    this.firebase
+      .database()
+      .ref(`Groups/${groupID}`)
+      .once('value', (snapshot) => {
+       const memberList: string[] = snapshot.val().userList; 
+        memberList.forEach((userID) => {
+          this.firebase
+          .database()
+          .ref(`User/${userID}`) 
+          .once('value', (snapshot) => {
+            renderMembers(snapshot.key, snapshot.val().name, snapshot.val().avatar)
+          })
+        })
       }, (error: { code: string; message: any; }) => {
         console.log('Error:\n ' + error.code);
         console.log(error.message);

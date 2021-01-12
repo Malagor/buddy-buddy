@@ -1,5 +1,5 @@
 export const divideSum = () => {
-  const sumInput: HTMLFormElement = document.querySelector('.total-sum');
+  const sumInput: HTMLFormElement = document.querySelector('.new-trans__total-sum');
   const membersSumInputs = document.querySelectorAll('.checked-member__sum');
   let membersSumEvenly: any = document.querySelectorAll('.checked-member__sum--evenly');
   let membersSumNotEvenly: any = document.querySelectorAll('.checked-member__sum--notevenly');
@@ -7,12 +7,10 @@ export const divideSum = () => {
 
   membersSumInputs.forEach((memberSum: HTMLInputElement) => {
     memberSum.addEventListener('keyup', () => {
-      console.log ('suminput', +memberSum.value);
       if (typeof +memberSum.value === 'number' && +memberSum.value > 0) {
         memberSum.classList.remove('checked-member__sum--evenly');
         memberSum.classList.add('checked-member__sum--notevenly');
       } else if (+memberSum.value === 0)  {
-        console.log('here');
         memberSum.classList.add('checked-member__sum--evenly');
         memberSum.classList.remove('checked-member__sum--notevenly');
 
@@ -27,16 +25,20 @@ export const divideSum = () => {
         sumNotEvenly += +input.value;
       });
       const totalSum = (+sumInput.value) - sumNotEvenly;
+      console.log ('totalSum', totalSum);
 
       if (totalSum >= 0) {
         membersSumEvenly.forEach((input: HTMLFormElement) => {
-          input.setAttribute('placeholder', `${(totalSum / numbOfmembers).toFixed(1)}`);
+          input.setAttribute('placeholder', `${(totalSum / numbOfmembers).toFixed(2)}`);
+          // input.value = (totalSum / numbOfmembers).toFixed(2);
         });
       } else {
         membersSumInputs.forEach((input: HTMLFormElement) => {
-          input.setAttribute('placeholder', '0.0');
+          input.setAttribute('placeholder', '0.00');
+          // input.value = '';
         });
       }
+
     });
   });
 
@@ -50,14 +52,47 @@ export const divideSum = () => {
     sumNotEvenly += +input.value;
   });
   const totalSum = (+sumInput.value) - sumNotEvenly;
+  console.log ('totalSum', totalSum);
 
   if (totalSum >= 0) {
     membersSumEvenly.forEach((input: HTMLFormElement) => {
-      input.setAttribute('placeholder', `${(totalSum / numbOfmembers).toFixed(1)}`);
+      input.setAttribute('placeholder', `${(totalSum / numbOfmembers).toFixed(2)}`);
+      // input.value = (totalSum / numbOfmembers).toFixed(2);
     });
   } else {
     membersSumInputs.forEach((input: HTMLFormElement) => {
-      input.setAttribute('placeholder', '0.0');
+      input.setAttribute('placeholder', '0.00');
+    
+      // input.value = '';
     });
   }
+
+  
 };
+
+
+// const checkData = ():void => {
+//   const createTransBtn = document.querySelector('.new-trans__create-btn');
+//   const descrInput: HTMLFormElement = document.querySelector('.new-trans__descr');
+//   const sumInput: HTMLFormElement = document.querySelector('.new-trans__total-sum');
+//   const sumInputs: NodeListOf<HTMLFormElement> = document.querySelectorAll('.checked-member__sum');
+//   let sum = 0;
+//   sumInputs.forEach((input: HTMLFormElement) => {
+//     sum += input.value ? +(input.value) : +input.getAttribute('placeholder');
+//   });
+//   const inputsRequired: NodeListOf<HTMLFormElement> = document.querySelectorAll('.input-required');
+//   inputsRequired.forEach((input: HTMLFormElement) => {
+//     input.addEventListener('input', () => {
+//       console.log (+sumInput.value);
+//       console.log (descrInput.value.length);
+//       console.log (sum);
+//       if (+sumInput.value > 0 && descrInput.value.length > 0 ) {
+//         console.log ('true');
+//         createTransBtn.removeAttribute('disabled');
+//       } else {
+//         console.log ('false');
+//         createTransBtn.setAttribute('disabled', 'true');
+//       }
+//     });
+//   })
+// };
