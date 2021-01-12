@@ -26,19 +26,18 @@ export class AccountPage extends Page {
           </div>
           <p class="block__nickname">@${data.account}</p>
         </div>
-
         <form class="account__form-change-info">        
-        <div class="form-group row block--margin-adaptive">
-          <div class="input-group flex-nowrap block--margin-adaptive">
-          <label for="account" class="col-sm-2 col-form-label">Account</label>
-            <div class="input-group-prepend ps-1">
-              <span class="input-group-text" id="addon-wrapping">@</span>
+          <div class="form-group row block--margin-adaptive">
+            <label for="account" class="col-sm-2 col-form-label">Account</label>
+            <div class="account__double-form col-sm-10">
+              <div class="input-group-prepend account__double-form--first">
+                <span class="input-group-text" id="addon-wrapping">@</span>
+              </div>
+              <input type="text" name="account" value="${
+                data.account
+              }" class="account__double-form--second form-control account__info__input account__info__input-id" placeholder="Username" aria-label="Username" aria-describedby="addon-wrapping" required>
             </div>
-            <input type="text" name="account" value="${
-              data.account
-            }" class="form-control account__info__input account__info__input-id" placeholder="Username" aria-label="Username" aria-describedby="addon-wrapping" required>
           </div>
-        </div>
           <div class="form-group row block--margin-adaptive">
             <label for="surname" class="col-sm-2 col-form-label">Name</label>
             <div class="col-sm-10">
@@ -55,16 +54,16 @@ export class AccountPage extends Page {
               }" class="form-control account__info__input" placeholder="E-mail" id="inputEmail3">
             </div>
           </div>
-          <div class="form-group row block--margin-adaptive">
-            <label for="inputPassword3" class="col-sm-2 col-form-label" >Day of Birth</label>
-            <div class="col-sm-10 align-self-center">
+          <div class="form-group row account__date--margin">
+            <label for="inputPassword3" class="col-sm-2 col-form-label">Birthday</label>
+            <div class="col-sm-10">
               <input type="date" name="date" value="${
                 data.date
               }" class="form-control account__info__input" id="inputPassword3" placeholder="Birthday">
             </div>
           </div>
           <fieldset class="form-group">
-            <div class="row">
+            <div class="row block--width-adaptive">
               <legend class="col-form-label col-sm-2 pt-0">Gender</legend>
               <div class="col-sm-10">
                 <div class="form-check">
