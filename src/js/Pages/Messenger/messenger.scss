@@ -5,23 +5,24 @@
 }
 
 .message__header {
-  width: 100%;
   display: grid;
-  grid-template-columns: 3rem 1fr 5rem;
   align-items: center;
-  grid-gap: 1rem;
+  width: 100%;
 
+  grid-gap: 1rem;
+  grid-template-columns: 3rem 1fr 5rem;
 }
 
 .message__avatar-wrapper {
   width: 3rem;
   height: 3rem;
-  border-radius: 50%;
   overflow: hidden;
+  border-radius: 50%;
 
   img {
-    height: 100%;
     width: 100%;
+    height: 100%;
+
     object-fit: contain;
   }
 }
@@ -36,7 +37,7 @@
   position: fixed;
   bottom: 3.5rem;
 
-  @include tablets{
+  @include tablets {
     bottom: 5rem;
   }
 }
@@ -51,10 +52,11 @@
   margin-right: 0.5rem;
 
   img {
-    height: 100%;
     width: 100%;
-    object-fit: contain;
+    height: 100%;
     border-radius: 50%;
+
+    object-fit: contain;
   }
 }
 

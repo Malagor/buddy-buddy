@@ -6,19 +6,16 @@
   margin-top: -5rem;
   padding: 3rem 0 0;
 
-@include phones {
+  @include phones {
     padding: 4rem 0 1rem;
   }
-
-@include tablets {
+  @include tablets {
     padding: 4.5rem 0 5.5rem;
   }
-
-@include laptop {
+  @include laptop {
     padding: 4.5rem 0 5.5rem;
   }
-
-@include desktop {
+  @include desktop {
     padding: 4.5rem 0 5.5rem;
   }
 }
@@ -56,15 +53,13 @@
   font-size: 1.2rem;
   color: rgba(0, 0, 0, 1);
 
-@include tablets {
+  @include tablets {
     font-size: 1.4rem;
   }
-
-@include laptop {
+  @include laptop {
     font-size: 1.5rem;
   }
-
-@include desktop {
+  @include desktop {
     font-size: 1.5rem;
   }
 }
@@ -73,12 +68,10 @@
   @include phones {
     margin-bottom: 1rem;
   }
-
-@include tablets {
+  @include tablets {
     margin-bottom: 1rem;
   }
-
-@include laptop {
+  @include laptop {
     margin-bottom: 1rem;
   }
 }
@@ -87,12 +80,10 @@
   @include phones {
     width: 100%;
   }
-
-@include tablets {
+  @include tablets {
     width: 100%;
   }
-
-@include laptop {
+  @include laptop {
     width: 100%;
   }
 }

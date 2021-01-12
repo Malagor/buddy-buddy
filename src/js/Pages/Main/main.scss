@@ -7,15 +7,13 @@
   padding: 0 1.5rem;
   border-bottom: 1px solid rgba(0, 0, 0, 0.05);
 
-@include tablets {
+  @include tablets {
     padding: 0 1.5rem;
   }
-
-@include laptop {
+  @include laptop {
     padding: 0 2rem;
   }
-
-@include desktop {
+  @include desktop {
     padding: 0 1rem;
   }
 }
@@ -49,19 +47,16 @@
 .main__group-slider {
   height: 9rem;
 
-@include phones {
+  @include phones {
     height: 10.5rem;
   }
-
-@include tablets {
+  @include tablets {
     height: 10rem;
   }
-
-@include laptop {
+  @include laptop {
     height: 12rem;
   }
-
-@include desktop {
+  @include desktop {
     height: 12rem;
   }
 }
