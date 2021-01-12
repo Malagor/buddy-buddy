@@ -216,25 +216,25 @@ export class Database {
         const users: string[] = snapshot.val().userList;
 
         if (users.includes(this.uid)) {
-          const dataGroup = snapshot.val(); 
+          const dataGroup = snapshot.val();
           const dataUserListGroup = dataGroup.userList;
 
           this.firebase
           .database()
           .ref('User')
           .once('value', (snapshot) => {
-            const snapshotUser = snapshot.val()
-            const userList = Object.keys(snapshotUser) // all users in DB
-            
+            const snapshotUser = snapshot.val();
+            const userList = Object.keys(snapshotUser); // all users in DB
+
             const arrayUserImg: any = [];
             userList.forEach(user => {
-              if(dataUserListGroup.includes(user)) {
-                arrayUserImg.push(snapshotUser[user].avatar)
-              } 
-            })
+              if (dataUserListGroup.includes(user)) {
+                arrayUserImg.push(snapshotUser[user].avatar);
+              }
+            });
 
-            callbacks({'dataGroup': dataGroup, 'arrayUserImg': arrayUserImg})
-          })
+            callbacks({'dataGroup': dataGroup, 'arrayUserImg': arrayUserImg});
+          });
 
         }
       }, (error: { code: string; message: any; }) => {

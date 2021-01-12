@@ -1,5 +1,6 @@
 import { Page } from '../../Classes/Page';
 import { IGroupData } from '../../Interfaces/IGroupData';
+import { getFormData } from '../../Util/getFormData';
 
 import { Modal } from 'bootstrap';
 
@@ -24,8 +25,13 @@ export class MyGroups extends Page {
             <h2>Groups</h2>
           </div>
         </div>
-        
-        <div id="divForListOpenGroups"></div>
+
+        <div id="divForListOpenGroups">
+          <div class="card-body data-is-not">
+            <h5 class="card-title">No groups yet.</h5>
+            <p class="card-text">Would you like to create the first group?</p>
+          </div>
+        </div>
 
         <div class="accordion closed-group-hidden" id="accordionExample">
           <div class="accordion-item">
@@ -57,15 +63,20 @@ export class MyGroups extends Page {
   }
 
   createGroupList(data: any) {
+    document.querySelector('.data-is-not').classList.add('closed-group-hidden');
+
     const HTMLListOpenGroups = document.getElementById('divForListOpenGroups');
     const HTMLListClosedGroups = document.getElementById('divForListClosedGroups');
 
-    data = null
-    if(data) {
-      if(!data.dataGroup.dateClose) {
+    console.log(Boolean(data));
+    console.log(data);
+    console.log();
+
+    if (data.dataGroup) {
+      if (!data.dataGroup.dateClose) {
         HTMLListOpenGroups.insertAdjacentHTML('afterbegin', createCardGroup(data));
-        //HTMLListOpenGroups.insertAdjacentHTML('afterbegin', this.createCard(data));
-      } else{
+        // HTMLListOpenGroups.insertAdjacentHTML('afterbegin', this.createCard(data));
+      } else {
         HTMLListClosedGroups.insertAdjacentHTML('afterbegin', createCardGroup(data));
       }
     } else if (!document.querySelector('.data-is-not')) {
@@ -81,24 +92,24 @@ export class MyGroups extends Page {
 
       const participantsImg: string[] = [];
       listImgUsers.forEach((imgUser: any) => {
-        if(participantsImg.length < 3) {
-          participantsImg.push(`<img class="card-group__img-avatar--mini" src="${imgUser}" alt="icon">`)
-        } 
+        if (participantsImg.length < 3) {
+          participantsImg.push(`<img class="card-group__img-avatar--mini" src="${imgUser}" alt="icon">`);
+        }
       });
       if (listImgUsers.length > NUM_OF_IMG_IN_GROUP_CARD) {
-        participantsImg.push('+')
-        participantsImg.push(String(listImgUsers.length))
-      } 
+        participantsImg.push('+');
+        participantsImg.push(String(listImgUsers.length));
+      }
 
       const groupCard = `
         <div class="card mb-3 card-group">
           <div class="row g-0 col">
             <div class="col-3 card-group__box-logo-group">
-              <img class="card-group__img-avatar" src="${data.dataGroup.Styles.Icon}" alt="icon-group">
+              <img class="card-group__img-avatar" src="${data.dataGroup.style.icon}" alt="icon-group">
             </div>
-  
+
             <div class="col-9 card-group__box-content">
-  
+
               <div class="row col">
                 <div class="col-7">
                   <h5>${data.dataGroup.title}</h5>
@@ -107,7 +118,7 @@ export class MyGroups extends Page {
                   <h5>${dataCreateGroup.slice(0, 10)}</h5>
                 </div>
               </div>
-  
+
               <div class="row col">
                 <div class="col-7">
                   ${participantsImg.join('')}
@@ -116,31 +127,31 @@ export class MyGroups extends Page {
                   ${balanceGroup}
                 </div>
               </div>
-  
+
             </div>
-  
+
           </div>
         </div>
       `;
-  
-      return groupCard
+
+      return groupCard;
     }
 
-    function contentForNoData(){
+    function contentForNoData() {
       const html = `
         <div class="card-body data-is-not">
           <h5 class="card-title">No groups yet.</h5>
           <p class="card-text">Would you like to create the first group?</p>
         </div>
       `;
-      return html; 
+      return html;
     }
 
-  } 
+  }
 
 
   createCard(data: any, balanceGroup: number | null = null) {
-    console.log('ok')
+    console.log('ok');
 
     const NUM_OF_IMG_IN_GROUP_CARD: number = 3;
     const date: Date = new Date(data.dataGroup.dateCreate);
@@ -149,14 +160,14 @@ export class MyGroups extends Page {
 
     const participantsImg: string[] = [];
     listImgUsers.forEach((imgUser: any) => {
-      if(participantsImg.length < 3) {
-        participantsImg.push(`<img class="card-group__img-avatar--mini" src="${imgUser}" alt="icon">`)
-      } 
+      if (participantsImg.length < 3) {
+        participantsImg.push(`<img class="card-group__img-avatar--mini" src="${imgUser}" alt="icon">`);
+      }
     });
     if (listImgUsers.length > NUM_OF_IMG_IN_GROUP_CARD) {
-      participantsImg.push('+')
-      participantsImg.push(String(listImgUsers.length))
-    } 
+      participantsImg.push('+');
+      participantsImg.push(String(listImgUsers.length));
+    }
 
     const groupCard = `
       <div class="card mb-3 card-group">
@@ -164,9 +175,9 @@ export class MyGroups extends Page {
           <div class="col-3 card-group__box-logo-group">
             <img class="card-group__img-avatar" src="${data.dataGroup.Styles.Icon}" alt="icon-group">
           </div>
-  
+
           <div class="col-9 card-group__box-content">
-  
+
             <div class="row col">
               <div class="col-7">
                 <h5>${data.dataGroup.title}</h5>
@@ -175,7 +186,7 @@ export class MyGroups extends Page {
                 <h5>${dataCreateGroup.slice(0, 10)}</h5>
               </div>
             </div>
-  
+
             <div class="row col">
               <div class="col-7">
                 ${participantsImg.join('')}
@@ -184,14 +195,14 @@ export class MyGroups extends Page {
                 ${balanceGroup}
               </div>
             </div>
-  
+
           </div>
-  
+
         </div>
       </div>
     `;
-  
-    return groupCard
+
+    return groupCard;
   }
 
   modal() {
@@ -204,7 +215,7 @@ export class MyGroups extends Page {
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
-            <form class="form-floating row g-3" id="newGroupForm">
+            <form class="form-floating row g-3 form-group" id="newGroupForm">
               <div class="form-floating col-12">
                 <input type="text" class="form-control" id="formTitle" name="title" placeholder="Title" required>
                 <label for="formTitle" class="form-label">Title*</label>
@@ -212,9 +223,15 @@ export class MyGroups extends Page {
                   Please input title.
                 </div>
               </div>
+
+              <div class="form-group">
+                <label for="exampleFormControlFile1">Add logo group</label>
+                <input type="file" class="form-control-file input-logo-group" id="formImg" name="logoGroup">
+              </div>
+
               <div class="<!--form-floating--> col-12">
                 <textarea class="form-control" id="formDesc" rows="3" name="description" placeholder="Description"></textarea>
-<!--                <label for="formDesc" class="form-label">Description</label>-->
+<!--                <label for="formDesc-" class="form-label">Description</label>-->
               </div>
               <div class="input-group col-12">
                 <span class="input-group-text" id="basic-addon1">@</span>
@@ -253,6 +270,22 @@ export class MyGroups extends Page {
     const { newGroupForm }: any = document.forms;
     const form: HTMLFormElement = newGroupForm;
 
+
+    let logoGroupImg = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT_nfXkbg7F-gw1LndLRRcgoQxmEtlGcBpKIw&usqp=CAU';
+    const formPhoto: HTMLFormElement = this.element.querySelector('.form-group');
+    const inputPhoto: HTMLInputElement = this.element.querySelector('.input-logo-group');
+
+    inputPhoto.addEventListener('change', (): void => {
+      if (inputPhoto.files[0]) {
+          const newData = getFormData(
+          formPhoto,
+          this.element.querySelector('.form-control-file'),
+        );
+        logoGroupImg = newData.logoGroup;
+      }
+    });
+
+
     form.onsubmit = (event) => {
       if (!form.checkValidity()) {
         event.preventDefault();
@@ -261,10 +294,13 @@ export class MyGroups extends Page {
       form.classList.add('was-validated');
       event.preventDefault();
 
+
+
       const title: string = (<HTMLInputElement>document.getElementById('formTitle')).value;
       const description: string = (<HTMLInputElement>document.getElementById('formDesc')).value;
       const members: NodeListOf<HTMLElement> = document.querySelectorAll('.member');
       const users: string[] = [];
+
 
       members.forEach(member => {
         users.push(member.getAttribute('data-id'));
@@ -277,7 +313,7 @@ export class MyGroups extends Page {
         dateClose: null,
         userList: users,
         transactionList: [],
-        style: null,
+        style: {'icon': logoGroupImg},
       };
       this.onCreateNewGroup(groupData);
       modal.hide();
@@ -333,7 +369,7 @@ export class MyGroups extends Page {
 }
 
 
-/// FOR BALANSE 
+/// FOR BALANSE
 
 /* let balanceGroup: string = '';
 if (element.balance < 0) {
