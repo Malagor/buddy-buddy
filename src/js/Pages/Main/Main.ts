@@ -39,7 +39,9 @@ export class Main extends Page {
         <th scope="row">${i + 1}</th>
         <td>${dt[i].Cur_Abbreviation}</td>
         <td>${dt[i].Cur_OfficialRate}</td>
-        <td>${dt[i].Cur_OfficialRate * (data.balance || 0)}</td>
+        <td>${dt[i].Cur_OfficialRate * (data.balance || 0)} ${
+        dt[i].Cur_Abbreviation
+      }</td>
       </tr>
       `;
     }
@@ -75,27 +77,27 @@ export class Main extends Page {
 
   render(data: any): void {
     this.element.innerHTML = `
-    <div class="account__wrapper d-flex align-items-center flex-column">
-      <div class="account__info d-flex align-items-center flex-column w-100">
-        <div class="account__header account__header--main d-flex align-items-center">
-          <p class="account__nick">@${data.account}</p>
+    <div class="block__wrapper d-flex align-items-center flex-column">
+      <div class="block__content d-flex align-items-center flex-column w-100">
+        <div class="block__header block__header--main d-flex align-items-center">
+          <p class="block__nickname">@${data.account}</p>
         </div>
         <div class="main__currency d-flex align-items-center flex-column w-100">
-          <div class="account__image-wrapper position-relative overflow-hidden">
+          <div class="block__image-wrapper position-relative overflow-hidden">
           <img src="${data.avatar}" alt="${
       data.name && data.surname
-    }" class="account__image position-absolute top-50 start-50 translate-middle">
+    }" class="block__image position-absolute top-50 start-50 translate-middle">
         </div>
           <h3 class="main__name">
             <span>${data.name}</span>
           </h3>
         </div>
-        <div class="main__currency d-flex align-items-center flex-column account--width-80">
-          <p class="account__balance">Balance ${data.balance || 0} ${
+        <div class="main__currency d-flex align-items-center flex-column block--width-80">
+          <p class="main__balance">Balance ${data.balance || 0} ${
       data.currency
     }</p>
         </div>
-        <div class="main__currency d-flex align-items-center flex-column account--width-85 main--border">
+        <div class="main__currency d-flex align-items-center flex-column block--width-85 main--border">
           <p class="main__currency__current d-flex align-items-center align-self-start">
             <span>Current currency:</span>
             <select class="form-select w-auto" aria-label="Default select example">
@@ -118,14 +120,14 @@ export class Main extends Page {
             </tbody>
           </table>
         </div>
-        <div class="main__currency d-flex align-items-center flex-column account--width-85 main--border">
+        <div class="main__currency d-flex align-items-center flex-column block--width-85 main--border">
           <p class="main__currency__current align-self-start">
             <span>My groups</span>
           </p>
           <div class="main__group-slider d-flex align-items-center justify-content-center flex-column w-100 main__card">
           </div>
         </div>
-        <div class="main__currency d-flex align-items-center flex-column account--width-85 main--border">
+        <div class="main__currency d-flex align-items-center flex-column block--width-85 main--border">
           <p class="main__currency__current align-self-start">
             <span>Group's transactions</span>
           </p>
