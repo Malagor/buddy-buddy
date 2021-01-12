@@ -78,6 +78,7 @@ export class App {
       this.messenger = Messenger.create('.main');
       this.messenger.onAddRecipient = this.onAddRecipientToMessage.bind(this);
       this.messenger.sendNewMessage = this.onSendNewMessage.bind(this);
+      this.messenger.onAnswerMessage = this.onAnswerMessage.bind(this);
       // this.messenger.render();
 
     } else {
@@ -199,6 +200,10 @@ export class App {
 
   onSendNewMessage(data: any): void {
     this.database.createNewMessage(data);
+  }
+
+  onAnswerMessage(userId: string) {
+    this.database.getUserInfo(userId, [this.messenger.answerModal]);
   }
 
   // loadMainPage() {

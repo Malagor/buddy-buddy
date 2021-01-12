@@ -128,7 +128,9 @@ export class Database {
       .ref(`User/${uid}`)
       .once('value', (snapshot) => {
         console.log('snapshot "getUserInfo" -  User Data:', snapshot.val());
-        callbacks.forEach(fn => fn(snapshot.val()));
+        const dataUser = snapshot.val();
+        dataUser.key = uid;
+        callbacks.forEach(fn => fn(dataUser));
         // callback(snapshot.val());
       }, (error: { code: string; }) => {
         console.log('Error: ' + error.code);

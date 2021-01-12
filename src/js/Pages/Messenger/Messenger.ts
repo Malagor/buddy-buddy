@@ -15,6 +15,8 @@ interface IMessage {
 export class Messenger extends Page {
   onAddRecipient: any;
   sendNewMessage: any;
+  onAnswerMessage: any;
+
   static create(element: string): Messenger {
     const page = new Messenger(element);
     page.printMessage = page.printMessage.bind(page);
@@ -28,7 +30,7 @@ export class Messenger extends Page {
           <div class="block__header account__header--main d-flex align-items-center">
             <p class="block__nick">Messenger</p>
           </div>
-          <div class="message-list w-75 d-flex flex-column">
+          <div class="message-list block--width-85 d-flex flex-column">
           </div>
         <button type="button" class="btn btn-primary d-flex align-items-center justify-content-center message__addBtn"><span class="material-icons">add</span></button>
       </div>
@@ -42,11 +44,23 @@ export class Messenger extends Page {
 
   protected events(): void {
 
+    this.element.addEventListener('click', event => {
+      const { target }: any = event;
+
+      if (target.closest('.answer-button')) {
+        const button: HTMLElement = target.closest('.answer-button');
+        const userId = button.getAttribute('data-user-uid');
+
+        this.onAnswerMessage(userId);
+      }
+    });
+
+
     const addMessageBtn = document.querySelector('.message__addBtn');
     const modal = new Modal(this.element.querySelector('#messageModal'));
     addMessageBtn.addEventListener('click', () => {
-        console.log('ShowModal');
-        modal.show();
+      console.log('ShowModal');
+      modal.show();
       // }
     });
 
@@ -71,10 +85,9 @@ export class Messenger extends Page {
         toUser,
         date,
         message,
-        status: false
+        status: false,
       };
       this.sendNewMessage(messageData);
-      // const modal = new Modal(this.element.querySelector('#messageModal'));
       modal.hide();
     };
 
@@ -94,7 +107,7 @@ export class Messenger extends Page {
       month: '2-digit',
       day: 'numeric',
       hour: '2-digit',
-      minute: '2-digit'
+      minute: '2-digit',
     };
     const date: Date = new Date(data.date);
     const localeDate: string = date.toLocaleString('ru-RU', dateOptions);
@@ -125,7 +138,7 @@ export class Messenger extends Page {
     if (data.direction) {
       html += `
         <div class="main__currency__current align-self-end mt-2">
-        <button type="button" class="btn btn-outline-primary btn-sm" data-user-uid="${data.key}">Answer</button>
+        <button type="button" class="btn btn-outline-primary btn-sm answer-button" data-user-uid="${data.key}">Answer</button>
         </div>
         `;
     }
@@ -179,5 +192,19 @@ export class Messenger extends Page {
     userWrapper.innerHTML = `
     <p class="error-message">${message}</p>
     `;
+  }
+
+  answerModal = (data: any): void => {
+    const formRecipient: HTMLFormElement = this.element.querySelector('#formRecipient');
+    formRecipient.value = data.account;
+
+    this.addUserForSendMessage(data);
+
+    const modalBtn: HTMLElement = this.element.querySelector('.message__addBtn');
+    modalBtn.click();
+
+    const formMessage: HTMLFormElement = this.element.querySelector('#formMessage');
+    formMessage.focus();
+
   }
 }
