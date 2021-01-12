@@ -52,6 +52,7 @@ export class App {
       this.layout.onHelpPage = this.onHelpPage.bind(this);
       this.layout.onSignOut = this.onSignOut.bind(this);
       this.layout.onAccountPage = this.onAccountPage.bind(this);
+      this.layout.onMessagesPage = this.onMessagesPage.bind(this);
 
       this.accountPage = AccountPage.create('.main');
 
@@ -135,6 +136,10 @@ export class App {
     this.database.getGroupsListForTransaction(this.transactionsList.newTrans.addGroupList);
     this.database.getMembersOfGroup(this.transactionsList.newTrans.addMembersOfGroup);
 
+  }
+
+  onMessagesPage() {
+    console.log('Load Messages Page!');
   }
 
   onStatisticsPage() {

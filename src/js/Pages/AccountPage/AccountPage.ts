@@ -10,61 +10,60 @@ export class AccountPage extends Page {
     console.log('Рендер Аккаунта');
     const data: any = this.checkNameAccount(dt);
     this.element.innerHTML = `
-    <div class="account__wrapper d-flex align-items-center flex-column">
-      <div class="account__info d-flex align-items-center flex-column w-100">
-        <div class="account__header account__header--account d-flex align-items-center">
-          <div class="account__image-wrapper position-relative overflow-hidden">
+    <div class="block__wrapper d-flex align-items-center flex-column">
+      <div class="block__content d-flex align-items-center flex-column w-100">
+        <div class="block__header block__header--account d-flex align-items-center">
+          <div class="block__image-wrapper position-relative">
             <img src="${data.avatar}" alt="${
-      data.name && data.surname
-    }" class="account__image position-absolute top-50 start-50 translate-middle">
+      data.name
+    }" class="block__image position-absolute top-50 start-50 translate-middle">
+            <form action=#" enctype="multipart/form-data" method="post" class="account__form-change-photo d-flex justify-content-center align-items-center">
+              <label for="file" class="account__button-change-photo d-flex justify-content-center align-items-center">
+                <i class="material-icons">add_a_photo</i>
+              </label>
+              <input type="file" name="avatar" id="file" class="account__input-photo position-absolute invisible">
+            </form>
           </div>
-          <p class="account__nick">@${data.account}</p>
-          <form action=#" enctype="multipart/form-data" method="post" class="account__form-change-photo d-flex justify-content-center align-items-center">
-            <label for="file" class="account__button-change-photo d-flex justify-content-center align-items-center">
-              <i class="material-icons">monochrome_photos</i>
-            </label>
-            <input type="file" name="avatar" id="file" class="account__input-photo position-absolute invisible">
-          </form>
+          <p class="block__nickname">@${data.account}</p>
         </div>
-
-        <form class="account__form-change-info">
-          <div class="input-group flex-nowrap">
-            <div class="input-group-prepend">
-              <span class="input-group-text" id="addon-wrapping">@</span>
+        <form class="account__form-change-info">        
+          <div class="form-group row block--margin-adaptive">
+            <label for="account" class="col-sm-2 col-form-label">Account</label>
+            <div class="account__double-form col-sm-10">
+              <div class="input-group-prepend account__double-form--first">
+                <span class="input-group-text" id="addon-wrapping">@</span>
+              </div>
+              <input type="text" name="account" value="${
+                data.account
+              }" class="account__double-form--second form-control account__info__input account__info__input-id" placeholder="Username" aria-label="Username" aria-describedby="addon-wrapping" required>
             </div>
-            <input type="text" name="account" value="${
-              data.account
-            }" class="form-control account__info__input account__info__input-id" placeholder="Username" aria-label="Username" aria-describedby="addon-wrapping" required>
           </div>
-          <div class="form-group row account--margin-adaptive">
-            <label for="surname" class="col-sm-2 col-form-label text-center account--width-adaptive">Name and Surname</label>
-            <div class="input-group">
+          <div class="form-group row block--margin-adaptive">
+            <label for="surname" class="col-sm-2 col-form-label">Name</label>
+            <div class="col-sm-10">
               <input type="text" name="name" aria-label="Last name" value="${
                 data.name
               }" class="form-control account__info__input" placeholder="Name" required>
-              <input type="text" name="surname" aria-label="First name" value="${
-                data.surname
-              }" class="form-control account__info__input" placeholder="Surname" id="surname">
             </div>
           </div>
-          <div class="form-group row account--margin-adaptive">
+          <div class="form-group row block--margin-adaptive">
             <label for="inputEmail3" class="col-sm-2 col-form-label">Email</label>
             <div class="col-sm-10">
               <input type="email" name="email" value="${
-                data.email
-              }" class="form-control account__info__input" placeholder="E-mail" id="inputEmail3" required>
+                data.email || ''
+              }" class="form-control account__info__input" placeholder="E-mail" id="inputEmail3">
             </div>
           </div>
-          <div class="form-group row account--margin-adaptive">
-            <label for="inputPassword3" class="col-sm-2 col-form-label" >Day of Birth</label>
-            <div class="col-sm-10 align-self-center">
+          <div class="form-group row account__date--margin">
+            <label for="inputPassword3" class="col-sm-2 col-form-label">Birthday</label>
+            <div class="col-sm-10">
               <input type="date" name="date" value="${
                 data.date
               }" class="form-control account__info__input" id="inputPassword3" placeholder="Birthday">
             </div>
           </div>
           <fieldset class="form-group">
-            <div class="row">
+            <div class="row block--width-adaptive">
               <legend class="col-form-label col-sm-2 pt-0">Gender</legend>
               <div class="col-sm-10">
                 <div class="form-check">
@@ -83,12 +82,11 @@ export class AccountPage extends Page {
             </div>
           </fieldset>
           <div class="form-group row">
-            <div class="col-sm-10 d-flex account--width-adaptive">
+            <div class="col-sm-10 d-flex block--width-adaptive">
               <button type="submit" class="account__input-submit btn btn-dark mx-auto" disabled>Save</button>
             </div>
           </div>
         </form>
-        <p class="account__balance d-flex align-items-center justify-content-center">Balance</p>
         </div>
     </div>
 
@@ -100,11 +98,6 @@ export class AccountPage extends Page {
   protected checkNameAccount(data: any): {} | void {
     const dt = { ...data };
     if (!dt.gender) dt.gender = '';
-    if (dt.surname) return;
-    if (dt.name.indexOf(' ') !== -1 && !dt.surname) {
-      dt.surname = dt.name.slice(dt.name.indexOf(' '));
-      dt.name = dt.name.slice(0, dt.name.indexOf(' '));
-    }
     return dt;
   }
 
@@ -119,9 +112,7 @@ export class AccountPage extends Page {
   }
 
   protected events(): void {
-    let currentScroll: number;
     let values: string[] = [];
-    const header: HTMLElement = this.element.querySelector('.account__header');
     const submitInfo: HTMLElement = this.element.querySelector(
       '.account__input-submit',
     );
@@ -135,14 +126,14 @@ export class AccountPage extends Page {
       '.account__form-change-info',
     );
     const idValue: HTMLInputElement = this.element.querySelector(
-      '.account__nick',
+      '.block__nickname',
     );
 
     inputPhoto.addEventListener('change', (): void => {
       if (inputPhoto.files[0]) {
         const newData: {} = getFormData(
           formPhoto,
-          this.element.querySelector('.account__image'),
+          this.element.querySelector('.block__image'),
         );
         console.log(
           'Здесь могла быть ваша функция передачи информации в базу данных!',
