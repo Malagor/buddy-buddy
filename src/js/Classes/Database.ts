@@ -236,6 +236,7 @@ export class Database {
       .ref('Messages')
       .on('child_added', (snapshot) => {
         const messageObj = snapshot.val();
+        const messageId = snapshot.key;
         console.log('message', messageObj.message);
         const { fromUser, toUser } = messageObj;
         if (fromUser === this.uid || toUser === this.uid) {
@@ -269,14 +270,25 @@ export class Database {
             const {toUser} = users;
 
             const messageData = {
-              avatar: toUser.val().avatar,
+              messageId,
               message: messageObj.message,
               date: messageObj.date,
+              status: messageObj.status,
               key: toUser.key,
+              avatar: toUser.val().avatar,
               name: toUser.val().name,
             };
 
             renderMessage(messageData);
+
+            // this.firebase
+            //   .database()
+            //   .ref(`Messages/${messageId}`)
+            //   .child('status')
+            //   .transaction(curStatus => {
+            //     curStatus = true;
+            //     return curStatus;
+            //   });
           });
         }
       }, (error: { code: string; message: any; }) => {

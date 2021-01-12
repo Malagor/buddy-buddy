@@ -2,11 +2,13 @@ import { Page } from '../../Classes/Page';
 import { Modal } from 'bootstrap';
 
 interface IMessage {
+  messageId: string | undefined;
   key: string;
   name: string;
   avatar: string;
   date: Date;
   message: string;
+  status: boolean;
 }
 
 export class Messenger extends Page {
@@ -20,12 +22,12 @@ export class Messenger extends Page {
 
   render(): void {
     let html = `
-      <div class="account__wrapper d-flex align-items-center flex-column">
-        <div class="account__info d-flex align-items-center flex-column w-100">
-          <div class="account__header account__header--main d-flex align-items-center">
-            <p class="account__nick">Messenger</p>
+      <div class="block__wrapper d-flex align-items-center flex-column">
+        <div class="block__content d-flex align-items-center flex-column w-100">
+          <div class="block__header account__header--main d-flex align-items-center">
+            <p class="block__nick">Messenger</p>
           </div>
-          <div class="message-list account--width-85">
+          <div class=" message-list account--width-85">
           </div>
         <button type="button" class="btn btn-primary d-flex align-items-center justify-content-center message__addBtn"><span class="material-icons">add</span></button>
       </div>
@@ -88,16 +90,31 @@ export class Messenger extends Page {
   }
 
   printMessage(data: IMessage): void {
+    const dateOptions = {
+      year: '2-digit',
+      month: '2-digit',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    };
+    const date: Date = new Date(data.date);
+    const localeDate: string = date.toLocaleString('ru-RU', dateOptions);
+
+    console.log(data);
+    let stateClass: string = '';
+    if (data.status === false) {
+      stateClass = 'message--not-read';
+    }
     const messageList = this.element.querySelector('.message-list');
 
     messageList.insertAdjacentHTML('beforeend', `
-      <div class="message d-flex flex-column align-items-center main--border">
+      <div class="message d-flex flex-column align-items-center main--border ${stateClass}" data-message-id="${data.messageId}">
         <div class="message__header align-self-start">
           <div class="message__avatar-wrapper">
             <img src="${data.avatar}" alt="${data.name}">
           </div>
           <div class="message__user-name fw-bold">${data.name}</div>
-          <div class="message__time">${data.date}</div>
+          <div class="message__time">${localeDate}</div>
         </div>
         <div class="main__currency__current align-self-start mt-1">
           <span>${data.message}</span>
