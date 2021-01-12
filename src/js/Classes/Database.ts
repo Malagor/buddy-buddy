@@ -128,7 +128,9 @@ export class Database {
       .ref(`User/${uid}`)
       .once('value', (snapshot) => {
         console.log('snapshot "getUserInfo" -  User Data:', snapshot.val());
-        callbacks.forEach(fn => fn(snapshot.val()));
+        const dataUser = snapshot.val();
+        dataUser.key = uid;
+        callbacks.forEach(fn => fn(dataUser));
         // callback(snapshot.val());
       }, (error: { code: string; }) => {
         console.log('Error: ' + error.code);
@@ -148,7 +150,7 @@ export class Database {
       });
   }
 
-  findUserByName(accountName: string, func: any) {
+  findUserByName(accountName: string, func: any, errorFunc?: any) {
     this.firebase
       .database()
       .ref(`User`)
@@ -166,6 +168,14 @@ export class Database {
           key: key,
         };
         func(data);
+      })
+      .catch(error => {
+        console.log('Error retrieving user data');
+        console.log(error.code);
+        console.log(error.message);
+        if (errorFunc) {
+          errorFunc(`Error retrieving user data.`);
+        }
       });
   }
 
@@ -217,6 +227,101 @@ export class Database {
           renderGroups(snapshot.val());
         }
       }, (error: { code: string; message: any; }) => {
+        console.log('Error:\n ' + error.code);
+        console.log(error.message);
+      });
+  }
+
+  getMessageList(renderMessage: any): void {
+    this.firebase
+      .database()
+      .ref('Messages')
+      .on('child_added', (snapshot) => {
+        const messageObj = snapshot.val();
+        const messageId = snapshot.key;
+        const { fromUser, toUser } = messageObj;
+
+        // console.log('message', messageObj.message);
+
+        if (fromUser === this.uid || toUser === this.uid) {
+
+          const fromUserData = this.firebase
+            .database()
+            .ref(`User/${fromUser}`)
+            .once('value', snapshot => {
+              return snapshot;
+            });
+
+          const toUserData = this.firebase
+            .database()
+            .ref(`User/${toUser}`)
+            .once('value', snapshot => {
+              return snapshot;
+            });
+
+          const users = Promise.all([fromUserData, toUserData])
+            .then(data => {
+              return {
+                fromUser: data[0],
+                toUser: data[1],
+              };
+            });
+
+          users.then(users => {
+            const { fromUser, toUser } = users;
+
+            const direction: boolean = toUser.key === this.uid;
+            let key: string;
+            let name: string;
+            let avatar: string;
+
+            if (direction) {
+              key = fromUser.key;
+              name = fromUser.val().name;
+              avatar = fromUser.val().avatar;
+            } else {
+              key = toUser.key;
+              name = toUser.val().name;
+              avatar = toUser.val().avatar;
+            }
+
+            const messageData = {
+              messageId,
+              message: messageObj.message,
+              date: messageObj.date,
+              status: messageObj.status,
+              key,
+              avatar,
+              name,
+              direction
+            };
+
+            renderMessage(messageData);
+
+            this.firebase
+              .database()
+              .ref(`Messages/${messageId}`)
+              .child('status')
+              .transaction(curStatus => {
+                curStatus = true;
+                return curStatus;
+              });
+          });
+        }
+      }, (error: { code: string; message: any; }) => {
+        console.log('Error:\n ' + error.code);
+        console.log(error.message);
+      });
+  }
+
+  createNewMessage(data: any): void {
+    data.fromUser = this.uid;
+
+    this.firebase
+      .database()
+      .ref('Messages')
+      .push(data)
+      .catch((error: { code: string; message: any; }) => {
         console.log('Error:\n ' + error.code);
         console.log(error.message);
       });

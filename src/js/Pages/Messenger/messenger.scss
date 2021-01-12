@@ -1,0 +1,65 @@
+@import "src/scss/_misc/mixins";
+
+.message {
+  font-size: 0.8rem;
+}
+
+.message__header {
+  display: grid;
+  align-items: center;
+  width: 100%;
+
+  grid-gap: 1rem;
+  grid-template-columns: 3rem 1fr 5rem;
+}
+
+.message__avatar-wrapper {
+  width: 3rem;
+  height: 3rem;
+  overflow: hidden;
+  border-radius: 50%;
+
+  img {
+    width: 100%;
+    height: 100%;
+
+    object-fit: contain;
+  }
+}
+
+.message__addBtn {
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+}
+
+.message__addBtn {
+  position: fixed;
+  bottom: 3.5rem;
+
+  @include tablets {
+    bottom: 5rem;
+  }
+}
+
+.recipient-user {
+  display: flex;
+}
+
+.recipient-user__image-wrapper {
+  width: 2rem;
+  height: 2rem;
+  margin-right: 0.5rem;
+
+  img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+
+    object-fit: contain;
+  }
+}
+
+.message--not-read {
+  box-shadow: 0 0 3px green;
+}

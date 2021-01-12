@@ -10,6 +10,7 @@ import { IGroupData } from '../Interfaces/IGroupData';
 import { GroupPage } from '../Pages/GroupsPages/GroupsPage';
 import { TransactionsList } from '../Pages/TransactionsList/transactionsList';
 import { dataTransList } from '../Data/dataTransList';
+import { Messenger } from '../Pages/Messenger/Messenger';
 
 export class App {
   private database: Database;
@@ -21,6 +22,7 @@ export class App {
   private accountPage: AccountPage;
   private groupsPage: GroupPage;
   private transactionsList: TransactionsList;
+  private messenger: Messenger;
 
   constructor() {
     this.database = Database.create();
@@ -72,6 +74,12 @@ export class App {
 
       this.transactionsList = TransactionsList.create('.main');
       this.transactionsList.onTransactionSubmit = this.onTransactionSubmit.bind(this);
+
+      this.messenger = Messenger.create('.main');
+      this.messenger.onAddRecipient = this.onAddRecipientToMessage.bind(this);
+      this.messenger.sendNewMessage = this.onSendNewMessage.bind(this);
+      this.messenger.onAnswerMessage = this.onAnswerMessage.bind(this);
+      // this.messenger.render();
 
     } else {
       console.log(`isUserLogon = ${state}`);
@@ -132,7 +140,9 @@ export class App {
   }
 
   onMessagesPage() {
-    console.log('Load Messages Page!');
+    this.messenger.render();
+    this.database.getMessageList(this.messenger.printMessage);
+    // this.database.getGroupList(this.groups.addGroupToList);
   }
 
   onStatisticsPage() {
@@ -184,6 +194,17 @@ export class App {
     this.database.findUserByName(accountName, this.groups.addMembersGroup);
   }
 
+  onAddRecipientToMessage(accountName: string) {
+    this.database.findUserByName(accountName, this.messenger.addUserForSendMessage, this.messenger.errorAddUserForSendMessage);
+  }
+
+  onSendNewMessage(data: any): void {
+    this.database.createNewMessage(data);
+  }
+
+  onAnswerMessage(userId: string) {
+    this.database.getUserInfo(userId, [this.messenger.answerModal]);
+  }
 
   // loadMainPage() {
   //   this.mainPage.render();
