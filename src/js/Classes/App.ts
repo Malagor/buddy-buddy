@@ -128,6 +128,7 @@ export class App {
 
   onTransactionsPage() {
     this.transactionsList.render(dataTransList);
+    this.transactionsList.newTrans.onCreateTransaction = this.onCreateTransaction.bind(this);
 
 
     this.database.getCurrencyList(this.transactionsList.newTrans.addCurrencyList);
@@ -183,6 +184,10 @@ export class App {
 
   onAddGroupMember(accountName: string) {
     this.database.findUserByName(accountName, this.groups.addMembersGroup);
+  }
+
+  onCreateTransaction(data: any) {
+    this.database.setDataTransaction(data);
   }
 
 

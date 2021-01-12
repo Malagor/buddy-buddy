@@ -311,8 +311,16 @@ export class Database {
       });
   }
 
-
-
-
+  setDataTransaction(data: any) {
+    data.userID = this.uid;
+    const transRef = this.firebase.database().ref('Transaction');    
+    const transKey = transRef.push().key;
+    console.log('transKey', transKey);
+    transRef.child(transKey)
+      .set(data)
+      .catch(error => {
+        console.log('Error: ' + error.code);
+      });
+  }
 
 }

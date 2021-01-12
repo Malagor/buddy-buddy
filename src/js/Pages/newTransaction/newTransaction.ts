@@ -1,6 +1,9 @@
 import { Page } from '../../Classes/Page';
 import { divideSum } from './divideSum';
+import { Modal } from 'bootstrap';
+import { addMemberHTML } from './addMemberHTML';
 export class NewTransaction extends Page {
+  onCreateTransaction: any;
 
   constructor(element: string) {
     super(element);
@@ -43,7 +46,7 @@ export class NewTransaction extends Page {
                 <input id="input-file" type="file" accept="image/*" class="add-check__file" name="check">                 
               </label>              
             </div>
-            <div class="add-check__icon-wrapper hidden" data-bs-toggle="modal" data-bs-target="#check"><img class="add-check__icon" src="#" alt="check"></div>
+            <div class="add-check__icon-wrapper hidden" ><img class="add-check__icon" src="#" alt="check"></div>
 
 
             <div class="modal fade add-check__modal" id="check" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
@@ -112,7 +115,7 @@ export class NewTransaction extends Page {
 
   addCurrencyList = (data: any) => {
     const currencySelect: HTMLFormElement = document.querySelector('.new-trans__currency-list');
-    const optionHTML = `<option value=${data.name}>${data.icon}</option>`;
+    const optionHTML = `<option value=${data.icon}>${data.icon}</option>`;
     currencySelect.insertAdjacentHTML('beforeend', optionHTML);
   }
 
@@ -139,33 +142,36 @@ export class NewTransaction extends Page {
   } 
 
   getDataforCreateTransaction = () => {
-    const group = document.querySelector('.new-trans__groups-list').value;
-    const descr:string = document.querySelector('.new-trans__descr').value;
-    const totalSum: string = document.querySelector('.total-sum').value;
-    const currency: string = document.querySelector('.new-trans__currency-list').value;
+
+    const group: HTMLFormElement= document.querySelector('.new-trans__groups-list');
+    const descr: HTMLFormElement = document.querySelector('.new-trans__descr');
+    const totalSum: HTMLFormElement = document.querySelector('.total-sum');
+    const currency: HTMLFormElement = document.querySelector('.new-trans__currency-list');
     const inputCheck: HTMLFormElement = document.querySelector('.add-check__file');
-    const currentDate  = new Date();
-    console.log('check', inputCheck.files[0]);
-
+    const currentDate  = +(new Date());
+    
     const userList: Array<any> = [];
-
     const checkedMembers = document.querySelectorAll('.checked-member-wrapper');
     checkedMembers.forEach((memb: HTMLElement) => {
-      console.log (memb);
       const user = {
         userID: memb.getAttribute('user-id'),
         cost: memb.querySelector('.checked-member__sum').value || memb.querySelector('.checked-member__sum').getAttribute('placeholder'),
         comment: memb.querySelector('.checked-member__comment').value,
+        state: 'pending',
       };
       userList.push(user);
-
     });
 
-    console.log('userlist', userList); 
-     
+    return {
+      date: currentDate,
+      totalCost: totalSum.value,
+      groupID: group.value,
+      descripion: descr.value,
+      tillSlip: inputCheck.files[0],
+      currency: currency.value,
+      toUserList: userList,
+    } 
   }
-
-  
 
   protected events(): void {
     const groups: HTMLFormElement = document.querySelector('.new-trans__groups-list');
@@ -198,15 +204,9 @@ export class NewTransaction extends Page {
     });
 
     const inputCheck: HTMLFormElement = document.querySelector('.add-check__file');
-    const inputCheckWrapper = document.querySelector('.add-check__wrapper');
-
-
     inputCheck.addEventListener('change', () => {
       if (inputCheck.value) {
-        console.log('файл загружен',inputCheck.value);
-        console.log('файл',inputCheck.files[0]);
-        document.querySelector('.add-check__icon-wrapper').classList.remove('hidden');
-         
+        document.querySelector('.add-check__icon-wrapper').classList.remove('hidden');        
         const checkInModal: HTMLImageElement = document.querySelector('.add-check__image');
         const checkIcon:HTMLImageElement = document.querySelector('.add-check__icon');
         const reader: FileReader = new FileReader();
@@ -216,60 +216,30 @@ export class NewTransaction extends Page {
             aImg2.src = e.target.result;
           };
         })(checkInModal, checkIcon);
-        reader.readAsDataURL(inputCheck.files[0]);
-       
-        
-      }
-     
+        reader.readAsDataURL(inputCheck.files[0]);        
+      }     
     });
-
-
-
 
     const createTransBtn = document.querySelector('.new-trans__create-btn');
     createTransBtn.addEventListener('click', (e) => {
       e.preventDefault();
-      this.getDataforCreateTransaction();
+      const data = this.getDataforCreateTransaction();
+      this.onCreateTransaction(data);
+      console.log ('data', data);
     });
 
-
+    const checkModal = new Modal(document.querySelector('.add-check__modal'));
+    const btnOpenCheck: HTMLElement = document.querySelector('.add-check__icon-wrapper');
     const btnCloseCheck: HTMLElement = document.querySelector('.add-check__close-modal');
+
+    btnOpenCheck.addEventListener('click',() => {
+      checkModal.show();
+    });
+
     btnCloseCheck.addEventListener('click', () => {
-      const checkModal = new bootstrap.Modal(document.getElementById('check'), {
-        keyboard: false
-      });
       checkModal.hide();
     });
 
   }
 }
-
-
-
-
-
-const addMemberHTML = (ID: string, name: string, avatar: string) => {
-  return `
-  <div class="checked-member-wrapper d-flex align-items-center justify-content-between" user-id=${ID}>
-    <div class="checked-member d-flex flex-column align-items-center">
-      <div class="checked-member__avatar">${avatar}</div>
-      <div class="checked-member__name">${name}</div>
-    </div>
-    <input class="checked-member__sum checked-member__sum--evenly form-control form-control-sm" type="text">
-    <textarea class="checked-member__comment form-control" placeholder="Комментарий"></textarea>
-  </div>
-  `;
-};
-
-
  
-
-
-  //   <div class="add-check input-group mb-2">
-  //   <label class="add-check__wrapper" for="input-file">
-  //     <div class="add-check__text">Добавить чек</div>
-  //     <i class="material-icons">attach_file</i>
-  //     <input id="input-file" type="file" accept="image/*" class="add-check__file" name="check">
-  //     <div class="add-check__image"><img src="https://img.icons8.com/carbon-copy/100/000000/check.png"/></div>         
-  //   </label>
-  // </div>
