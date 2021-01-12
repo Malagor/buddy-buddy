@@ -19,34 +19,36 @@ export class MyGroups extends Page {
   render(): void {
 
     let html = `
-      <div id="contentGroup" class="container">
-        <div class="row justify-content-between">
-          <div class="col-6">
-            <h2>Groups</h2>
-          </div>
-        </div>
-
-        <div id="divForListOpenGroups">
-          <div class="card-body data-is-not">
-            <h5 class="card-title">No groups yet.</h5>
-            <p class="card-text">Would you like to create the first group?</p>
-          </div>
-        </div>
-
-        <div class="accordion closed-group-hidden" id="accordionExample">
-          <div class="accordion-item">
-            <h2 class="accordion-header" id="headingOne">
-              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
-                Closed Group
-              </button>
-            </h2>
-            <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
-              <div id="divForListClosedGroups" class="accordion-body">
-
+      <div class="block__wrapper d-flex align-items-center flex-column">
+        <div class="block__content d-flex align-items-center flex-column w-100">
+          <div id="contentGroup" class="container">
+            <div class="row justify-content-between block__title">
+              <div class="col-6">
+                <h2>Groups</h2>
               </div>
             </div>
-          </div>
-        </div>
+
+            <div id="divForListOpenGroups">
+              <div class="card-body data-is-not">
+                <h5 class="card-title">No groups yet.</h5>
+                <p class="card-text">Would you like to create the first group?</p>
+              </div>
+            </div>
+
+            <div class="accordion closed-group-hidden" id="accordionExample">
+              <div class="accordion-item">
+                <h2 class="accordion-header" id="headingOne">
+                  <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                    Closed Group
+                  </button>
+                </h2>
+                <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                  <div id="divForListClosedGroups" class="accordion-body">
+
+                  </div>
+                </div>
+              </div>
+            </div>
     `;
 
     html += `
@@ -55,7 +57,7 @@ export class MyGroups extends Page {
     </button>
     `;
 
-    html += `</div>`;
+    html += `</div></div></div>`;
 
     html += this.modal();
     this.element.innerHTML = html;

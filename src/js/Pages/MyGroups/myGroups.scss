@@ -1,6 +1,10 @@
 @import "./src/scss/_misc/mixins";
 @import "../../../scss/_misc/variables.scss";
 
+.block__title{
+  margin-bottom: 1rem;
+  background-color: rgba(0,0,0,.05);
+}
 
 .card-group {
   margin: auto;
