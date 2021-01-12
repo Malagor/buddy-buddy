@@ -13,19 +13,21 @@ $color-text: #000000;
 
 .new-trans {
   &__members {
-    padding-bottom: rem(5px);
+    padding: rem(5px);
     border-top: 1px solid #ced4da;
     border-bottom: 1px solid #ced4da;
   }
   &__members-list {
     .member {
+      width: rem(70px);
       margin: rem(5px);
 
       &__avatar {
         width: rem(35px);
         height: rem(35px);
         margin-bottom: rem(5px);
-        background-color: blue;
+        overflow: hidden;
+        // background-color: blue;
         border-radius: 50%;
         transition: transform 0.3s ease-out;
 
@@ -39,58 +41,90 @@ $color-text: #000000;
         }
       }
 
+      &__avatar > img {
+        width: 100%;
+        height: 100%;
+
+        object-fit: contain;
+      }
+
       .checked {
         border: 3px solid lightseagreen;
       }
 
       &__name {
+        max-width: rem(50px);
         font-size: rem(12px);
+        line-height: 1rem;
+        text-align: center;
 
-        @include phones {
-          font-size: rem(14px);
-        }
+        // @include phones {
+        //   font-size: rem(14px);
+        // }
       }
     }
   }
 }
 
-
-
-
-
 .add-check {
-  width: rem(150px);
-  background-color: #e9ecef;
-  border: 1px dashed #ced4da;
-  border-radius: 5px;
-  transition: all 0.3s ease-out;
-  &:hover {
-    background-color: #ced4da;
-    border: 1px dashed black;
-  };
-
   &__wrapper {
-    display: flex;
-    justify-content: space-evenly;
-    align-items: center;
-    padding: rem(5px);
+    width: rem(120px);
+    height: rem(30px);
+    background-color: #e9ecef;
+    border: 1px dashed #ced4da;
+    border-radius: 5px;
+    transition: all 0.3s ease-out;
     &:hover {
-      cursor: pointer;
+      background-color: #ced4da;
+      border: 1px dashed black;
     };
   }
 
+  &__label {
+    &:hover {
+      cursor: pointer;
+    }
+  }
+
   &__text {
+    padding-top: rem(3px);
+    padding-left: rem(5px);
     font-size: rem(14px);
   }
 
+
   &__file {
+    position: absolute;
     width: 0;
     outline: 0;
     opacity: 0;
     user-select: none;
     pointer-events: none;
   }
+
+  &__icon-wrapper {
+    width: rem(50px);
+    height: rem(50px);
+    padding-left: rem(10px);
+    &:hover {
+      cursor: pointer;
+    }
+
+    & > img {
+      width: 100%;
+      height: 100%;
+
+      object-fit: cover;
+    }
+  }
+
+  &__image {
+    width: 100%;
+
+    object-fit: contain;
+  }
 }
+
 
 
 
@@ -101,8 +135,10 @@ $color-text: #000000;
     width: rem(35px);
     height: rem(35px);
     margin-bottom: rem(5px);
+    overflow: hidden;
     background-color: blue;
     border-radius: 50%;
+    transition: transform 0.3s ease-out;
 
     @include phones {
       width: rem(40px);
@@ -110,12 +146,22 @@ $color-text: #000000;
     }
   }
 
-  &__name {
-    font-size: rem(12px);
+  &__avatar > img {
+    width: 100%;
+    height: 100%;
 
-    @include phones {
-      font-size: rem(14px);
-    }
+    object-fit: contain;
+  }
+
+  &__name {
+    max-width: rem(50px);
+    font-size: rem(12px);
+    line-height: 1rem;
+    text-align: center;
+
+    // @include phones {
+    //   font-size: rem(14px);
+    // }
   }
 
   &__sum {
@@ -125,6 +171,10 @@ $color-text: #000000;
   &__comment {
     width: 50%;
   }
+}
+
+.hidden {
+  display: none;
 }
 
 

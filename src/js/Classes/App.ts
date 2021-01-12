@@ -128,8 +128,12 @@ export class App {
 
   onTransactionsPage() {
     this.transactionsList.render(dataTransList);
-    // this.database.getGroupList(this.transactionsList.addGroupList);
-    
+
+
+    this.database.getCurrencyList(this.transactionsList.newTrans.addCurrencyList);
+    this.database.getGroupsListForTransaction(this.transactionsList.newTrans.addGroupList);
+    this.database.getMembersOfGroup(this.transactionsList.newTrans.addMembersOfGroup);
+
   }
 
   onStatisticsPage() {

@@ -247,5 +247,72 @@ export class Database {
   //
   // }
 
- 
+  getCurrencyList(renderCurrencyList: any): void {
+    this.firebase
+    .database()
+    .ref('Currency')
+    .on('child_added', (snapshot) => {
+      console.log ('currency', snapshot.val())
+      renderCurrencyList(snapshot.val());
+    }, (error: { code: string; message: any; }) => {
+      console.log('Error:\n ' + error.code);
+      console.log(error.message);
+    });
+  }
+
+  getGroupsListForTransaction(renderGroupList: any): void {
+
+    this.firebase
+      .database()
+      .ref(`User/${this.uid}`)
+      .once('value', (snapshot) => {
+        // console.log ('groups=', snapshot.val().groupList);
+        const groupsIDList = snapshot.val().groupList; 
+        const currGroup = snapshot.val().currentGroup;       
+        groupsIDList.forEach((groupID: any) => {
+          this.firebase
+          .database()
+          .ref(`Groups/${groupID}`)
+          .once('value', (snapshot) => {
+            renderGroupList(groupID, snapshot.val().title, currGroup);
+          })
+        })
+      }, (error: { code: string; message: any; }) => {
+        console.log('Error:\n ' + error.code);
+        console.log(error.message);
+      });
+  }
+
+  getMembersOfGroup(renderMembers: any) {
+    this.firebase
+      .database()
+      .ref(`User/${this.uid}`)
+      .once('value', (snapshot) => {
+        const currentGroup = snapshot.val().currentGroup;
+        console.log ('currentgroup', currentGroup);
+        this.firebase
+          .database()
+          .ref(`Groups/${currentGroup}`) 
+          .once('value', (snapshot) => {
+            const memberList: string[] = snapshot.val().userList;
+            memberList.forEach((userID) => {
+              this.firebase
+              .database()
+              .ref(`User/${userID}`) 
+              .once('value', (snapshot) => {
+                renderMembers(snapshot.key, snapshot.val().name, snapshot.val().avatar)
+              })
+            })
+          })        
+      
+      }, (error: { code: string; message: any; }) => {
+        console.log('Error:\n ' + error.code);
+        console.log(error.message);
+      });
+  }
+
+
+
+
+
 }

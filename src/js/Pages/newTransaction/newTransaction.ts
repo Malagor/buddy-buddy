@@ -1,51 +1,7 @@
 import { Page } from '../../Classes/Page';
-
-let currentGroup = 'группа2';
-const datafail = [{title: "группа1",
-                ID: "1-1",
-                userList: [{name: "Маша", 
-                            ID: "1", 
-                            image: "URL"},
-                            {name: "Паша", 
-                             ID: "2", 
-                            image: "URL"}, 
-                            {name: "Саша", 
-                            ID: "3", 
-                            image: "URL"}]},
-              {title: 'группа2',
-               ID: "2-2", 
-               userList: [{name: "Соня", 
-                          userID: "4", 
-                          image: "URL"},
-                          {name: "Петя", 
-                          userID: "5", 
-                          image: "URL"}, 
-                          {name: "Коля", 
-                          userID: "6", 
-                          image: "URL"}]}, 
-              {title: 'группа3',
-               ID: "3-3",
-               userList: [{name: "Оля", 
-                        userID: "7", 
-                        image: "URL"},
-                        {name: "Лена", 
-                        userID: "8", 
-                        image: "URL"}, 
-                        {name: "Катя", 
-                        userID: "9", 
-                        image: "URL"}]},                           
-                          ];
-
-const userList = [
-  {ID: '111', name: "Оля", avatar: "#"},
-  {ID: '222', name: "Коля", avatar: "#"},
-  {ID: '333', name: "Маша", avatar: "#"},
-  {ID: '444', name: "Саша", avatar: "#"},
-  {ID: '555', name: "Паша", avatar: "#"},
-  {ID: '666', name: "Лена", avatar: "#"},
-];                       
+import { divideSum } from './divideSum';
 export class NewTransaction extends Page {
- 
+
   constructor(element: string) {
     super(element);
   }
@@ -55,7 +11,7 @@ export class NewTransaction extends Page {
   }
 
   render = (): void => {
-   
+
     this.element.innerHTML = `
       <div class="new-trans modal-content">
         <div class="modal-header">
@@ -63,7 +19,7 @@ export class NewTransaction extends Page {
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-    
+
           <div class="input-group mb-2">
             <span class="input-group-text">Группа</span>
             <select class="new-trans__groups-list form-select"></select>
@@ -80,81 +36,146 @@ export class NewTransaction extends Page {
             <select class="new-trans__currency-list form-select w-20"></select>
           </div>
 
-          <div class="add-check input-group mb-2">
-            <label class="add-check__wrapper">
-              <div class="add-check__text">Добавить чек</div>
-              <i class="material-icons">attach_file</i>
-              <input type="file" accept="image/*" class="add-check__file" name="check">
-            </label>
+          <div class="add-check d-flex align-items-center mb-2">
+            <div class="add-check__wrapper input-group">
+              <label class="add-check__label" for="input-file">
+                <div class="add-check__text">Добавить чек</div>
+                <input id="input-file" type="file" accept="image/*" class="add-check__file" name="check">                 
+              </label>              
+            </div>
+            <div class="add-check__icon-wrapper hidden" data-bs-toggle="modal" data-bs-target="#check"><img class="add-check__icon" src="#" alt="check"></div>
+
+
+            <div class="modal fade add-check__modal" id="check" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+              <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content p-2 d-flex flex-column">
+                    <button type="button" class="btn-close align-self-end add-check__close-modal" aria-label="Close"></button>
+                    <div class="p-2">
+                      <img class="add-check__image src="#" alt="check">
+                    </div>
+                    
+                </div>
+              </div>
+            </div> 
+
           </div>
 
+         
+    
+         
           <div class="new-trans__members">
-            <div class="new-trans__members-list d-flex flex-wrap justify-content-center"></div>
-            <div class="d-flex justify-content-center">
-              <button type="button" class="all-btn btn btn-secondary btn-sm">Выбрать всех</button>
-            </div> 
+            <div class="new-trans__members-list d-flex flex-wrap justify-content-start"></div>        
+            <button type="button" class="all-btn btn btn-secondary btn-sm">Выбрать всех</button>
           </div>
-          
+
           <div class="checked-members"></div>
 
         </div>
-            
+
         <div class="modal-footer">
           <button type="button" class="new-trans__create-btn btn btn-primary w-100" data-bs-dismiss="modal">Создать транзакцию</button>
         </div>
       </div>
     `;
 
-    this.addGroupsList(datafail);
-    this.addMembersOfGroup(userList);  
 
     this.events();
   }
 
-  addGroupsList = (dataX: any) => {
+  addGroupList = (groupID: string, groupTitle: string, currentGroup: string) => {
     const groups: HTMLInputElement = document.querySelector('.new-trans__groups-list');
-    dataX.forEach((group: any) => {
-      const groupElement = document.createElement('option');
-      groups.value = currentGroup;
-      if(group.title === currentGroup) {
-        groupElement.setAttribute('selected', '');
-      }
-      groupElement.classList.add('new-trans__groups-item');
-      groupElement.setAttribute('group-id', `${group.ID}`)
-      groupElement.value = group.title;
-      groupElement.innerText = group.title;
-      groups.append(groupElement);
-    });
+    const groupElement = document.createElement('option');
+  
+    if (groupTitle === currentGroup) {
+      groupElement.setAttribute('selected', '');
+    }
+    groupElement.classList.add('new-trans__groups-item');
+    groupElement.value = groupID;
+    groupElement.innerText = groupTitle;
+    groups.append(groupElement);
   }
 
-  addMembersOfGroup = (dataX: any) => {
-   const members = document.querySelector('.new-trans__members-list'); 
-   dataX.forEach((user: any) => {
-    const userElement = document.createElement('div');
+  addMembersOfGroup = (userID: string, userName: string, userAvatar: string): void => {
+   const members = document.querySelector('.new-trans__members-list');
+   const userElement = document.createElement('div');
       userElement.classList.add('member', 'd-flex', 'flex-column', 'align-items-center');
-      userElement.setAttribute('user-id', `${user.ID}`);
+      userElement.setAttribute('user-id', `${userID}`);
       userElement.innerHTML = `
         <div class="member__avatar">
-          <img src="${user.avatar}" alt="#">
+          <img src="${userAvatar}" alt="#">
         </div>
-        <div class="member__name">${user.name}</div>
+        <div class="member__name">${userName}</div>
       `;
-      members.append(userElement);
-   });
+      members.append(userElement);   
+      this._clickOnMember(userElement);   
   }
 
+  addCurrencyList = (data: any) => {
+    const currencySelect: HTMLFormElement = document.querySelector('.new-trans__currency-list');
+    const optionHTML = `<option value=${data.name}>${data.icon}</option>`;
+    currencySelect.insertAdjacentHTML('beforeend', optionHTML);
+  }
+
+  _clickOnMember = (user: HTMLElement) => {
+    user.addEventListener('click', () => {
+      const userAvatar = user.querySelector('.member__avatar');
+      const userName = user.querySelector('.member__name').innerHTML;
+      const userID = user.getAttribute('user-id');
+      userAvatar.classList.toggle('checked');
+      if (userAvatar.classList.contains('checked')) {
+        const checkedUserHTML = addMemberHTML(userID, userName, userAvatar.innerHTML);
+        const ckeckedMembersList: HTMLElement = document.querySelector('.checked-members');
+        ckeckedMembersList.insertAdjacentHTML('beforeend', checkedUserHTML);
+      } else {
+        const checkedMembers = document.querySelectorAll('.checked-member-wrapper');
+        checkedMembers.forEach((memb) => {
+          if (memb.querySelector('.checked-member__name').innerHTML === userName) {
+            memb.remove();
+          }
+        });
+      }
+      divideSum();
+    });  
+  } 
+
+  getDataforCreateTransaction = () => {
+    const group = document.querySelector('.new-trans__groups-list').value;
+    const descr:string = document.querySelector('.new-trans__descr').value;
+    const totalSum: string = document.querySelector('.total-sum').value;
+    const currency: string = document.querySelector('.new-trans__currency-list').value;
+    const inputCheck: HTMLFormElement = document.querySelector('.add-check__file');
+    const currentDate  = new Date();
+    console.log('check', inputCheck.files[0]);
+
+    const userList: Array<any> = [];
+
+    const checkedMembers = document.querySelectorAll('.checked-member-wrapper');
+    checkedMembers.forEach((memb: HTMLElement) => {
+      console.log (memb);
+      const user = {
+        userID: memb.getAttribute('user-id'),
+        cost: memb.querySelector('.checked-member__sum').value || memb.querySelector('.checked-member__sum').getAttribute('placeholder'),
+        comment: memb.querySelector('.checked-member__comment').value,
+      };
+      userList.push(user);
+
+    });
+
+    console.log('userlist', userList); 
+     
+  }
+
+  
+
   protected events(): void {
-    const groups: HTMLInputElement = document.querySelector('.new-trans__groups-list');
+    const groups: HTMLFormElement = document.querySelector('.new-trans__groups-list');
     const ckeckedMembersList: HTMLElement = document.querySelector('.checked-members');
     const allBtn: HTMLFormElement = document.querySelector('.all-btn');
     const sumInput: HTMLFormElement = document.querySelector('.total-sum');
-    const allMembers = document.querySelectorAll('.member'); 
-
+   
     groups.addEventListener('change', () => {
-      currentGroup = groups.value;
+      console.log (groups.value);
     });
-
-    
 
     sumInput.addEventListener('keyup', () => {
       if (typeof +sumInput.value === 'number') {
@@ -162,146 +183,93 @@ export class NewTransaction extends Page {
       }
     });
 
-    allMembers.forEach((user) => {
-        user.addEventListener('click', () => {
-          const userAvatar = user.querySelector('.member__avatar');
-          const userName = user.querySelector('.member__name').innerHTML;
-          const userID = user.getAttribute('user-id');
-          userAvatar.classList.toggle('checked');
-          if (userAvatar.classList.contains('checked')) {
-            const checkedUserHTML = `
-            <div class="checked-member-wrapper d-flex align-items-center justify-content-between">
-              <div class="checked-member d-flex flex-column align-items-center">
-                <div class="checked-member__avatar"></div>
-                <div class="checked-member__name" user-id=${userID}>${userName}</div>
-              </div>          
-              <input class="checked-member__sum checked-member__sum--evenly form-control form-control-sm" type="text">          
-              <textarea class="checked-member__comment form-control" placeholder="Комментарий"></textarea>          
-            </div>
-            `;
-            ckeckedMembersList.insertAdjacentHTML('beforeend', checkedUserHTML);
-          } else {
-            const checkedMembers = document.querySelectorAll('.checked-member-wrapper');
-            checkedMembers.forEach((memb) => {
-              if(memb.querySelector('.checked-member__name').innerHTML === userName) {
-                memb.remove();
-              }
-            });
-          }
-          divideSum();
-        });
-      });
-  
-    
     allBtn.addEventListener('click', () => {
+      const allMembers = document.querySelectorAll('.member');
       ckeckedMembersList.innerHTML = '';
       allMembers.forEach((user) => {
         const userAvatar = user.querySelector('.member__avatar');
         const userName = user.querySelector('.member__name').innerHTML;
         const userID = user.getAttribute('user-id');
         userAvatar.classList.add('checked');
-        const checkedUserHTML = `
-            <div class="checked-member-wrapper d-flex align-items-center justify-content-between">
-              <div class="checked-member d-flex flex-column align-items-center">
-                <div class="checked-member__avatar"></div>
-                <div class="checked-member__name" user-id=${userID}>${userName}</div>
-              </div>
-              <input class="checked-member__sum checked-member__sum--evenly form-control form-control-sm" type="text">
-              <textarea class="checked-member__comment form-control" placeholder="Комментарий"></textarea>
-            </div>
-            `;
-        ckeckedMembersList.insertAdjacentHTML('beforeend', checkedUserHTML);    
-
+        const checkedUserHTML = addMemberHTML(userID, userName, userAvatar.innerHTML);
+        ckeckedMembersList.insertAdjacentHTML('beforeend', checkedUserHTML);
       });
-   
-      divideSum();    
+      divideSum();
     });
 
-    const inputCheck = document.querySelector('.add-check__file');
+    const inputCheck: HTMLFormElement = document.querySelector('.add-check__file');
     const inputCheckWrapper = document.querySelector('.add-check__wrapper');
 
+
     inputCheck.addEventListener('change', () => {
-      inputCheckWrapper.innerHTML = `<div class="add-check__text">Чек добавлен</div>
-      <i class="material-icons">check</i>
-      <input type="file" accept="image/*" class="add-check__file" name="check">`;
+      if (inputCheck.value) {
+        console.log('файл загружен',inputCheck.value);
+        console.log('файл',inputCheck.files[0]);
+        document.querySelector('.add-check__icon-wrapper').classList.remove('hidden');
+         
+        const checkInModal: HTMLImageElement = document.querySelector('.add-check__image');
+        const checkIcon:HTMLImageElement = document.querySelector('.add-check__icon');
+        const reader: FileReader = new FileReader();
+        reader.onload = (function (aImg1: HTMLImageElement, aImg2: HTMLImageElement ) {
+          return (e: any): void => {
+            aImg1.src = e.target.result;
+            aImg2.src = e.target.result;
+          };
+        })(checkInModal, checkIcon);
+        reader.readAsDataURL(inputCheck.files[0]);
+       
+        
+      }
+     
     });
-  }  
-}
 
 
 
 
+    const createTransBtn = document.querySelector('.new-trans__create-btn');
+    createTransBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      this.getDataforCreateTransaction();
+    });
 
 
-const divideSum = ():void => {
-  const sumInput: HTMLFormElement = document.querySelector('.total-sum');
-  const membersSumInputs = document.querySelectorAll('.checked-member__sum');
-  let membersSumEvenly: any = document.querySelectorAll('.checked-member__sum--evenly');
-  let membersSumNotEvenly: any = document.querySelectorAll('.checked-member__sum--notevenly'); 
-  let numbOfmembers: number = membersSumEvenly.length;
-
-  membersSumInputs.forEach((memberSum: HTMLInputElement) => {
-    memberSum.addEventListener('keyup', () => {
-      console.log ('suminput', +memberSum.value);
-      if(typeof +memberSum.value === 'number' && +memberSum.value > 0) {
-        memberSum.classList.remove('checked-member__sum--evenly');
-        memberSum.classList.add('checked-member__sum--notevenly');     
-      } else if (+memberSum.value === 0)  {
-        console.log('here');
-        memberSum.classList.add('checked-member__sum--evenly');
-        memberSum.classList.remove('checked-member__sum--notevenly');
-          
-      } else return;
-
-      membersSumEvenly = document.querySelectorAll('.checked-member__sum--evenly');
-      numbOfmembers = membersSumEvenly.length;
-      membersSumNotEvenly = document.querySelectorAll('.checked-member__sum--notevenly');
-
-      let sumNotEvenly: number = 0;
-      membersSumNotEvenly.forEach((input: any) => {
-        sumNotEvenly += +input.value;
+    const btnCloseCheck: HTMLElement = document.querySelector('.add-check__close-modal');
+    btnCloseCheck.addEventListener('click', () => {
+      const checkModal = new bootstrap.Modal(document.getElementById('check'), {
+        keyboard: false
       });
-      const totalSum = (+sumInput.value) - sumNotEvenly; 
-
-      if (totalSum >= 0) {
-        membersSumEvenly.forEach((input: HTMLFormElement) => {
-          input.setAttribute('placeholder',`${(totalSum / numbOfmembers).toFixed(1)}`);
-        });
-      } else {
-        membersSumInputs.forEach((input: HTMLFormElement) => {
-          input.setAttribute('placeholder','0.0');
-        });
-      }                     
+      checkModal.hide();
     });
-  });
 
-
-  membersSumEvenly = document.querySelectorAll('.checked-member__sum--evenly');
-  numbOfmembers = membersSumEvenly.length;
-  membersSumNotEvenly = document.querySelectorAll('.checked-member__sum--notevenly');
-
-  let sumNotEvenly: number = 0;
-  membersSumNotEvenly.forEach((input: any) => {
-    sumNotEvenly += +input.value;
-  });
-  const totalSum = (+sumInput.value) - sumNotEvenly; 
-
-  if (totalSum >= 0) {
-    membersSumEvenly.forEach((input: HTMLFormElement) => {
-      input.setAttribute('placeholder',`${(totalSum / numbOfmembers).toFixed(1)}`);
-    });
-  } else {
-    membersSumInputs.forEach((input: HTMLFormElement) => {
-      input.setAttribute('placeholder','0.0');
-    });
-  }     
+  }
 }
 
 
 
 
 
+const addMemberHTML = (ID: string, name: string, avatar: string) => {
+  return `
+  <div class="checked-member-wrapper d-flex align-items-center justify-content-between" user-id=${ID}>
+    <div class="checked-member d-flex flex-column align-items-center">
+      <div class="checked-member__avatar">${avatar}</div>
+      <div class="checked-member__name">${name}</div>
+    </div>
+    <input class="checked-member__sum checked-member__sum--evenly form-control form-control-sm" type="text">
+    <textarea class="checked-member__comment form-control" placeholder="Комментарий"></textarea>
+  </div>
+  `;
+};
 
 
+ 
 
 
+  //   <div class="add-check input-group mb-2">
+  //   <label class="add-check__wrapper" for="input-file">
+  //     <div class="add-check__text">Добавить чек</div>
+  //     <i class="material-icons">attach_file</i>
+  //     <input id="input-file" type="file" accept="image/*" class="add-check__file" name="check">
+  //     <div class="add-check__image"><img src="https://img.icons8.com/carbon-copy/100/000000/check.png"/></div>         
+  //   </label>
+  // </div>

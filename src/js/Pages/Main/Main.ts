@@ -129,7 +129,7 @@ export class Main extends Page {
           </div>
         </div>
       </div>
-    </div>    
+    </div>
     `;
     this.getDataForCurrency(this.element.querySelector('tbody'));
     this.renderSlider(this.element.querySelector('.main__group-slider'), data);

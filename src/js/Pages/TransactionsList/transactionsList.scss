@@ -102,13 +102,16 @@
   right: rem(20px);
   bottom: rem(70px);
   align-self: flex-end;
-  color: $color-dark-accent-2;
-  background-color: transparent;
-  border: none;
-  outline: none;
+  width: rem(50px);
+  height: rem(50px);
+  border-radius: 50%;
+ 
 
   span {
-    font-size: rem(60px);
+    font-size: rem(30px);
+    position: relative;
+    right: 3px;
+    top: 3px;
   }
 }
 

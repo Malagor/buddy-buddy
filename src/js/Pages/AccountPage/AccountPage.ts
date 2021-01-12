@@ -90,12 +90,12 @@ export class AccountPage extends Page {
         </form>
         <p class="account__balance d-flex align-items-center justify-content-center">Balance</p>
         </div>
-    </div>     
-    
+    </div>
+
       `;
     this.checkGenderAccount(data);
     this.events();
-  };
+  }
 
   protected checkNameAccount(data: any): {} | void {
     const dt = { ...data };
