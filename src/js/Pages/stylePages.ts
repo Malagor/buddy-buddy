@@ -5,3 +5,4 @@ import './AccountPage/AccountPage.scss';
 import './GroupsPages/groupsPage.scss';
 import './TransactionsList/transactionsList.scss';
 import './newTransaction/newTransaction.scss';
+import './Messenger/messenger.scss';
