@@ -29,7 +29,7 @@ export class AccountPage extends Page {
           </div>
           <p class="block__nickname">@${data.account}</p>
         </div>
-        <form class="account__form-change-info">        
+        <form class="account__form-change-info">
           <div class="form-group row block--margin-adaptive">
             <label for="account" class="col-sm-2 col-form-label">Account</label>
             <div class="account__double-form col-sm-10">
@@ -91,12 +91,12 @@ export class AccountPage extends Page {
           </div>
         </form>
         </div>
-    </div>     
-    
+    </div>
+
       `;
     this.checkGenderAccount(data);
     this.events();
-  };
+  }
 
   protected checkNameAccount(data: any): {} | void {
     const dt = { ...data };

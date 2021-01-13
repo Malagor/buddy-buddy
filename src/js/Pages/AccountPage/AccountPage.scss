@@ -7,21 +7,18 @@
   padding: 0 1rem;
   background-color: rgba(0, 0, 0, 0.05);
 
-@include phones {
+  @include phones {
     margin-bottom: 2.5rem;
   }
-
-@include tablets {
+  @include tablets {
     margin-bottom: 2.5rem;
     padding: 0 1.5rem;
   }
-
-@include laptop {
+  @include laptop {
     margin-bottom: 2.5rem;
     padding: 0 2rem;
   }
-
-@include desktop {
+  @include desktop {
     margin-bottom: 2.5rem;
     padding: 0 10%;
   }
@@ -93,15 +90,13 @@
 .account__date--margin {
   margin-bottom: 0.5rem;
 
-@include phones {
+  @include phones {
     margin-bottom: 1rem;
   }
-
-@include tablets {
+  @include tablets {
     margin-bottom: 1rem;
   }
-
-@include laptop {
+  @include laptop {
     margin-bottom: 1rem;
   }
 }
