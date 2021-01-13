@@ -8,46 +8,33 @@
   justify-content: center;
   align-items: center;
   height: 100vh;
+  margin-top: rem(-92px);
+  padding: rem(80px) 0 rem(68px);
 
-  // margin-top: -5rem;
-  // padding: 3rem 0 0;
+@include tablets {
+    padding-bottom: rem(80px);
+  }
 
-  // @include phones {
-  //     padding: 4rem 0 1rem;
-  //   }
+@include laptop {
+    padding-bottom: rem(80px);
+  }
 
-  // @include tablets {
-  //     padding: 4.5rem 0 5.5rem;
-  //   }
-
-  // @include laptop {
-  //     padding: 4.5rem 0 5.5rem;
-  //   }
-
-  // @include desktop {
-  //     padding: 4.5rem 0 5.5rem;
-  //   }
+@include desktop {
+    padding-bottom: rem(80px);
+  }
 }
 
 .block__content {
-  position: absolute;
-  top: -0.5rem;
-  left: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
   width: 100%;
   height: 100%;
-
-// margin: 1rem 0 1rem;
-  padding: 0 0 1.5rem;
+  padding: 0;
   overflow: hidden;
-  overflow-y: scroll;
   background-color: rgba(255, 255, 255, 1);
   border-radius: rem(15px);
   box-shadow: 0 0 10px 5px rgba(0, 0, 0, 0.075);
-
-  // transform: translate(-50%, -50%);
 }
 
 .block__header {
@@ -56,6 +43,109 @@
   display: flex;
   align-items: center;
   width: 100%;
+}
+
+.block__header--account {
+  padding: 1rem;
+  background-color: rgba(0, 0, 0, 0.05);
+
+@include tablets {
+    padding: 1rem 1.5rem;
+  }
+
+@include laptop {
+    padding: 1rem 2rem;
+  }
+
+@include desktop {
+    padding: 1rem 10%;
+  }
+
+  .block__title {
+    @include desktop {
+      font-size: 1.6rem;
+    }
+  }
+}
+
+.block__header--main {
+  position: sticky;
+  padding: 0.5rem 1.5rem 0.5rem 2.3rem;
+  background-color: rgba(255, 255, 255, 1);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+
+@include laptop {
+    padding: 0.5rem 2rem 0.5rem 2.5rem;
+  }
+
+@include desktop {
+    padding: 0.5rem 1rem 0.5rem 1.5rem;
+  }
+}
+
+.block__main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  padding: 1.5rem 0;
+  overflow-y: auto;
+
+  gap: 1rem;
+  scrollbar-color: rgba(0, 0, 0, 0.05) rgb(170, 170, 170);
+  scrollbar-width: thin;
+
+  &::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+    background-color: rgba(0, 0, 0, 0.05);
+    opacity: 0.7;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: rgb(170, 170, 170);
+  }
+}
+
+.block__common-image-wrapper {
+  position: relative;
+  width: rem(80px);
+  height: rem(80px);
+}
+
+.block__form-change-photo {
+  position: absolute;
+  right: -0.3rem;
+  bottom: -0.5rem;
+  z-index: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 1.9rem;
+  height: 1.9rem;
+  background: rgba(255, 255, 255, 1);
+  border: none;
+  border-radius: 50%;
+  outline: none;
+
+  & > .block__button-change-photo {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+
+    & > .material-icons {
+      font-size: 1.4rem;
+      color: rgb(0, 0, 0);
+    }
+  }
+
+  & > .block__input-photo {
+    position: absolute;
+    visibility: hidden;
+    opacity: 0;
+  }
 }
 
 .block__image-wrapper {
@@ -67,13 +157,17 @@
   border-radius: 50%;
 
   & > .block__image {
+    position: absolute;
+    top: 50%;
+    left: 50%;
     width: rem(80px);
+    transform: translate(-50%, -50%);
   }
 }
 
-.block__nickname {
+.block__title {
   z-index: 1;
-  margin: auto 0 auto 0.8rem;
+  margin: auto 0;
   font-weight: bolder;
   font-size: 1.2rem;
   color: rgba(0, 0, 0, 1);
@@ -89,6 +183,46 @@
 @include desktop {
     font-size: 1.5rem;
   }
+}
+
+.block__footer {
+  position: sticky;
+  z-index: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  padding: 0.5rem 1.5rem;
+  background-color: rgba(255, 255, 255, 1);
+  border-top: 1px solid rgba(0, 0, 0, 0.05);
+
+@include laptop {
+    padding: 0.5rem 2rem;
+  }
+
+@include desktop {
+    padding: 0.5rem 1rem;
+  }
+}
+
+.block__card {
+  display: flex;
+  align-items: center;
+  padding: 0.5rem;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  border-radius: rem(10px);
+  & > .main__balance {
+    margin: 0;
+    font-size: 1.35rem;
+  }
+}
+
+.block__card--no-border {
+  border: 1px solid rgba(255, 255, 255, 1);
+}
+
+.block__element-gap {
+  gap: 0.5rem;
 }
 
 .block--margin-adaptive {
