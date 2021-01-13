@@ -94,7 +94,8 @@ export class Database {
           currency: 'BYN',
         };
 
-        this._registrationUser(uid, userData);
+        this.hasUser(uid, userData);
+        // this._registrationUser(uid, userData);
 
       })
       .catch(function(error) {
@@ -134,6 +135,20 @@ export class Database {
         // callback(snapshot.val());
       }, (error: { code: string; }) => {
         console.log('Error: ' + error.code);
+      });
+  }
+
+  hasUser(uid: string, callback: any) {
+    this.firebase
+      .database()
+      .ref(`User/${uid}`)
+      .once('value', (snapshot) => {
+        if (!snapshot.key) {
+          callback(snapshot.val());
+        }
+      }, (error: { code: string; message: string}) => {
+        console.log('Error: ' + error.code);
+        console.log('Message: ' + error.message);
       });
   }
 
