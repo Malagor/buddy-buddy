@@ -130,79 +130,27 @@ export class Messenger extends Page {
     if (!messageList) return;
 
     let html = `
-      <div class="message d-flex flex-column align-items-center main--border ${directionClass} ${stateClass} col-10" data-message-id="${data.messageId}">
-        <div class="message__header align-self-start">
+      <div class="message main--border ${directionClass} ${stateClass} col-10" data-message-id="${data.messageId}">
           <div class="message__avatar-wrapper">
             <img src="" alt="">
           </div>
           <div class="message__user-name fw-bold"></div>
           <div class="message__time">${localeDate}</div>
-        </div>
-        <div class="main__currency__current align-self-start mt-1">
+        <div class="message__text align-self-start mt-1">
           <span>${data.message}</span>
         </div>`;
 
     if (data.isReceive) {
       html += `
-        <div class="main__currency__current align-self-end mt-2">
-        <button type="button" class="btn btn-outline-primary btn-sm answer-button" data-user-uid="">Answer</button>
+        <div class="message__button">
+          <button type="button" class="btn btn-outline-primary btn-sm answer-button" data-user-uid="${data.key}">Answer</button>
         </div>
         `;
     }
-
     html += `</div>`;
 
     messageList.insertAdjacentHTML('afterbegin', html);
-
   }
-
-  // printMessage(data: IMessage): void {
-  //   console.log('printMessage', data);
-  //   const dateOptions = {
-  //     year: '2-digit',
-  //     month: '2-digit',
-  //     day: 'numeric',
-  //     hour: '2-digit',
-  //     minute: '2-digit',
-  //   };
-  //   const date: Date = new Date(data.date);
-  //   const localeDate: string = date.toLocaleString('ru-RU', dateOptions);
-  //
-  //   let stateClass: string = '';
-  //   if (data.status === false && data.direction) {
-  //     stateClass = 'message--not-read';
-  //   }
-  //   let directionClass: string = 'align-self-end';
-  //   if (data.direction) {
-  //     directionClass = 'align-self-start';
-  //   }
-  //   const messageList = this.element.querySelector('.message-list');
-  //
-  //   let html = `
-  //     <div class="message d-flex flex-column align-items-center main--border ${directionClass} ${stateClass} col-10" data-message-id="${data.messageId}">
-  //       <div class="message__header align-self-start">
-  //         <div class="message__avatar-wrapper">
-  //           <img src="}" alt="">
-  //         </div>
-  //         <div class="message__user-name fw-bold"></div>
-  //         <div class="message__time">${localeDate}</div>
-  //       </div>
-  //       <div class="main__currency__current align-self-start mt-1">
-  //         <span>${data.message}</span>
-  //       </div>`;
-  //
-  //   if (data.direction) {
-  //     html += `
-  //       <div class="main__currency__current align-self-end mt-2">
-  //       <button type="button" class="btn btn-outline-primary btn-sm answer-button" data-user-uid="">Answer</button>
-  //       </div>
-  //       `;
-  //   }
-  //
-  //   html += `</div>`;
-  //
-  //   messageList.insertAdjacentHTML('afterbegin', html);
-  // }
 
   setUserDataInMessage = (data: any): void => {
     const message = this.element.querySelector(`[data-message-id=${data.messageId}]`);
