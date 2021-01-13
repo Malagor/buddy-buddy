@@ -66,7 +66,7 @@ $color-text: #000000;
       }
 
       .checked {
-        border: 3px solid lightseagreen;
+        border: 3px solid #297eff;
       }
 
       &__name {
@@ -74,10 +74,6 @@ $color-text: #000000;
         font-size: rem(12px);
         line-height: 1rem;
         text-align: center;
-
-        // @include phones {
-        //   font-size: rem(14px);
-        // }
       }
     }
   }

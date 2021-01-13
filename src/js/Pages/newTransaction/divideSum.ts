@@ -26,7 +26,6 @@ export const divideSum = () => {
         sumNotEvenly += +input.value;
       });
       const totalSum = (+sumInput.value) - sumNotEvenly;
-      console.log ('totalSum', totalSum);
 
       if (totalSum >= 0) {
         memberSum.style.color = 'black';
@@ -54,7 +53,6 @@ export const divideSum = () => {
     sumNotEvenly += +input.value;
   });
   const totalSum = (+sumInput.value) - sumNotEvenly;
-  console.log ('totalSum', totalSum);
 
   if (totalSum >= 0) {
     membersSumEvenly.forEach((input: HTMLFormElement) => {

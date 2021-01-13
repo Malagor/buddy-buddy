@@ -13,15 +13,10 @@ export const checkData = () => {
       }
     })
     
-    console.log (+sumInput.value);
-    console.log (descrInput.value.length);
-    console.log (sum);
     if (+sumInput.value > 0 && descrInput.value.length > 0 && Math.abs(+sumInput.value - sum) < 1 
         && isZero === 0) {
-      console.log ('true');
       createTransBtn.removeAttribute('disabled');
     } else {
-      console.log ('false');
       createTransBtn.setAttribute('disabled', 'true');
     }
 

@@ -260,12 +260,10 @@ export class Database {
   }
 
   getGroupsListForTransaction(renderGroupList: any): void {
-
     this.firebase
       .database()
       .ref(`User/${this.uid}`)
       .once('value', (snapshot) => {
-        // console.log ('groups=', snapshot.val().groupList);
         const groupsIDList = snapshot.val().groupList; 
         const currGroup = snapshot.val().currentGroup;       
         groupsIDList.forEach((groupID: any) => {
@@ -288,7 +286,6 @@ export class Database {
       .ref(`User/${this.uid}`)
       .once('value', (snapshot) => {
         const currentGroup = snapshot.val().currentGroup;
-        console.log ('currentgroup', currentGroup);
         this.firebase
           .database()
           .ref(`Groups/${currentGroup}`) 
@@ -332,14 +329,27 @@ export class Database {
 
   setDataTransaction(data: any) {
     data.userID = this.uid;
-    const transRef = this.firebase.database().ref('Transaction');    
+    const transRef = this.firebase.database().ref('Transactions');    
     const transKey = transRef.push().key;
-    console.log('transKey', transKey);
     transRef.child(transKey)
       .set(data)
       .catch(error => {
         console.log('Error: ' + error.code);
       });
-  }
 
+    const groupRef = this.firebase.database().ref(`Groups/${data.groupID}/transactions`); 
+    groupRef.transaction(list => {
+      if(list) {
+        list.push(transKey);
+        return list;
+      } else {
+        let arrTrans: string[] = [];
+        arrTrans.push(transKey);
+        return arrTrans;
+      }
+    })
+    .catch(error => {
+      console.log('Error: ' + error.code);
+    });
+  }
 }
