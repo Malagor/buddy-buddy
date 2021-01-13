@@ -12,6 +12,10 @@ $color-text: #000000;
 }
 
 .new-trans {
+  &__label {
+    font-size: rem(14px);
+  }
+
   &__currency-group {
     display: flex;
     align-items: stretch;

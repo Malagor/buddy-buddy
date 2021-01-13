@@ -26,7 +26,7 @@ export class TransactionsList extends Page {
          <span class="material-icons">add</span>
       </button>
       <div class="modal fade new-trans__modal" id="new-trans-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-wrapper modal-dialog modal-dialog-centered">
+        <div class="modal-wrapper modal-dialog modal-dialog-centered modal-dialog-scrollable">
 
         </div>
       </div>

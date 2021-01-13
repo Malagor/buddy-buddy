@@ -1,3 +1,5 @@
+import { checkData } from './checkData';
+
 export const divideSum = () => {
   const sumInput: HTMLFormElement = document.querySelector('.new-trans__total-sum');
   const membersSumInputs = document.querySelectorAll('.checked-member__sum');
@@ -13,7 +15,6 @@ export const divideSum = () => {
       } else if (+memberSum.value === 0)  {
         memberSum.classList.add('checked-member__sum--evenly');
         memberSum.classList.remove('checked-member__sum--notevenly');
-
       } else return;
 
       membersSumEvenly = document.querySelectorAll('.checked-member__sum--evenly');
@@ -28,17 +29,18 @@ export const divideSum = () => {
       console.log ('totalSum', totalSum);
 
       if (totalSum >= 0) {
+        memberSum.style.color = 'black';
         membersSumEvenly.forEach((input: HTMLFormElement) => {
           input.setAttribute('placeholder', `${(totalSum / numbOfmembers).toFixed(2)}`);
-          // input.value = (totalSum / numbOfmembers).toFixed(2);
         });
       } else {
+        memberSum.style.color = 'red';  
         membersSumInputs.forEach((input: HTMLFormElement) => {
           input.setAttribute('placeholder', '0.00');
-          // input.value = '';
         });
       }
 
+      checkData();
     });
   });
 
@@ -57,42 +59,12 @@ export const divideSum = () => {
   if (totalSum >= 0) {
     membersSumEvenly.forEach((input: HTMLFormElement) => {
       input.setAttribute('placeholder', `${(totalSum / numbOfmembers).toFixed(2)}`);
-      // input.value = (totalSum / numbOfmembers).toFixed(2);
     });
   } else {
     membersSumInputs.forEach((input: HTMLFormElement) => {
       input.setAttribute('placeholder', '0.00');
-    
-      // input.value = '';
     });
   }
-
-  
 };
 
 
-// const checkData = ():void => {
-//   const createTransBtn = document.querySelector('.new-trans__create-btn');
-//   const descrInput: HTMLFormElement = document.querySelector('.new-trans__descr');
-//   const sumInput: HTMLFormElement = document.querySelector('.new-trans__total-sum');
-//   const sumInputs: NodeListOf<HTMLFormElement> = document.querySelectorAll('.checked-member__sum');
-//   let sum = 0;
-//   sumInputs.forEach((input: HTMLFormElement) => {
-//     sum += input.value ? +(input.value) : +input.getAttribute('placeholder');
-//   });
-//   const inputsRequired: NodeListOf<HTMLFormElement> = document.querySelectorAll('.input-required');
-//   inputsRequired.forEach((input: HTMLFormElement) => {
-//     input.addEventListener('input', () => {
-//       console.log (+sumInput.value);
-//       console.log (descrInput.value.length);
-//       console.log (sum);
-//       if (+sumInput.value > 0 && descrInput.value.length > 0 ) {
-//         console.log ('true');
-//         createTransBtn.removeAttribute('disabled');
-//       } else {
-//         console.log ('false');
-//         createTransBtn.setAttribute('disabled', 'true');
-//       }
-//     });
-//   })
-// };

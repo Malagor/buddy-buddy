@@ -3,6 +3,7 @@ import { divideSum } from './divideSum';
 import { Modal } from 'bootstrap';
 import { addMemberHTML } from './addMemberHTML';
 import { clearAllInputs } from './clearAllInputs';
+import { checkData } from './checkData';
 export class NewTransaction extends Page {
   onCreateTransaction: any;
   onShowMembersOfGroup: any;
@@ -28,7 +29,7 @@ export class NewTransaction extends Page {
         <form class="all-forms">
 
           <div class="form-group row block--margin-adaptive">
-            <label for="group" class="col-sm-2 col-form-label">Группа</label>
+            <label for="group" class="new-trans__label col-sm-2 col-form-label">Группа</label>
             <div class="col-sm-10">
               <select id="group"class="new-trans__groups-list form-select"></select>
             </div>
@@ -36,14 +37,14 @@ export class NewTransaction extends Page {
 
 
           <div class="form-group row block--margin-adaptive align-items-center">
-            <label for="descr" class="col-sm-2 col-form-label">Описание</label>
+            <label for="descr" class="new-trans__label col-sm-2 col-form-label">Описание</label>
             <div class="col-sm-10">
               <textarea id="descr" class="new-trans__descr input-required form-control" required></textarea>
             </div>
           </div>
 
           <div class="form-group row block--margin-adaptive mb-3">
-            <label class="col-sm-2 col-form-label">Сумма</label>
+            <label class="new-trans__label col-sm-2 col-form-label">Сумма</label>
             <div class="new-trans__currency-group col-sm-10">            
               <input type="text" class="new-trans__total-sum input-required form-control w-75" required pattern="\d[0-9]\.?\d[0-9]">
               <select class="new-trans__currency-list form-select w-25"></select>
@@ -186,42 +187,46 @@ export class NewTransaction extends Page {
 
   protected events(): void {
     const groups: HTMLFormElement = document.querySelector('.new-trans__groups-list');
-    const ckeckedMembersList: HTMLElement = document.querySelector('.checked-members');
+    const checkedMembersList: HTMLElement = document.querySelector('.checked-members');
     const allBtn: HTMLFormElement = document.querySelector('.all-btn');
     const sumInput: HTMLFormElement = document.querySelector('.new-trans__total-sum');
+    const members = document.querySelector('.new-trans__members-list');
+    const inputCheck: HTMLFormElement = document.querySelector('.add-check__file');
+    const checkModal = new Modal(document.querySelector('.add-check__modal'));
+    const btnOpenCheck: HTMLElement = document.querySelector('.add-check__icon-wrapper');
+    const btnCloseCheck: HTMLElement = document.querySelector('.add-check__close-modal');
+    const newTransModal = new Modal(document.querySelector('.new-trans__modal'));
+    const btnCloseNewTrans: HTMLElement = document.querySelector('.new-trans__close-modal');
     
    
     groups.addEventListener('change', () => {
-      // console.log ('groups.value', groups.value);
-
-      const members = document.querySelector('.new-trans__members-list');
       members.innerHTML = '';
+      checkedMembersList.innerHTML = '';
       this.onShowMembersOfGroup(groups.value);
-
     });
 
     sumInput.addEventListener('keyup', () => {
       if (typeof +sumInput.value === 'number') {
         divideSum();
+        checkData();
       }
     });
 
     allBtn.addEventListener('click', () => {
       const allMembers = document.querySelectorAll('.member');
-      ckeckedMembersList.innerHTML = '';
+      checkedMembersList.innerHTML = '';
       allMembers.forEach((user) => {
         const userAvatar = user.querySelector('.member__avatar');
         const userName = user.querySelector('.member__name').innerHTML;
         const userID = user.getAttribute('user-id');
         userAvatar.classList.add('checked');
         const checkedUserHTML = addMemberHTML(userID, userName, userAvatar.innerHTML);
-        ckeckedMembersList.insertAdjacentHTML('beforeend', checkedUserHTML);
+        checkedMembersList.insertAdjacentHTML('beforeend', checkedUserHTML);
       });
       divideSum();
       checkData();
     });
 
-    const inputCheck: HTMLFormElement = document.querySelector('.add-check__file');
     inputCheck.addEventListener('change', () => {
       if (inputCheck.value) {
         document.querySelector('.add-check__icon-wrapper').classList.remove('hidden');        
@@ -245,10 +250,7 @@ export class NewTransaction extends Page {
       this.onCreateTransaction(data);
       clearAllInputs();
     });
-
-    const checkModal = new Modal(document.querySelector('.add-check__modal'));
-    const btnOpenCheck: HTMLElement = document.querySelector('.add-check__icon-wrapper');
-    const btnCloseCheck: HTMLElement = document.querySelector('.add-check__close-modal');
+ 
     btnOpenCheck.addEventListener('click',() => {
       checkModal.show();
     });
@@ -257,42 +259,14 @@ export class NewTransaction extends Page {
       checkModal.hide();
     });
 
-
-    const newTransModal = new Modal(document.querySelector('.new-trans__modal'));
-    const btnCloseNewTrans: HTMLElement = document.querySelector('.new-trans__close-modal');
-
     btnCloseNewTrans.addEventListener('click', () => {
       newTransModal.hide();
       clearAllInputs();
     });
 
+    const descrInput: HTMLFormElement = document.querySelector('.new-trans__descr');
+    descrInput.addEventListener('keyup', () => {
+      checkData();
+    });
   }
 }
-
-
-
-
-const checkData = ():void => {
-  const createTransBtn = document.querySelector('.new-trans__create-btn');
-  const descrInput: HTMLFormElement = document.querySelector('.new-trans__descr');
-  const sumInput: HTMLFormElement = document.querySelector('.new-trans__total-sum');
-  const sumInputs: NodeListOf<HTMLFormElement> = document.querySelectorAll('.checked-member__sum');
-
-  const inputsRequired: NodeListOf<HTMLFormElement> = document.querySelectorAll('.input-required');
-  inputsRequired.forEach((input: HTMLFormElement) => {
-    input.addEventListener('input', () => {
-      console.log (+sumInput.value);
-      console.log (descrInput.value.length);
-  
-      if (+sumInput.value > 0 && descrInput.value.length > 0 ) {
-        console.log ('true');
-        createTransBtn.removeAttribute('disabled');
-      } else {
-        console.log ('false');
-        createTransBtn.setAttribute('disabled', 'true');
-      }
-    });
-  })
-};
-
- 
