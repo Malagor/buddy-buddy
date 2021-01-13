@@ -227,7 +227,7 @@ export class Database {
             const userList = Object.keys(snapshotUser); // all users in DB
 
 
-            //const arrayUserImg: string[] = userList.filter(user => dataUserListGroup.includes(user));
+            // const arrayUserImg: string[] = userList.filter(user => dataUserListGroup.includes(user));
             const arrayUsers: any[] = [];
             userList.forEach(user => {
               if (dataUserListGroup.includes(user)) {
@@ -236,9 +236,9 @@ export class Database {
             });
 
             const dataForGroup = {
-              'dataGroup': dataGroup, 
+              'dataGroup': dataGroup,
               'arrayUsers': arrayUsers
-            } 
+            };
             callbacks(dataForGroup);
           });
 
