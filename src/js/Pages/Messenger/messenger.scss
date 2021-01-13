@@ -1,0 +1,82 @@
+@import "src/scss/_misc/mixins";
+
+.message {
+  font-size: 0.8rem;
+  background: #f1f1f1;
+  display: grid;
+  align-items: center;
+  grid-gap: 0.5rem;
+  grid-template-columns: 3rem 1fr 6rem;
+  grid-template-rows: auto auto;
+  grid-template-areas: "avatar name time" "message message button";
+
+  &--own {
+    background: #F0B791;
+    grid-template-areas: "avatar name time" "message message message";
+  }
+}
+
+.message__avatar-wrapper {
+  width: 3rem;
+  height: 3rem;
+  overflow: hidden;
+  border-radius: 50%;
+  grid-area: avatar;
+
+  img {
+    width: 100%;
+    height: 100%;
+
+    object-fit: contain;
+  }
+}
+
+.message__user-name {
+  grid-area: name;
+}
+
+.message__time {
+  grid-area: time;
+}
+
+.message__text {
+  grid-area: message;
+}
+
+.message__button {
+  grid-area: button;
+}
+
+.message__addBtn {
+  position: fixed;
+  bottom: 3.5rem;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+
+  @include tablets {
+    bottom: 5rem;
+  }
+}
+
+.recipient-user {
+  display: flex;
+}
+
+.recipient-user__image-wrapper {
+  width: 2rem;
+  height: 2rem;
+  margin-right: 0.5rem;
+
+  img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+
+    object-fit: contain;
+  }
+}
+
+.message--not-read {
+  box-shadow: 0 0 3px green;
+}

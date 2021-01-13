@@ -9,6 +9,8 @@ import { AccountPage } from '../Pages/AccountPage/AccountPage';
 import { IGroupData } from '../Interfaces/IGroupData';
 import { TransactionsList } from '../Pages/TransactionsList/transactionsList';
 import { dataTransList } from '../Data/dataTransList';
+import { INotification, Notifications } from './Notifications';
+import { Messenger } from '../Pages/Messenger/Messenger';
 
 export class App {
   private database: Database;
@@ -19,6 +21,8 @@ export class App {
   private groups: MyGroups;
   private accountPage: AccountPage;
   private transactionsList: TransactionsList;
+  private notifications: Notifications;
+  private messenger: Messenger;
 
   constructor() {
     this.database = Database.create();
@@ -53,8 +57,8 @@ export class App {
       this.layout.onMessagesPage = this.onMessagesPage.bind(this);
 
       this.accountPage = AccountPage.create('.main');
-
       this.mainPage = Main.create('.main');
+
       this.database.getUserInfo(uid, [
         this.mainPage.render,
         this.layout.setSidebarData,
@@ -67,6 +71,27 @@ export class App {
       this.transactionsList = TransactionsList.create('.main');
       this.transactionsList.onTransactionSubmit = this.onTransactionSubmit.bind(this);
 
+      this.messenger = Messenger.create('.main');
+      this.messenger.onAddRecipient = this.onAddRecipientToMessage.bind(this);
+      this.messenger.sendNewMessage = this.onSendNewMessage.bind(this);
+      this.messenger.onAnswerMessage = this.onAnswerMessage.bind(this);
+
+      // Notifications Init
+      setTimeout(() => {
+        const groupsEl: NodeListOf<Element> = document.querySelectorAll('.sidebarGroupsLink .badge');
+        const transactionsEl: NodeListOf<Element> = document.querySelectorAll('.sidebarTransactionsLink .badge');
+        const messagesEl: NodeListOf<Element> = document.querySelectorAll('.sidebarMessagesLink .badge');
+
+        const notiData: INotification = {
+          groupsEl,
+          transactionsEl,
+          messagesEl,
+        };
+
+        this.notifications = Notifications.create(notiData);
+
+        this.database.countNewMessage(this.notifications.sentMessageNotification);
+      }, 2000);
     } else {
       console.log(`isUserLogon = ${state}`);
       this.authPage = AuthPage.create('#app');
@@ -125,7 +150,9 @@ export class App {
   }
 
   onMessagesPage() {
-    console.log('Load Messages Page!');
+    this.messenger.render();
+    this.database.getMessageList(this.messenger.printMessage);
+    // this.database.getGroupList(this.groups.addGroupToList);
   }
 
   onStatisticsPage() {
@@ -177,6 +204,17 @@ export class App {
     this.database.findUserByName(accountName, this.groups.addMembersGroup);
   }
 
+  onAddRecipientToMessage(accountName: string) {
+    this.database.findUserByName(accountName, this.messenger.addUserForSendMessage, this.messenger.errorAddUserForSendMessage);
+  }
+
+  onSendNewMessage(data: any): void {
+    this.database.createNewMessage(data);
+  }
+
+  onAnswerMessage(userId: string) {
+    this.database.getUserInfo(userId, [this.messenger.answerModal]);
+  }
 
   // loadMainPage() {
   //   this.mainPage.render();

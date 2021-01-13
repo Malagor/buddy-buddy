@@ -1,60 +1,53 @@
 @import "./src/scss/_misc/mixins";
 @import "../../../scss/_misc/variables.scss";
 
-.account__header--main {
-  height: rem(50px);
-  margin-bottom: 1rem;
-  padding: 0 1.5rem;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.05);@include tablets {
-    padding: 0 1.5rem;
-  }@include laptop {
-    padding: 0 2rem;
-  }@include desktop {
-    padding: 0 1rem;
-  }
+
+.main__balance {
+  margin: 2rem 0 0;
+  font-size: 1.8rem;
 }
 
-.main__currency {
-  & > .account__image-wrapper {
-    width: rem(80px);
-    height: rem(80px);
-    border-radius: 50%;
-
-    & > .account__image {
-      width: rem(80px);
-    }
-  }
-
-  & > .account__balance {
-    margin-bottom: 1rem;
-    font-size: 1.35rem;
-  }
-
-  & > .main__currency__current {
-    gap: 0.5rem;
-  }
-}
-
-.main__card {
+.main__inner-card {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
   padding: 0.5rem;
   background-color: rgba(0, 0, 0, 0.05);
 }
 
 .main__group-slider {
-  height: 9rem;@include phones {
+  height: 9rem;
+
+@include phones {
     height: 10.5rem;
-  }@include tablets {
+  }
+
+@include tablets {
     height: 10rem;
-  }@include laptop {
+  }
+
+@include laptop {
     height: 12rem;
-  }@include desktop {
+  }
+
+@include desktop {
     height: 12rem;
   }
 }
 
-.main--border {
-  margin-bottom: 1rem;
-  padding: 0.5rem;
-  border: 1px solid rgba(0, 0, 0, 0.05);
-  border-radius: rem(10px);
+.main__name {
+  font-size: 1.2rem;
+
+@include tablets {
+    font-size: 1.4rem;
+  }
+
+@include laptop {
+    font-size: 1.5rem;
+  }
+
+@include desktop {
+    font-size: 1.5rem;
+  }
 }
