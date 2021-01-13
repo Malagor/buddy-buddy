@@ -1,75 +1,6 @@
 @import "./src/scss/_misc/mixins";
 @import "../../../scss/_misc/variables.scss";
 
-.block__header--account {
-  height: rem(120px);
-  margin-bottom: 1.5rem;
-  padding: 0 1rem;
-  background-color: rgba(0, 0, 0, 0.05);
-
-  @include phones {
-    margin-bottom: 2.5rem;
-  }
-  @include tablets {
-    margin-bottom: 2.5rem;
-    padding: 0 1.5rem;
-  }
-  @include laptop {
-    margin-bottom: 2.5rem;
-    padding: 0 2rem;
-  }
-  @include desktop {
-    margin-bottom: 2.5rem;
-    padding: 0 10%;
-  }
-
-  .block__nickname {
-    @include desktop {
-      font-size: 1.6rem;
-    }
-  }
-}
-
-.account__wrapper-photo {
-  position: relative;
-  width: rem(80px);
-  height: rem(80px);
-}
-
-.account__form-change-photo {
-  position: absolute;
-  right: -0.3rem;
-  bottom: -0.5rem;
-  z-index: 1;
-  width: 1.9rem;
-  height: 1.9rem;
-  overflow: hidden;
-  background: rgba(255, 255, 255, 1);
-  border: none;
-  border-radius: 50%;
-  outline: none;
-
-  & > .account__button-change-photo > .material-icons {
-    font-size: 1.4rem;
-  }
-
-  & > .account__button-change-photo {
-    cursor: pointer;
-
-    & > .material-icons {
-      color: rgb(0, 0, 0);
-    }
-  }
-
-  & > .account__input-photo {
-    opacity: 0;
-  }
-}
-
-.account__form-change-info {
-  width: 85%;
-}
-
 .account__double-form {
   display: flex;
   .account__double-form--first {
@@ -90,13 +21,15 @@
 .account__date--margin {
   margin-bottom: 0.5rem;
 
-  @include phones {
+@include phones {
     margin-bottom: 1rem;
   }
-  @include tablets {
+
+@include tablets {
     margin-bottom: 1rem;
   }
-  @include laptop {
+
+@include laptop {
     margin-bottom: 1rem;
   }
 }
