@@ -33,15 +33,18 @@ export class Messenger extends Page {
 
   render(): void {
     let html = `
-      <div class="block__wrapper d-flex align-items-center flex-column">
-        <div class="block__content d-flex align-items-center flex-column w-100">
-          <div class="block__header account__header--main d-flex align-items-center">
-            <p class="block__nick">Messenger</p>
-          </div>
-          <div class="message-list block--width-85 d-flex flex-column">
-          </div>
-        <button type="button" class="btn btn-primary d-flex align-items-center justify-content-center message__addBtn"><span class="material-icons">add</span></button>
+    <div class="block__wrapper">
+      <div class="block__content">
+        <div class="block__header block__header--main">
+          <p class="block__title">Messenger</p>
+        </div>
+        <div class="block__main">
+          <div class="message-list block--width-85 d-flex flex-column"></div>
       </div>
+      <div class="block__footer">
+          <button type="button" class="btn btn-primary message__addBtn">New message</button>
+        </div>
+    </div>
     `;
 
     html += this.modal();
@@ -130,7 +133,7 @@ export class Messenger extends Page {
     if (!messageList) return;
 
     let html = `
-      <div class="message main--border ${directionClass} ${stateClass} col-10" data-message-id="${data.messageId}">
+      <div class="message block__card flex-column block--width-85 ${directionClass} ${stateClass} col-10 mb-3" data-message-id="${data.messageId}">
           <div class="message__avatar-wrapper">
             <img src="" alt="">
           </div>

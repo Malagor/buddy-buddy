@@ -49,7 +49,7 @@ export class Layout extends Page {
                 </a>
               </li>
               <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="#" id="sidebarAccountLink" data-target=".navbar-collapse.in">
+                <a class="nav-link active" aria-current="page" href="#" id="sidebarAccountLink">
                   <i class="material-icons">account_box</i><span class="nav-link__text">Аккаунт</span>
                 </a>
               </li>
