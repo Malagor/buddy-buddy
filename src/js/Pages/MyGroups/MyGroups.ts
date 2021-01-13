@@ -12,7 +12,7 @@ export class MyGroups extends Page {
   static create(el: string): MyGroups {
     const page = new MyGroups(el);
     page.addMembersGroup = page.addMembersGroup.bind(page);
-    page.addGroupToList = page.addGroupToList.bind(page);
+    page.createGroupList = page.createGroupList.bind(page);
     return page;
   }
 
@@ -266,28 +266,6 @@ export class MyGroups extends Page {
       const member: HTMLFormElement = document.querySelector('#formMembers');
       this.onAddMember(member.value);
     });
-  }
-
-  addGroupToList(group: any) {
-    const list = this.element.querySelector('.groups');
-    let date: Date = new Date(group.dateCreate);
-    const localDate: string = date.toLocaleString();
-    if (group) {
-      const html = `
-          <div class="card group">
-            <div class="card__content">
-                 <div><span><strong>Title</strong> </span><span>${group.title}</span></div>
-                 <div><span><strong>Description</strong> </span><span>${group.description}</span></div>
-                 <div><span><strong>Create Date</strong> </span><span>${localDate}</span></div>
-                 <div><span><strong>User list</strong> </span><span>${group.userList}</span></div>
-            </div>
-          </div>
-        `;
-
-      list.insertAdjacentHTML('afterbegin', html);
-    } else {
-      console.log('No data');
-    }
   }
 
   addMembersGroup(data: any): void {
