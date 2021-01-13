@@ -24,6 +24,7 @@
   & > .block__image-wrapper {
     width: rem(80px);
     height: rem(80px);
+    overflow: hidden;
     border-radius: 50%;
 
     & > .block__image {
@@ -32,7 +33,7 @@
   }
 
   & > .main__balance {
-    margin-bottom: 1rem;
+    margin: 0;
     font-size: 1.35rem;
   }
 
@@ -71,9 +72,33 @@
   }
 }
 
+.main__name {
+  font-size: 1.2rem;
+
+@include tablets {
+    font-size: 1.4rem;
+  }
+
+@include laptop {
+    font-size: 1.5rem;
+  }
+
+@include desktop {
+    font-size: 1.5rem;
+  }
+}
+
 .main--border {
   margin-bottom: 1rem;
   padding: 0.5rem;
   border: 1px solid rgba(0, 0, 0, 0.05);
   border-radius: rem(10px);
+}
+
+.main--no-border {
+  border: 1px solid rgba(255, 255, 255, 1);
+}
+
+.main__currency__current {
+  gap: 0.5rem;
 }

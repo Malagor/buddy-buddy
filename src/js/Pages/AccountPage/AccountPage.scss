@@ -33,6 +33,12 @@
   }
 }
 
+.account__wrapper-photo {
+  position: relative;
+  width: rem(80px);
+  height: rem(80px);
+}
+
 .account__form-change-photo {
   position: absolute;
   right: -0.3rem;

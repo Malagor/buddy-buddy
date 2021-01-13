@@ -13,10 +13,13 @@ export class AccountPage extends Page {
     <div class="block__wrapper d-flex align-items-center flex-column">
       <div class="block__content d-flex align-items-center flex-column w-100">
         <div class="block__header block__header--account d-flex align-items-center">
-          <div class="block__image-wrapper position-relative">
-            <img src="${data.avatar}" alt="${
+
+          <div class="account__wrapper-photo">
+            <div class="block__image-wrapper">
+              <img src="${data.avatar}" alt="${
       data.name
     }" class="block__image position-absolute top-50 start-50 translate-middle">
+            </div>
             <form action=#" enctype="multipart/form-data" method="post" class="account__form-change-photo d-flex justify-content-center align-items-center">
               <label for="file" class="account__button-change-photo d-flex justify-content-center align-items-center">
                 <i class="material-icons">add_a_photo</i>
