@@ -11,7 +11,7 @@ import { GroupPage } from '../Pages/GroupsPages/GroupsPage';
 import { TransactionsList } from '../Pages/TransactionsList/transactionsList';
 import { dataTransList } from '../Data/dataTransList';
 import { INotification, Notifications } from './Notifications';
-import { Messenger } from '../Pages/Messenger/Messenger';
+import { INewMessage, Messenger } from '../Pages/Messenger/Messenger';
 
 export class App {
   private database: Database;
@@ -158,7 +158,7 @@ export class App {
 
   onMessagesPage() {
     this.messenger.render();
-    this.database.getMessageList(this.messenger.printMessage);
+    this.database.getMessageList(this.messenger.printMessage, this.messenger.setUserDataInMessage);
     // this.database.getGroupList(this.groups.addGroupToList);
   }
 
@@ -215,7 +215,7 @@ export class App {
     this.database.findUserByName(accountName, this.messenger.addUserForSendMessage, this.messenger.errorAddUserForSendMessage);
   }
 
-  onSendNewMessage(data: any): void {
+  onSendNewMessage(data: INewMessage): void {
     this.database.createNewMessage(data);
   }
 

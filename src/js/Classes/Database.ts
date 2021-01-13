@@ -2,6 +2,7 @@ import firebase from 'firebase';
 import 'firebase/auth';
 import { default as CyrillicToTranslit } from 'cyrillic-to-translit-js/CyrillicToTranslit';
 import { IGroupData } from '../Interfaces/IGroupData';
+import { INewMessage } from '../Pages/Messenger/Messenger';
 
 const defaultAvatar: string = require('../../assets/images/default-user-avatar.jpg');
 
@@ -146,7 +147,7 @@ export class Database {
         if (!snapshot.key) {
           callback(snapshot.val());
         }
-      }, (error: { code: string; message: string}) => {
+      }, (error: { code: string; message: string }) => {
         console.log('Error: ' + error.code);
         console.log('Message: ' + error.message);
       });
@@ -255,6 +256,7 @@ export class Database {
   // }
 
   countNewMessage(callback: any): void {
+    console.log('Notification listener: START...');
     let countMessage: number = 0;
     this.firebase
       .database()
@@ -270,7 +272,7 @@ export class Database {
       });
   }
 
-  getMessageList(renderMessage: any): void {
+  getMessageList(renderMessage: any, setUserData: any): void {
     this.firebase
       .database()
       .ref('Messages')
@@ -279,72 +281,47 @@ export class Database {
         const messageId = snapshot.key;
         const { fromUser, toUser } = messageObj;
 
-        // console.log('message', messageObj.message);
+        console.log(messageObj.isRead);
 
         if (fromUser === this.uid || toUser === this.uid) {
+          let isReceive: boolean = toUser === this.uid;
 
-          const fromUserData = this.firebase
+          const messageData = {
+            messageId,
+            message: messageObj.message,
+            date: messageObj.date,
+            isRead: messageObj.isRead,
+            isReceive
+          };
+          renderMessage(messageData);
+
+          const secondUserId = isReceive ? fromUser : toUser;
+
+          this.firebase
             .database()
-            .ref(`User/${fromUser}`)
-            .once('value', snapshot => {
-              return snapshot;
-            });
-
-          const toUserData = this.firebase
-            .database()
-            .ref(`User/${toUser}`)
-            .once('value', snapshot => {
-              return snapshot;
-            });
-
-          const users = Promise.all([fromUserData, toUserData])
-            .then(data => {
-              return {
-                fromUser: data[0],
-                toUser: data[1],
+            .ref(`User/${secondUserId}`)
+            .once('value', userData => {
+              console.log('userData', userData.val());
+              const userDataForMessage = {
+                messageId,
+                key: userData.key,
+                name: userData.val().name,
+                avatar: userData.val().avatar,
               };
+              setUserData(userDataForMessage);
             });
 
-          users.then(users => {
-            const { fromUser, toUser } = users;
-
-            const direction: boolean = toUser.key === this.uid;
-            let key: string;
-            let name: string;
-            let avatar: string;
-
-            if (direction) {
-              key = fromUser.key;
-              name = fromUser.val().name;
-              avatar = fromUser.val().avatar;
-            } else {
-              key = toUser.key;
-              name = toUser.val().name;
-              avatar = toUser.val().avatar;
-            }
-
-            const messageData = {
-              messageId,
-              message: messageObj.message,
-              date: messageObj.date,
-              status: messageObj.status,
-              key,
-              avatar,
-              name,
-              direction
-            };
-
-            renderMessage(messageData);
-
+          // if user get and read message, status is toggle to "true"
+          if (isReceive) {
             this.firebase
               .database()
               .ref(`Messages/${messageId}`)
-              .child('status')
+              .child('isRead')
               .transaction(curStatus => {
                 curStatus = true;
                 return curStatus;
               });
-          });
+          }
         }
       }, (error: { code: string; message: any; }) => {
         console.log('Error:\n ' + error.code);
@@ -353,7 +330,8 @@ export class Database {
   }
 
 
-  createNewMessage(data: any): void {
+  createNewMessage(data: INewMessage): void {
+    console.log('createNewMessage', data);
     data.fromUser = this.uid;
 
     this.firebase
