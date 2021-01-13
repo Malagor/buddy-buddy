@@ -116,29 +116,27 @@ export class Messenger extends Page {
     if (data.status === false && data.direction) {
       stateClass = 'message--not-read';
     }
-    let directionClass: string = 'align-self-end';
+    let directionClass: string = 'align-self-end message--own';
     if (data.direction) {
       directionClass = 'align-self-start';
     }
     const messageList = this.element.querySelector('.message-list');
 
     let html = `
-      <div class="message d-flex flex-column align-items-center main--border ${directionClass} ${stateClass} col-10" data-message-id="${data.messageId}">
-        <div class="message__header align-self-start">
+      <div class="message main--border ${directionClass} ${stateClass} col-10" data-message-id="${data.messageId}">
           <div class="message__avatar-wrapper">
             <img src="${data.avatar}" alt="${data.name}">
           </div>
           <div class="message__user-name fw-bold">${data.name}</div>
           <div class="message__time">${localeDate}</div>
-        </div>
-        <div class="main__currency__current align-self-start mt-1">
+        <div class="message__text align-self-start mt-1">
           <span>${data.message}</span>
         </div>`;
 
     if (data.direction) {
       html += `
-        <div class="main__currency__current align-self-end mt-2">
-        <button type="button" class="btn btn-outline-primary btn-sm answer-button" data-user-uid="${data.key}">Answer</button>
+        <div class="message__button">
+          <button type="button" class="btn btn-outline-primary btn-sm answer-button" data-user-uid="${data.key}">Answer</button>
         </div>
         `;
     }

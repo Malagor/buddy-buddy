@@ -2,15 +2,18 @@
 
 .message {
   font-size: 0.8rem;
-}
-
-.message__header {
+  background: #f1f1f1;
   display: grid;
   align-items: center;
-  width: 100%;
+  grid-gap: 0.5rem;
+  grid-template-columns: 3rem 1fr 6rem;
+  grid-template-rows: auto auto;
+  grid-template-areas: "avatar name time" "message message button";
 
-  grid-gap: 1rem;
-  grid-template-columns: 3rem 1fr 5rem;
+  &--own {
+    background: #F0B791;
+    grid-template-areas: "avatar name time" "message message message";
+  }
 }
 
 .message__avatar-wrapper {
@@ -18,6 +21,7 @@
   height: 3rem;
   overflow: hidden;
   border-radius: 50%;
+  grid-area: avatar;
 
   img {
     width: 100%;
@@ -27,15 +31,28 @@
   }
 }
 
-.message__addBtn {
-  width: 3rem;
-  height: 3rem;
-  border-radius: 50%;
+.message__user-name {
+  grid-area: name;
+}
+
+.message__time {
+  grid-area: time;
+}
+
+.message__text {
+  grid-area: message;
+}
+
+.message__button {
+  grid-area: button;
 }
 
 .message__addBtn {
   position: fixed;
   bottom: 3.5rem;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
 
   @include tablets {
     bottom: 5rem;
