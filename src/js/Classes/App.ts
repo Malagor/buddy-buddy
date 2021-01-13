@@ -62,10 +62,6 @@ export class App {
         this.layout.setSidebarData,
       ]);
 
-      this.groupsPage = GroupPage.create('.main');
-      this.groupsPage.onCreateNewGroup = this.onCreateNewGroup.bind(this);
-      // this.groupsPage.onAddMember = this.onAddGroupMember.bind(this);
-
       this.groups = MyGroups.create('.main');
       this.groups.onCreateNewGroup = this.onCreateNewGroup.bind(this);
       this.groups.onAddMember = this.onAddGroupMember.bind(this);

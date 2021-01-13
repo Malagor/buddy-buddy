@@ -226,14 +226,20 @@ export class Database {
             const snapshotUser = snapshot.val();
             const userList = Object.keys(snapshotUser); // all users in DB
 
-            const arrayUserImg: any = [];
+
+            //const arrayUserImg: string[] = userList.filter(user => dataUserListGroup.includes(user));
+            const arrayUsers: any[] = [];
             userList.forEach(user => {
               if (dataUserListGroup.includes(user)) {
-                arrayUserImg.push(snapshotUser[user].avatar);
+                arrayUsers.push(snapshotUser[user]);
               }
             });
 
-            callbacks({'dataGroup': dataGroup, 'arrayUserImg': arrayUserImg});
+            const dataForGroup = {
+              'dataGroup': dataGroup, 
+              'arrayUsers': arrayUsers
+            } 
+            callbacks(dataForGroup);
           });
 
         }
