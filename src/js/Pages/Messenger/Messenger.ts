@@ -121,7 +121,7 @@ export class Messenger extends Page {
     if (data.isRead === false && data.isReceive) {
       stateClass = 'message--not-read';
     }
-    let directionClass: string = 'align-self-end';
+    let directionClass: string = 'align-self-end message--own';
     if (data.isReceive) {
       directionClass = 'align-self-start';
     }
