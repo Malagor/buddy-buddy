@@ -8,6 +8,7 @@ export class Notifications {
   private groupsEl: NodeListOf<Element>;
   private transactionsEl: NodeListOf<Element>;
   private messagesEl: NodeListOf<Element>;
+  private _newMessageCount: number = 0;
 
   constructor(obj: INotification) {
     this.groupsEl = obj.groupsEl;
@@ -32,8 +33,25 @@ export class Notifications {
   }
 
   sentMessageNotification = (num: number | null): void => {
-    this.messagesEl.forEach(badge => {
-      badge.textContent = num.toString(10);
-    });
+    console.log('this.newMessageCount', this.newMessageCount);
+    console.log('num', num);
+    this.newMessageCount += num;
+    if (this.newMessageCount) {
+      this.messagesEl.forEach(badge => {
+        badge.textContent = num.toString(10);
+      });
+    } else {
+      this.messagesEl.forEach(badge => {
+        badge.textContent = '';
+      });
+    }
+  }
+
+  get newMessageCount(): number {
+    return this._newMessageCount;
+  }
+
+  set newMessageCount(value: number) {
+    this._newMessageCount = value;
   }
 }

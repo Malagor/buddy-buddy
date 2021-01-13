@@ -157,6 +157,10 @@ export class App {
   }
 
   onMessagesPage() {
+    console.log('onMessagesPage');
+
+    this.notifications.newMessageCount = 0;
+    this.notifications.sentMessageNotification(0);
     this.messenger.render();
     this.database.getMessageList(this.messenger.printMessage, this.messenger.setUserDataInMessage);
     // this.database.getGroupList(this.groups.addGroupToList);

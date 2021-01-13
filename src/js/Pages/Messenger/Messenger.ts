@@ -127,13 +127,15 @@ export class Messenger extends Page {
     }
     const messageList = this.element.querySelector('.message-list');
 
+    if (!messageList) return;
+
     let html = `
       <div class="message d-flex flex-column align-items-center main--border ${directionClass} ${stateClass} col-10" data-message-id="${data.messageId}">
         <div class="message__header align-self-start">
           <div class="message__avatar-wrapper">
-            <img src="${data.avatar}" alt="${data.name}">
+            <img src="" alt="">
           </div>
-          <div class="message__user-name fw-bold">${data.name}</div>
+          <div class="message__user-name fw-bold"></div>
           <div class="message__time">${localeDate}</div>
         </div>
         <div class="main__currency__current align-self-start mt-1">
@@ -143,7 +145,7 @@ export class Messenger extends Page {
     if (data.isReceive) {
       html += `
         <div class="main__currency__current align-self-end mt-2">
-        <button type="button" class="btn btn-outline-primary btn-sm answer-button" data-user-uid="${data.key}">Answer</button>
+        <button type="button" class="btn btn-outline-primary btn-sm answer-button" data-user-uid="">Answer</button>
         </div>
         `;
     }
@@ -151,6 +153,7 @@ export class Messenger extends Page {
     html += `</div>`;
 
     messageList.insertAdjacentHTML('afterbegin', html);
+
   }
 
   // printMessage(data: IMessage): void {
@@ -203,6 +206,8 @@ export class Messenger extends Page {
 
   setUserDataInMessage = (data: any): void => {
     const message = this.element.querySelector(`[data-message-id=${data.messageId}]`);
+    if (!message) return;
+
     const img = message.querySelector('img');
     img.setAttribute('src', data.avatar);
     img.setAttribute('alt', data.name);
@@ -210,7 +215,7 @@ export class Messenger extends Page {
     const name = message.querySelector('.message__user-name');
     name.textContent = data.name;
 
-    if (data.direction) {
+    if (data.isReceive) {
       const btn = message.querySelector('.answer-button');
       btn.setAttribute('data-user-uid', data.key);
     }

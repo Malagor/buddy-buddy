@@ -263,7 +263,7 @@ export class Database {
       .ref('Messages')
       .on('child_added', (snapshot) => {
         const toUser: string = snapshot.val().toUser;
-        const status: boolean = snapshot.val().status;
+        const status: boolean = snapshot.val().isRead;
 
         if (toUser === this.uid && status === false) {
           countMessage += 1;
@@ -280,8 +280,6 @@ export class Database {
         const messageObj = snapshot.val();
         const messageId = snapshot.key;
         const { fromUser, toUser } = messageObj;
-
-        console.log(messageObj.isRead);
 
         if (fromUser === this.uid || toUser === this.uid) {
           let isReceive: boolean = toUser === this.uid;
@@ -301,12 +299,12 @@ export class Database {
             .database()
             .ref(`User/${secondUserId}`)
             .once('value', userData => {
-              console.log('userData', userData.val());
               const userDataForMessage = {
                 messageId,
                 key: userData.key,
                 name: userData.val().name,
                 avatar: userData.val().avatar,
+                isReceive
               };
               setUserData(userDataForMessage);
             });
