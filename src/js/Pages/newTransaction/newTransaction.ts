@@ -100,7 +100,7 @@ export class NewTransaction extends Page {
   addGroupList = (groupID: string, groupTitle: string, currentGroup: string) => {
     const groups: HTMLInputElement = document.querySelector('.new-trans__groups-list');
     const groupElement = document.createElement('option');
-    if (groupTitle === currentGroup) {
+    if (groupID === currentGroup) {
       groupElement.setAttribute('selected', '');
     }
     groupElement.classList.add('new-trans__groups-item');

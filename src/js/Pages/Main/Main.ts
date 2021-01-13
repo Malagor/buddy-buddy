@@ -7,7 +7,7 @@ export class Main extends Page {
     return page;
   }
 
-  getDataForCurrency(el: HTMLElement): any | void {
+  getDataForCurrency(el: HTMLElement): void {
     fetch('https://www.nbrb.by/api/exrates/rates?periodicity=0')
       .then((response) => {
         return response.json();
@@ -17,7 +17,7 @@ export class Main extends Page {
       });
   }
 
-  createCurrTable(data: any): any {
+  createCurrTable(data: any): string {
     const currencies: string[] = ['EUR', 'USD', 'RUB'];
     const dt: any = [];
     data.map((item: any) => {
@@ -39,6 +39,9 @@ export class Main extends Page {
         <th scope="row">${i + 1}</th>
         <td>${dt[i].Cur_Abbreviation}</td>
         <td>${dt[i].Cur_OfficialRate}</td>
+        <td>${dt[i].Cur_OfficialRate * (data.balance || 0)} ${
+        dt[i].Cur_Abbreviation
+      }</td>
       </tr>
       `;
     }
@@ -46,7 +49,8 @@ export class Main extends Page {
     return result;
   }
 
-  renderSlider(elem: HTMLElement, dt: any): any {
+  renderSlider(elem: HTMLElement, dt: any): void {
+    console.log(dt);
     // if (dt.groupList === '[]') {
     elem.innerHTML = `
       <div class="card">
@@ -59,13 +63,13 @@ export class Main extends Page {
     // }
   }
 
-  renderTransactions(elem: HTMLElement, dt: any): any {
+  renderTransactions(elem: HTMLElement, dt: any): void {
+    console.log(dt);
     // if (dt.groupList === '[]') {
     elem.innerHTML = `
       <div class="card">
         <div class="card-body d-flex align-items-center flex-column justify-content-center">
-          <h6 class="card-title">No transactions yet.</h6>
-          <button type="button" class="btn btn-secondary btn-sm">Create transaction $$$</button>
+          <h6 class="card-title m-0">No transactions yet.</h6>
         </div>
       </div>
       `;
@@ -74,26 +78,30 @@ export class Main extends Page {
 
   render(data: any): void {
     this.element.innerHTML = `
-    <div class="account__wrapper d-flex align-items-center flex-column">
-      <div class="account__info d-flex align-items-center flex-column w-100">
-        <div class="account__header account__header--main d-flex align-items-center">
-          <p class="account__nick">@${data.account}</p>
-        </div>
-        <div class="main__currency d-flex align-items-center flex-column w-100">
-          <div class="account__image-wrapper position-relative overflow-hidden">
-          <img src="${data.avatar}" alt="${
+    <div class="block__wrapper">
+    <div class="block__content">
+      <div class="block__header block__header--main">
+        <p class="block__title">@${data.account}</p>
+      </div>
+      <div class="block__main">      
+        <div class="block__card justify-content-between block--width-85 block__card--no-border">
+          <div class="block__card block__element-gap flex-column block__card--no-border">
+              <div class="block__image-wrapper">
+                <img src="${data.avatar}" alt="${
       data.name && data.surname
-    }" class="account__image position-absolute top-50 start-50 translate-middle">
+    }" class="block__image">
+            </div>
+            <h3 class="main__name">
+              <span>${data.name}</span>
+            </h3>
+          </div>
+          <p class="main__balance align-self-start">Balance ${
+            data.balance || 0
+          } ${data.currency}
+          </p>
         </div>
-          <h3 class="main__name">
-            <span>${data.name}</span>
-          </h3>
-        </div>
-        <div class="main__currency d-flex align-items-center flex-column account--width-80">
-          <p class="account__balance">Balance 250$</p>
-        </div>
-        <div class="main__currency d-flex align-items-center flex-column account--width-85 main--border">
-          <p class="main__currency__current d-flex align-items-center align-self-start">
+        <div class="block__card flex-column block--width-85">
+          <p class="block__element-gap d-flex align-items-center align-self-start">
             <span>Current currency:</span>
             <select class="form-select w-auto" aria-label="Default select example">
               <option value="BYN" selected>BYN</option>
@@ -108,29 +116,30 @@ export class Main extends Page {
                 <th scope="col">#</th>
                 <th scope="col">Currency</th>
                 <th scope="col">National Bank</th>
+                <th scope="col">Balance</th>
               </tr>
             </thead>
             <tbody>
             </tbody>
           </table>
         </div>
-        <div class="main__currency d-flex align-items-center flex-column account--width-85 main--border">
-          <p class="main__currency__current align-self-start">
+        <div class="block__card flex-column block--width-85">
+          <p class="align-self-start">
             <span>My groups</span>
           </p>
-          <div class="main__group-slider d-flex align-items-center justify-content-center flex-column w-100 main__card">
+          <div class="main__group-slider flex-column main__inner-card">
           </div>
         </div>
-        <div class="main__currency d-flex align-items-center flex-column account--width-85 main--border">
-          <p class="main__currency__current align-self-start">
+        <div class="block__card flex-column block--width-85">
+          <p class="align-self-start">
             <span>Group's transactions</span>
           </p>
-          <div class="main__group-transactions d-flex align-items-center justify-content-center flex-column w-100 main__card">
+          <div class="main__group-transactions flex-column main__inner-card">
           </div>
-        </div>
-      </div>
+        </div>        
     </div>
-    `;
+  </div>
+  `;
     this.getDataForCurrency(this.element.querySelector('tbody'));
     this.renderSlider(this.element.querySelector('.main__group-slider'), data);
     this.renderTransactions(
