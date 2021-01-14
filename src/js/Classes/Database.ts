@@ -496,4 +496,47 @@ export class Database {
       console.log('Error: ' + error.code);
     });
   }
+
+  getMyTransactionsList(renderTransaction: any, renderUser:any):void {
+    this.firebase
+      .database()
+      .ref(`User/${this.uid}`)
+      .once('value', (snapshot) => {
+        const currGroup = snapshot.val().currentGroup;
+        this.firebase
+        .database()
+        .ref(`Groups/${currGroup}`)
+        .once('value', (snapshot) => {
+          const transList = snapshot.val().transactions;
+          transList.forEach((transID: string) => {
+            this.firebase
+            .database()
+            .ref(`Transactions/${transID}`)
+            .once('value', (snapshot) => {
+              if (this.uid === snapshot.val().userID) {
+                console.log ('transSnapshot', snapshot.val());
+                renderTransaction(snapshot.key, snapshot.val());                
+                const userList:string[] = snapshot.val().toUserList;
+                userList.forEach((user: any, i: number) => {
+                  this.firebase
+                    .database()
+                    .ref(`User/${user.userID}`)
+                    .once('value', (snapshot) => {
+                      const user = {
+                        id: snapshot.key,
+                        userName: snapshot.val().name,
+                        avatar: snapshot.val().avatar,
+                      }
+                      renderUser(transID, user, i);                        
+                    })
+                })       
+              }
+            });
+          });
+        });
+      }, (error: { code: string; message: any; }) => {
+        console.log('Error:\n ' + error.code);
+        console.log(error.message);
+      });  
+  }
 }

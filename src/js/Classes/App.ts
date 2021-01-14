@@ -9,7 +9,7 @@ import { AccountPage } from '../Pages/AccountPage/AccountPage';
 import { IGroupData } from '../Interfaces/IGroupData';
 import { GroupPage } from '../Pages/GroupsPages/GroupsPage';
 import { TransactionsList } from '../Pages/TransactionsList/transactionsList';
-import { dataTransList } from '../Data/dataTransList';
+
 import { INotification, Notifications } from './Notifications';
 import { Messenger } from '../Pages/Messenger/Messenger';
 
@@ -75,7 +75,6 @@ export class App {
       this.groups.onAddMember = this.onAddGroupMember.bind(this);
 
       this.transactionsList = TransactionsList.create('.main');
-      this.transactionsList.onTransactionSubmit = this.onTransactionSubmit.bind(this);
 
       this.messenger = Messenger.create('.main');
       this.messenger.onAddRecipient = this.onAddRecipientToMessage.bind(this);
@@ -153,12 +152,18 @@ export class App {
   }
 
   onTransactionsPage() {
-    this.transactionsList.render(dataTransList);
+    this.transactionsList.render();
     this.transactionsList.newTrans.onCreateTransaction = this.onCreateTransaction.bind(this);
     this.transactionsList.newTrans.onShowMembersOfGroup = this.onShowMembersOfGroup.bind(this);
     this.database.getCurrencyList(this.transactionsList.newTrans.addCurrencyList);
     this.database.getGroupsListForTransaction(this.transactionsList.newTrans.addGroupList);
     this.database.getMembersOfGroupFirst(this.transactionsList.newTrans.addMembersOfGroup);
+
+    this.database.getGroupsListForTransaction(this.transactionsList.addGroupToTransList);
+    const groups: HTMLFormElement = document.querySelector('.trans-list__groups');
+    // console.log ('groups.value', groups.value);
+    this.database.getMyTransactionsList(this.transactionsList.addMyTransactions, this.transactionsList.addUserToList);
+    // setTimeout(() => this.transactionsList.positionUsers(), 1000);
 
   }
 
