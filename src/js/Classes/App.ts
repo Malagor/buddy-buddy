@@ -154,6 +154,12 @@ export class App {
 
   onTransactionsPage() {
     this.transactionsList.render(dataTransList);
+    this.transactionsList.newTrans.onCreateTransaction = this.onCreateTransaction.bind(this);
+    this.transactionsList.newTrans.onShowMembersOfGroup = this.onShowMembersOfGroup.bind(this);
+    this.database.getCurrencyList(this.transactionsList.newTrans.addCurrencyList);
+    this.database.getGroupsListForTransaction(this.transactionsList.newTrans.addGroupList);
+    this.database.getMembersOfGroupFirst(this.transactionsList.newTrans.addMembersOfGroup);
+
   }
 
   onMessagesPage() {
@@ -209,6 +215,14 @@ export class App {
 
   onAddGroupMember(accountName: string) {
     this.database.findUserByName(accountName, this.groups.addMembersGroup);
+  }
+
+  onCreateTransaction(data: any) {
+    this.database.setDataTransaction(data);
+  }
+
+  onShowMembersOfGroup(groupID: string) {
+    this.database.getMembersOfGroup(groupID, this.transactionsList.newTrans.addMembersOfGroup);
   }
 
   onAddRecipientToMessage(accountName: string) {
