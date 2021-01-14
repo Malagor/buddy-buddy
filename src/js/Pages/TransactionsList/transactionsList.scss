@@ -52,10 +52,11 @@
   &__descr {
     font-size: rem(14px);
 
-    @include phones {
+@include phones {
       font-size: rem(16px);
     }
   }
+
 
   .trans-item__buttons {
     padding-left: rem(10px);
@@ -67,7 +68,7 @@
   .trans-item__day {
     font-size: rem(14px);
 
-    @include phones {
+@include phones {
       font-size: rem(16px);
     }
   }
@@ -75,7 +76,7 @@
   .trans-item__time {
     font-size: rem(12px);
 
-    @include phones {
+@include phones {
       font-size: rem(14px);
     }
   }
@@ -83,7 +84,7 @@
   .cost {
     font-size: rem(17px);
 
-    @include phones {
+@include phones {
       font-size: rem(20px);
     }
   }
@@ -102,7 +103,7 @@
         border-radius: 50%;
         overflow:hidden;
 
-        @include phones {
+@include phones {
           width: rem(50px);
           height: rem(50px);
         }
@@ -155,7 +156,7 @@
       border: 1px solid black;
       border-radius: 50%;
 
-      @include phones {
+@include phones {
         width: rem(50px);
         height: rem(50px);
       }
@@ -165,7 +166,7 @@
       margin-top: rem(2px);
       font-size: rem(14px);
 
-      @include phones {
+@include phones {
         font-size: rem(16px);
       }
     }
@@ -173,7 +174,7 @@
     &__comment {
       font-size: rem(12px);
 
-      @include phones {
+@include phones {
         font-size: rem(14px);
       }
     }

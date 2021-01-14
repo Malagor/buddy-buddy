@@ -7,7 +7,6 @@ import { MyGroups } from '../Pages/MyGroups/MyGroups';
 import { AccountPage } from '../Pages/AccountPage/AccountPage';
 
 import { IGroupData } from '../Interfaces/IGroupData';
-import { GroupPage } from '../Pages/GroupsPages/GroupsPage';
 import { TransactionsList } from '../Pages/TransactionsList/transactionsList';
 
 import { INotification, Notifications } from './Notifications';
@@ -21,7 +20,6 @@ export class App {
   private mainPage: Main;
   private groups: MyGroups;
   private accountPage: AccountPage;
-  private groupsPage: GroupPage;
   private transactionsList: TransactionsList;
   private notifications: Notifications;
   private messenger: Messenger;
@@ -65,10 +63,6 @@ export class App {
         this.mainPage.render,
         this.layout.setSidebarData,
       ]);
-
-      this.groupsPage = GroupPage.create('.main');
-      this.groupsPage.onCreateNewGroup = this.onCreateNewGroup.bind(this);
-      // this.groupsPage.onAddMember = this.onAddGroupMember.bind(this);
 
       this.groups = MyGroups.create('.main');
       this.groups.onCreateNewGroup = this.onCreateNewGroup.bind(this);
@@ -146,9 +140,8 @@ export class App {
   }
 
   onGroupsPage() {
-    // this.groupsPage.render(groupsData);
     this.groups.render();
-    this.database.getGroupList(this.groups.addGroupToList);
+    this.database.getGroupList(this.groups.createGroupList);
   }
 
   onTransactionsPage() {
