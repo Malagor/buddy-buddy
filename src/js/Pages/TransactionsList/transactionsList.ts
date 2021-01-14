@@ -110,7 +110,7 @@ export class TransactionsList extends Page {
 
       </div>
     `;
-    listOfTrans.insertAdjacentHTML('beforeend', transHTML);
+    listOfTrans.insertAdjacentHTML('afterbegin', transHTML);
   }
 
   _changeColor = (balance: number):void => {
@@ -125,32 +125,27 @@ export class TransactionsList extends Page {
   addUserToList = (transID: string, user: any, i:number) => {
     const usersList = document.getElementById(transID).querySelector('.trans-item__users');
     const userWrapper = document.createElement('div');
-      userWrapper.classList.add('user', 'd-flex', 'flex-column', 'align-items-center');
+      userWrapper.classList.add('user');
       userWrapper.setAttribute('user-id', user.id); 
       userWrapper.innerHTML = `
         <div class="user__avatar"><img src=${user.avatar} alt=${user.userName}></div>
         <div class="user__name">${user.userName}</div>
       `;
-      if (i >= 0 && i < 3) {
-        userWrapper.style.left = `${-(i * 15)}px`;
-      } else {
-        userWrapper.style.display = 'none';
-      }
+
       usersList.append(userWrapper);
 
       if (i > 0) {
         const names = usersList.querySelectorAll('.user__name');
         names.forEach((name: HTMLElement) => name.style.display = 'none');
-      }
+      } 
 
-        if (i >= 3) {
+        if (i >= 5) {
           if (usersList.querySelector('.add-numb')) {
             usersList.querySelector('.add-numb').remove();
           }
         const addNumb = document.createElement('div');
-        addNumb.classList.add('add-numb', 'align-self-center', 'position-relative');
-        addNumb.innerText = `+${i - 2}`;
-        addNumb.style.left = `${-(i * 10)}px`;
+        addNumb.classList.add('add-numb', 'align-self-end');
+        addNumb.innerText = `+${i - 4}`;
         usersList.append(addNumb);
       }
   }

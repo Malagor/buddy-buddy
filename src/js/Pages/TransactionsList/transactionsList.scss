@@ -90,12 +90,17 @@
   }
 
   .trans-item__users {
-    position: relative;
+    // position: relative;
+    // display: flex;
+    
 
     .user {
-      position: relative;
+      // position: relative;
+      margin-left: -20px;
+      display: none;
 
       &__avatar {
+
         width: rem(40px);
         height: rem(40px);
         // background-color: grey;
@@ -117,10 +122,24 @@
       }
 
       &__name {
-        display: none;
-        font-size: rem(14px);
+        // display: none;
+        font-size: rem(12px);
+        max-width: rem(100px);
+        text-align: center;
+        line-height: 1rem;
       }
     }
+
+    .user:nth-child(1) {
+        margin-left: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .user:nth-child(2), .user:nth-child(3), .user:nth-child(4), .user:nth-child(5)   {  
+       display: flex;
+    }  
 
     .add-numb {
       font-size: rem(20px);
