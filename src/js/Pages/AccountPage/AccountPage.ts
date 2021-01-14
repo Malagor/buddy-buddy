@@ -188,6 +188,7 @@ export class AccountPage extends Page {
       .querySelectorAll('.account__info__input')
       .forEach((item: HTMLInputElement, index: number): void => {
         values = checkRadio(item);
+        console.log ('values', values);
         item.addEventListener('input', () => {
           if (values[index] !== item.value) {
             submitInfo.removeAttribute('disabled');

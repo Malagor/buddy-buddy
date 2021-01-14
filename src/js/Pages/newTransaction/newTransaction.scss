@@ -1,0 +1,194 @@
+$color-text: #000000;
+
+@function rem($px) {
+  @return $px / 16px + 0rem;
+}
+
+
+@mixin phones {
+  @media screen and (min-width: 480px) {
+    @content;
+  }
+}
+
+.new-trans {
+  &__label {
+    font-size: rem(14px);
+  }
+
+  &__currency-group {
+    display: flex;
+    align-items: stretch;
+  }
+
+  &__total-sum {
+    border-radius: 0.25rem 0 0 0.25rem;
+  }
+
+  &__currency-list {
+    border-radius: 0 0.25rem 0.25rem 0;
+  }
+
+  &__members {
+    padding: rem(5px);
+    border-top: 1px solid #ced4da;
+    border-bottom: 1px solid #ced4da;
+  }
+  &__members-list {
+    .member {
+      width: rem(70px);
+      margin: rem(5px);
+
+      &__avatar {
+        width: rem(35px);
+        height: rem(35px);
+        margin-bottom: rem(5px);
+        overflow: hidden;
+        // background-color: blue;
+        border-radius: 50%;
+        transition: transform 0.3s ease-out;
+
+        @include phones {
+          width: rem(40px);
+          height: rem(40px);
+        }
+        &:hover {
+          transform: scale(1.1);
+          cursor: pointer;
+        }
+      }
+
+      &__avatar > img {
+        width: 100%;
+        height: 100%;
+
+        object-fit: contain;
+      }
+
+      .checked {
+        border: 3px solid #297eff;
+      }
+
+      &__name {
+        max-width: rem(50px);
+        font-size: rem(12px);
+        line-height: 1rem;
+        text-align: center;
+      }
+    }
+  }
+}
+
+.add-check {
+  height: rem(40px);
+  &__wrapper {
+    width: rem(120px);
+    height: rem(30px);
+    background-color: #e9ecef;
+    border: 1px dashed #ced4da;
+    border-radius: 5px;
+    transition: all 0.3s ease-out;
+    &:hover {
+      background-color: #ced4da;
+      border: 1px dashed black;
+    };
+  }
+
+  &__label {
+    &:hover {
+      cursor: pointer;
+    }
+  }
+
+  &__text {
+    padding-top: rem(3px);
+    padding-left: rem(5px);
+    font-size: rem(14px);
+  }
+
+
+  &__file {
+    position: absolute;
+    width: 0;
+    outline: 0;
+    opacity: 0;
+    user-select: none;
+    pointer-events: none;
+  }
+
+  &__icon-wrapper {
+    width: rem(40px);
+    height: rem(40px);
+    margin-left: rem(10px);
+    border: 1px solid gray;
+    border-radius: 5px;
+    &:hover {
+      cursor: pointer;
+    }
+
+    & > img {
+      width: 100%;
+      height: 100%;
+
+      object-fit: cover;
+    }
+  }
+
+  &__image {
+    width: 100%;
+
+    object-fit: contain;
+  }
+}
+
+
+
+
+.checked-member {
+  margin: rem(5px);
+
+  &__avatar {
+    width: rem(35px);
+    height: rem(35px);
+    margin-bottom: rem(5px);
+    overflow: hidden;
+    background-color: blue;
+    border-radius: 50%;
+    transition: transform 0.3s ease-out;
+
+    @include phones {
+      width: rem(40px);
+      height: rem(40px);
+    }
+  }
+
+  &__avatar > img {
+    width: 100%;
+    height: 100%;
+
+    object-fit: contain;
+  }
+
+  &__name {
+    max-width: rem(50px);
+    font-size: rem(12px);
+    line-height: 1rem;
+    text-align: center;
+
+    // @include phones {
+    //   font-size: rem(14px);
+    // }
+  }
+
+  &__sum {
+    width: 20%;
+  }
+
+  &__comment {
+    width: 50%;
+  }
+}
+
+.hidden {
+  display: none;
+}

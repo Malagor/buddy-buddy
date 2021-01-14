@@ -21,7 +21,9 @@
   }
 
   &__descr {
-    font-size: rem(14px);@include phones {
+    font-size: rem(14px);
+
+@include phones {
       font-size: rem(16px);
     }
   }
@@ -34,25 +36,33 @@
     color: $color-dark-accent-1;
     background-color: transparent;
     border: none;
-    outline: none;@include phones {
+    outline: none;
+
+@include phones {
       font-size: rem(12px);
     }
   }
 
   .day {
-    font-size: rem(14px);@include phones {
+    font-size: rem(14px);
+
+@include phones {
       font-size: rem(16px);
     }
   }
 
   .time {
-    font-size: rem(12px);@include phones {
+    font-size: rem(12px);
+
+@include phones {
       font-size: rem(14px);
     }
   }
 
   .cost {
-    font-size: rem(17px);@include phones {
+    font-size: rem(17px);
+
+@include phones {
       font-size: rem(20px);
     }
   }
@@ -68,7 +78,9 @@
         height: rem(40px);
         background-color: grey;
         border: 1px solid black;
-        border-radius: 50%;@include phones {
+        border-radius: 50%;
+
+@include phones {
           width: rem(50px);
           height: rem(50px);
         }
@@ -88,15 +100,18 @@
 .new-trans-btn {
   position: fixed;
   right: rem(20px);
-  bottom: rem(20px);
+  bottom: rem(70px);
   align-self: flex-end;
-  color: $color-dark-accent-2;
-  background-color: transparent;
-  border: none;
-  outline: none;
+  width: rem(50px);
+  height: rem(50px);
+  border-radius: 50%;
+ 
 
   span {
-    font-size: rem(60px);
+    font-size: rem(30px);
+    position: relative;
+    right: 3px;
+    top: 3px;
   }
 }
 
@@ -108,7 +123,9 @@
       height: rem(40px);
       background-color: grey;
       border: 1px solid black;
-      border-radius: 50%;@include phones {
+      border-radius: 50%;
+
+@include phones {
         width: rem(50px);
         height: rem(50px);
       }
@@ -116,13 +133,17 @@
 
     &__name {
       margin-top: rem(2px);
-      font-size: rem(14px);@include phones {
+      font-size: rem(14px);
+
+@include phones {
         font-size: rem(16px);
       }
     }
 
     &__comment {
-      font-size: rem(12px);@include phones {
+      font-size: rem(12px);
+
+@include phones {
         font-size: rem(14px);
       }
     }
