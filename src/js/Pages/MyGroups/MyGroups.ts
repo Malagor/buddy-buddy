@@ -143,22 +143,28 @@ export class MyGroups extends Page {
           <div class="modal-body">
             <form class="form-floating row g-3 form-group" id="newGroupForm">
 
+
+
+
+
+
+
             <div class="row modal-top">
 
-              <div class="col-3">
-                <div class="block__image-wrapper position-relative">
-                  <img src="${defaultGroupLogo}" alt="logoGroup" class="block__image position-absolute top-50 start-50 translate-middle">
-                  <div class="form-group-test">
-                    <label class="account__form-change-photo justify-content-center align-items-center" for="exampleFormControlFile1">
-                      <i class="material-icons position-material-icons">add_a_photo</i>
-                    </label>
-                    <input type="file" class="account__form-change-photo justify-content-center align-items-center transparent" id="inputImg" name="logoGroup">
-                  </div>
+              <div class="block__common-image-wrapper col-3">
+                <div class="block__image-wrapper">
+                  <img src="${defaultGroupLogo}" alt="logoGroup" class="block__image">
+                </div>
+                <div class="block__form-change-photo form-group">
+                  <label for="file" class="block__button-change-photo">
+                    <i class="material-icons">add_a_photo</i>
+                  </label>
+                  <input type="file" id="inputImg" name="logoGroup" class="block__form-change-photo input-logo-group">
                 </div>
               </div>
 
 
-              <div class="form-floating col-9 d-flex align-items-center  modal-top__input-title">
+              <div class="form-floating col-9 form-title">
                 <input type="text" class="form-control" id="formTitle" name="title" placeholder="Title" required>
                 <label for="formTitle" class="form-label">Title*</label>
                 <div class="invalid-feedback">
@@ -301,3 +307,21 @@ if (element.balance < 0) {
     </h5>
   `;
 } */
+
+
+
+
+/* <div class="col-3">
+<div class="block__image-wrapper position-relative">
+  <img src="${defaultGroupLogo}" alt="logoGroup" class="block__image">
+  <div class="form-group-test">
+    <label class="" for="exampleFormControlFile1">
+
+    </label>
+    <div>
+    <i class="material-icons position-material-icons">add_a_photo</i>
+  </div>
+    <input type="file" class="account__form-change-photo justify-content-center align-items-center transparent" id="inputImg" name="logoGroup">
+  </div>
+</div>
+</div> */

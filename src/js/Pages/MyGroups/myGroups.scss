@@ -6,7 +6,9 @@
 }
 
 .position-material-icons {
-  margin: 2px;
+  position: absolute;
+  right: 0;
+  bottom: 0;   
 }
 
 .block__title {
@@ -63,10 +65,17 @@
 
 .modal-top {
   margin: 1rem 0 0 0;
+}
 
-  &__input-title {
-    padding: 0;
-  }
+.form-title {
+  padding: 0;
+  margin: rem(10px) 0 0 rem(40px);
+}
+
+.input-logo-group {
+  position: absolute;
+  bottom: 0;
+  opacity: 0;
 }
 
 .add-new-group {
