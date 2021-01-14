@@ -50,7 +50,6 @@ export class Main extends Page {
   }
 
   renderSlider(elem: HTMLElement, dt: any): void {
-    console.log(dt);
     // if (dt.groupList === '[]') {
     elem.innerHTML = `
       <div class="card">
@@ -64,7 +63,6 @@ export class Main extends Page {
   }
 
   renderTransactions(elem: HTMLElement, dt: any): void {
-    console.log(dt);
     // if (dt.groupList === '[]') {
     elem.innerHTML = `
       <div class="card">

@@ -4,9 +4,13 @@
 
 html {
   min-height: 100vh;
-  font-size: 14px;@include tablets {
+  font-size: 14px;
+
+@include tablets {
     font-size: 15px;
-  }@include laptop {
+  }
+
+@include laptop {
     font-size: 16px;
   }
 }
@@ -27,10 +31,14 @@ body {
 
 .sidebar {
   position: fixed;
-  top: 0;/* rtl:raw:
+  top: 0;
+
+/* rtl:raw:
   right: 0;
   */
-  bottom: 0;/* rtl:remove */
+  bottom: 0;
+
+/* rtl:remove */
   left: 0;
   z-index: 100; /* Behind the navbar */
   padding: rem(53px) 0 0; /* Height of navbar */
@@ -61,6 +69,11 @@ body {
   color: #297eff;
 }
 
+.footer .nav-link.active {
+  color: #297eff;
+}
+
+>>>>>>> develop
 .sidebar .nav-link:hover .feather,
 .sidebar .nav-link.active .feather {
   color: inherit;

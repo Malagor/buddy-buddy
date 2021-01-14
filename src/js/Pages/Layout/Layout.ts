@@ -44,12 +44,12 @@ export class Layout extends Page {
           <hr>
           <ul class="nav flex-column">
               <li class="nav-item">
-                <a class="nav-link sidebarMainLink" aria-current="page" href="#">
+                <a class="nav-link sidebarMainLink active" href="#">
                   <i class="material-icons">house</i><span class="nav-link__text">Главная</span>
                 </a>
               </li>
               <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="#" id="sidebarAccountLink" data-target=".navbar-collapse.in">
+                <a class="nav-link sidebarAccountLink" href="#" id="sidebarAccountLink">
                   <i class="material-icons">account_box</i><span class="nav-link__text">Аккаунт</span>
                 </a>
               </li>
@@ -75,18 +75,18 @@ export class Layout extends Page {
           <hr>
           <ul class="nav flex-column mb-2">
               <li class="nav-item">
-                <a class="nav-link" href="#" id="sidebarStatisticsLink">
+                <a class="nav-link sidebarStatisticsLink" href="#" id="sidebarStatisticsLink">
                  <i class="material-icons">bar_chart</i><span class="nav-link__text">Статистика</span>
                 </a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="#" id="sidebarSettingsLink">
+                <a class="nav-link sidebarSettingsLink" href="#" id="sidebarSettingsLink">
                   <i class="material-icons">settings</i>
             <span class="nav-link__text">Настройки</span>
                 </a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="#" id="sidebarHelpLink">
+                <a class="nav-link sidebarHelpLink" href="#" id="sidebarHelpLink">
                   <i class="material-icons">help_outline</i>
             <span class="nav-link__text">Помощь</span>
                 </a>
@@ -149,7 +149,7 @@ export class Layout extends Page {
       <div class="footer__content row align-items-center">
         <div class="footer__title col-3">
           <div class="nav-item">
-            <a class="nav-link sidebarMainLink" aria-current="page" href="#">
+            <a class="nav-link sidebarMainLink active" aria-current="page" href="#">
               <i class="material-icons">house</i><span class="d-none d-sm-block nav-link__text">Главная</span>
             </a>
           </div>
@@ -221,21 +221,22 @@ export class Layout extends Page {
     document.body.addEventListener('click', (ev) => {
       const { target }: any = ev;
 
-      // if (target.closest('#signOut')) {
-      //   this.onSignOut();
-      // }
-
       if (target.closest('.sidebarMainLink')) {
         ev.preventDefault();
         this.onMainPage();
         if (!target.closest('.footer')) {
           Layout.closeMobileMenu();
         }
+        this.setCurrentPageInMenu(target.closest('.sidebarMainLink'));
       }
+
       if (target.closest('#sidebarAccountLink')) {
         ev.preventDefault();
         this.onAccountPage();
         Layout.closeMobileMenu();
+
+        this.setCurrentPageInMenu(target.closest('#sidebarAccountLink'));
+
       }
 
       if (target.closest('.sidebarGroupsLink')) {
@@ -244,6 +245,8 @@ export class Layout extends Page {
         if (!target.closest('.footer')) {
           Layout.closeMobileMenu();
         }
+
+        this.setCurrentPageInMenu(target.closest('.sidebarGroupsLink'));
       }
 
       if (target.closest('.sidebarTransactionsLink')) {
@@ -252,6 +255,8 @@ export class Layout extends Page {
         if (!target.closest('.footer')) {
           Layout.closeMobileMenu();
         }
+
+        this.setCurrentPageInMenu(target.closest('.sidebarTransactionsLink'));
       }
 
       if (target.closest('.sidebarMessagesLink')) {
@@ -260,24 +265,32 @@ export class Layout extends Page {
         if (!target.closest('.footer')) {
           Layout.closeMobileMenu();
         }
+
+        this.setCurrentPageInMenu(target.closest('.sidebarMessagesLink'));
       }
 
       if (target.closest('#sidebarStatisticsLink')) {
         ev.preventDefault();
         this.onStatisticsPage();
         Layout.closeMobileMenu();
+
+        this.setCurrentPageInMenu(target.closest('#sidebarStatisticsLink'));
       }
 
       if (target.closest('#sidebarSettingsLink')) {
         ev.preventDefault();
         this.onSettingsPage();
         Layout.closeMobileMenu();
+
+        this.setCurrentPageInMenu(target.closest('#sidebarSettingsLink'));
       }
 
       if (target.closest('#sidebarHelpLink')) {
         ev.preventDefault();
         this.onHelpPage();
         Layout.closeMobileMenu();
+
+        this.setCurrentPageInMenu(target.closest('#sidebarHelpLink'));
       }
     });
   }
@@ -304,5 +317,23 @@ export class Layout extends Page {
     if (display !== 'none') {
       toggleMenu.click();
     }
+  }
+
+  setCurrentPageInMenu(menuItem: HTMLElement): void {
+    const menuLinks: NodeListOf<HTMLElement> = document.querySelectorAll('.nav-link');
+
+    menuLinks.forEach(item => {
+      item.classList.remove('active');
+      item.removeAttribute('aria-current');
+    });
+
+    let itemClasses: string = menuItem.classList.value;
+    itemClasses = itemClasses.split(' ').map(el =>  '.' + el).join('');
+
+    const allMenuSameClasses: NodeListOf<HTMLElement> = document.querySelectorAll(`${itemClasses}`);
+    allMenuSameClasses.forEach(item => {
+      item.classList.add('active');
+      item.setAttribute('aria-current', 'page');
+    });
   }
 }
