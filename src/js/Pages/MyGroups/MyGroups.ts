@@ -176,7 +176,7 @@ export class MyGroups extends Page {
 <!--                <label for="formMembers">Members</label>-->
                 <button type="button" class="btn btn-primary" id="addNewGroupMember"><span class="material-icons">person_search</span></button>
               </div>
-               <div class="col-12 group-members-avatar"></div>
+               <div class="row col-12 group-members-avatar"></div>
                <div class="modal-footer">
                   <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                   <button type="submit" class="btn btn-primary" id="createGroupBtn">Create New Group</button>
@@ -267,11 +267,11 @@ export class MyGroups extends Page {
     if (data) {
       const members = document.querySelector('.group-members-avatar');
       members.insertAdjacentHTML('beforeend', `
-    <div class="member" data-id="${data.key}">
-      <div class="member__avatar">
-        <img src="${data.avatar}" alt="${data.name}">
+    <div class="col-3 member" data-id="${data.key}">
+      <div class="member__avatar text-center">
+        <img class="member__img" src="${data.avatar}" alt="${data.name}">
       </div>
-      <div class="member__name">${data.name}</div>
+      <div class="member__name text-center">${data.name}</div>
     </div>
     `);
       const input: HTMLFormElement = document.querySelector('#formMembers');

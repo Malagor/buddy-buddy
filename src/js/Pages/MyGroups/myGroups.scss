@@ -89,3 +89,15 @@
     margin: 5px 0 0 -1px;
   }
 }
+
+.member {
+  padding-top: rem(10px);
+
+  &__img {
+    width: 5rem;
+    height: 5rem;
+    overflow: hidden;
+    background-color: rgba(0,0,0,.075);
+    border-radius: 50%;
+  }
+}
