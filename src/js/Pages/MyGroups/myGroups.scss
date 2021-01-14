@@ -1,0 +1,103 @@
+@import "./src/scss/_misc/mixins";
+@import "../../../scss/_misc/variables.scss";
+
+.transparent {
+  opacity: 0;
+}
+
+.position-material-icons {
+  position: absolute;
+  right: 0;
+  bottom: 0;   
+}
+
+.group__button-change-photo {
+  font-size: 1.4rem;
+  color: rgb(0, 0, 0);
+  cursor: pointer;
+}
+
+.block__h2-indents {
+  margin: rem(10px) 0 rem(10px) 0;
+}
+
+.card-group {
+  margin: auto;
+
+  &__box-content {
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+  }
+
+  &__img-avatar {
+    width: rem(60px);
+    height: rem(60px);
+    border-radius: 50%;
+
+    &--mini {
+      width: rem(25px);
+      height: rem(25px);
+      border-radius: 50%;
+    }
+  }
+
+  &__balance {
+    &--negative {
+      color: red;
+    }
+
+    &--positive {
+      color: green;
+    }
+  }
+
+  &__box-logo-group {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+}
+
+.closed-group-hidden {
+  display: none;
+}
+
+.modal-top {
+  margin: 1rem 0 0 0;
+}
+
+.form-title {
+  padding: 0;
+  margin: rem(10px) 0 0 rem(40px);
+}
+
+.input-logo-group {
+  position: absolute;
+  bottom: 0;
+  opacity: 0;
+}
+
+.add-new-group {
+  position: fixed;
+  right: 14%;
+  bottom: rem(90px);
+  width: rem(51px);
+  height: rem(51px);
+  border-radius: 50%;
+
+  &__icon {
+    margin: 5px 0 0 -1px;
+  }
+}
+
+.member {
+  padding-top: rem(10px);
+
+  &__img {
+    width: 5rem;
+    height: 5rem;
+    overflow: hidden;
+    background-color: rgba(0,0,0,.075);
+    border-radius: 50%;
+  }
+}

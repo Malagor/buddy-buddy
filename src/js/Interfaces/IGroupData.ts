@@ -5,5 +5,5 @@ export interface IGroupData {
   dateClose: number | null;
   userList: string[] | [];
   transactionList: string[] | [];
-  style: any;
+  icon: string;
 }

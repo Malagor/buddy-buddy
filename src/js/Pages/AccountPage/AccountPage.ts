@@ -91,13 +91,12 @@ export class AccountPage extends Page {
             </div>
           </div>
         </div>
-      </div>
     </div>
 
       `;
     this.checkGenderAccount(data);
     this.events();
-  };
+  }
 
   protected checkNameAccount(data: any): {} | void {
     const dt = { ...data };
