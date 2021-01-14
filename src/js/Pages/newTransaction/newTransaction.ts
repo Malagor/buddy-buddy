@@ -8,10 +8,6 @@ export class NewTransaction extends Page {
   onCreateTransaction: any;
   onShowMembersOfGroup: any;
 
-  constructor(element: string) {
-    super(element);
-  }
-
   static create(element: string): NewTransaction {
     return new NewTransaction(element);
   }
@@ -125,13 +121,13 @@ export class NewTransaction extends Page {
         
   }
 
-  addCurrencyList = (currID: string, icon: string) => {
+  addCurrencyList = (currID: string, icon: string):void => {
     const currencySelect: HTMLFormElement = document.querySelector('.new-trans__currency-list');
     const optionHTML = `<option value=${currID}>${icon}</option>`;
     currencySelect.insertAdjacentHTML('beforeend', optionHTML);
   }
 
-  _clickOnMember = (user: HTMLElement) => {
+  _clickOnMember = (user: HTMLElement):void => {
     user.addEventListener('click', () => {
       const userAvatar = user.querySelector('.member__avatar');
       const userName = user.querySelector('.member__name').innerHTML;

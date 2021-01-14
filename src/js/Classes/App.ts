@@ -222,7 +222,7 @@ export class App {
   }
 
   onShowMembersOfGroup(groupID: string) {
-    this.database.getMembersOfGroup(this.transactionsList.newTrans.addMembersOfGroup, groupID);
+    this.database.getMembersOfGroup(groupID, this.transactionsList.newTrans.addMembersOfGroup);
   }
 
   onAddRecipientToMessage(accountName: string) {

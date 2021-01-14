@@ -451,7 +451,7 @@ export class Database {
       });
   }
 
-  getMembersOfGroup(renderMembers: any, groupID:string) {
+  getMembersOfGroup(groupID:string,renderMembers: any) {
     this.firebase
       .database()
       .ref(`Groups/${groupID}`)
