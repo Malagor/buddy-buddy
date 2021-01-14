@@ -24,7 +24,7 @@ export class MyGroups extends Page {
           <div id="contentGroup" class="container">
             <div class="row justify-content-between block__title">
               <div class="col-6">
-                <h2>Groups</h2>
+                <h2 class="block__h2-indents">Groups</h2>
               </div>
             </div>
 
@@ -143,12 +143,6 @@ export class MyGroups extends Page {
           <div class="modal-body">
             <form class="form-floating row g-3 form-group" id="newGroupForm">
 
-
-
-
-
-
-
             <div class="row modal-top">
 
               <div class="block__common-image-wrapper col-3">
@@ -163,7 +157,6 @@ export class MyGroups extends Page {
                 </div>
               </div>
 
-
               <div class="form-floating col-9 form-title">
                 <input type="text" class="form-control" id="formTitle" name="title" placeholder="Title" required>
                 <label for="formTitle" class="form-label">Title*</label>
@@ -173,9 +166,6 @@ export class MyGroups extends Page {
               </div>
 
             </div>
-
-
-
               <div class="<!--form-floating--> col-12">
                 <textarea class="form-control" id="formDesc" rows="3" name="description" placeholder="Description"></textarea>
 <!--                <label for="formDesc-" class="form-label">Description</label>-->
@@ -307,21 +297,3 @@ if (element.balance < 0) {
     </h5>
   `;
 } */
-
-
-
-
-/* <div class="col-3">
-<div class="block__image-wrapper position-relative">
-  <img src="${defaultGroupLogo}" alt="logoGroup" class="block__image">
-  <div class="form-group-test">
-    <label class="" for="exampleFormControlFile1">
-
-    </label>
-    <div>
-    <i class="material-icons position-material-icons">add_a_photo</i>
-  </div>
-    <input type="file" class="account__form-change-photo justify-content-center align-items-center transparent" id="inputImg" name="logoGroup">
-  </div>
-</div>
-</div> */
