@@ -33,7 +33,7 @@ export const divideSum = () => {
           input.setAttribute('placeholder', `${(totalSum / numbOfmembers).toFixed(2)}`);
         });
       } else {
-        memberSum.style.color = 'red';  
+        memberSum.style.color = 'red';
         membersSumInputs.forEach((input: HTMLFormElement) => {
           input.setAttribute('placeholder', '0.00');
         });

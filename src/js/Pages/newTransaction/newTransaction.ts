@@ -13,7 +13,7 @@ export class NewTransaction extends Page {
   }
 
   render = (): void => {
- 
+
 
     this.element.innerHTML = `
       <div class="new-trans modal-content">
@@ -41,20 +41,20 @@ export class NewTransaction extends Page {
 
           <div class="form-group row block--margin-adaptive mb-3">
             <label class="new-trans__label col-sm-2 col-form-label">Сумма</label>
-            <div class="new-trans__currency-group col-sm-10">            
+            <div class="new-trans__currency-group col-sm-10">
               <input type="text" class="new-trans__total-sum input-required form-control w-75" required pattern="\d[0-9]\.?\d[0-9]">
               <select class="new-trans__currency-list form-select w-25"></select>
             </div>
           </div>
 
-         
+
 
           <div class="add-check d-flex align-items-center mb-3">
             <div class="add-check__wrapper input-group">
               <label class="add-check__label" for="input-file">
                 <div class="add-check__text">Добавить чек</div>
-                <input id="input-file" type="file" accept="image/*" class="add-check__file" name="check">                 
-              </label>              
+                <input id="input-file" type="file" accept="image/*" class="add-check__file" name="check">
+              </label>
             </div>
             <div class="add-check__icon-wrapper hidden" ><img class="add-check__icon" src="#" alt="check"></div>
 
@@ -66,15 +66,15 @@ export class NewTransaction extends Page {
                     <div class="p-2">
                       <img class="add-check__image src="#" alt="check">
                     </div>
-                    
+
                 </div>
               </div>
-            </div> 
+            </div>
 
           </div>
-         
+
           <div class="new-trans__members">
-            <div class="new-trans__members-list d-flex flex-wrap justify-content-start"></div>        
+            <div class="new-trans__members-list d-flex flex-wrap justify-content-start"></div>
             <button type="button" class="all-btn btn btn-secondary btn-sm">Выбрать всех</button>
           </div>
 
@@ -82,8 +82,8 @@ export class NewTransaction extends Page {
 
         </div>
 
-        </form> 
-          
+        </form>
+
         <div class="modal-footer">
           <button type="button" class="new-trans__create-btn btn btn-primary w-100" data-bs-dismiss="modal" disabled>Создать транзакцию</button>
         </div>
@@ -116,18 +116,18 @@ export class NewTransaction extends Page {
         </div>
         <div class="member__name">${userName}</div>
       `;
-      members.append(userElement);   
+      members.append(userElement);
       this._clickOnMember(userElement);
-        
+
   }
 
-  addCurrencyList = (currID: string, icon: string):void => {
+  addCurrencyList = (currID: string, icon: string): void => {
     const currencySelect: HTMLFormElement = document.querySelector('.new-trans__currency-list');
     const optionHTML = `<option value=${currID}>${icon}</option>`;
     currencySelect.insertAdjacentHTML('beforeend', optionHTML);
   }
 
-  _clickOnMember = (user: HTMLElement):void => {
+  _clickOnMember = (user: HTMLElement): void => {
     user.addEventListener('click', () => {
       const userAvatar = user.querySelector('.member__avatar');
       const userName = user.querySelector('.member__name').innerHTML;
@@ -147,11 +147,11 @@ export class NewTransaction extends Page {
       }
       divideSum();
       checkData();
-    });  
-  } 
+    });
+  }
 
   getDataforCreateTransaction = () => {
-    const group: HTMLFormElement= document.querySelector('.new-trans__groups-list');
+    const group: HTMLFormElement = document.querySelector('.new-trans__groups-list');
     const descr: HTMLFormElement = document.querySelector('.new-trans__descr');
     const totalSum: HTMLFormElement = document.querySelector('.new-trans__total-sum');
     const currency: HTMLFormElement = document.querySelector('.new-trans__currency-list');
@@ -162,7 +162,7 @@ export class NewTransaction extends Page {
     checkedMembers.forEach((memb: HTMLElement) => {
       const user = {
         userID: memb.getAttribute('user-id'),
-        cost: memb.querySelector('.checked-member__sum').value || 
+        cost: memb.querySelector('.checked-member__sum').value ||
               memb.querySelector('.checked-member__sum').getAttribute('placeholder'),
         comment: memb.querySelector('.checked-member__comment').value,
         state: 'pending',
@@ -178,7 +178,7 @@ export class NewTransaction extends Page {
       tillSlip: inputCheck.files[0] ? inputCheck.files[0] : false,
       currency: currency.value,
       toUserList: userList,
-    } 
+    };
   }
 
   protected events(): void {
@@ -193,8 +193,8 @@ export class NewTransaction extends Page {
     const btnCloseCheck: HTMLElement = document.querySelector('.add-check__close-modal');
     const newTransModal = new Modal(document.querySelector('.new-trans__modal'));
     const btnCloseNewTrans: HTMLElement = document.querySelector('.new-trans__close-modal');
-    
-   
+
+
     groups.addEventListener('change', () => {
       members.innerHTML = '';
       checkedMembersList.innerHTML = '';
@@ -225,9 +225,9 @@ export class NewTransaction extends Page {
 
     inputCheck.addEventListener('change', () => {
       if (inputCheck.value) {
-        document.querySelector('.add-check__icon-wrapper').classList.remove('hidden');        
+        document.querySelector('.add-check__icon-wrapper').classList.remove('hidden');
         const checkInModal: HTMLImageElement = document.querySelector('.add-check__image');
-        const checkIcon:HTMLImageElement = document.querySelector('.add-check__icon');
+        const checkIcon: HTMLImageElement = document.querySelector('.add-check__icon');
         const reader: FileReader = new FileReader();
         reader.onload = (function (aImg1: HTMLImageElement, aImg2: HTMLImageElement ) {
           return (e: any): void => {
@@ -235,8 +235,8 @@ export class NewTransaction extends Page {
             aImg2.src = e.target.result;
           };
         })(checkInModal, checkIcon);
-        reader.readAsDataURL(inputCheck.files[0]);        
-      }     
+        reader.readAsDataURL(inputCheck.files[0]);
+      }
     });
 
     const createTransBtn = document.querySelector('.new-trans__create-btn');
@@ -246,8 +246,8 @@ export class NewTransaction extends Page {
       this.onCreateTransaction(data);
       clearAllInputs();
     });
- 
-    btnOpenCheck.addEventListener('click',() => {
+
+    btnOpenCheck.addEventListener('click', () => {
       checkModal.show();
     });
 
