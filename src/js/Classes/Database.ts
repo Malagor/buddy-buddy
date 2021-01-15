@@ -3,6 +3,7 @@ import 'firebase/auth';
 import { default as CyrillicToTranslit } from 'cyrillic-to-translit-js/CyrillicToTranslit';
 import { IGroupData } from '../Interfaces/IGroupData';
 import { INewMessage } from '../Pages/Messenger/Messenger';
+import { IHandlers } from './App';
 
 const defaultAvatar: string = require('../../assets/images/default-user-avatar.jpg');
 
@@ -326,61 +327,86 @@ export class Database {
       });
   }
 
-  getMessageList(renderMessage: any, setUserData: any): void {
+  deleteHandlers(handlers: IHandlers) {
+    const base = this.firebase.database();
+
+    if (handlers.messages) {
+      base.ref('Messages')
+        .off('child_added', handlers.messages);
+    }
+
+    if (handlers.groups) {
+      base.ref('Groups')
+        .off('child_added', handlers.groups);
+    }
+
+    if (handlers.transactions) {
+      base.ref('Transactions')
+        .off('child_added', handlers.transactions);
+    }
+  }
+
+  getMessageList(callback: any): void {
+
     this.firebase
       .database()
       .ref('Messages')
-      .on('child_added', (snapshot) => {
-        const messageObj = snapshot.val();
-        const messageId = snapshot.key;
-        const { fromUser, toUser } = messageObj;
-
-        if (fromUser === this.uid || toUser === this.uid) {
-          let isReceive: boolean = toUser === this.uid;
-
-          const messageData = {
-            messageId,
-            message: messageObj.message,
-            date: messageObj.date,
-            isRead: messageObj.isRead,
-            isReceive,
-          };
-          renderMessage(messageData);
-
-          const secondUserId = isReceive ? fromUser : toUser;
-
-          this.firebase
-            .database()
-            .ref(`User/${secondUserId}`)
-            .once('value', userData => {
-              const userDataForMessage = {
-                messageId,
-                key: userData.key,
-                name: userData.val().name,
-                avatar: userData.val().avatar,
-                isReceive,
-              };
-              setUserData(userDataForMessage);
-            });
-
-          // if user get and read message, status is toggle to "true"
-          if (isReceive) {
-            this.firebase
-              .database()
-              .ref(`Messages/${messageId}`)
-              .child('isRead')
-              .transaction(curStatus => {
-                curStatus = true;
-                return curStatus;
-              });
-          }
-        }
-      }, (error: { code: string; message: any; }) => {
-        console.log('Error:\n ' + error.code);
-        console.log(error.message);
-      });
+      .on('child_added', callback,
+        (error: { code: string; message: any; }) => {
+          console.log('Error:\n ' + error.code);
+          console.log(error.message);
+        });
   }
 
+  messageHandler = (renderMessage: any, setUserData: any) => {
+
+    const uid = this.uid;
+    const base = this.firebase.database();
+
+    return (snapshot: { val: () => any; key: any; }) => {
+      const messageObj = snapshot.val();
+      const messageId = snapshot.key;
+      const { fromUser, toUser } = messageObj;
+
+      if (fromUser === uid || toUser === uid) {
+        let isReceive: boolean = toUser === uid;
+
+        const messageData = {
+          messageId,
+          message: messageObj.message,
+          date: messageObj.date,
+          isRead: messageObj.isRead,
+          isReceive,
+        };
+
+        renderMessage(messageData);
+
+        const secondUserId = isReceive ? fromUser : toUser;
+
+        base.ref(`User/${secondUserId}`)
+          .once('value', (userData: { key: any; val: () => { (): any; new(): any; name: any; avatar: any; }; }) => {
+            const userDataForMessage = {
+              messageId,
+              key: userData.key,
+              name: userData.val().name,
+              avatar: userData.val().avatar,
+              isReceive,
+            };
+            setUserData(userDataForMessage);
+          });
+
+        // if user get and read message, status is toggle to "true"
+        if (isReceive) {
+          base.ref(`Messages/${messageId}`)
+            .child('isRead')
+            .transaction((curStatus: boolean) => {
+              curStatus = true;
+              return curStatus;
+            });
+        }
+      }
+    };
+  }
 
   createNewMessage(data: INewMessage): void {
     console.log('createNewMessage', data);

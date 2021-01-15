@@ -81,7 +81,7 @@ export class Main extends Page {
       <div class="block__header block__header--main">
         <p class="block__title">@${data.account}</p>
       </div>
-      <div class="block__main">      
+      <div class="block__main">
         <div class="block__card justify-content-between block--width-85 block__card--no-border">
           <div class="block__card block__element-gap flex-column block__card--no-border">
               <div class="block__image-wrapper">
@@ -134,7 +134,7 @@ export class Main extends Page {
           </p>
           <div class="main__group-transactions flex-column main__inner-card">
           </div>
-        </div>        
+        </div>
     </div>
   </div>
   `;
