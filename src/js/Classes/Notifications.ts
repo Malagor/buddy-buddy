@@ -4,10 +4,16 @@ export interface INotification {
   messagesEl: NodeListOf<Element>;
 }
 
+export enum TypeOfNotifications {
+  Message,
+  Group,
+  Transaction
+}
+
 export class Notifications {
-  private groupsEl: NodeListOf<Element>;
-  private transactionsEl: NodeListOf<Element>;
-  private messagesEl: NodeListOf<Element>;
+  private readonly groupsEl: NodeListOf<Element>;
+  private readonly transactionsEl: NodeListOf<Element>;
+  private readonly messagesEl: NodeListOf<Element>;
   private _messageCount: number = 0;
   private _transactionCount: number = 0;
   private _groupCount: number = 0;
@@ -22,52 +28,63 @@ export class Notifications {
     return new Notifications((elements));
   }
 
-  setGroupNotification = (num: number): void => {
-    this.groupCount += num;
-    if (this.groupCount) {
-      this.groupsEl.forEach(badge => {
-        badge.textContent = this.groupCount.toString(10);
-      });
-    } else {
-      this.groupsEl.forEach(badge => {
-        badge.textContent = '';
-      });
+  setNotificationMark = (type: TypeOfNotifications, num: number): void => {
+    let elements: NodeListOf<Element> | null;
+    let counter: number = 0;
+
+    switch (type) {
+      case TypeOfNotifications.Message:
+        elements = this.messagesEl;
+        this.messageCount += num;
+        counter = this.messageCount;
+        break;
+      case TypeOfNotifications.Transaction:
+        elements = this.transactionsEl;
+        this.transactionCount += num;
+        counter = this.transactionCount;
+        break;
+      case TypeOfNotifications.Group:
+        elements = this.groupsEl;
+        this.groupCount += num;
+        counter = this.groupCount;
+        break;
+      default:
+        elements = null;
+        break;
+    }
+
+    if (elements) {
+      if (counter) {
+        elements.forEach(badge => {
+          badge.textContent = counter.toString(10);
+        });
+      } else {
+        elements.forEach(badge => {
+          badge.textContent = '';
+        });
+      }
     }
   }
 
-  decreaseGroupNotification() {
-    this.groupCount -= 1;
-    this.setGroupNotification(0);
-  }
+  decreaseNotificationMark(type: TypeOfNotifications): void {
+    switch (type) {
+      case TypeOfNotifications.Message:
+        this.messageCount -= 1;
+        this.setNotificationMark(TypeOfNotifications.Message, 0);
+        break;
 
-  setTransactionNotification = (num: number): void => {
-    this.transactionCount += num;
-    if (this.transactionCount) {
-      this.transactionsEl.forEach(badge => {
-        badge.textContent = this.transactionCount.toString(10);
-      });
-    } else {
-      this.transactionsEl.forEach(badge => {
-        badge.textContent = '';
-      });
-    }
-  }
+      case TypeOfNotifications.Group:
+        this.groupCount -= 1;
+        this.setNotificationMark(TypeOfNotifications.Group, 0);
+        break;
 
-  decreaseTransactionNotification() {
-    this.transactionCount -= 1;
-    this.setTransactionNotification(0);
-  }
+      case TypeOfNotifications.Transaction:
+        this.transactionCount -= 1;
+        this.setNotificationMark(TypeOfNotifications.Transaction, 0);
+        break;
 
-  setMessageNotification = (num: number): void => {
-    this.messageCount += num;
-    if (this.messageCount) {
-      this.messagesEl.forEach(badge => {
-        badge.textContent = this.messageCount.toString(10);
-      });
-    } else {
-      this.messagesEl.forEach(badge => {
-        badge.textContent = '';
-      });
+      default:
+        return;
     }
   }
 

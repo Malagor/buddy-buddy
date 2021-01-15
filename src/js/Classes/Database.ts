@@ -4,6 +4,7 @@ import { default as CyrillicToTranslit } from 'cyrillic-to-translit-js/CyrillicT
 import { IGroupData } from '../Interfaces/IGroupData';
 import { INewMessage } from '../Pages/Messenger/Messenger';
 import { IHandlers } from './App';
+import { TypeOfNotifications } from './Notifications';
 
 const defaultAvatar: string = require('../../assets/images/default-user-avatar.jpg');
 
@@ -234,8 +235,6 @@ export class Database {
   }
 
   getGroupList(callbacks: any): void {
-    const arrayUsersInfo: any = [];
-
     this.firebase
       .database()
       .ref('Groups')
@@ -276,21 +275,22 @@ export class Database {
       });
   }
 
-  countGroupsInvite(callback: any): void {
+  countGroupsInvite(setNotificationMark: any): void {
     this.firebase
       .database()
       .ref('Groups')
       .on('child_added', snapshot => {
-        // console.log(`countGroupsInvite`, snapshot.val());
+        let count: number = 0;
+        console.log(`countGroupsInvite`, snapshot.val());
 
+        setNotificationMark(TypeOfNotifications.Group, count);
       }, (error: { code: string; message: any; }) => {
         console.log('Error:\n ' + error.code);
         console.log(error.message);
       });
   }
 
-  countTransactionInvite(callback: any): void {
-    console.log('Start Transactions Counts...');
+  countTransactionInvite(setNotificationMark: any): void {
     this.firebase
       .database()
       .ref('Transactions')
@@ -300,9 +300,9 @@ export class Database {
           return (user.userID === this.uid && user.state !== 'approve');
         });
         if (hasUserId) {
-          callback(1);
+          setNotificationMark(TypeOfNotifications.Transaction, 1);
         } else {
-          callback(0);
+          setNotificationMark(TypeOfNotifications.Transaction, 0);
         }
       }, (error: { code: string; message: any; }) => {
         console.log('Error:\n ' + error.code);
@@ -311,7 +311,7 @@ export class Database {
 
   }
 
-  countNewMessage(callback: any): void {
+  countNewMessage(setNotificationMark: any): void {
     this.firebase
       .database()
       .ref('Messages')
@@ -320,9 +320,9 @@ export class Database {
         const status: boolean = snapshot.val().isRead;
 
         if (toUser === this.uid && status === false) {
-          callback(1);
+          setNotificationMark(TypeOfNotifications.Message, 1);
         } else {
-          callback(0);
+          setNotificationMark(TypeOfNotifications.Message, 0);
         }
       });
   }

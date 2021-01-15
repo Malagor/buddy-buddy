@@ -9,7 +9,7 @@ import { AccountPage } from '../Pages/AccountPage/AccountPage';
 import { IGroupData } from '../Interfaces/IGroupData';
 import { TransactionsList } from '../Pages/TransactionsList/transactionsList';
 import { dataTransList } from '../Data/dataTransList';
-import { INotification, Notifications } from './Notifications';
+import { INotification, Notifications, TypeOfNotifications } from './Notifications';
 import { INewMessage, Messenger } from '../Pages/Messenger/Messenger';
 
 export interface IHandlers {
@@ -143,7 +143,7 @@ export class App {
   onGroupsPage() {
     this.deleteHandlers();
     this.notifications.groupCount = 0;
-    this.notifications.setGroupNotification(0);
+    this.notifications.setNotificationMark(TypeOfNotifications.Group, 0);
 
     this.groups.render();
     this.database.getGroupList(this.groups.createGroupList);
@@ -153,7 +153,7 @@ export class App {
   onTransactionsPage() {
     this.deleteHandlers();
     this.notifications.transactionCount = 0;
-    this.notifications.setTransactionNotification(0);
+    this.notifications.setNotificationMark(TypeOfNotifications.Transaction, 0);
 
     this.transactionsList.render(dataTransList);
     this.transactionsList.newTrans.onCreateTransaction = this.onCreateTransaction.bind(this);
@@ -167,11 +167,10 @@ export class App {
   onMessagesPage() {
     this.deleteHandlers();
     this.notifications.messageCount = 0;
-    this.notifications.setMessageNotification(0);
+    this.notifications.setNotificationMark(TypeOfNotifications.Message, 0);
 
     this.messenger.render();
     this.messageHandler = this.database.messageHandler(this.messenger.addMessageToList, this.messenger.setUserDataInMessage);
-    // this.database.getMessageList(this.messenger.addMessageToList, this.messenger.setUserDataInMessage);
     this.database.getMessageList(this.messageHandler);
 
   }
@@ -258,16 +257,16 @@ export class App {
       messagesEl,
     };
     this.notifications = Notifications.create(notiData);
-    this.database.countNewMessage(this.notifications.setMessageNotification);
-    this.database.countGroupsInvite(this.notifications.setGroupNotification);
-    this.database.countTransactionInvite(this.notifications.setTransactionNotification);
+    this.database.countNewMessage(this.notifications.setNotificationMark);
+    this.database.countGroupsInvite(this.notifications.setNotificationMark);
+    this.database.countTransactionInvite(this.notifications.setNotificationMark);
   }
 
   deleteHandlers() {
     const handlers: IHandlers = {
       messages: this.messageHandler,
       groups: this.groupHandler,
-      transactions: this.transactionHandler
+      transactions: this.transactionHandler,
     };
 
     this.database.deleteHandlers(handlers);
