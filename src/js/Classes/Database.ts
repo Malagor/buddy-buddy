@@ -232,15 +232,42 @@ export class Database {
       });
   }
 
-  getGroupList(renderGroups: any): void {
+  getGroupList(callbacks: any): void {
+    const arrayUsersInfo: any = [];
 
     this.firebase
       .database()
       .ref('Groups')
       .on('child_added', (snapshot) => {
         const users: string[] = snapshot.val().userList;
+
         if (users.includes(this.uid)) {
-          renderGroups(snapshot.val());
+          const dataGroup = snapshot.val();
+          const dataUserListGroup = dataGroup.userList;
+
+          this.firebase
+          .database()
+          .ref('User')
+          .once('value', (snapshot) => {
+            const snapshotUser = snapshot.val();
+            const userList = Object.keys(snapshotUser); // all users in DB
+
+
+            // const arrayUserImg: string[] = userList.filter(user => dataUserListGroup.includes(user));
+            const arrayUsers: any[] = [];
+            userList.forEach(user => {
+              if (dataUserListGroup.includes(user)) {
+                arrayUsers.push(snapshotUser[user]);
+              }
+            });
+
+            const dataForGroup = {
+              'dataGroup': dataGroup,
+              'arrayUsers': arrayUsers
+            };
+            callbacks(dataForGroup);
+          });
+
         }
       }, (error: { code: string; message: any; }) => {
         console.log('Error:\n ' + error.code);
