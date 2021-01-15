@@ -44,6 +44,8 @@ export class App {
       this.layout = Layout.create('#app');
       this.layout.render();
 
+      this.startNotification();
+
       // SIDEBAR
       this.layout.onSignOut = this.onSignOut.bind(this);
       this.layout.onStatisticsPage = this.onStatisticsPage.bind(this);
@@ -77,21 +79,19 @@ export class App {
       this.messenger.onAnswerMessage = this.onAnswerMessage.bind(this);
 
       // Notifications Init
-      setTimeout(() => {
-        const groupsEl: NodeListOf<Element> = document.querySelectorAll('.sidebarGroupsLink .badge');
-        const transactionsEl: NodeListOf<Element> = document.querySelectorAll('.sidebarTransactionsLink .badge');
-        const messagesEl: NodeListOf<Element> = document.querySelectorAll('.sidebarMessagesLink .badge');
-
-        const notiData: INotification = {
-          groupsEl,
-          transactionsEl,
-          messagesEl,
-        };
-
-        this.notifications = Notifications.create(notiData);
-
-        this.database.countNewMessage(this.notifications.sentMessageNotification);
-      }, 2000);
+      // setTimeout(() => {
+      //
+      //
+      //   const notiData: INotification = {
+      //     groupsEl,
+      //     transactionsEl,
+      //     messagesEl,
+      //   };
+      //   this.notifications = Notifications.create(notiData);
+      //
+      //
+      //   this.database.countNewMessage(this.notifications.setMessageNotification);
+      // }, 2000);
     } else {
       console.log(`isUserLogon = ${state}`);
       this.authPage = AuthPage.create('#app');
@@ -158,8 +158,8 @@ export class App {
   onMessagesPage() {
     console.log('onMessagesPage');
 
-    this.notifications.newMessageCount = 0;
-    this.notifications.sentMessageNotification(0);
+    this.notifications.messageCount = 0;
+    this.notifications.setMessageNotification(0);
     this.messenger.render();
     this.database.getMessageList(this.messenger.printMessage, this.messenger.setUserDataInMessage);
     // this.database.getGroupList(this.groups.addGroupToList);
@@ -234,6 +234,18 @@ export class App {
     this.database.getUserInfo(userId, [this.messenger.answerModal]);
   }
 
+  startNotification(): void {
+    const groupsEl: NodeListOf<Element> = document.querySelectorAll('.sidebarGroupsLink .badge');
+    const transactionsEl: NodeListOf<Element> = document.querySelectorAll('.sidebarTransactionsLink .badge');
+    const messagesEl: NodeListOf<Element> = document.querySelectorAll('.sidebarMessagesLink .badge');
+    const notiData: INotification = {
+      groupsEl,
+      transactionsEl,
+      messagesEl,
+    };
+    this.notifications = Notifications.create(notiData);
+    this.database.countNewMessage(this.notifications.setMessageNotification);
+  }
   // loadMainPage() {
   //   this.mainPage.render();
   // }

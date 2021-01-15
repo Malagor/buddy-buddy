@@ -66,7 +66,6 @@ export class Messenger extends Page {
       }
     });
 
-
     const addMessageBtn = document.querySelector('.message__addBtn');
     const modal = new Modal(this.element.querySelector('#messageModal'));
     addMessageBtn.addEventListener('click', () => {
@@ -84,14 +83,22 @@ export class Messenger extends Page {
       form.classList.add('was-validated');
       event.preventDefault();
 
-      const toUser: string = form.querySelector('.recipient-user__name').getAttribute('data-user-uid');
+      const toUserName: HTMLElement = form.querySelector('.recipient-user__name');
+      let toUserID: string;
+      if (!toUserName) {
+        this.errorAddUserForSendMessage('No user selected to send the message!');
+        return;
+      } else {
+        toUserID = toUserName.getAttribute('data-user-uid');
+      }
+
       const messageTextarea: HTMLFormElement = form.querySelector('#formMessage');
       const message: string = messageTextarea.value;
       const date = Date.now();
 
       const messageData: INewMessage = {
         fromUser: null,
-        toUser,
+        toUser: toUserID,
         date,
         message,
         isRead: false,

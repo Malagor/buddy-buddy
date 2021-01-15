@@ -246,27 +246,27 @@ export class Database {
           const dataUserListGroup = dataGroup.userList;
 
           this.firebase
-          .database()
-          .ref('User')
-          .once('value', (snapshot) => {
-            const snapshotUser = snapshot.val();
-            const userList = Object.keys(snapshotUser); // all users in DB
+            .database()
+            .ref('User')
+            .once('value', (snapshot) => {
+              const snapshotUser = snapshot.val();
+              const userList = Object.keys(snapshotUser); // all users in DB
 
 
-            // const arrayUserImg: string[] = userList.filter(user => dataUserListGroup.includes(user));
-            const arrayUsers: any[] = [];
-            userList.forEach(user => {
-              if (dataUserListGroup.includes(user)) {
-                arrayUsers.push(snapshotUser[user]);
-              }
+              // const arrayUserImg: string[] = userList.filter(user => dataUserListGroup.includes(user));
+              const arrayUsers: any[] = [];
+              userList.forEach(user => {
+                if (dataUserListGroup.includes(user)) {
+                  arrayUsers.push(snapshotUser[user]);
+                }
+              });
+
+              const dataForGroup = {
+                'dataGroup': dataGroup,
+                'arrayUsers': arrayUsers,
+              };
+              callbacks(dataForGroup);
             });
-
-            const dataForGroup = {
-              'dataGroup': dataGroup,
-              'arrayUsers': arrayUsers
-            };
-            callbacks(dataForGroup);
-          });
 
         }
       }, (error: { code: string; message: any; }) => {
@@ -284,17 +284,18 @@ export class Database {
 
   countNewMessage(callback: any): void {
     console.log('Notification listener: START...');
-    let countMessage: number = 0;
     this.firebase
       .database()
       .ref('Messages')
       .on('child_added', (snapshot) => {
         const toUser: string = snapshot.val().toUser;
         const status: boolean = snapshot.val().isRead;
+        console.log('Message: ', snapshot.val().message);
 
         if (toUser === this.uid && status === false) {
-          countMessage += 1;
-          callback(countMessage);
+          callback(1);
+        } else {
+          callback(0);
         }
       });
   }
@@ -316,7 +317,7 @@ export class Database {
             message: messageObj.message,
             date: messageObj.date,
             isRead: messageObj.isRead,
-            isReceive
+            isReceive,
           };
           renderMessage(messageData);
 
@@ -331,7 +332,7 @@ export class Database {
                 key: userData.key,
                 name: userData.val().name,
                 avatar: userData.val().avatar,
-                isReceive
+                isReceive,
               };
               setUserData(userDataForMessage);
             });
@@ -396,14 +397,14 @@ export class Database {
 
   getCurrencyList(renderCurrencyList: any): void {
     this.firebase
-    .database()
-    .ref('Currency')
-    .on('child_added', (snapshot) => {
-      renderCurrencyList(snapshot.key, snapshot.val().icon);
-    }, (error: { code: string; message: any; }) => {
-      console.log('Error:\n ' + error.code);
-      console.log(error.message);
-    });
+      .database()
+      .ref('Currency')
+      .on('child_added', (snapshot) => {
+        renderCurrencyList(snapshot.key, snapshot.val().icon);
+      }, (error: { code: string; message: any; }) => {
+        console.log('Error:\n ' + error.code);
+        console.log(error.message);
+      });
   }
 
   getGroupsListForTransaction(renderGroupList: any): void {
@@ -411,16 +412,16 @@ export class Database {
       .database()
       .ref(`User/${this.uid}`)
       .once('value', (snapshot) => {
-        const groupsIDList = snapshot.val().groupList; 
-        const currGroup = snapshot.val().currentGroup;       
+        const groupsIDList = snapshot.val().groupList;
+        const currGroup = snapshot.val().currentGroup;
         groupsIDList.forEach((groupID: any) => {
           this.firebase
-          .database()
-          .ref(`Groups/${groupID}`)
-          .once('value', (snapshot) => {
-            renderGroupList(groupID, snapshot.val().title, currGroup);
-          })
-        })
+            .database()
+            .ref(`Groups/${groupID}`)
+            .once('value', (snapshot) => {
+              renderGroupList(groupID, snapshot.val().title, currGroup);
+            });
+        });
       }, (error: { code: string; message: any; }) => {
         console.log('Error:\n ' + error.code);
         console.log(error.message);
@@ -435,39 +436,38 @@ export class Database {
         const currentGroup = snapshot.val().currentGroup;
         this.firebase
           .database()
-          .ref(`Groups/${currentGroup}`) 
+          .ref(`Groups/${currentGroup}`)
           .once('value', (snapshot) => {
             const memberList: string[] = snapshot.val().userList;
             memberList.forEach((userID) => {
               this.firebase
-              .database()
-              .ref(`User/${userID}`) 
-              .once('value', (snapshot) => {
-                renderMembers(snapshot.key, snapshot.val().name, snapshot.val().avatar)
-              })
-            })
-          })        
-      
+                .database()
+                .ref(`User/${userID}`)
+                .once('value', (snapshot) => {
+                  renderMembers(snapshot.key, snapshot.val().name, snapshot.val().avatar);
+                });
+            });
+          });
       }, (error: { code: string; message: any; }) => {
         console.log('Error:\n ' + error.code);
         console.log(error.message);
       });
   }
 
-  getMembersOfGroup(groupID:string,renderMembers: any) {
+  getMembersOfGroup(groupID: string, renderMembers: any) {
     this.firebase
       .database()
       .ref(`Groups/${groupID}`)
       .once('value', (snapshot) => {
-       const memberList: string[] = snapshot.val().userList; 
+        const memberList: string[] = snapshot.val().userList;
         memberList.forEach((userID) => {
           this.firebase
-          .database()
-          .ref(`User/${userID}`) 
-          .once('value', (snapshot) => {
-            renderMembers(snapshot.key, snapshot.val().name, snapshot.val().avatar)
-          })
-        })
+            .database()
+            .ref(`User/${userID}`)
+            .once('value', (snapshot) => {
+              renderMembers(snapshot.key, snapshot.val().name, snapshot.val().avatar);
+            });
+        });
       }, (error: { code: string; message: any; }) => {
         console.log('Error:\n ' + error.code);
         console.log(error.message);
@@ -476,7 +476,7 @@ export class Database {
 
   setDataTransaction(data: any) {
     data.userID = this.uid;
-    const transRef = this.firebase.database().ref('Transactions');    
+    const transRef = this.firebase.database().ref('Transactions');
     const transKey = transRef.push().key;
     transRef.child(transKey)
       .set(data)
@@ -484,9 +484,9 @@ export class Database {
         console.log('Error: ' + error.code);
       });
 
-    const groupRef = this.firebase.database().ref(`Groups/${data.groupID}/transactions`); 
+    const groupRef = this.firebase.database().ref(`Groups/${data.groupID}/transactions`);
     groupRef.transaction(list => {
-      if(list) {
+      if (list) {
         list.push(transKey);
         return list;
       } else {
@@ -495,8 +495,8 @@ export class Database {
         return arrTrans;
       }
     })
-    .catch(error => {
-      console.log('Error: ' + error.code);
-    });
+      .catch(error => {
+        console.log('Error: ' + error.code);
+      });
   }
 }

@@ -8,7 +8,7 @@ export class Notifications {
   private groupsEl: NodeListOf<Element>;
   private transactionsEl: NodeListOf<Element>;
   private messagesEl: NodeListOf<Element>;
-  private _newMessageCount: number = 0;
+  private _messageCount: number = 0;
 
   constructor(obj: INotification) {
     this.groupsEl = obj.groupsEl;
@@ -20,25 +20,23 @@ export class Notifications {
     return new Notifications((elements));
   }
 
-  sentGroupNotification = (num: number | null): void => {
+  setGroupNotification = (num: number | null): void => {
     this.groupsEl.forEach(badge => {
       badge.textContent = num.toString(10);
     });
   }
 
-  sentTransactionNotification = (num: number | null): void => {
+  setTransactionNotification = (num: number | null): void => {
     this.transactionsEl.forEach(badge => {
       badge.textContent = num.toString(10);
     });
   }
 
-  sentMessageNotification = (num: number | null): void => {
-    console.log('this.newMessageCount', this.newMessageCount);
-    console.log('num', num);
-    this.newMessageCount += num;
-    if (this.newMessageCount) {
+  setMessageNotification = (num: number): void => {
+    this.messageCount += num;
+    if (this.messageCount) {
       this.messagesEl.forEach(badge => {
-        badge.textContent = num.toString(10);
+        badge.textContent = this.messageCount.toString(10);
       });
     } else {
       this.messagesEl.forEach(badge => {
@@ -47,11 +45,11 @@ export class Notifications {
     }
   }
 
-  get newMessageCount(): number {
-    return this._newMessageCount;
+  get messageCount(): number {
+    return this._messageCount;
   }
 
-  set newMessageCount(value: number) {
-    this._newMessageCount = value;
+  set messageCount(value: number) {
+    this._messageCount = value;
   }
 }
