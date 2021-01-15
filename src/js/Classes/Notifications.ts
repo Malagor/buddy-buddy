@@ -9,6 +9,8 @@ export class Notifications {
   private transactionsEl: NodeListOf<Element>;
   private messagesEl: NodeListOf<Element>;
   private _messageCount: number = 0;
+  private _transactionCount: number = 0;
+  private _groupCount: number = 0;
 
   constructor(obj: INotification) {
     this.groupsEl = obj.groupsEl;
@@ -20,16 +22,40 @@ export class Notifications {
     return new Notifications((elements));
   }
 
-  setGroupNotification = (num: number | null): void => {
-    this.groupsEl.forEach(badge => {
-      badge.textContent = num.toString(10);
-    });
+  setGroupNotification = (num: number): void => {
+    this.groupCount += num;
+    if (this.groupCount) {
+      this.groupsEl.forEach(badge => {
+        badge.textContent = this.groupCount.toString(10);
+      });
+    } else {
+      this.groupsEl.forEach(badge => {
+        badge.textContent = '';
+      });
+    }
   }
 
-  setTransactionNotification = (num: number | null): void => {
-    this.transactionsEl.forEach(badge => {
-      badge.textContent = num.toString(10);
-    });
+  decreaseGroupNotification() {
+    this.groupCount -= 1;
+    this.setGroupNotification(0);
+  }
+
+  setTransactionNotification = (num: number): void => {
+    this.transactionCount += num;
+    if (this.transactionCount) {
+      this.transactionsEl.forEach(badge => {
+        badge.textContent = this.transactionCount.toString(10);
+      });
+    } else {
+      this.transactionsEl.forEach(badge => {
+        badge.textContent = '';
+      });
+    }
+  }
+
+  decreaseTransactionNotification() {
+    this.transactionCount -= 1;
+    this.setTransactionNotification(0);
   }
 
   setMessageNotification = (num: number): void => {
@@ -51,5 +77,21 @@ export class Notifications {
 
   set messageCount(value: number) {
     this._messageCount = value;
+  }
+
+  get transactionCount(): number {
+    return this._transactionCount;
+  }
+
+  set transactionCount(value: number) {
+    this._transactionCount = value;
+  }
+
+  get groupCount(): number {
+    return this._groupCount;
+  }
+
+  set groupCount(value: number) {
+    this._groupCount = value;
   }
 }

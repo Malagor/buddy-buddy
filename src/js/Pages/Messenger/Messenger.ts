@@ -27,7 +27,7 @@ export class Messenger extends Page {
 
   static create(element: string): Messenger {
     const page = new Messenger(element);
-    page.printMessage = page.printMessage.bind(page);
+    page.addMessageToList = page.addMessageToList.bind(page);
     return page;
   }
 
@@ -47,14 +47,43 @@ export class Messenger extends Page {
     </div>
     `;
 
-    html += this.modal();
+    html += this.modalHTML();
 
     this.element.innerHTML = html;
     this.events();
   }
 
-  protected events(): void {
+  modalHTML(): string {
+    return `
+    <div class="modal fade" id="messageModal" tabindex="-1" aria-labelledby="New message" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">New message</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <form id="messageForm">
+              <div class="input-group col-12 mb-3">
+                <span class="input-group-text" id="account-user">@</span>
+                <input type="text" class="form-control" id="formRecipient" placeholder="Recipient" aria-label="Account Name" aria-describedby="account-user">
+                <button type="button" class="btn btn-primary" id="addRecipient"><span class="material-icons">person_search</span></button>
+              </div>
+              <div class="col-12 mb-3 recipient-user"></div>
+              <div class="mb-3">
+                <textarea class="form-control" id="formMessage" rows="3" placeholder="Message" minlength="3"></textarea>
+              </div>
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              <button type="submit" class="btn btn-primary" form="messageForm">Send</input>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    `;
+  }
 
+  protected events(): void {
     this.element.addEventListener('click', event => {
       const { target }: any = event;
 
@@ -66,15 +95,16 @@ export class Messenger extends Page {
       }
     });
 
+    // Show modal event
     const addMessageBtn = document.querySelector('.message__addBtn');
     const modal = new Modal(this.element.querySelector('#messageModal'));
     addMessageBtn.addEventListener('click', () => {
       modal.show();
     });
 
+    // Submit Form event
     const { messageForm }: any = document.forms;
     const form: HTMLFormElement = messageForm;
-
     form.onsubmit = (event) => {
       if (!form.checkValidity()) {
         event.preventDefault();
@@ -107,6 +137,7 @@ export class Messenger extends Page {
       modal.hide();
     };
 
+    // Add Recipient User Name+Avatar in Message Form
     const addRecipient = form.querySelector('#addRecipient');
     addRecipient.addEventListener('click', (ev) => {
       ev.preventDefault();
@@ -116,7 +147,8 @@ export class Messenger extends Page {
     });
   }
 
-  printMessage(data: IMessage): void {
+  // Displays the current message on the page
+  addMessageToList(data: IMessage): void {
     const dateOptions = {
       year: '2-digit',
       month: '2-digit',
@@ -150,6 +182,7 @@ export class Messenger extends Page {
           <span>${data.message}</span>
         </div>`;
 
+    // If this is an incoming message we add the answer button
     if (data.isReceive) {
       html += `
         <div class="message__button">
@@ -162,6 +195,7 @@ export class Messenger extends Page {
     messageList.insertAdjacentHTML('afterbegin', html);
   }
 
+  // Fills in the message with the user's data
   setUserDataInMessage = (data: any): void => {
     const message = this.element.querySelector(`[data-message-id=${data.messageId}]`);
     if (!message) return;
@@ -179,36 +213,7 @@ export class Messenger extends Page {
     }
   }
 
-  modal(): string {
-    return `
-    <div class="modal fade" id="messageModal" tabindex="-1" aria-labelledby="New message" aria-hidden="true">
-      <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">New message</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body">
-            <form id="messageForm">
-              <div class="input-group col-12 mb-3">
-                <span class="input-group-text" id="account-user">@</span>
-                <input type="text" class="form-control" id="formRecipient" placeholder="Recipient" aria-label="Account Name" aria-describedby="account-user">
-                <button type="button" class="btn btn-primary" id="addRecipient"><span class="material-icons">person_search</span></button>
-              </div>
-              <div class="col-12 mb-3 recipient-user"></div>
-              <div class="mb-3">
-                <textarea class="form-control" id="formMessage" rows="3" placeholder="Message" minlength="3"></textarea>
-              </div>
-              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-              <button type="submit" class="btn btn-primary" form="messageForm">Send</input>
-            </form>
-          </div>
-        </div>
-      </div>
-    </div>
-    `;
-  }
-
+  // Add Recipient User Name+Avatar in Message Form
   addUserForSendMessage = (userData: any): void => {
     const userWrapper: HTMLElement = document.querySelector('.recipient-user');
 
@@ -218,6 +223,7 @@ export class Messenger extends Page {
     `;
   }
 
+  // Displays an error message in the form
   errorAddUserForSendMessage = (message: string): void => {
     const userWrapper: HTMLElement = document.querySelector('.recipient-user');
     userWrapper.innerHTML = `
@@ -225,7 +231,8 @@ export class Messenger extends Page {
     `;
   }
 
-  answerModal = (data: any): void => {
+  // Calls a modal window for a response with the recipient's data filled in
+  callAnswerModal = (data: any): void => {
     const formRecipient: HTMLFormElement = this.element.querySelector('#formRecipient');
     formRecipient.value = data.account;
 

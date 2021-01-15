@@ -275,22 +275,48 @@ export class Database {
       });
   }
 
-  // countGroupsInvite(callback: any): void {
-  //
-  // }
-  // countTransactionInvite(callback: any): void {
-  //
-  // }
+  countGroupsInvite(callback: any): void {
+    this.firebase
+      .database()
+      .ref('Groups')
+      .on('child_added', snapshot => {
+        // console.log(`countGroupsInvite`, snapshot.val());
+
+      }, (error: { code: string; message: any; }) => {
+        console.log('Error:\n ' + error.code);
+        console.log(error.message);
+      });
+  }
+
+  countTransactionInvite(callback: any): void {
+    console.log('Start Transactions Counts...');
+    this.firebase
+      .database()
+      .ref('Transactions')
+      .on('child_added', snapshot => {
+        const userList = snapshot.val().toUserList;
+        const hasUserId = userList.find((user: { userID: string; state: string; }) => {
+          return (user.userID === this.uid && user.state !== 'approve');
+        });
+        if (hasUserId) {
+          callback(1);
+        } else {
+          callback(0);
+        }
+      }, (error: { code: string; message: any; }) => {
+        console.log('Error:\n ' + error.code);
+        console.log(error.message);
+      });
+
+  }
 
   countNewMessage(callback: any): void {
-    console.log('Notification listener: START...');
     this.firebase
       .database()
       .ref('Messages')
       .on('child_added', (snapshot) => {
         const toUser: string = snapshot.val().toUser;
         const status: boolean = snapshot.val().isRead;
-        console.log('Message: ', snapshot.val().message);
 
         if (toUser === this.uid && status === false) {
           callback(1);

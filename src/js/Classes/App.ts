@@ -141,11 +141,17 @@ export class App {
   }
 
   onGroupsPage() {
+    this.notifications.groupCount = 0;
+    this.notifications.setGroupNotification(0);
+
     this.groups.render();
     this.database.getGroupList(this.groups.createGroupList);
   }
 
   onTransactionsPage() {
+    this.notifications.transactionCount = 0;
+    this.notifications.setTransactionNotification(0);
+
     this.transactionsList.render(dataTransList);
     this.transactionsList.newTrans.onCreateTransaction = this.onCreateTransaction.bind(this);
     this.transactionsList.newTrans.onShowMembersOfGroup = this.onShowMembersOfGroup.bind(this);
@@ -156,13 +162,11 @@ export class App {
   }
 
   onMessagesPage() {
-    console.log('onMessagesPage');
-
     this.notifications.messageCount = 0;
     this.notifications.setMessageNotification(0);
+
     this.messenger.render();
-    this.database.getMessageList(this.messenger.printMessage, this.messenger.setUserDataInMessage);
-    // this.database.getGroupList(this.groups.addGroupToList);
+    this.database.getMessageList(this.messenger.addMessageToList, this.messenger.setUserDataInMessage);
   }
 
   onStatisticsPage() {
@@ -231,7 +235,7 @@ export class App {
   }
 
   onAnswerMessage(userId: string) {
-    this.database.getUserInfo(userId, [this.messenger.answerModal]);
+    this.database.getUserInfo(userId, [this.messenger.callAnswerModal]);
   }
 
   startNotification(): void {
@@ -245,7 +249,10 @@ export class App {
     };
     this.notifications = Notifications.create(notiData);
     this.database.countNewMessage(this.notifications.setMessageNotification);
+    this.database.countGroupsInvite(this.notifications.setGroupNotification);
+    this.database.countTransactionInvite(this.notifications.setTransactionNotification);
   }
+
   // loadMainPage() {
   //   this.mainPage.render();
   // }
