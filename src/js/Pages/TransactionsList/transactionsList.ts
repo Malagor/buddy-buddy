@@ -36,20 +36,7 @@ export class TransactionsList extends Page {
     <div class="modal fade new-trans__modal" id="new-trans-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
       <div class="modal-wrapper modal-dialog modal-dialog-centered modal-dialog-scrollable">
       </div>
-    </div>
-      
-
-
-
-
-
-
-
-
-   
-
-
-     
+    </div>     
     `;
    
     this.newTrans = NewTransaction.create('.modal-wrapper');
@@ -72,7 +59,30 @@ export class TransactionsList extends Page {
   }
 
 
-  addMyTransactions = (transID:string, trans: any):void => {
+  addMyTransactions = (transID:string, trans: any, currentGroup: string, owner: boolean, ownUID:string):void => {
+    
+    let btnDisplay;
+    let nameDisplay;
+    let cost;
+    let colorCost;
+    if (owner) {
+      nameDisplay = 'd-none';
+      btnDisplay = 'd-none';
+      cost = `+${(+trans.totalCost).toFixed(2)}`;
+      colorCost = 'text-success';
+    } else {
+      nameDisplay = 'd-block';
+      btnDisplay = 'd-flex';
+      cost = `-${(+trans.toUserList.find((user: any) => user.userID === ownUID).cost).toFixed(2)}`;
+      colorCost = 'text-danger';
+    }
+
+    let transDisplay;
+    if (trans.groupID === currentGroup) {
+      transDisplay = 'd-flex';
+    } else {
+      transDisplay = 'd-none';
+    }
 
     const dayOptions = {
       year: '2-digit',
@@ -91,21 +101,29 @@ export class TransactionsList extends Page {
 
     const listOfTrans: HTMLElement = document.querySelector('.trans-list__list');
     const transHTML: string = `
-      <div class="trans-item d-flex flex-column block--width-85" id=${transID} data-time=${trans.date}>
+      <div class="trans-item ${transDisplay} flex-column block--width-85" group-id =${trans.groupID} id=${transID} data-time=${trans.date}>
         <p class="trans-item__header align-self-start row">
           <span class="trans-item__descr fw-bolder text-truncate">${trans.descripion}</span>
         </p>
 
         <div class="trans-item__info row">
-          <div class="date col-4 col-sm-3 align-self-start">
+          <div class="date col-3 align-self-start">
             <div class="trans-item__day">${localeDay}</div>
             <div class="trans-item__time">${localeTime}</div>
           </div>
-          <div class="trans-item__users col-5 col-sm-6 d-flex align-self-center justify-content-center"></div>
-          <div class="cost col-3 align-self-center text-success">+${trans.totalCost} ${trans.currency}</div>
+          <div class="trans-item__users col-5  d-flex align-self-center justify-content-center"></div>
+          <div class="trans-item__cost col-4  align-self-center ${colorCost}  justify-content-end text-end">${cost} ${trans.currency}</div>
         </div>
-        <div class="trans-item__buttons row">
-          <button type="button" class="btn btn-outline-secondary btn-sm w-25">Подробнее</button>
+        <div class="trans-item__buttons d-flex justify-content-between">
+          <button type="button" class="trans-item__more btn btn-outline-secondary btn-sm">Подробнее</button>
+          <div class="trans-item__addform ${btnDisplay}">
+            <select class="trans-item__state form-select" aria-label="Default select example">
+              <option value="pending">ожидание</option>
+              <option value="approve">подтвердить</option>
+              <option value="abort">отклонить</option>
+            </select>
+          </div>
+
         </div>
 
       </div>
@@ -122,97 +140,76 @@ export class TransactionsList extends Page {
   }
 
 
-  addUserToList = (transID: string, user: any, i:number) => {
+  addUserToList = (transID: string, user: any, i:number, owner: boolean) => {
+   
+    let nameDisplay;
+    if (owner) {
+      nameDisplay = 'd-none';
+    } else {
+      nameDisplay = 'd-block';   
+    }
     const usersList = document.getElementById(transID).querySelector('.trans-item__users');
     const userWrapper = document.createElement('div');
       userWrapper.classList.add('user');
       userWrapper.setAttribute('user-id', user.id); 
       userWrapper.innerHTML = `
         <div class="user__avatar"><img src=${user.avatar} alt=${user.userName}></div>
-        <div class="user__name">${user.userName}</div>
+        <div class="user__name ${nameDisplay}">${user.userName}</div>
       `;
 
       usersList.append(userWrapper);
+      // const names = usersList.querySelectorAll('.user__name');
+      // names.forEach((name: HTMLElement) => name.style.display = 'none'); 
+      // if (i > 0) {
+      //   const names = usersList.querySelectorAll('.user__name');
+      //   names.forEach((name: HTMLElement) => name.style.display = 'none');
+      // } 
 
-      if (i > 0) {
-        const names = usersList.querySelectorAll('.user__name');
-        names.forEach((name: HTMLElement) => name.style.display = 'none');
-      } 
-
-        if (i >= 5) {
+        if (i >= 3) {
           if (usersList.querySelector('.add-numb')) {
             usersList.querySelector('.add-numb').remove();
           }
         const addNumb = document.createElement('div');
         addNumb.classList.add('add-numb', 'align-self-end');
-        addNumb.innerText = `+${i - 4}`;
+        addNumb.innerText = `+${i - 2}`;
         usersList.append(addNumb);
       }
   }
 
-
-
-  // addUsersBox = (transID: string, users: any[]) => {
-  //   // console.log ('transID', transID);
-  //   // console.log ('users=', users);
-    
-  //   // console.log ('users.length=', users.length);
-  //   // console.log ('users[0]=', users[0]);
-  //   let i = 0;
-  //   while (i < users.length && i < 3) {
-  //     console.log (i);
-      
-  //     userWrapper.style.left = `${-(i * 15)}px`;
-  //     usersList.append(userWrapper);
-  //     i += 1;
-  //   }
-
-  //   if (users.length > 1) {
-  //     const names = usersList.querySelectorAll('.user__name');
-  //     names.forEach((name) => name.classList.add('invisible'));
-  //   }
-
-  //   if (users.length > 3) {
-  //     const addNumb = document.createElement('div');
-  //     addNumb.classList.add('add-numb', 'align-self-center', 'position-relative');
-  //     addNumb.innerText = `+${users.length - 3}`;
-  //     addNumb.style.left = `${-(i * 10)}px`;
-  //     usersList.append(addNumb);
-  //   }
-  // }
-
-  
-
-  
-
-  
-
- 
-
-
-
-
-
-
   protected events(): void {
+    const groups: HTMLFormElement = document.querySelector('.trans-list__groups');
+    groups.addEventListener('change', () => {
+      const transList:NodeListOf<HTMLElement> = document.querySelectorAll('.trans-item');
+      const groupID = groups.value;
+      console.log ('groupValue', groupID);
+      // console.log ('groupTitle', groups.inner);
+      transList.forEach((transItem: HTMLElement) => {
+        const itemGroupID = transItem.getAttribute('group-id');
+        if (itemGroupID === groupID) {
+          transItem.classList.add('d-flex');
+          transItem.classList.remove('d-none');
+        } else {
+          transItem.classList.add('d-none');
+          transItem.classList.remove('d-flex');
+        }
+      });
 
+      const groupsInModal = document.querySelector('.new-trans__groups-list');
+      const optionsModal = groupsInModal.querySelectorAll('option');
+      optionsModal.forEach((opt: HTMLOptionElement) => {
+        if (opt.value === groupID) {
+          opt.setAttribute('selected', '');
+        } else {
+          opt.removeAttribute('selected');
+        }
+      });
 
-
-
-    // const btnsSubmit = document.querySelectorAll('.trans-item__btn');
-    // btnsSubmit.forEach((btn, i) => {
-    //   btn.addEventListener('click', () => {
-    //     btn.innerHTML = `<span class="material-icons">check</span>`;
-    //     // this.onTransactionSubmit(i);
-    //   });
-    // });
-
-
-    // const newTransBtn = document.querySelector('.new-trans-btn');
-    // newTransBtn.addEventListener('click', () => {
-      // this.newTrans = NewTransaction.create('.modal-wrapper');
-      // this.newTrans.render();
-    // });
+      const members = document.querySelector('.new-trans__members-list');
+      const checkedMembersList: HTMLElement = document.querySelector('.checked-members');
+      members.innerHTML = '';
+      checkedMembersList.innerHTML = '';
+      this.newTrans.onShowMembersOfGroup(groupID);
+    });
   }
 }
 

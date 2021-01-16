@@ -9,21 +9,6 @@
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
-// .trans-wrapper {
-//   max-width: rem(720px);
-// }
-
 .user-balance {
   font-size: rem(20px);
 }
@@ -32,22 +17,17 @@
   margin-top: rem(10px);
 }
 
-.block__card {
-  display: flex;
-  align-items: center;
-  padding: 0.5rem;
-  border: 1px solid rgba(0, 0, 0, 0.05);
-  border-radius: rem(10px);
-  & > .main__balance {
-    margin: 0;
-    font-size: 1.35rem;
-  }
-}
+
 
 .trans-item {
+  box-shadow: 0 3px 5px rgba(0,0,0,0.25);
   padding: 0.5rem;
   border: 1px solid rgba(0, 0, 0, 0.05);
   border-radius: rem(10px);
+
+  &__header {
+    margin-bottom: rem(5px);
+  }
 
   &__descr {
     font-size: rem(14px);
@@ -58,14 +38,45 @@
   }
 
 
-  .trans-item__buttons {
-    padding-left: rem(10px);
-    padding-right: rem(10px);
+   &__cost {
+    padding-left: 0;
+    font-size: rem(14px);
+  } 
+
+
+
+
+  &__buttons {
+    margin-top: rem(5px);
+   
   }
 
+  &__more {
+    width: rem(80px);
+    height: rem(20px);
+    font-size: rem(12px);
+    padding: 0;
+  }
+
+  &__state {
+     width: rem(130px);
+     height: rem(20px);
+     font-size: rem(12px);
+     padding: 0 0 0 5px;
+    //  border-radius: 0.25rem 0 0 0.25rem;
+  }
+
+  //  &__ok {
+  //    width: rem(30px);
+  //    height: rem(20px);
+  //    font-size: rem(12px);
+  //    padding: 0;
+  //    border-radius: 0 0.25rem 0.25rem 0;
+  // }
 
 
-  .trans-item__day {
+
+  &__day {
     font-size: rem(14px);
 
 @include phones {
@@ -73,7 +84,7 @@
     }
   }
 
-  .trans-item__time {
+  &__time {
     font-size: rem(12px);
 
 @include phones {
@@ -81,36 +92,39 @@
     }
   }
 
-  .cost {
-    font-size: rem(17px);
+  &__cost {
+    padding-left: 0;
+    font-size: rem(14px);
+    line-height: 1rem;
 
 @include phones {
-      font-size: rem(20px);
+      font-size: rem(18px);
     }
   }
 
-  .trans-item__users {
+  &__users {
     // position: relative;
     // display: flex;
     
 
     .user {
+
       // position: relative;
       margin-left: -20px;
       display: none;
 
       &__avatar {
 
-        width: rem(40px);
-        height: rem(40px);
+        width: rem(35px);
+        height: rem(35px);
         // background-color: grey;
         // border: 1px solid black;
         border-radius: 50%;
         overflow:hidden;
 
 @include phones {
-          width: rem(50px);
-          height: rem(50px);
+          width: rem(45px);
+          height: rem(45px);
         }
       }
 
@@ -137,7 +151,7 @@
         align-items: center;
     }
 
-    .user:nth-child(2), .user:nth-child(3), .user:nth-child(4), .user:nth-child(5)   {  
+    .user:nth-child(2), .user:nth-child(3)   {  
        display: flex;
     }  
 
@@ -145,6 +159,8 @@
       font-size: rem(20px);
     }
   }
+
+  
 }
 
 // .new-trans-btn {

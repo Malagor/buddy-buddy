@@ -138,7 +138,7 @@ export class NewTransaction extends Page {
         const checkedMembersList: HTMLElement = document.querySelector('.checked-members');
         checkedMembersList.insertAdjacentHTML('beforeend', checkedUserHTML);
       } else {
-        const checkedMembers = document.querySelectorAll('.checked-member-wrapper');
+        const checkedMembers = document.querySelectorAll('.checked-member__wrapper');
         checkedMembers.forEach((memb) => {
           if (memb.querySelector('.checked-member__name').innerHTML === userName) {
             memb.remove();
@@ -158,12 +158,12 @@ export class NewTransaction extends Page {
     const inputCheck: HTMLFormElement = document.querySelector('.add-check__file');
     const currentDate  = +(new Date());
     const userList: Array<any> = [];
-    const checkedMembers = document.querySelectorAll('.checked-member-wrapper');
+    const checkedMembers = document.querySelectorAll('.checked-member__wrapper');
     checkedMembers.forEach((memb: HTMLElement) => {
       const user = {
         userID: memb.getAttribute('user-id'),
-        cost: memb.querySelector('.checked-member__sum').value || 
-              memb.querySelector('.checked-member__sum').getAttribute('placeholder'),
+        cost: +memb.querySelector('.checked-member__sum').value || 
+              +memb.querySelector('.checked-member__sum').getAttribute('placeholder'),
         comment: memb.querySelector('.checked-member__comment').value,
         state: 'pending',
       };
@@ -172,7 +172,7 @@ export class NewTransaction extends Page {
 
     return {
       date: currentDate,
-      totalCost: totalSum.value,
+      totalCost: +totalSum.value,
       groupID: group.value,
       descripion: descr.value,
       tillSlip: inputCheck.files[0] ? inputCheck.files[0] : false,

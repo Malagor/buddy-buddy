@@ -145,7 +145,11 @@ $color-text: #000000;
 
 
 .checked-member {
-  margin: rem(5px);
+  width: rem(90px);
+  // margin: rem(5px);
+  &__wrapper {
+    margin-top: rem(5px);
+  }
 
   &__avatar {
     width: rem(35px);

@@ -153,10 +153,8 @@ export class App {
     this.database.getMembersOfGroupFirst(this.transactionsList.newTrans.addMembersOfGroup);
 
     this.database.getGroupsListForTransaction(this.transactionsList.addGroupToTransList);
-    const groups: HTMLFormElement = document.querySelector('.trans-list__groups');
-    // console.log ('groups.value', groups.value);
     this.database.getMyTransactionsList(this.transactionsList.addMyTransactions, this.transactionsList.addUserToList);
-    // setTimeout(() => this.transactionsList.positionUsers(), 1000);
+   
 
   }
 
@@ -205,11 +203,6 @@ export class App {
   // onAddGroupMember(name: string) {
   //   this.database.findUserByName(name, this.groupsPage.addMembersGroup);
   // }
-
-  onTransactionSubmit(i: number) {
-    dataTransList.transactions[i].submit = true;
-    console.log('submit transaction');
-  }
 
   onAddGroupMember(accountName: string) {
     this.database.findUserByName(accountName, this.groups.addMembersGroup);

@@ -436,7 +436,10 @@ export class Database {
       .ref(`User/${this.uid}`)
       .once('value', (snapshot) => {
         const groupsIDList = snapshot.val().groupList; 
-        const currGroup = snapshot.val().currentGroup;       
+        let currGroup = snapshot.val().currentGroup;
+        if (!currGroup) {
+          currGroup = snapshot.val().groupList[0];
+        }      
         groupsIDList.forEach((groupID: any) => {
           this.firebase
           .database()
@@ -456,10 +459,14 @@ export class Database {
       .database()
       .ref(`User/${this.uid}`)
       .once('value', (snapshot) => {
-        const currentGroup = snapshot.val().currentGroup;
+        let currGroup = snapshot.val().currentGroup;
+        if (!currGroup) {
+          currGroup = snapshot.val().groupList[0];
+        }
+
         this.firebase
           .database()
-          .ref(`Groups/${currentGroup}`) 
+          .ref(`Groups/${currGroup}`) 
           .once('value', (snapshot) => {
             const memberList: string[] = snapshot.val().userList;
             memberList.forEach((userID) => {
@@ -529,41 +536,58 @@ export class Database {
       .database()
       .ref(`User/${this.uid}`)
       .once('value', (snapshot) => {
-        const currGroup = snapshot.val().currentGroup;
+         
+        let currGroup = snapshot.val().currentGroup;
+        if (!currGroup) {
+          currGroup = snapshot.val().groupList[0];
+        }
         this.firebase
         .database()
-        .ref(`Groups/${currGroup}`)
-        .once('value', (snapshot) => {
-          const transList = snapshot.val().transactions;
-          transList.forEach((transID: string) => {
+        .ref('Transactions')
+        .on('child_added', (snapshot) => {          
+          // console.log ('snapshotchild', snapshot.val());
+          if (snapshot.val().userID === this.uid) { 
+            renderTransaction(snapshot.key, snapshot.val(), currGroup, true, this.uid); 
+            const transID = snapshot.key;
+            const userList:string[] = snapshot.val().toUserList;
+            userList.forEach((user: any, i: number) => {
+              this.firebase
+                .database()
+                .ref(`User/${user.userID}`)
+                .once('value', (snapshot) => {
+                  const user = {
+                    id: snapshot.key,
+                    userName: snapshot.val().name,
+                    avatar: snapshot.val().avatar,
+                  }
+                  renderUser(transID, user, i, true);                        
+                });
+            });      
+
+          } else if (snapshot.val().toUserList.some((user:any) => user.userID === this.uid)){
+            // console.log (false);
+            renderTransaction(snapshot.key, snapshot.val(), currGroup, false, this.uid); 
+            const userID = snapshot.val().userID;
+            const transID = snapshot.key;
             this.firebase
-            .database()
-            .ref(`Transactions/${transID}`)
-            .once('value', (snapshot) => {
-              if (this.uid === snapshot.val().userID) {
-                console.log ('transSnapshot', snapshot.val());
-                renderTransaction(snapshot.key, snapshot.val());                
-                const userList:string[] = snapshot.val().toUserList;
-                userList.forEach((user: any, i: number) => {
-                  this.firebase
-                    .database()
-                    .ref(`User/${user.userID}`)
-                    .once('value', (snapshot) => {
-                      const user = {
-                        id: snapshot.key,
-                        userName: snapshot.val().name,
-                        avatar: snapshot.val().avatar,
-                      }
-                      renderUser(transID, user, i);                        
-                    })
-                })       
-              }
-            });
-          });
-        });
+                .database()
+                .ref(`User/${userID}`)
+                .once('value', (snapshot) => {
+                  const user = {
+                    id: snapshot.key,
+                    userName: snapshot.val().name,
+                    avatar: snapshot.val().avatar,
+                  }
+                  renderUser(transID, user, 0, false);                        
+                });
+          } else return;          
+        });   
       }, (error: { code: string; message: any; }) => {
         console.log('Error:\n ' + error.code);
         console.log(error.message);
       });  
   }
 }
+
+
+
