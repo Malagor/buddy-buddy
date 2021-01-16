@@ -203,6 +203,71 @@ export class Database {
 
   createNewGroup(data: IGroupData) {
     console.log('createNewGroup - data\n', data);
+    const file: any = data.icon;
+
+    const metadata = {
+      'contentType': file.type,
+    };
+    this.firebase.storage()
+      .ref()
+      .child('Groups/' + file.name)
+      .put(file, metadata)
+      .then((snapshot) => {
+        snapshot.ref.getDownloadURL()
+          .then((url) => {
+            data['icon'] = url;
+            return data;
+          })
+          .then(data => {
+            this.firebase
+              .database()
+              .ref('Groups')
+              .push(data)
+              .then(group => {
+                const groupKey = group.key;
+
+                this.firebase.database().ref(`Groups/${groupKey}`)
+                  .on('value', (group) => {
+                    const users: any = group.val().userList;
+
+                    users.forEach((userInData: any) => {
+                      console.log('userInData', userInData)
+                      console.log('userInData.userId', userInData.userId)
+                      
+
+                      const user = this.firebase.database()
+                        .ref('User')
+                        .child(userInData.userId);
+
+                      const userGroup = user.child('groupList');
+                      userGroup.transaction(groupList => {
+                        const groupInfo = {
+                          groupId: groupKey,
+                          state: 'pending'
+                        };
+                        if (groupList) {
+                          groupList.push(groupInfo);
+                          return groupList;
+                        } else {
+                          let arrGroup: any[] = [];
+                          arrGroup.push(groupInfo);
+                          return arrGroup;
+                        }
+                      });
+                    });
+                  });
+              })
+              .catch(error => {
+                console.log(error.code);
+                console.log(error.message);
+              });
+          });
+      });
+  }
+
+
+  /* createNewGroup(data: IGroupData) {
+    console.log('createNewGroup - data\n', data);
     this.firebase
       .database()
       .ref('Groups')
@@ -229,7 +294,7 @@ export class Database {
         console.log(error.code);
         console.log(error.message);
       });
-  }
+  } */
 
   getGroupList(callbacks: any): void {
     const arrayUsersInfo: any = [];
