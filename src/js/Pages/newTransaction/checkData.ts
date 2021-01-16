@@ -8,7 +8,7 @@ export const checkData = () => {
     let isZero = 0;
     sumInputs.forEach((input: HTMLFormElement) => {
       sum += input.value ? +input.value : +input.getAttribute('placeholder');
-      if (+input.getAttribute('placeholder') == 0) {
+      if (+input.getAttribute('placeholder') === 0) {
         isZero += 1;
       }
     })

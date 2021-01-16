@@ -507,6 +507,11 @@ export class Database {
 
   setDataTransaction(data: any) {
     data.userID = this.uid;
+    data.toUserList.forEach((user) => {
+      if(user.userID === this.uid) {
+        user.state === 'approve';
+      }
+    });
     const transRef = this.firebase.database().ref('Transactions');    
     const transKey = transRef.push().key;
     transRef.child(transKey)
@@ -587,6 +592,24 @@ export class Database {
         console.log(error.message);
       });  
   }
+
+  setNewStateTransaction(state: string, transID: string):void {
+    const refTrans =  this.firebase.database().ref(`Transactions/${transID}`);
+    refTrans.once('value', (snapshot) => {
+       const userList = snapshot.val().toUserList;
+       userList.forEach((user: any, i:number) => {
+          if (user.userID === this.uid) {
+            refTrans.child(`toUserList/${i}/state`).set(state);
+            
+          }
+       });
+    },
+    (error: { code: string; message: any; }) => {
+      console.log('Error:\n ' + error.code);
+      console.log(error.message);
+    });
+  }
+
 }
 
 

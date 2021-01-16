@@ -69,6 +69,7 @@ export class App {
       this.groups.onAddMember = this.onAddGroupMember.bind(this);
 
       this.transactionsList = TransactionsList.create('.main');
+      this.transactionsList.onChangeState = this.onChangeState.bind(this);
 
       this.messenger = Messenger.create('.main');
       this.messenger.onAddRecipient = this.onAddRecipientToMessage.bind(this);
@@ -154,9 +155,8 @@ export class App {
 
     this.database.getGroupsListForTransaction(this.transactionsList.addGroupToTransList);
     this.database.getMyTransactionsList(this.transactionsList.addMyTransactions, this.transactionsList.addUserToList);
-   
-
   }
+
 
   onMessagesPage() {
     this.messenger.render();
@@ -214,6 +214,10 @@ export class App {
 
   onShowMembersOfGroup(groupID: string) {
     this.database.getMembersOfGroup(groupID, this.transactionsList.newTrans.addMembersOfGroup);
+  }
+
+  onChangeState(state: string, transID: string) {
+    this.database.setNewStateTransaction(state, transID);
   }
 
   onAddRecipientToMessage(accountName: string) {
