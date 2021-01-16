@@ -17,6 +17,7 @@ export class Layout extends Page {
   onSignOut: any;
   onAccountPage: any;
   onMessagesPage: any;
+  onContactsPage: any;
 
   static create(el: string) {
     return new Layout(el);
@@ -50,7 +51,12 @@ export class Layout extends Page {
               </li>
               <li class="nav-item">
                 <a class="nav-link sidebarAccountLink" href="#" id="sidebarAccountLink">
-                  <i class="material-icons">account_box</i><span class="nav-link__text">Аккаунт</span>
+                  <i class="material-icons">person</i><span class="nav-link__text">Аккаунт</span>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link sidebarContactsLink" href="#">
+                  <i class="material-icons">contacts</i><span class="nav-link__text">Контакты</span>
                 </a>
               </li>
               <li class="nav-item">
@@ -236,7 +242,14 @@ export class Layout extends Page {
         Layout.closeMobileMenu();
 
         this.setCurrentPageInMenu(target.closest('#sidebarAccountLink'));
+      }
 
+      if (target.closest('.sidebarContactsLink')) {
+        ev.preventDefault();
+        this.onContactsPage();
+        Layout.closeMobileMenu();
+
+        this.setCurrentPageInMenu(target.closest('.sidebarContactsLink'));
       }
 
       if (target.closest('.sidebarGroupsLink')) {

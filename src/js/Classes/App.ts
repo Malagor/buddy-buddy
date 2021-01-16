@@ -11,6 +11,7 @@ import { TransactionsList } from '../Pages/TransactionsList/transactionsList';
 import { dataTransList } from '../Data/dataTransList';
 import { INotification, Notifications } from './Notifications';
 import { Messenger } from '../Pages/Messenger/Messenger';
+import { Contacts } from '../Pages/Contacts/Contacts';
 
 export class App {
   private database: Database;
@@ -23,6 +24,8 @@ export class App {
   private transactionsList: TransactionsList;
   private notifications: Notifications;
   private messenger: Messenger;
+  private contacts: Contacts;
+  private contactsHandler: void;
 
   constructor() {
     this.database = Database.create();
@@ -55,6 +58,7 @@ export class App {
       this.layout.onSignOut = this.onSignOut.bind(this);
       this.layout.onAccountPage = this.onAccountPage.bind(this);
       this.layout.onMessagesPage = this.onMessagesPage.bind(this);
+      this.layout.onContactsPage = this.onContactsPage.bind(this);
 
       this.accountPage = AccountPage.create('.main');
       this.mainPage = Main.create('.main');
@@ -75,6 +79,9 @@ export class App {
       this.messenger.onAddRecipient = this.onAddRecipientToMessage.bind(this);
       this.messenger.sendNewMessage = this.onSendNewMessage.bind(this);
       this.messenger.onAnswerMessage = this.onAnswerMessage.bind(this);
+
+      this.contacts = Contacts.create('.main');
+
 
       // Notifications Init
       setTimeout(() => {
@@ -138,6 +145,11 @@ export class App {
   onAccountPage() {
     const uid: string = this.database.uid;
     this.database.getUserInfo(uid, [this.accountPage.render]);
+  }
+
+  onContactsPage() {
+    this.contactsHandler = this.database.contactsHandler(this.contacts.render);
+    this.database.getContactsList(this.contactsHandler);
   }
 
   onGroupsPage() {
