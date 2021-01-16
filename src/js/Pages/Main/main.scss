@@ -4,7 +4,44 @@
 
 .main__balance {
   margin: 2rem 0 0;
-  font-size: 1.8rem;
+  font-size: 1.1rem;
+
+@include phones {
+    font-size: 1.35rem;
+  }
+
+@include tablets {
+    font-size: 1.8rem;
+  }
+
+@include laptop {
+    font-size: 1.8rem;
+  }
+
+@include desktop {
+    font-size: 1.8rem;
+  }
+}
+
+.block__card > table,
+.main--font-size {
+  font-size: 0.9rem;
+
+@include phones {
+    font-size: 0.95rem;
+  }
+
+@include tablets {
+    font-size: 1rem;
+  }
+
+@include laptop {
+    font-size: 1rem;
+  }
+
+@include desktop {
+    font-size: 1rem;
+  }
 }
 
 .main__inner-card {
@@ -17,15 +54,9 @@
 }
 
 .main__group-slider {
-  height: 9rem;
-
-@include phones {
-    height: 10.5rem;
-  }
-
-@include tablets {
-    height: 10rem;
-  }
+  align-items: flex-start;
+  height: 11rem;
+  padding: 0;
 
 @include laptop {
     height: 12rem;
@@ -50,4 +81,217 @@
 @include desktop {
     font-size: 1.5rem;
   }
+}
+
+.main__group-transactions {
+  gap: 0.9rem;
+}
+
+.main__card-trans {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 100%;
+  padding: 0.3rem 0.5rem;
+  border-radius: rem(10px);
+
+  gap: 0.3rem;
+}
+
+.main__card-trans__header,
+.main__card-trans__main {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 0;
+}
+
+.card-trans__header__title {
+  font-weight: bolder;
+}
+
+.card-trans__main__loc {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin-bottom: 0;
+
+  gap: 0.1rem;
+}
+
+.card-trans__main__date {
+  font-size: rem(14px);
+}
+
+.card-trans__main__time {
+  font-size: rem(12px);
+}
+
+.card-trans__main__avatars,
+.cars-trans__main__cost,
+.slider__item__avatars {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 0;
+}
+
+.avatars__wrapper--slider {
+  margin-left: -6px;
+  overflow: hidden;
+  border-radius: 50%;
+}
+
+.avatars__wrapper {
+  margin-left: -15px;
+  overflow: hidden;
+  border-radius: 50%;
+}
+
+.avatars__wrapper:nth-child(1) {
+  margin-left: 0;
+}
+
+.avatars__wrapper--slider:nth-child(1) {
+  position: relative;
+  width: rem(23px);
+  height: rem(23px);
+  margin-left: rem(20px);
+
+  img {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: rem(23px);
+    transform: translate(-50%, -50%);
+  }
+}
+
+.avatars__wrapper--slider:nth-child(3) {
+  position: relative;
+  width: rem(23px);
+  height: rem(23px);
+  img {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: rem(23px);
+    transform: translate(-50%, -50%);
+  }
+}
+
+.avatars__wrapper--slider:nth-child(2) {
+  z-index: 1;
+}
+
+.avatars__wrapper--single {
+  overflow: hidden;
+  border-radius: 50%;
+}
+
+.avatars__wrapper--single:nth-child(2) {
+  margin-left: -10px;
+}
+
+.avatars__wrapper--digit {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: rem(40px);
+  height: rem(40px);
+  margin-left: -10px;
+  border-radius: 50%;
+}
+
+.avatars__wrapper--slider-digit {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: rem(25px);
+  height: rem(25px);
+  margin-left: -5px;
+  border-radius: 50%;
+}
+
+.main__card-trans__footer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 0;
+}
+
+.card-trans__footer__total {
+  font-size: rem(16px);
+}
+
+.main__carousel {
+  width: 100%;
+  height: 100%;
+}
+
+.arrows-visibility {
+  visibility: hidden;
+}
+
+.carousel-item__inner {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+}
+
+.main__slider__item {
+  display: flex;
+  flex-direction: column;
+  width: 47%;
+  height: 90%;
+  overflow: hidden;
+  background-color: rgba(0, 0, 0, 0.05);
+  border-radius: rem(10px);
+
+  gap: 0.4rem;
+}
+
+.slider__item__img {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 57.5%;
+  overflow: hidden;
+  background-color: rgba(255, 255, 255, 1);
+
+  .material-icons {
+    font-size: 4.3rem;
+  }
+}
+
+.slider__item__title {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: rem(20px);
+  margin-bottom: 0;
+  line-height: 0.8rem;
+
+  span {
+    width: auto;
+    font-size: 0.9rem;
+    text-align: center;
+  }
+}
+
+.slider__item__avatars {
+  margin-bottom: 0.3rem;
+}
+
+.carousel-control-prev {
+  left: -14.5%;
+}
+
+.carousel-control-next {
+  right: -14.5%;
 }
