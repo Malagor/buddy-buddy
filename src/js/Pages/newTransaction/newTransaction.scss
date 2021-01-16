@@ -134,6 +134,11 @@ $color-text: #000000;
     }
   }
 
+  &__image-wrap {
+    width: 100%;
+    margin-bottom: rem(20px);
+  }
+
   &__image {
     width: 100%;
 

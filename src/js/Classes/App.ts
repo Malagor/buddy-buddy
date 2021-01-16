@@ -155,6 +155,9 @@ export class App {
 
     this.database.getGroupsListForTransaction(this.transactionsList.addGroupToTransList);
     this.database.getMyTransactionsList(this.transactionsList.addMyTransactions, this.transactionsList.addUserToList);
+
+    // this.transactionHandler = this.database.transactionHandler(this.transactionsList.addMyTransactions, this.transactionsList.addUserToList);
+    // this.database.getMyTransactionsList(this.transactionHandler);
   }
 
 

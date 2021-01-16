@@ -84,6 +84,7 @@ export class TransactionsList extends Page {
     let btnDisplay;
     let cost;
     let colorCost;
+    let transDisplay;
     
     if (owner) {
       btnDisplay = 'd-none';
@@ -95,7 +96,6 @@ export class TransactionsList extends Page {
       colorCost = 'text-danger';
     }
 
-    let transDisplay;
     if (trans.groupID === currentG) {
       transDisplay = 'd-flex';
     } else {
@@ -114,7 +114,7 @@ export class TransactionsList extends Page {
             border = 'border border-2 border-success';
           } else if (user.state === 'abort') {
             selectAbort = 'selected';
-            border = '';
+            border = 'border border-2 border-danger';
           } else if (user.state === 'approve') {
             btnDisplay = 'd-none';
           }
@@ -174,21 +174,35 @@ export class TransactionsList extends Page {
     listOfTrans.prepend(transaction);
 
     const selectState: HTMLSelectElement = transaction.querySelector('.trans-item__state');
-    selectState.addEventListener('change', () => {
-      this.onChangeState(selectState.value, transID);
-      if(selectState.value === "approve") {
-        transaction.classList.remove('border', 'border-2', 'border-success', 'border-danger');
-      } else if (selectState.value === "abort") {
-        transaction.classList.remove('border-success');
-        transaction.classList.add('border', 'border-2', 'border-danger');
-      } else if (selectState.value === "pending") {
-        transaction.classList.remove('border-danger');
-        transaction.classList.add('border', 'border-2', 'border-success');
+    this.changeSelectState(selectState, transaction, transID);
+    // selectState.addEventListener('change', () => {
+    //   this.onChangeState(selectState.value, transID);
+    //   if(selectState.value === "approve") {
+    //     transaction.classList.remove('border', 'border-2', 'border-success', 'border-danger');
+    //   } else if (selectState.value === "abort") {
+    //     transaction.classList.remove('border-success');
+    //     transaction.classList.add('border', 'border-2', 'border-danger');
+    //   } else if (selectState.value === "pending") {
+    //     transaction.classList.remove('border-danger');
+    //     transaction.classList.add('border', 'border-2', 'border-success');
+    //   }
+    // });
+  }
+
+  changeSelectState = (select: HTMLSelectElement, trans: HTMLElement, transID: string):void => {
+    select.addEventListener('change', () => {
+      this.onChangeState(select.value, transID);
+      if(select.value === "approve") {
+        trans.classList.remove('border', 'border-2', 'border-success', 'border-danger');
+      } else if (select.value === "abort") {
+        trans.classList.remove('border-success');
+        trans.classList.add('border', 'border-2', 'border-danger');
+      } else if (select.value === "pending") {
+        trans.classList.remove('border-danger');
+        trans.classList.add('border', 'border-2', 'border-success');
       }
     });
   }
-
-
 
   addUserToList = (transID: string, user: any, i:number, owner: boolean) => {
    

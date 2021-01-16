@@ -4,6 +4,7 @@ import { Modal } from 'bootstrap';
 import { addMemberHTML } from './addMemberHTML';
 import { clearAllInputs } from './clearAllInputs';
 import { checkData } from './checkData';
+import { copyFileSync } from 'fs';
 export class NewTransaction extends Page {
   onCreateTransaction: any;
   onShowMembersOfGroup: any;
@@ -53,7 +54,7 @@ export class NewTransaction extends Page {
             <div class="add-check__wrapper input-group">
               <label class="add-check__label" for="input-file">
                 <div class="add-check__text">Добавить чек</div>
-                <input id="input-file" type="file" accept="image/*" class="add-check__file" name="check">                 
+                <input id="input-file" type="file" accept="image/*" class="add-check__file" name="check" multiple>                 
               </label>              
             </div>
             <div class="add-check__icon-wrapper hidden" ><img class="add-check__icon" src="#" alt="check"></div>
@@ -63,8 +64,9 @@ export class NewTransaction extends Page {
               <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content p-2 d-flex flex-column">
                     <button type="button" class="btn-close align-self-end add-check__close-modal" aria-label="Close"></button>
-                    <div class="p-2">
-                      <img class="add-check__image src="#" alt="check">
+                    <div class="p-2 add-check__check-box">
+                      
+                    
                     </div>
                     
                 </div>
@@ -156,6 +158,17 @@ export class NewTransaction extends Page {
     const totalSum: HTMLFormElement = document.querySelector('.new-trans__total-sum');
     const currency: HTMLFormElement = document.querySelector('.new-trans__currency-list');
     const inputCheck: HTMLFormElement = document.querySelector('.add-check__file');
+    let checks;
+    if (inputCheck.files) {
+      checks = Object.entries(inputCheck.files).map((check) => check[1]);
+    } else {
+      checks = false;
+    }
+
+    console.log ('checks', checks);
+   
+
+
     const currentDate  = +(new Date());
     const userList: Array<any> = [];
     const checkedMembers = document.querySelectorAll('.checked-member__wrapper');
@@ -175,7 +188,7 @@ export class NewTransaction extends Page {
       totalCost: +totalSum.value,
       groupID: group.value,
       descripion: descr.value,
-      tillSlip: inputCheck.files[0] ? inputCheck.files[0] : false,
+      photo: checks,
       currency: currency.value,
       toUserList: userList,
     } 
@@ -224,18 +237,47 @@ export class NewTransaction extends Page {
     });
 
     inputCheck.addEventListener('change', () => {
-      if (inputCheck.value) {
+      if (inputCheck.files) {
+        console.log ('files', inputCheck.files );
+        const files = Object.entries(inputCheck.files);
+      
         document.querySelector('.add-check__icon-wrapper').classList.remove('hidden');        
-        const checkInModal: HTMLImageElement = document.querySelector('.add-check__image');
+       
+
         const checkIcon:HTMLImageElement = document.querySelector('.add-check__icon');
+
+      
+
         const reader: FileReader = new FileReader();
-        reader.onload = (function (aImg1: HTMLImageElement, aImg2: HTMLImageElement ) {
+        reader.onload = (function (aImg1: HTMLImageElement) {
           return (e: any): void => {
             aImg1.src = e.target.result;
-            aImg2.src = e.target.result;
+            // aImg2.src = e.target.result;
           };
-        })(checkInModal, checkIcon);
-        reader.readAsDataURL(inputCheck.files[0]);        
+        })(checkIcon);
+        reader.readAsDataURL(inputCheck.files[0]); 
+
+        const checksWrapper = document.querySelector('.add-check__check-box');
+        files.forEach((file: any) => {
+            const checkWrap: HTMLElement = document.createElement('div');
+            checkWrap.classList.add('add-check__image-wrap');
+            checkWrap.innerHTML = `<img class="add-check__image src="#" alt="check">`;
+            checksWrapper.append(checkWrap);
+            const imgCheck: HTMLImageElement = checkWrap.querySelector('.add-check__image');
+            const readerCheck: FileReader = new FileReader();
+            readerCheck.onload = (function (imgCheck: HTMLImageElement) {
+              return (e: any): void => {
+                imgCheck.src = e.target.result;
+                
+              };
+            })(imgCheck);
+            readerCheck.readAsDataURL(file[1]); 
+           
+        });
+
+
+        
+        
       }     
     });
 
