@@ -230,11 +230,7 @@ export class Database {
                   .on('value', (group) => {
                     const users: any = group.val().userList;
 
-                    users.forEach((userInData: any) => {
-                      console.log('userInData', userInData)
-                      console.log('userInData.userId', userInData.userId)
-                      
-
+                    users.forEach((userInData: any) => {      
                       const user = this.firebase.database()
                         .ref('User')
                         .child(userInData.userId);
