@@ -8,8 +8,6 @@ export class Main extends Page {
   }
 
   renderGroups(userList: any, index: number, title: string, length: number) {
-    console.log(userList, length);
-
     if (!userList) return;
     const elems: any = document.querySelectorAll('.carousel-item__inner');
     const newIndex: number = length - index - 1;
