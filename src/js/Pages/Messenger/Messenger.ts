@@ -3,9 +3,9 @@ import { Modal } from 'bootstrap';
 
 export interface IMessage {
   messageId: string | undefined;
-  key: string;
-  name: string;
-  avatar: string;
+  key?: string;
+  name?: string;
+  avatar?: string;
   date: number;
   message: string;
   isRead: boolean;

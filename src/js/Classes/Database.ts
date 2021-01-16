@@ -2,7 +2,7 @@ import firebase from 'firebase';
 import 'firebase/auth';
 import { default as CyrillicToTranslit } from 'cyrillic-to-translit-js/CyrillicToTranslit';
 import { IGroupData } from '../Interfaces/IGroupData';
-import { INewMessage } from '../Pages/Messenger/Messenger';
+import { IMessage, INewMessage } from '../Pages/Messenger/Messenger';
 import { IHandlers } from './App';
 import { TypeOfNotifications } from './Notifications';
 
@@ -168,7 +168,7 @@ export class Database {
       });
   }
 
-  findUserByName(accountName: string, func: any, errorFunc?: any) {
+  findUserByName(accountName: string, handlerFunc: any, errorFunc?: any) {
     this.firebase
       .database()
       .ref(`User`)
@@ -185,7 +185,7 @@ export class Database {
           account: snapshot.val()[`${key}`].account,
           key: key,
         };
-        func(data);
+        handlerFunc(data);
       })
       .catch(error => {
         console.log('Error retrieving user data');
@@ -234,7 +234,7 @@ export class Database {
       });
   }
 
-  getGroupList(callbacks: any): void {
+  getGroupList(handlerFunc: any): void {
     this.firebase
       .database()
       .ref('Groups')
@@ -265,7 +265,7 @@ export class Database {
                 'dataGroup': dataGroup,
                 'arrayUsers': arrayUsers,
               };
-              callbacks(dataForGroup);
+              handlerFunc(dataForGroup);
             });
 
         }
@@ -275,7 +275,7 @@ export class Database {
       });
   }
 
-  countGroupsInvite(setNotificationMark: any): void {
+  countGroupsInvite(setNotificationMark: { (type: TypeOfNotifications, num: number): void; (arg0: TypeOfNotifications, arg1: number): void; }): void {
     this.firebase
       .database()
       .ref('Groups')
@@ -290,7 +290,7 @@ export class Database {
       });
   }
 
-  countTransactionInvite(setNotificationMark: any): void {
+  countTransactionInvite(setNotificationMark: { (type: TypeOfNotifications, num: number): void; (arg0: TypeOfNotifications, arg1: number): void; }): void {
     this.firebase
       .database()
       .ref('Transactions')
@@ -311,7 +311,7 @@ export class Database {
 
   }
 
-  countNewMessage(setNotificationMark: any): void {
+  countNewMessage(setNotificationMark: { (type: TypeOfNotifications, num: number): void; (arg0: TypeOfNotifications, arg1: number): void; }): void {
     this.firebase
       .database()
       .ref('Messages')
@@ -346,19 +346,20 @@ export class Database {
     }
   }
 
-  getMessageList(callback: any): void {
+  getMessageList(addMessageToListFunc: { (snapshot: any): void; (a: firebase.database.DataSnapshot, b?: string): any; }): void {
 
     this.firebase
       .database()
       .ref('Messages')
-      .on('child_added', callback,
+      .on('child_added', addMessageToListFunc,
         (error: { code: string; message: any; }) => {
           console.log('Error:\n ' + error.code);
           console.log(error.message);
         });
   }
 
-  messageHandler = (renderMessage: any, setUserData: any) => {
+  messageHandler = (renderMessage: (arg0: IMessage) => void,
+                    setUserData: (arg0: { messageId: any; key: any; name: any; avatar: any; isReceive: boolean; }) => void) => {
 
     const uid = this.uid;
     const base = this.firebase.database();
@@ -371,7 +372,7 @@ export class Database {
       if (fromUser === uid || toUser === uid) {
         let isReceive: boolean = toUser === uid;
 
-        const messageData = {
+        const messageData: IMessage = {
           messageId,
           message: messageObj.message,
           date: messageObj.date,
@@ -447,7 +448,7 @@ export class Database {
   //
   // }
 
-  getCurrencyList(renderCurrencyList: any): void {
+  getCurrencyList(renderCurrencyList: { (currID: string, icon: string): void; (arg0: string, arg1: any): void; }): void {
     this.firebase
       .database()
       .ref('Currency')
@@ -459,7 +460,7 @@ export class Database {
       });
   }
 
-  getGroupsListForTransaction(renderGroupList: any): void {
+  getGroupsListForTransaction(renderGroupList: { (groupID: string, groupTitle: string, currentGroup: string): void; (arg0: any, arg1: any, arg2: any): void; }): void {
     this.firebase
       .database()
       .ref(`User/${this.uid}`)
@@ -480,7 +481,7 @@ export class Database {
       });
   }
 
-  getMembersOfGroupFirst(renderMembers: any) {
+  getMembersOfGroupFirst(renderMembers: { (userID: string, userName: string, userAvatar: string): void; (arg0: string, arg1: any, arg2: any): void; }) {
     this.firebase
       .database()
       .ref(`User/${this.uid}`)
