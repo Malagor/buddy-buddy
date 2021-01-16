@@ -299,11 +299,19 @@ export class Database {
       .database()
       .ref('Groups')
       .on('child_added', (snapshot) => {
-        const users: string[] = snapshot.val().userList;
+        const users: string[] = [] 
+        
+        snapshot.val().userList.forEach(element => {
+          console.log(element.userId)
+          users.push(element.userId)  
+        });
+
 
         if (users.includes(this.uid)) {
           const dataGroup = snapshot.val();
-          const dataUserListGroup = dataGroup.userList;
+          const dataUserListGroup: any[] =  dataGroup.userList.map((userElement: any) => {
+            return userElement.userId;
+          } )
 
           this.firebase
           .database()
@@ -312,14 +320,21 @@ export class Database {
             const snapshotUser = snapshot.val();
             const userList = Object.keys(snapshotUser); // all users in DB
 
-
             // const arrayUserImg: string[] = userList.filter(user => dataUserListGroup.includes(user));
             const arrayUsers: any[] = [];
             userList.forEach(user => {
               if (dataUserListGroup.includes(user)) {
+
                 arrayUsers.push(snapshotUser[user]);
               }
             });
+
+           /*  const arrayUsers: any[] = userList.map((user) => {
+              if (dataUserListGroup.includes(user)) {
+                console.log(snapshotUser[user])
+                return snapshotUser[user];
+              }
+            }) */
 
             const dataForGroup = {
               'dataGroup': dataGroup,
