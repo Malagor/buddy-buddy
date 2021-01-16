@@ -47,7 +47,12 @@ export class Database {
     });
   }
 
-  createUserByEmail(email: string, password: string, nameUser: string = '', errorHandleFunction: any) {
+  createUserByEmail(
+    email: string,
+    password: string,
+    nameUser: string = '',
+    errorHandleFunction: any,
+  ) {
     console.log(email + ' : ' + password + ' : ' + nameUser);
     const userData = {
       name: nameUser,
@@ -58,13 +63,15 @@ export class Database {
       currency: 'BYN',
     };
 
-    this.firebase.auth().createUserWithEmailAndPassword(email, password)
-      .then((data: { user: { uid: string; }; }) => {
+    this.firebase
+      .auth()
+      .createUserWithEmailAndPassword(email, password)
+      .then((data: { user: { uid: string } }) => {
         const uid: string = data.user.uid;
         // saveUID(uid);
         this._registrationUser(uid, userData);
       })
-      .catch(function(error: { code: any; message: any; }) {
+      .catch(function (error: { code: any; message: any }) {
         console.log(error.code);
         console.log(error.message);
         errorHandleFunction(error.message);
@@ -96,20 +103,23 @@ export class Database {
 
         this.hasUser(uid, userData);
         // this._registrationUser(uid, userData);
-
       })
-      .catch(function(error) {
+      .catch(function (error) {
         console.log(error.code);
         console.log(error.message);
         errorHandleFunction(error.message);
       });
   }
 
-  loginUserByEmail(email: string, password: string, errorHandleFunction: any): void {
+  loginUserByEmail(
+    email: string,
+    password: string,
+    errorHandleFunction: any,
+  ): void {
     this.firebase
       .auth()
       .signInWithEmailAndPassword(email, password)
-      .catch(function(error) {
+      .catch(function (error) {
         console.log(error.code);
         console.log(error.message);
         errorHandleFunction(error.message);
@@ -117,24 +127,134 @@ export class Database {
   }
 
   protected _registrationUser(uid: string, data: object) {
-    this.firebase
-      .database()
-      .ref(`User/${uid}`)
-      .set(data);
+    this.firebase.database().ref(`User/${uid}`).set(data);
   }
 
   getUserInfo(uid: string, callbacks: any[]): any {
     this.firebase
       .database()
       .ref(`User/${uid}`)
-      .once('value', (snapshot) => {
-        console.log('snapshot "getUserInfo" -  User Data:', snapshot.val());
-        const dataUser = snapshot.val();
-        dataUser.key = uid;
-        callbacks.forEach(fn => fn(dataUser));
-        // callback(snapshot.val());
-      }, (error: { code: string; }) => {
-        console.log('Error: ' + error.code);
+      .once(
+        'value',
+        (snapshot) => {
+          console.log('snapshot "getUserInfo" -  User Data:', snapshot.val());
+          const dataUser = snapshot.val();
+          dataUser.key = uid;
+          callbacks.forEach((fn) => fn(dataUser));
+          // callback(snapshot.val());
+        },
+        (error: { code: string }) => {
+          console.log('Error: ' + error.code);
+        },
+      );
+  }
+
+  async getUserTransactions(uid: string, callbacks: any) {
+    let dat: any = await this.firebase
+      .database()
+      .ref(`Transactions`)
+      .once(
+        'value',
+        (snapshot) => {
+          return snapshot;
+        },
+        (error: { code: string }) => {
+          console.log('Error: ' + error.code);
+        },
+      );
+
+    let dataUser: any = dat.val();
+    dataUser = Object.entries(dataUser);
+    dataUser = dataUser
+      .filter((item: any) =>
+        item[1].toUserList.find(
+          (it: any) => it.userID === uid || item.userID === uid,
+        ),
+      )
+      .map((item: any) => {
+        item[1].uid = uid;
+        return item[1];
+      })
+      .map(async (item: any) => {
+        const request: any = await this.firebase
+          .database()
+          .ref(`Groups/${item.groupID}`)
+          .once('value', (snapshot) => {
+            return snapshot;
+          });
+        item.groupTitle = request.val().title;
+
+        return item;
+      });
+
+    const result = Promise.all(dataUser).then((data) => {
+      data.reverse();
+      callbacks[0](data);
+      this.getUsersAvatars(data, callbacks[1]);
+    });
+  }
+
+  getUsersAvatars(data: any, callback: any) {
+    const resultData: any = data
+      .map((item: any) => {
+        const elem: any = item.toUserList.map(async (it: any) => {
+          const res: any = await this.firebase
+            .database()
+            .ref(`User/${it.userID}`)
+            .once('value', (snapshot) => {
+              return snapshot;
+            });
+          it.userAvatar = res.val().avatar;
+          return it;
+        });
+        item.toUserList = elem;
+        return item;
+      })
+      .map(async (item: any, index: number) => {
+        item.toUserList = await Promise.all(
+          item.toUserList,
+        ).then((userList: any) =>
+          callback(userList, index, item.uid, item.currency),
+        );
+      });
+  }
+
+  async getUserGroups(uid: string, callback: any) {
+    const dat: any = await this.firebase
+      .database()
+      .ref(`Groups`)
+      .once(
+        'value',
+        (snapshot) => {
+          return snapshot;
+        },
+        (error: { code: string }) => {
+          console.log('Error: ' + error.code);
+        },
+      );
+    const data: any = dat.val();
+    const value: any = Object.entries(data)
+      .filter((item: any) => item[1].userList.find((it: any) => it === uid))
+      .map((item: any) => {
+        const elem: any = item[1].userList.map(async (it: any) => {
+          const res: any = await this.firebase
+            .database()
+            .ref(`User/${it}`)
+            .once('value', (snapshot) => {
+              return snapshot;
+            });
+          it = res.val().avatar;
+          return it;
+        });
+        item[1].userList = elem;
+        return item[1];
+      })
+      .map(async (item: any, index: number) => {
+        item.userList = await Promise.all(item.userList).then(
+          (userList: any) => {
+            callback(userList, index, item.title, value.length);
+          },
+        );
       });
   }
 
@@ -142,27 +262,34 @@ export class Database {
     this.firebase
       .database()
       .ref(`User/${uid}`)
-      .once('value', (snapshot) => {
-        if (!snapshot.key) {
-          callback(snapshot.val());
-        }
-      }, (error: { code: string; message: string}) => {
-        console.log('Error: ' + error.code);
-        console.log('Message: ' + error.message);
-      });
+      .once(
+        'value',
+        (snapshot) => {
+          if (!snapshot.key) {
+            callback(snapshot.val());
+          }
+        },
+        (error: { code: string; message: string }) => {
+          console.log('Error: ' + error.code);
+          console.log('Message: ' + error.message);
+        },
+      );
   }
 
   signOut() {
     this.firebase
       .auth()
       .signOut()
-      .then(function() {
-        console.log('Signout Succesfull');
-      }, function(error) {
-        console.log('Signout Failed');
-        console.log(error.code);
-        console.log(error.message);
-      });
+      .then(
+        function () {
+          console.log('Signout Succesfull');
+        },
+        function (error) {
+          console.log('Signout Failed');
+          console.log(error.code);
+          console.log(error.message);
+        },
+      );
   }
 
   findUserByName(accountName: string, func: any, errorFunc?: any) {
@@ -184,7 +311,7 @@ export class Database {
         };
         func(data);
       })
-      .catch(error => {
+      .catch((error) => {
         console.log('Error retrieving user data');
         console.log(error.code);
         console.log(error.message);
@@ -207,13 +334,13 @@ export class Database {
       .database()
       .ref('Groups')
       .push(data)
-      .then(group => {
+      .then((group) => {
         const groupKey = group.key;
         const users = data.userList;
-        users.forEach(userId => {
+        users.forEach((userId) => {
           const user = this.firebase.database().ref('User').child(userId);
           const userGroup = user.child('groupList');
-          userGroup.transaction(groupList => {
+          userGroup.transaction((groupList) => {
             if (groupList) {
               groupList.push(groupKey);
               return groupList;
@@ -225,26 +352,29 @@ export class Database {
           });
         });
       })
-      .catch(error => {
+      .catch((error) => {
         console.log(error.code);
         console.log(error.message);
       });
   }
 
   getGroupList(renderGroups: any): void {
-
     this.firebase
       .database()
       .ref('Groups')
-      .on('child_added', (snapshot) => {
-        const users: string[] = snapshot.val().userList;
-        if (users.includes(this.uid)) {
-          renderGroups(snapshot.val());
-        }
-      }, (error: { code: string; message: any; }) => {
-        console.log('Error:\n ' + error.code);
-        console.log(error.message);
-      });
+      .on(
+        'child_added',
+        (snapshot) => {
+          const users: string[] = snapshot.val().userList;
+          if (users.includes(this.uid)) {
+            renderGroups(snapshot.val());
+          }
+        },
+        (error: { code: string; message: any }) => {
+          console.log('Error:\n ' + error.code);
+          console.log(error.message);
+        },
+      );
   }
 
   // countGroupsInvite(callback: any): void {
@@ -274,84 +404,87 @@ export class Database {
     this.firebase
       .database()
       .ref('Messages')
-      .on('child_added', (snapshot) => {
-        const messageObj = snapshot.val();
-        const messageId = snapshot.key;
-        const { fromUser, toUser } = messageObj;
+      .on(
+        'child_added',
+        (snapshot) => {
+          const messageObj = snapshot.val();
+          const messageId = snapshot.key;
+          const { fromUser, toUser } = messageObj;
 
-        // console.log('message', messageObj.message);
+          // console.log('message', messageObj.message);
 
-        if (fromUser === this.uid || toUser === this.uid) {
-
-          const fromUserData = this.firebase
-            .database()
-            .ref(`User/${fromUser}`)
-            .once('value', snapshot => {
-              return snapshot;
-            });
-
-          const toUserData = this.firebase
-            .database()
-            .ref(`User/${toUser}`)
-            .once('value', snapshot => {
-              return snapshot;
-            });
-
-          const users = Promise.all([fromUserData, toUserData])
-            .then(data => {
-              return {
-                fromUser: data[0],
-                toUser: data[1],
-              };
-            });
-
-          users.then(users => {
-            const { fromUser, toUser } = users;
-
-            const direction: boolean = toUser.key === this.uid;
-            let key: string;
-            let name: string;
-            let avatar: string;
-
-            if (direction) {
-              key = fromUser.key;
-              name = fromUser.val().name;
-              avatar = fromUser.val().avatar;
-            } else {
-              key = toUser.key;
-              name = toUser.val().name;
-              avatar = toUser.val().avatar;
-            }
-
-            const messageData = {
-              messageId,
-              message: messageObj.message,
-              date: messageObj.date,
-              status: messageObj.status,
-              key,
-              avatar,
-              name,
-              direction
-            };
-
-            renderMessage(messageData);
-
-            this.firebase
+          if (fromUser === this.uid || toUser === this.uid) {
+            const fromUserData = this.firebase
               .database()
-              .ref(`Messages/${messageId}`)
-              .child('status')
-              .transaction(curStatus => {
-                curStatus = true;
-                return curStatus;
+              .ref(`User/${fromUser}`)
+              .once('value', (snapshot) => {
+                return snapshot;
               });
-          });
-        }
-      }, (error: { code: string; message: any; }) => {
-        console.log('Error:\n ' + error.code);
-        console.log(error.message);
-      });
-  }
 
+            const toUserData = this.firebase
+              .database()
+              .ref(`User/${toUser}`)
+              .once('value', (snapshot) => {
+                return snapshot;
+              });
+
+            const users = Promise.all([fromUserData, toUserData]).then(
+              (data) => {
+                return {
+                  fromUser: data[0],
+                  toUser: data[1],
+                };
+              },
+            );
+
+            users.then((users) => {
+              const { fromUser, toUser } = users;
+
+              const direction: boolean = toUser.key === this.uid;
+              let key: string;
+              let name: string;
+              let avatar: string;
+
+              if (direction) {
+                key = fromUser.key;
+                name = fromUser.val().name;
+                avatar = fromUser.val().avatar;
+              } else {
+                key = toUser.key;
+                name = toUser.val().name;
+                avatar = toUser.val().avatar;
+              }
+
+              const messageData = {
+                messageId,
+                message: messageObj.message,
+                date: messageObj.date,
+                status: messageObj.status,
+                key,
+                avatar,
+                name,
+                direction,
+              };
+
+              renderMessage(messageData);
+
+              this.firebase
+                .database()
+                .ref(`Messages/${messageId}`)
+                .child('status')
+                .transaction((curStatus) => {
+                  curStatus = true;
+                  return curStatus;
+                });
+            });
+          }
+        },
+        (error: { code: string; message: any }) => {
+          console.log('Error:\n ' + error.code);
+          console.log(error.message);
+        },
+      );
+  }
 
   createNewMessage(data: any): void {
     data.fromUser = this.uid;
@@ -360,12 +493,11 @@ export class Database {
       .database()
       .ref('Messages')
       .push(data)
-      .catch((error: { code: string; message: any; }) => {
+      .catch((error: { code: string; message: any }) => {
         console.log('Error:\n ' + error.code);
         console.log(error.message);
       });
   }
-
 
   // addTheme(nameTheme: string) {
   //
