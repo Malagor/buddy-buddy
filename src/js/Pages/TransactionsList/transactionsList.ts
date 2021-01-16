@@ -1,5 +1,6 @@
 import { Page } from '../../Classes/Page';
 import { NewTransaction } from '../newTransaction/newTransaction';
+import { Modal } from 'bootstrap';
 
 export class TransactionsList extends Page {
   onChangeState: any;
@@ -19,19 +20,14 @@ export class TransactionsList extends Page {
         <div class="block__header block__header--main">
           <p class="block__title">Список транзакций</p>
         </div>
-
-       
-     
+   
         <div class="block__groups block--width-85">
           <select class="trans-list__groups form-select w-75" aria-label="Default select example">
           </select>
           <div class="user-balance text-center w-25">250$</div>
         </div>
 
-
-
-        <div class="trans-list__list"> 
-               
+        <div class="trans-list__list">              
         </div>
 
         <div class="block__footer">
@@ -67,18 +63,15 @@ export class TransactionsList extends Page {
 
 
   addMyTransactions = (transID:string, trans: any, currentGroup: string, owner: boolean, ownUID:string):void => {
-    console.log ('currentGroup', currentGroup);
-    console.log ( 'trans-list', document.querySelector('.trans-list__groups').innerHTML);
-    console.log ('trans', trans);
-    
+      
     let currentG;
     const transList: HTMLFormElement = document.querySelector('.trans-list__groups');
     if (transList.value) {    
-      currentG = document.querySelector('.trans-list__groups').value;
-      console.log ('currentG1', currentG);
+      currentG = transList.value;
+     
     } else {
       currentG = currentGroup;
-      console.log ('currentG2', currentG);
+      
     }
 
     let btnDisplay;
@@ -125,22 +118,9 @@ export class TransactionsList extends Page {
     } else if (trans.toUserList.some((user:any) => user.state === 'pending')) {
       border = 'border border-2 border-warning';
     } 
+
+    const date: any = this.getDate(trans.date);
   
-    const dayOptions = {
-      year: '2-digit',
-      month: '2-digit',
-      day: 'numeric',   
-    };
-
-    const timeOptions = {   
-      hour: '2-digit',
-      minute: '2-digit',
-    };
-
-    const date: Date = new Date(trans.date); 
-    const localeDay: string = date.toLocaleString('ru-RU', dayOptions);
-    const localeTime: string = date.toLocaleString('ru-RU', timeOptions);
-
     const listOfTrans: HTMLElement = document.querySelector('.trans-list__list');
     const transaction = document.createElement('div');
     transaction.className = `trans-item ${transDisplay} ${border} flex-column block--width-85`;
@@ -153,8 +133,8 @@ export class TransactionsList extends Page {
       </p>
       <div class="trans-item__info row">
         <div class="date col-3 align-self-start">
-          <div class="trans-item__day">${localeDay}</div>
-          <div class="trans-item__time">${localeTime}</div>
+          <div class="trans-item__day">${date.localeDay}</div>
+          <div class="trans-item__time">${date.localeTime}</div>
         </div>
         <div class="trans-item__users col-5  d-flex align-self-center justify-content-center"></div>
         <div class="trans-item__cost col-4  align-self-center ${colorCost}  justify-content-end text-end">${cost} ${trans.currency}</div>
@@ -169,24 +149,48 @@ export class TransactionsList extends Page {
           </select>
         </div>
       </div>
+
+      <div class="details modal fade" id="addition" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content details__wrapper"> 
+
+
+
+                <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+            
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-primary">Save changes</button>
+            </div>  
+            
+            
+          </div>
+        </div>
+      </div> 
+
     `;
 
     listOfTrans.prepend(transaction);
 
     const selectState: HTMLSelectElement = transaction.querySelector('.trans-item__state');
     this.changeSelectState(selectState, transaction, transID);
-    // selectState.addEventListener('change', () => {
-    //   this.onChangeState(selectState.value, transID);
-    //   if(selectState.value === "approve") {
-    //     transaction.classList.remove('border', 'border-2', 'border-success', 'border-danger');
-    //   } else if (selectState.value === "abort") {
-    //     transaction.classList.remove('border-success');
-    //     transaction.classList.add('border', 'border-2', 'border-danger');
-    //   } else if (selectState.value === "pending") {
-    //     transaction.classList.remove('border-danger');
-    //     transaction.classList.add('border', 'border-2', 'border-success');
-    //   }
-    // });
+
+    const detailsModal = new Modal(document.querySelector('.details'));
+    const detailsModalWrapper:HTMLElement = document.querySelector('.details__wrapper');
+    const btnDetails: HTMLElement = document.querySelector('.trans-item__more');
+    btnDetails.addEventListener('click',() => {
+      if (owner) {
+        detailsModalWrapper.innerHTML = this.renderOutTrans(transID, trans);
+      } else {
+        detailsModalWrapper.innerHTML = this.renderInTrans(transID, trans);
+      }
+      detailsModal.show();
+    });
   }
 
   changeSelectState = (select: HTMLSelectElement, trans: HTMLElement, transID: string):void => {
@@ -234,13 +238,43 @@ export class TransactionsList extends Page {
       }
   }
 
+  getDate = (data: string) => {
+    const dayOptions = {
+      year: '2-digit',
+      month: '2-digit',
+      day: 'numeric',   
+    };
+
+    const timeOptions = {   
+      hour: '2-digit',
+      minute: '2-digit',
+    };
+
+    const date: Date = new Date(data); 
+    const localeDay: string = date.toLocaleString('ru-RU', dayOptions);
+    const localeTime: string = date.toLocaleString('ru-RU', timeOptions);
+
+    return {
+      localeDay,
+      localeTime
+    }
+  }
+
+  renderInTrans = (transID: string, trans: any) => {
+    return 'a';
+    
+  }
+
+  renderOutTrans = (transID: string, trans: any) => {
+    return 'v';
+    
+  }
+
   protected events(): void {
     const groups: HTMLFormElement = document.querySelector('.trans-list__groups');
     groups.addEventListener('change', () => {
       const transList:NodeListOf<HTMLElement> = document.querySelectorAll('.trans-item');
       const groupID = groups.value;
-      console.log ('groupValue', groupID);
-      // console.log ('groupTitle', groups.inner);
       transList.forEach((transItem: HTMLElement) => {
         const itemGroupID = transItem.getAttribute('group-id');
         if (itemGroupID === groupID) {
@@ -269,13 +303,6 @@ export class TransactionsList extends Page {
       this.newTrans.onShowMembersOfGroup(groupID);
     });
   }
-
-
-
-
-
-
-
 }
 
 

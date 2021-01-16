@@ -543,7 +543,7 @@ export class Database {
       };
       this.firebase.storage()
         .ref()
-        .child('Transactions/' + file.name)
+        .child('transactions/' + file.name)
         .put(file, metadata)
         .then((snapshot) => {
           snapshot.ref.getDownloadURL()

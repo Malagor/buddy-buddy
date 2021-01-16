@@ -4,7 +4,7 @@ import { Modal } from 'bootstrap';
 import { addMemberHTML } from './addMemberHTML';
 import { clearAllInputs } from './clearAllInputs';
 import { checkData } from './checkData';
-import { copyFileSync } from 'fs';
+
 export class NewTransaction extends Page {
   onCreateTransaction: any;
   onShowMembersOfGroup: any;
@@ -23,7 +23,6 @@ export class NewTransaction extends Page {
           <button type="button" class="btn-close new-trans__close-modal" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-        <form class="all-forms">
 
           <div class="form-group row block--margin-adaptive">
             <label for="group" class="new-trans__label col-sm-2 col-form-label">Группа</label>
@@ -31,7 +30,6 @@ export class NewTransaction extends Page {
               <select id="group"class="new-trans__groups-list form-select"></select>
             </div>
           </div>
-
 
           <div class="form-group row block--margin-adaptive align-items-center">
             <label for="descr" class="new-trans__label col-sm-2 col-form-label">Описание</label>
@@ -48,8 +46,6 @@ export class NewTransaction extends Page {
             </div>
           </div>
 
-         
-
           <div class="add-check d-flex align-items-center mb-3">
             <div class="add-check__wrapper input-group">
               <label class="add-check__label" for="input-file">
@@ -59,20 +55,15 @@ export class NewTransaction extends Page {
             </div>
             <div class="add-check__icon-wrapper hidden" ><img class="add-check__icon" src="#" alt="check"></div>
 
-
             <div class="modal fade add-check__modal" id="check" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
               <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content p-2 d-flex flex-column">
                     <button type="button" class="btn-close align-self-end add-check__close-modal" aria-label="Close"></button>
-                    <div class="p-2 add-check__check-box">
-                      
-                    
-                    </div>
-                    
+                    <div class="p-2 add-check__check-box">                 
+                    </div>                
                 </div>
               </div>
             </div> 
-
           </div>
          
           <div class="new-trans__members">
@@ -81,11 +72,8 @@ export class NewTransaction extends Page {
           </div>
 
           <div class="checked-members"></div>
-
         </div>
-
-        </form> 
-          
+       
         <div class="modal-footer">
           <button type="button" class="new-trans__create-btn btn btn-primary w-100" data-bs-dismiss="modal" disabled>Создать транзакцию</button>
         </div>
@@ -164,11 +152,7 @@ export class NewTransaction extends Page {
     } else {
       checks = false;
     }
-
-    console.log ('checks', checks);
    
-
-
     const currentDate  = +(new Date());
     const userList: Array<any> = [];
     const checkedMembers = document.querySelectorAll('.checked-member__wrapper');
@@ -206,8 +190,7 @@ export class NewTransaction extends Page {
     const btnCloseCheck: HTMLElement = document.querySelector('.add-check__close-modal');
     const newTransModal = new Modal(document.querySelector('.new-trans__modal'));
     const btnCloseNewTrans: HTMLElement = document.querySelector('.new-trans__close-modal');
-    
-   
+      
     groups.addEventListener('change', () => {
       members.innerHTML = '';
       checkedMembersList.innerHTML = '';
@@ -239,20 +222,14 @@ export class NewTransaction extends Page {
     inputCheck.addEventListener('change', () => {
       if (inputCheck.files) {
         console.log ('files', inputCheck.files );
-        const files = Object.entries(inputCheck.files);
-      
+        const files = Object.entries(inputCheck.files);     
         document.querySelector('.add-check__icon-wrapper').classList.remove('hidden');        
        
-
         const checkIcon:HTMLImageElement = document.querySelector('.add-check__icon');
-
-      
-
         const reader: FileReader = new FileReader();
         reader.onload = (function (aImg1: HTMLImageElement) {
           return (e: any): void => {
             aImg1.src = e.target.result;
-            // aImg2.src = e.target.result;
           };
         })(checkIcon);
         reader.readAsDataURL(inputCheck.files[0]); 
@@ -271,13 +248,8 @@ export class NewTransaction extends Page {
                 
               };
             })(imgCheck);
-            readerCheck.readAsDataURL(file[1]); 
-           
-        });
-
-
-        
-        
+            readerCheck.readAsDataURL(file[1]);            
+        });        
       }     
     });
 
