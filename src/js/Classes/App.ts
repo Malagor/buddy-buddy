@@ -11,7 +11,7 @@ import { TransactionsList } from '../Pages/TransactionsList/transactionsList';
 import { dataTransList } from '../Data/dataTransList';
 import { INotification, Notifications } from './Notifications';
 import { Messenger } from '../Pages/Messenger/Messenger';
-import { Contacts } from '../Pages/Contacts/Contacts';
+import { Contacts, ISearchUserData } from '../Pages/Contacts/Contacts';
 
 export class App {
   private database: Database;
@@ -81,6 +81,7 @@ export class App {
       this.messenger.onAnswerMessage = this.onAnswerMessage.bind(this);
 
       this.contacts = Contacts.create('.main');
+      this.contacts.addUserToContacts = this.onAddUserToContacts.bind(this);
 
 
       // Notifications Init
@@ -148,7 +149,9 @@ export class App {
   }
 
   onContactsPage() {
-    this.contactsHandler = this.database.contactsHandler(this.contacts.render);
+
+    this.contacts.render();
+    this.contactsHandler = this.database.contactsHandler(this.contacts.addContactToList);
     this.database.getContactsList(this.contactsHandler);
   }
 
@@ -170,7 +173,6 @@ export class App {
   onMessagesPage() {
     this.messenger.render();
     this.database.getMessageList(this.messenger.printMessage);
-    // this.database.getGroupList(this.groups.addGroupToList);
   }
 
   onStatisticsPage() {
@@ -240,6 +242,10 @@ export class App {
 
   onAnswerMessage(userId: string) {
     this.database.getUserInfo(userId, [this.messenger.answerModal]);
+  }
+
+  onAddUserToContacts(userData: ISearchUserData, errorHandler: (message: string) => void): void {
+    this.database.addUserToContacts(userData, errorHandler);
   }
 
   // loadMainPage() {

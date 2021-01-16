@@ -1,54 +1,94 @@
 import { Page } from '../../Classes/Page';
+import { getFormData } from '../../Util/getFormData';
+
+export interface ISearchUserData {
+  name?: string;
+  account?: string;
+}
 
 export class Contacts extends Page {
+  addUserToContacts: any;
+
   static create(element: string): Contacts {
     return new Contacts(element);
   }
 
-  render(data: any): void {
-    let html = `
+  render(): void {
+    this.element.innerHTML = `
       <div class="block__wrapper d-flex align-items-center flex-column">
         <div class="block__content d-flex align-items-center flex-column w-100">
           <div class="block__header account__header--main d-flex align-items-center">
             <p class="block__nick">Contacts</p>
           </div>
-          <div class="message-list block--width-85 d-flex flex-column">
-          <p>${data}</p>
-          </div>
-        <button type="button" class="btn btn-primary d-flex align-items-center justify-content-center message__addBtn"><span class="material-icons">add</span></button>
+          <form id="contactForm" class="search-form">
+            <div class="input-group">
+              <span class="input-group-text" id="basic-addon1">@</span>
+              <input type="text" class="form-control" placeholder="Account" aria-label="Account contact" aria-describedby="basic-addon1" name="account">
+            </div>
+            <div class="input-group">
+              <span class="input-group-text" id="basic-addon2">Name</span>
+              <input type="text" class="form-control" placeholder="Contact\`s name" aria-label="Contact\`s name" aria-describedby="basic-addon2" name="name">
+            </div>
+            <button type="submit" class="btn btn-primary" form="contactForm">Add</button>
+            <div class="contact__message error-message"></div>
+          </form>
+          <div class="contacts-list block--width-85"></div>
       </div>
     `;
 
-    html += this.modalHTML();
-
-    this.element.innerHTML = html;
     this.events();
   }
 
-  modalHTML(): string {
-    return `
-    <div class="modal fade" id="messageModal" tabindex="-1" aria-labelledby="New message" aria-hidden="true">
-      <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">Add Contact</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body">
-            <form id="messageForm">
-              <div class="input-group col-12 mb-3">
-                <span class="input-group-text" id="account-user">@</span>
-                <input type="text" class="form-control" id="formRecipient" placeholder="Recipient" aria-label="Account Name" aria-describedby="account-user">
-                <button type="button" class="btn btn-primary" id="addRecipient"><span class="material-icons">person_search</span></button>
-              </div>
-              <div class="col-12 mb-3 recipient-user"></div>
-              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-              <button type="submit" class="btn btn-primary" form="messageForm">Send</input>
-            </form>
-          </div>
-        </div>
+
+  addContactToList = (data: any): void => {
+    if (data) {
+      const list = this.element.querySelector('.contacts-list');
+      if (!list) return;
+
+      let htmlContact = `
+    <div class="contact" data-user-id="${data.key}">
+      <div class="contact__avatar-wrapper">
+        <img src="${data.avatar}" alt="${data.name}">
+      </div>
+      <div class="contact__name">${data.name}</div>
+      <div class="contact__account">${data.account}</div>
+      <div class="contact__buttons">
+        <button type="button" class="btn btn-secondary contact__button">Button</button>
       </div>
     </div>
     `;
+
+      list.insertAdjacentHTML('afterbegin', htmlContact);
+
+      const formInputs: NodeListOf<HTMLInputElement> = this.element.querySelectorAll('#contactForm input');
+      formInputs.forEach(input => {
+        input.value = '';
+      });
+    }
+
+  }
+
+  protected events(): void {
+    const form: HTMLFormElement = this.element.querySelector('#contactForm');
+
+    form.onsubmit = (ev) => {
+      ev.preventDefault();
+      const formData: ISearchUserData = getFormData(form);
+      if (formData.account !== '' && formData.name !== '') {
+        this.errorMessageForm('Enter either your account or username.');
+        return;
+      }
+      if (formData.account || formData.name) {
+        this.addUserToContacts(formData, this.errorMessageForm);
+      } else {
+        this.errorMessageForm('You need to enter the user\'s name or account.');
+        return;
+      }
+    };
+  }
+
+  errorMessageForm(message: string): void {
+    const errorField: HTMLElement = document.querySelector('.error-message');
+    errorField.textContent = message;
   }
 }

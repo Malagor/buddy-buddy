@@ -2,6 +2,7 @@ import firebase from 'firebase';
 import 'firebase/auth';
 import { default as CyrillicToTranslit } from 'cyrillic-to-translit-js/CyrillicToTranslit';
 import { IGroupData } from '../Interfaces/IGroupData';
+import { ISearchUserData } from '../Pages/Contacts/Contacts';
 
 const defaultAvatar: string = require('../../assets/images/default-user-avatar.jpg');
 
@@ -379,17 +380,21 @@ export class Database {
       });
   }
 
-  contactsHandler(renderContact: any): (snapshot: void) => void {
-    return (snapshot: void): void => {
+  contactsHandler = (renderContact: any): any => {
+    const base = this.firebase.database();
+    return (snapshot: any): void => {
       if (snapshot) {
-        const key = snapshot.key;
         const contact = snapshot.val();
 
-        console.log('Key:', key);
-        console.log('Contact:', contact);
-
-        renderContact(key);
-
+        base
+          .ref(`User/${contact}`)
+          .once('value', snapshot => {
+            const key = snapshot.key;
+            const userData = snapshot.val();
+            userData.key = key;
+            console.log(userData);
+            renderContact(userData);
+          });
       } else {
         console.log('No Contacts');
       }
@@ -552,5 +557,50 @@ export class Database {
       .catch(error => {
         console.log('Error: ' + error.code);
       });
+  }
+
+  addUserToContacts(userData: ISearchUserData, errorHandler: (message: string) => void) {
+    const userTable = this.firebase.database().ref('User');
+    userTable
+      .once('value', (userList) => {
+        const userObjs = userList.val();
+        const keysList = Object.keys(userObjs);
+        const userKey: string[] = keysList.filter(key => {
+          if (userObjs[key].account === userData.account) return key;
+          if (userObjs[key].name === userData.name) return key;
+
+          return false;
+        });
+
+        if (userKey.length) {
+          const userContacts = userTable
+            .child(this.uid)
+            .child('contacts');
+
+          userContacts.transaction(contactList => {
+            if (contactList) {
+              // If User not exists
+              if (!contactList.includes(userKey[0])) {
+                contactList.push(userKey[0]);
+              } else {
+                errorHandler('The user is already in your contacts.');
+              }
+              return contactList;
+            } else {
+              const newList: string[] = [];
+              newList.push(userKey[0]);
+              return newList;
+            }
+
+          });
+        } else {
+          errorHandler('The user is not found.');
+        }
+      })
+      .catch(error => {
+        errorHandler(error.message);
+      });
+
+
   }
 }
