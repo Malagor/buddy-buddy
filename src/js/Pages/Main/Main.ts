@@ -74,7 +74,7 @@ export class Main extends Page {
 
     let result: string = `
     <tr>
-      <th scope="row">0</th>
+      <th scope="row">1</th>
       <td>${current}</td>
       <td>1</td>
       <td>${rateOfCurrent * (data.balance || 0)} ${current}</td>
