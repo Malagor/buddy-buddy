@@ -7,36 +7,93 @@ export class Main extends Page {
     return page;
   }
 
-  getDataForCurrency(el: HTMLElement): void {
+  renderGroups(userList: any, index: number, title: string, length: number) {
+    console.log(userList, length);
+
+    if (!userList) return;
+    const elems: any = document.querySelectorAll('.carousel-item__inner');
+    const newIndex: number = length - index - 1;
+    const elemIndex: number =
+      newIndex % 2 === 0 ? newIndex / 2 : (newIndex - 1) / 2;
+    elems[elemIndex].innerHTML += `
+    <div class="main__slider__item">
+      <div class="slider__item__img">
+        <i class="material-icons">groups</i>
+      </div>
+      <p class="slider__item__title">
+        <span>${title}</span>
+      </p>
+      <div class="slider__item__avatars">
+      </div>
+    </div>
+    `;
+
+    const avatarsBlock = document.querySelectorAll('.slider__item__avatars');
+
+    userList.forEach((item: any, ind: number) => {
+      if (userList.length >= 3) {
+        if (ind < 3) {
+          avatarsBlock[newIndex].innerHTML += `
+          <div class="avatars__wrapper--slider">
+            <img src="${item}" alt="user avatar" width="25px">
+          </div>
+          `;
+        } else if (ind === 3) {
+          avatarsBlock[newIndex].innerHTML += `
+          <div class="avatars__wrapper--slider-digit">
+            <span>+${userList.length - 3}</span>
+          </div>
+          `;
+        }
+      } else {
+        avatarsBlock[newIndex].innerHTML += `
+        <div class="avatars__wrapper--single">
+          <img src="${item}" alt="user avatar" width="25px">
+        </div>
+        `;
+      }
+    });
+  }
+
+  getDataForCurrency(callback: any, current: string): void {
     fetch('https://www.nbrb.by/api/exrates/rates?periodicity=0')
       .then((response) => {
         return response.json();
       })
-      .then((data) => {
-        el.innerHTML = this.createCurrTable(data);
+      .then((data: any) => {
+        callback(data, current);
       });
   }
 
-  createCurrTable(data: any): string {
-    const currencies: string[] = ['EUR', 'USD', 'RUB'];
+  createCurrTable(data: any, current: string): void {
+    const currencies: string[] = ['USD', 'EUR', 'RUB'];
     const dt: any = [];
-    data.map((item: any) => {
-      if (
-        currencies.map((it: any) => {
-          if (it === item.Cur_Abbreviation) {
-            dt.push(item);
-          }
-        })
-      ) {
-      }
-    });
-    const currencyCount: number = 3;
-    let result: string = '';
+    const rateOfCurrent =
+      current !== 'BYN'
+        ? data.find((item: any) => item.Cur_Abbreviation === current)
+            .Cur_OfficialRate
+        : 1;
 
-    for (let i = 0; i < currencyCount; i += 1) {
+    let result: string = `
+    <tr>
+      <th scope="row">0</th>
+      <td>${current}</td>
+      <td>1</td>
+      <td>${rateOfCurrent * (data.balance || 0)} ${current}</td>
+    </tr>`;
+
+    data.forEach((item: any) => {
+      currencies.forEach((it: any) => {
+        if (it === item.Cur_Abbreviation) {
+          dt.push(item);
+        }
+      });
+    });
+
+    for (let i = 0; i < dt.length; i += 1) {
       result += `
       <tr>
-        <th scope="row">${i + 1}</th>
+        <th scope="row">${i + 2}</th>
         <td>${dt[i].Cur_Abbreviation}</td>
         <td>${dt[i].Cur_OfficialRate}</td>
         <td>${dt[i].Cur_OfficialRate * (data.balance || 0)} ${
@@ -45,33 +102,143 @@ export class Main extends Page {
       </tr>
       `;
     }
-
-    return result;
+    document.querySelector('tbody').innerHTML = result;
   }
 
   renderSlider(elem: HTMLElement, dt: any): void {
-    // if (dt.groupList === '[]') {
-    elem.innerHTML = `
+    if (!dt.groupList.length) {
+      elem.innerHTML = `
       <div class="card">
         <div class="card-body d-flex align-items-center flex-column">
-          <h6 class="card-title">No groups yet.</h6>
+          <h6 class="card-title main--font-size">No groups yet.</h6>
           <button type="button" class="btn btn-secondary btn-sm">Go to group's page</button>
         </div>
       </div>
       `;
-    // }
+    } else {
+      elem.innerHTML = `      
+      <div id="carouselExampleControls" class="carousel slide main__carousel carousel-dark" data-bs-ride="carousel" data-bs-interval="false">
+        <div class="carousel-inner h-100">
+        </div>
+        <a class="carousel-control-prev arrows-color" href="#carouselExampleControls" role="button" data-bs-slide="prev">
+          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Previous</span>
+        </a>
+        <a class="carousel-control-next arrows-color" href="#carouselExampleControls" role="button" data-bs-slide="next">
+          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Next</span>
+        </a>
+      </div>`;
+
+      elem.querySelectorAll('.arrow-color').forEach((item: any) => {
+        if (dt.groupList.length < 3) item.classLis.add('arrows-visibility');
+      });
+
+      const carouselItemCount: number =
+        dt.groupList.length % 2 === 0
+          ? dt.groupList.length - 1
+          : (dt.groupList.length + 1) / 2;
+      for (let i = 0; i < carouselItemCount; i += 1) {
+        elem.querySelector('.carousel-inner').innerHTML += `
+        <div class="carousel-item h-100">
+          <div class="carousel-item__inner">
+          </div>
+        </div>
+        `;
+      }
+      elem
+        .querySelector('.carousel-inner')
+        .querySelectorAll('.carousel-item')[0]
+        .classList.add('active');
+    }
   }
 
-  renderTransactions(elem: HTMLElement, dt: any): void {
-    // if (dt.groupList === '[]') {
-    elem.innerHTML = `
+  renderAvatarsBlock(
+    data: any,
+    index: number,
+    uid: string,
+    currency: string,
+  ): void {
+    const elems: any = document.querySelectorAll('.card-trans__main__avatars');
+    const ELEMENTS_COUNT: number = 3;
+    let html: string = '';
+
+    data.forEach((item: any, ind: number) => {
+      if (ind < ELEMENTS_COUNT) {
+        html += `
+            <div class="avatars__wrapper">
+              <img src="${item.userAvatar}" alt="user avatar" width="40px">
+            </div>
+            `;
+      } else if (ind === ELEMENTS_COUNT) {
+        html += `
+            <div class="avatars__wrapper--digit">
+              <span>+${data.length - ELEMENTS_COUNT}</span>
+            </div>
+            `;
+      }
+    });
+    elems[index].innerHTML = html;
+
+    const userCosts: any = document.querySelectorAll('.cars-trans__main__cost');
+
+    data.forEach((item: any) => {
+      if (item.userID === uid) {
+        userCosts[index].innerHTML = `
+        <span>${item.cost} ${currency}</span>
+      `;
+      }
+    });
+  }
+
+  renderTransactions(data: any): void {
+    const dt: any = data;
+    if (!dt.length) {
+      document.querySelector('.main__group-transactions').innerHTML = `
       <div class="card">
         <div class="card-body d-flex align-items-center flex-column justify-content-center">
-          <h6 class="card-title m-0">No transactions yet.</h6>
+          <h6 class="card-title m-0 main--font-size">No transactions yet.</h6>
         </div>
       </div>
       `;
-    // }
+    } else {
+      dt.forEach((item: any, index: number) => {
+        if (index < 10) {
+          const date: Date = new Date(item.date);
+          document.querySelector('.main__group-transactions').innerHTML += `
+            <div class="card main__card-trans">
+              <p class="main__card-trans__header">
+                <span class="card-trans__header__title">${
+                  item.descripion
+                }</span>
+                <span class="card-trans__header__title"> Group: ${
+                  item.groupTitle
+                }</span>
+              </p>
+              <div class="main__card-trans__main">
+                <p class="card-trans__main__loc">
+                  <span class="card-trans__main__date">
+                  ${date.toLocaleDateString()}
+                  </span>
+                  <span class="card-trans__main__time">
+                  ${date.toLocaleTimeString().slice(0, 5)}
+                    </span>
+                </p>
+                <div class="card-trans__main__avatars">
+                </div>
+                <p class="cars-trans__main__cost">
+                </p>
+              </div>
+              <p class="main__card-trans__footer">
+                <span class="card-trans__footer__total">
+                  Total: ${item.totalCost} ${item.currency}
+                </span>
+              </p>
+            </div>
+            `;
+        }
+      });
+    }
   }
 
   render(data: any): void {
@@ -93,27 +260,18 @@ export class Main extends Page {
               <span>${data.name}</span>
             </h3>
           </div>
-          <p class="main__balance align-self-start">Balance ${
-            data.balance || 0
-          } ${data.currency}
+          <p class="main__balance align-self-start block__element-gap">
+            <span>Balance</span> 
+            <span>${data.balance || 0} ${data.currency}</span>
           </p>
         </div>
         <div class="block__card flex-column block--width-85">
-          <p class="block__element-gap d-flex align-items-center align-self-start">
-            <span>Current currency:</span>
-            <select class="form-select w-auto" aria-label="Default select example">
-              <option value="BYN" selected>BYN</option>
-              <option value="EUR">EUR</option>
-              <option value="USD">USD</option>
-              <option value="RUB">RUB</option>
-            </select>
-          </p>
           <table class="table">
             <thead>
               <tr>
                 <th scope="col">#</th>
                 <th scope="col">Currency</th>
-                <th scope="col">National Bank</th>
+                <th scope="col">Rate</th>
                 <th scope="col">Balance</th>
               </tr>
             </thead>
@@ -122,15 +280,15 @@ export class Main extends Page {
           </table>
         </div>
         <div class="block__card flex-column block--width-85">
-          <p class="align-self-start">
+          <p class="align-self-start main--font-size">
             <span>My groups</span>
           </p>
           <div class="main__group-slider flex-column main__inner-card">
           </div>
         </div>
         <div class="block__card flex-column block--width-85">
-          <p class="align-self-start">
-            <span>Group's transactions</span>
+          <p class="align-self-start main--font-size">
+            <span>My transactions</span>
           </p>
           <div class="main__group-transactions flex-column main__inner-card">
           </div>
@@ -138,11 +296,7 @@ export class Main extends Page {
     </div>
   </div>
   `;
-    this.getDataForCurrency(this.element.querySelector('tbody'));
+    this.getDataForCurrency(this.createCurrTable, data.currency);
     this.renderSlider(this.element.querySelector('.main__group-slider'), data);
-    this.renderTransactions(
-      this.element.querySelector('.main__group-transactions'),
-      data,
-    );
   }
 }
