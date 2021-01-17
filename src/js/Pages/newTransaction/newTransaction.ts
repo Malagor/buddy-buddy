@@ -14,7 +14,7 @@ export class NewTransaction extends Page {
   }
 
   render = (): void => {
- 
+
 
     this.element.innerHTML = `
       <div class="new-trans modal-content">
@@ -27,7 +27,7 @@ export class NewTransaction extends Page {
           <div class="form-group row block--margin-adaptive">
             <label for="group" class="new-trans__label col-sm-2 col-form-label">Группа</label>
             <div class="col-sm-10">
-              <select id="group"class="new-trans__groups-list form-select"></select>
+              <select id="group" class="new-trans__groups-list form-select"></select>
             </div>
           </div>
 
@@ -40,7 +40,7 @@ export class NewTransaction extends Page {
 
           <div class="form-group row block--margin-adaptive mb-3">
             <label class="new-trans__label col-sm-2 col-form-label">Сумма</label>
-            <div class="new-trans__currency-group col-sm-10">            
+            <div class="new-trans__currency-group col-sm-10">
               <input type="text" class="new-trans__total-sum input-required form-control w-75" required pattern="\d[0-9]\.?\d[0-9]">
               <select class="new-trans__currency-list form-select w-25"></select>
             </div>
@@ -59,15 +59,18 @@ export class NewTransaction extends Page {
               <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content p-2 d-flex flex-column">
                     <button type="button" class="btn-close align-self-end add-check__close-modal" aria-label="Close"></button>
-                    <div class="p-2 add-check__check-box">                 
-                    </div>                
+                    <div class="p-2">
+                      <img class="add-check__image" src="#" alt="check">
+                    </div>
+
                 </div>
               </div>
-            </div> 
+            </div>
+
           </div>
-         
+
           <div class="new-trans__members">
-            <div class="new-trans__members-list d-flex flex-wrap justify-content-start"></div>        
+            <div class="new-trans__members-list d-flex flex-wrap justify-content-start"></div>
             <button type="button" class="all-btn btn btn-secondary btn-sm">Выбрать всех</button>
           </div>
 
@@ -96,28 +99,28 @@ export class NewTransaction extends Page {
   }
 
   addMembersOfGroup = (userID: string, userName: string, userAvatar: string): void => {
-   const members = document.querySelector('.new-trans__members-list');
-   const userElement = document.createElement('div');
-      userElement.classList.add('member', 'd-flex', 'flex-column', 'align-items-center');
-      userElement.setAttribute('user-id', `${userID}`);
-      userElement.innerHTML = `
+    const members = document.querySelector('.new-trans__members-list');
+    const userElement = document.createElement('div');
+    userElement.classList.add('member', 'd-flex', 'flex-column', 'align-items-center');
+    userElement.setAttribute('user-id', `${userID}`);
+    userElement.innerHTML = `
         <div class="member__avatar">
           <img src="${userAvatar}" alt="#">
         </div>
         <div class="member__name">${userName}</div>
       `;
-      members.append(userElement);   
-      this._clickOnMember(userElement);
-        
+    members.append(userElement);
+    this._clickOnMember(userElement);
+
   }
 
-  addCurrencyList = (currID: string, icon: string):void => {
+  addCurrencyList = (currID: string, icon: string): void => {
     const currencySelect: HTMLFormElement = document.querySelector('.new-trans__currency-list');
     const optionHTML = `<option value=${currID}>${icon}</option>`;
     currencySelect.insertAdjacentHTML('beforeend', optionHTML);
   }
 
-  _clickOnMember = (user: HTMLElement):void => {
+  _clickOnMember = (user: HTMLElement): void => {
     user.addEventListener('click', () => {
       const userAvatar = user.querySelector('.member__avatar');
       const userName = user.querySelector('.member__name').innerHTML;
@@ -137,11 +140,11 @@ export class NewTransaction extends Page {
       }
       divideSum();
       checkData();
-    });  
-  } 
+    });
+  }
 
   getDataforCreateTransaction = () => {
-    const group: HTMLFormElement= document.querySelector('.new-trans__groups-list');
+    const group: HTMLFormElement = document.querySelector('.new-trans__groups-list');
     const descr: HTMLFormElement = document.querySelector('.new-trans__descr');
     const totalSum: HTMLFormElement = document.querySelector('.new-trans__total-sum');
     const currency: HTMLFormElement = document.querySelector('.new-trans__currency-list');
@@ -157,11 +160,13 @@ export class NewTransaction extends Page {
     const userList: Array<any> = [];
     const checkedMembers = document.querySelectorAll('.checked-member__wrapper');
     checkedMembers.forEach((memb: HTMLElement) => {
+      const sumInput: HTMLInputElement = memb.querySelector('.checked-member__sum');
+      const commentInput: HTMLInputElement = memb.querySelector('.checked-member__comment');
+
       const user = {
         userID: memb.getAttribute('user-id'),
-        cost: +memb.querySelector('.checked-member__sum').value || 
-              +memb.querySelector('.checked-member__sum').getAttribute('placeholder'),
-        comment: memb.querySelector('.checked-member__comment').value,
+        cost: +sumInput.value || +sumInput.getAttribute('placeholder'),
+        comment: commentInput.value,
         state: 'pending',
       };
       userList.push(user);
@@ -175,7 +180,7 @@ export class NewTransaction extends Page {
       photo: checks,
       currency: currency.value,
       toUserList: userList,
-    } 
+    };
   }
 
   protected events(): void {
@@ -260,8 +265,8 @@ export class NewTransaction extends Page {
       this.onCreateTransaction(data);
       clearAllInputs();
     });
- 
-    btnOpenCheck.addEventListener('click',() => {
+
+    btnOpenCheck.addEventListener('click', () => {
       checkModal.show();
     });
 

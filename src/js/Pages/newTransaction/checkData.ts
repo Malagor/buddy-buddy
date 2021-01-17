@@ -1,5 +1,5 @@
 export const checkData = () => {
-  const createTransBtn:HTMLFormElement = document.querySelector('.new-trans__create-btn');
+  const createTransBtn: HTMLFormElement = document.querySelector('.new-trans__create-btn');
   const descrInput: HTMLFormElement = document.querySelector('.new-trans__descr');
   const sumInput: HTMLFormElement = document.querySelector('.new-trans__total-sum');
   const sumInputs: NodeListOf<HTMLFormElement> = document.querySelectorAll('.checked-member__sum');

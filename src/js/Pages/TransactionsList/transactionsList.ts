@@ -242,6 +242,10 @@ export class TransactionsList extends Page {
     }
   }
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> develop
 
 
   renderInTrans = (transID: string, trans: any) => {
