@@ -75,7 +75,6 @@ export class App {
       this.mainPage = Main.create('.main');
 
       this.database.getUserInfo(uid, [this.layout.setSidebarData]);
-      this.loadCurrentPage();
 
       this.groups = MyGroups.create('.main');
       this.groups.onCreateNewGroup = this.onCreateNewGroup.bind(this);
@@ -90,6 +89,8 @@ export class App {
       this.messenger.onAddRecipient = this.onAddRecipientToMessage.bind(this);
       this.messenger.sendNewMessage = this.onSendNewMessage.bind(this);
       this.messenger.onAnswerMessage = this.onAnswerMessage.bind(this);
+
+      this.loadCurrentPage();
     } else {
       console.log(`isUserLogon = ${state}`);
       this.authPage = AuthPage.create('#app');
@@ -157,7 +158,7 @@ export class App {
   }
 
   onGroupsPage() {
-    // this.setCurrentPage('Groups');
+    this.setCurrentPage('Groups');
     this.deleteHandlers();
     this.notifications.groupCount = 0;
     this.notifications.setNotificationMark(TypeOfNotifications.Group, 0);
@@ -167,7 +168,7 @@ export class App {
   }
 
   onTransactionsPage() {
-    // this.setCurrentPage('Transactions');
+    this.setCurrentPage('Transactions');
     this.deleteHandlers();
     this.notifications.transactionCount = 0;
     this.notifications.setNotificationMark(TypeOfNotifications.Transaction, 0);
@@ -191,7 +192,7 @@ export class App {
   }
 
   onMessagesPage() {
-    // this.setCurrentPage('Messages');
+    this.setCurrentPage('Messages');
     this.deleteHandlers();
     this.notifications.messageCount = 0;
     this.notifications.setNotificationMark(TypeOfNotifications.Message, 0);
