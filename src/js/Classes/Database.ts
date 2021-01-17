@@ -210,7 +210,7 @@ export class Database {
     };
     this.firebase.storage()
       .ref()
-      .child('Groups/' + file.name)
+      .child('groups/' + file.name)
       .put(file, metadata)
       .then((snapshot) => {
         snapshot.ref.getDownloadURL()
