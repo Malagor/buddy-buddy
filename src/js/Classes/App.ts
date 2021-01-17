@@ -207,12 +207,29 @@ export class App {
   onCreateNewGroup(data: any) { // исправить any
     const userArray: string[] = data.userList;
     const userId = this.database.uid;
+    const currentGroup = data.currentGroup;
 
     // check self in Users List
     if (!userArray.includes(userId)) {
       userArray.push(userId);
     }
-    this.database.createNewGroup(data);
+
+    const dataForCreateGroup = {
+      groupData: data.groupData,
+      userList: userArray,
+      currentGroup: currentGroup,
+      userId: userId 
+    }
+    this.database.createNewGroup(dataForCreateGroup);
+
+ /*    const dataForAddCurrentGroup = {
+      userId: userId,
+      groupData: data.groupData,
+    }
+
+    if(currentGroup){
+      this.database.addCurrentGroup(dataForAddCurrentGroup)
+    } */
   }
 
   // onAddGroupMember(name: string) {
