@@ -1,5 +1,8 @@
 import { Page } from '../../Classes/Page';
 import { Modal } from 'bootstrap';
+import { getFormData } from '../../Util/getFormData';
+
+const defAvatar = require('../../../assets/images/default-user-avatar.jpg');
 
 export interface IMessage {
   messageId: string | undefined;
@@ -64,14 +67,21 @@ export class Messenger extends Page {
           </div>
           <div class="modal-body">
             <form id="messageForm">
-              <div class="input-group col-12 mb-3">
-                <span class="input-group-text" id="account-user">@</span>
-                <input type="text" class="form-control" id="formRecipient" placeholder="Recipient" aria-label="Account Name" aria-describedby="account-user">
-                <button type="button" class="btn btn-primary" id="addRecipient"><span class="material-icons">person_search</span></button>
+<!--              <div class="col-12 mb-3">-->
+<!--                <input type="text" class="form-control" id="formRecipient" placeholder="Recipient" aria-label="Account Name" aria-describedby="account-user">-->
+<!--              </div>-->
+              <div class="dropdown">
+                <input class="form-control dropdown-toggle" type="text" id="formRecipient" data-bs-toggle="dropdown" aria-expanded="false" placeholder="Recipient" autocomplete="off" name="name">
+                <input type="text" name="key" class="contact-user-id" hidden>
+                <ul class="dropdown-menu contacts-user-list" aria-labelledby="formRecipient">
+                  <li class="contact-list__item" data-user-id="xuUwNecRyxfaWkuBMyhOGybGukQ2">
+                    <img class="contact-list__avatar" src="${defAvatar}" alt="Alex Malagor">
+                    <span class="contact-list__name">Alex Malagor1</span>
+                  </li>
+                </ul>
               </div>
-              <div class="col-12 mb-3 recipient-user"></div>
               <div class="mb-3">
-                <textarea class="form-control" id="formMessage" rows="3" placeholder="Message" minlength="3"></textarea>
+                <textarea class="form-control" id="formMessage" rows="3" placeholder="Message" minlength="3" name="message"></textarea>
               </div>
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
               <button type="submit" class="btn btn-primary" form="messageForm">Send</input>
@@ -95,6 +105,40 @@ export class Messenger extends Page {
       }
     });
 
+    // Auto-search Recipient of message
+    const formRecipient: HTMLInputElement = document.querySelector('#formRecipient');
+    const li: NodeListOf<Element> = document.querySelectorAll('.contact-list__item');
+    formRecipient.onkeyup = () => {
+      const val: string = formRecipient.value.toLowerCase();
+      if (val.length > 1) {
+        li.forEach(item => {
+          item.setAttribute('hidden', '');
+          if (item.querySelector('.contact-list__name').textContent.toLowerCase().includes(val)) {
+            item.removeAttribute('hidden');
+          }
+        });
+      } else {
+        li.forEach(item => {
+          item.removeAttribute('hidden');
+        });
+      }
+    };
+
+    // select user as Recipient for message
+    const contactList = document.querySelector('.contacts-user-list');
+    contactList.addEventListener('click', event => {
+      const { target }: any = event;
+
+      if (target.closest('.contact-list__item')) {
+        const item: HTMLElement = target.closest('.contact-list__item');
+        const formRecipient: HTMLInputElement = document.querySelector('#formRecipient');
+        const keyInput: HTMLInputElement = document.querySelector('.contact-user-id');
+
+        formRecipient.value = item.querySelector('.contact-list__name').textContent;
+        keyInput.value = item.getAttribute('data-user-id');
+      }
+    });
+
     // Show modal event
     const addMessageBtn = document.querySelector('.message__addBtn');
     const modal = new Modal(this.element.querySelector('#messageModal'));
@@ -113,38 +157,18 @@ export class Messenger extends Page {
       form.classList.add('was-validated');
       event.preventDefault();
 
-      const toUserName: HTMLElement = form.querySelector('.recipient-user__name');
-      let toUserID: string;
-      if (!toUserName) {
-        this.errorAddUserForSendMessage('No user selected to send the message!');
-        return;
-      } else {
-        toUserID = toUserName.getAttribute('data-user-uid');
-      }
-
-      const messageTextarea: HTMLFormElement = form.querySelector('#formMessage');
-      const message: string = messageTextarea.value;
-      const date = Date.now();
+      const formData = getFormData(form);
 
       const messageData: INewMessage = {
+        toUser: formData.key,
+        message: formData.message,
+        date: Date.now(),
         fromUser: null,
-        toUser: toUserID,
-        date,
-        message,
         isRead: false,
       };
       this.sendNewMessage(messageData);
       modal.hide();
     };
-
-    // Add Recipient User Name+Avatar in Message Form
-    const addRecipient = form.querySelector('#addRecipient');
-    addRecipient.addEventListener('click', (ev) => {
-      ev.preventDefault();
-      const recipientInput: HTMLFormElement = form.querySelector('#formRecipient');
-      const accountUser: string = recipientInput.value;
-      this.onAddRecipient(accountUser);
-    });
   }
 
   // Displays the current message on the page
@@ -211,7 +235,7 @@ export class Messenger extends Page {
       const btn = message.querySelector('.answer-button');
       btn.setAttribute('data-user-uid', data.key);
     }
-  }
+  };
 
   // Add Recipient User Name+Avatar in Message Form
   addUserForSendMessage = (userData: any): void => {

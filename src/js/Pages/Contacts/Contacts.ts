@@ -117,4 +117,14 @@ export class Contacts extends Page {
     const errorField: HTMLElement = document.querySelector('.error-message');
     errorField.textContent = message;
   }
+
+  getHtmlContactInputList(element: string) {
+    const html = `
+      <div class="dropdown">
+        <input class="form-control dropdown-toggle" type="text" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false" placeholder="Recipient">
+        <ul class="dropdown-menu contacts-user-list" aria-labelledby="dropdownMenuButton">
+        </ul>
+      </div>
+    `;
+  }
 }

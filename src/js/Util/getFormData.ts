@@ -3,7 +3,7 @@ export const getFormData = (
   imageElement?: HTMLImageElement,
 ): any => {
   const formFields: NodeListOf<HTMLFormElement> = formElement.querySelectorAll(
-    'input, select',
+    'input, select, textarea',
   );
 
   const formData: { [key: string]: any } = {};
