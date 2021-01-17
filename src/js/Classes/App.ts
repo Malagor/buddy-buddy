@@ -9,8 +9,14 @@ import { AccountPage } from '../Pages/AccountPage/AccountPage';
 import { IGroupData } from '../Interfaces/IGroupData';
 import { TransactionsList } from '../Pages/TransactionsList/transactionsList';
 import { dataTransList } from '../Data/dataTransList';
-import { INotification, Notifications } from './Notifications';
-import { Messenger } from '../Pages/Messenger/Messenger';
+import { INotification, Notifications, TypeOfNotifications } from './Notifications';
+import { INewMessage, Messenger } from '../Pages/Messenger/Messenger';
+
+export interface IHandlers {
+  messages: any;
+  groups: any;
+  transactions: any;
+}
 
 export class App {
   private database: Database;
@@ -23,6 +29,9 @@ export class App {
   private transactionsList: TransactionsList;
   private notifications: Notifications;
   private messenger: Messenger;
+  private messageHandler: (snapshot: any) => void;
+  private transactionHandler: (snapshot: any) => void;
+  private groupHandler: (snapshot: any) => void;
 
   constructor() {
     this.database = Database.create();
@@ -43,6 +52,8 @@ export class App {
       // user signin
       this.layout = Layout.create('#app');
       this.layout.render();
+
+      this.startNotification();
 
       // SIDEBAR
       this.layout.onSignOut = this.onSignOut.bind(this);
@@ -76,22 +87,7 @@ export class App {
       this.messenger.sendNewMessage = this.onSendNewMessage.bind(this);
       this.messenger.onAnswerMessage = this.onAnswerMessage.bind(this);
 
-      // Notifications Init
-      setTimeout(() => {
-        const groupsEl: NodeListOf<Element> = document.querySelectorAll('.sidebarGroupsLink .badge');
-        const transactionsEl: NodeListOf<Element> = document.querySelectorAll('.sidebarTransactionsLink .badge');
-        const messagesEl: NodeListOf<Element> = document.querySelectorAll('.sidebarMessagesLink .badge');
 
-        const notiData: INotification = {
-          groupsEl,
-          transactionsEl,
-          messagesEl,
-        };
-
-        this.notifications = Notifications.create(notiData);
-
-        this.database.countNewMessage(this.notifications.sentMessageNotification);
-      }, 2000);
     } else {
       console.log(`isUserLogon = ${state}`);
       this.authPage = AuthPage.create('#app');
@@ -131,21 +127,34 @@ export class App {
   }
 
   onMainPage() {
+    this.deleteHandlers();
     const uid: string = this.database.uid;
     this.database.getUserInfo(uid, [this.mainPage.render]);
+
   }
 
   onAccountPage() {
+    this.deleteHandlers();
     const uid: string = this.database.uid;
     this.database.getUserInfo(uid, [this.accountPage.render]);
+
   }
 
   onGroupsPage() {
+    this.deleteHandlers();
+    this.notifications.groupCount = 0;
+    this.notifications.setNotificationMark(TypeOfNotifications.Group, 0);
+
     this.groups.render();
     this.database.getGroupList(this.groups.createGroupList);
+
   }
 
   onTransactionsPage() {
+    this.deleteHandlers();
+    this.notifications.transactionCount = 0;
+    this.notifications.setNotificationMark(TypeOfNotifications.Transaction, 0);
+
     this.transactionsList.render(dataTransList);
     this.transactionsList.newTrans.onCreateTransaction = this.onCreateTransaction.bind(this);
     this.transactionsList.newTrans.onShowMembersOfGroup = this.onShowMembersOfGroup.bind(this);
@@ -156,20 +165,28 @@ export class App {
   }
 
   onMessagesPage() {
+    this.deleteHandlers();
+    this.notifications.messageCount = 0;
+    this.notifications.setNotificationMark(TypeOfNotifications.Message, 0);
+
     this.messenger.render();
-    this.database.getMessageList(this.messenger.printMessage);
-    // this.database.getGroupList(this.groups.addGroupToList);
+    this.messageHandler = this.database.messageHandler(this.messenger.addMessageToList, this.messenger.setUserDataInMessage);
+    this.database.getMessageList(this.messageHandler);
+
   }
 
   onStatisticsPage() {
+    this.deleteHandlers();
     console.log('Load Statistics Page!');
   }
 
   onSettingsPage() {
+    this.deleteHandlers();
     console.log('Load Settings Page!');
   }
 
   onHelpPage() {
+    this.deleteHandlers();
     console.log('Load Help Page!');
   }
 
@@ -222,12 +239,37 @@ export class App {
     this.database.findUserByName(accountName, this.messenger.addUserForSendMessage, this.messenger.errorAddUserForSendMessage);
   }
 
-  onSendNewMessage(data: any): void {
+  onSendNewMessage(data: INewMessage): void {
     this.database.createNewMessage(data);
   }
 
   onAnswerMessage(userId: string) {
-    this.database.getUserInfo(userId, [this.messenger.answerModal]);
+    this.database.getUserInfo(userId, [this.messenger.callAnswerModal]);
+  }
+
+  startNotification(): void {
+    const groupsEl: NodeListOf<Element> = document.querySelectorAll('.sidebarGroupsLink .badge');
+    const transactionsEl: NodeListOf<Element> = document.querySelectorAll('.sidebarTransactionsLink .badge');
+    const messagesEl: NodeListOf<Element> = document.querySelectorAll('.sidebarMessagesLink .badge');
+    const notiData: INotification = {
+      groupsEl,
+      transactionsEl,
+      messagesEl,
+    };
+    this.notifications = Notifications.create(notiData);
+    this.database.countNewMessage(this.notifications.setNotificationMark);
+    this.database.countGroupsInvite(this.notifications.setNotificationMark);
+    this.database.countTransactionInvite(this.notifications.setNotificationMark);
+  }
+
+  deleteHandlers() {
+    const handlers: IHandlers = {
+      messages: this.messageHandler,
+      groups: this.groupHandler,
+      transactions: this.transactionHandler,
+    };
+
+    this.database.deleteHandlers(handlers);
   }
 
   // loadMainPage() {

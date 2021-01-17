@@ -47,18 +47,6 @@
   grid-area: button;
 }
 
-.message__addBtn {
-  position: fixed;
-  bottom: 3.5rem;
-  width: 3rem;
-  height: 3rem;
-  border-radius: 50%;
-
-  @include tablets {
-    bottom: 5rem;
-  }
-}
-
 .recipient-user {
   display: flex;
 }

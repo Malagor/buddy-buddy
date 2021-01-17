@@ -1,15 +1,23 @@
 import { Page } from '../../Classes/Page';
 import { Modal } from 'bootstrap';
 
-interface IMessage {
+export interface IMessage {
   messageId: string | undefined;
-  key: string;
-  name: string;
-  avatar: string;
-  date: Date;
+  key?: string;
+  name?: string;
+  avatar?: string;
+  date: number;
   message: string;
-  status: boolean;
-  direction: boolean;
+  isRead: boolean;
+  isReceive: boolean;
+}
+
+export interface INewMessage {
+  fromUser: string | null;
+  toUser: string;
+  date: number;
+  isRead: boolean;
+  message: string;
 }
 
 export class Messenger extends Page {
@@ -19,134 +27,33 @@ export class Messenger extends Page {
 
   static create(element: string): Messenger {
     const page = new Messenger(element);
-    page.printMessage = page.printMessage.bind(page);
+    page.addMessageToList = page.addMessageToList.bind(page);
     return page;
   }
 
   render(): void {
     let html = `
-      <div class="block__wrapper d-flex align-items-center flex-column">
-        <div class="block__content d-flex align-items-center flex-column w-100">
-          <div class="block__header account__header--main d-flex align-items-center">
-            <p class="block__nick">Messenger</p>
-          </div>
-          <div class="message-list block--width-85 d-flex flex-column">
-          </div>
-        <button type="button" class="btn btn-primary d-flex align-items-center justify-content-center message__addBtn"><span class="material-icons">add</span></button>
+    <div class="block__wrapper">
+      <div class="block__content">
+        <div class="block__header block__header--main">
+          <p class="block__title">Messenger</p>
+        </div>
+        <div class="block__main">
+          <div class="message-list block--width-85 d-flex flex-column"></div>
       </div>
+      <div class="block__footer">
+          <button type="button" class="btn btn-primary message__addBtn">New message</button>
+        </div>
+    </div>
     `;
 
-    html += this.modal();
+    html += this.modalHTML();
 
     this.element.innerHTML = html;
     this.events();
   }
 
-  protected events(): void {
-
-    this.element.addEventListener('click', event => {
-      const { target }: any = event;
-
-      if (target.closest('.answer-button')) {
-        const button: HTMLElement = target.closest('.answer-button');
-        const userId = button.getAttribute('data-user-uid');
-
-        this.onAnswerMessage(userId);
-      }
-    });
-
-
-    const addMessageBtn = document.querySelector('.message__addBtn');
-    const modal = new Modal(this.element.querySelector('#messageModal'));
-    addMessageBtn.addEventListener('click', () => {
-      console.log('ShowModal');
-      modal.show();
-      // }
-    });
-
-    const { messageForm }: any = document.forms;
-    const form: HTMLFormElement = messageForm;
-
-    form.onsubmit = (event) => {
-      if (!form.checkValidity()) {
-        event.preventDefault();
-        event.stopPropagation();
-      }
-      form.classList.add('was-validated');
-      event.preventDefault();
-
-      const toUser: string = form.querySelector('.recipient-user__name').getAttribute('data-user-uid');
-      const messageTextarea: HTMLFormElement = form.querySelector('#formMessage');
-      const message: string = messageTextarea.value;
-      const date = Date.now();
-
-      const messageData = {
-        fromUser: '',
-        toUser,
-        date,
-        message,
-        status: false,
-      };
-      this.sendNewMessage(messageData);
-      modal.hide();
-    };
-
-    const addRecipient = form.querySelector('#addRecipient');
-    addRecipient.addEventListener('click', (ev) => {
-      ev.preventDefault();
-      const recipientInput: HTMLFormElement = form.querySelector('#formRecipient');
-      const accountUser: string = recipientInput.value;
-      this.onAddRecipient(accountUser);
-    });
-  }
-
-  printMessage(data: IMessage): void {
-    console.log('data.direction', data.direction);
-    const dateOptions = {
-      year: '2-digit',
-      month: '2-digit',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
-    };
-    const date: Date = new Date(data.date);
-    const localeDate: string = date.toLocaleString('ru-RU', dateOptions);
-
-    let stateClass: string = '';
-    if (data.status === false && data.direction) {
-      stateClass = 'message--not-read';
-    }
-    let directionClass: string = 'align-self-end message--own';
-    if (data.direction) {
-      directionClass = 'align-self-start';
-    }
-    const messageList = this.element.querySelector('.message-list');
-
-    let html = `
-      <div class="message main--border ${directionClass} ${stateClass} col-10" data-message-id="${data.messageId}">
-          <div class="message__avatar-wrapper">
-            <img src="${data.avatar}" alt="${data.name}">
-          </div>
-          <div class="message__user-name fw-bold">${data.name}</div>
-          <div class="message__time">${localeDate}</div>
-        <div class="message__text align-self-start mt-1">
-          <span>${data.message}</span>
-        </div>`;
-
-    if (data.direction) {
-      html += `
-        <div class="message__button">
-          <button type="button" class="btn btn-outline-primary btn-sm answer-button" data-user-uid="${data.key}">Answer</button>
-        </div>
-        `;
-    }
-
-    html += `</div>`;
-
-    messageList.insertAdjacentHTML('afterbegin', html);
-  }
-
-  modal(): string {
+  modalHTML(): string {
     return `
     <div class="modal fade" id="messageModal" tabindex="-1" aria-labelledby="New message" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
@@ -176,6 +83,137 @@ export class Messenger extends Page {
     `;
   }
 
+  protected events(): void {
+    this.element.addEventListener('click', event => {
+      const { target }: any = event;
+
+      if (target.closest('.answer-button')) {
+        const button: HTMLElement = target.closest('.answer-button');
+        const userId = button.getAttribute('data-user-uid');
+
+        this.onAnswerMessage(userId);
+      }
+    });
+
+    // Show modal event
+    const addMessageBtn = document.querySelector('.message__addBtn');
+    const modal = new Modal(this.element.querySelector('#messageModal'));
+    addMessageBtn.addEventListener('click', () => {
+      modal.show();
+    });
+
+    // Submit Form event
+    const { messageForm }: any = document.forms;
+    const form: HTMLFormElement = messageForm;
+    form.onsubmit = (event) => {
+      if (!form.checkValidity()) {
+        event.preventDefault();
+        event.stopPropagation();
+      }
+      form.classList.add('was-validated');
+      event.preventDefault();
+
+      const toUserName: HTMLElement = form.querySelector('.recipient-user__name');
+      let toUserID: string;
+      if (!toUserName) {
+        this.errorAddUserForSendMessage('No user selected to send the message!');
+        return;
+      } else {
+        toUserID = toUserName.getAttribute('data-user-uid');
+      }
+
+      const messageTextarea: HTMLFormElement = form.querySelector('#formMessage');
+      const message: string = messageTextarea.value;
+      const date = Date.now();
+
+      const messageData: INewMessage = {
+        fromUser: null,
+        toUser: toUserID,
+        date,
+        message,
+        isRead: false,
+      };
+      this.sendNewMessage(messageData);
+      modal.hide();
+    };
+
+    // Add Recipient User Name+Avatar in Message Form
+    const addRecipient = form.querySelector('#addRecipient');
+    addRecipient.addEventListener('click', (ev) => {
+      ev.preventDefault();
+      const recipientInput: HTMLFormElement = form.querySelector('#formRecipient');
+      const accountUser: string = recipientInput.value;
+      this.onAddRecipient(accountUser);
+    });
+  }
+
+  // Displays the current message on the page
+  addMessageToList(data: IMessage): void {
+    const dateOptions = {
+      year: '2-digit',
+      month: '2-digit',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+    };
+    const date: Date = new Date(data.date);
+    const localeDate: string = date.toLocaleString('ru-RU', dateOptions);
+
+    let stateClass: string = '';
+    if (data.isRead === false && data.isReceive) {
+      stateClass = 'message--not-read';
+    }
+    let directionClass: string = 'align-self-end message--own';
+    if (data.isReceive) {
+      directionClass = 'align-self-start';
+    }
+    const messageList = this.element.querySelector('.message-list');
+
+    if (!messageList) return;
+
+    let html = `
+      <div class="message block__card flex-column block--width-85 ${directionClass} ${stateClass} col-10 mb-3" data-message-id="${data.messageId}">
+          <div class="message__avatar-wrapper">
+            <img src="" alt="">
+          </div>
+          <div class="message__user-name fw-bold"></div>
+          <div class="message__time">${localeDate}</div>
+        <div class="message__text align-self-start mt-1">
+          <span>${data.message}</span>
+        </div>`;
+
+    // If this is an incoming message we add the answer button
+    if (data.isReceive) {
+      html += `
+        <div class="message__button">
+          <button type="button" class="btn btn-outline-primary btn-sm answer-button" data-user-uid="${data.key}">Answer</button>
+        </div>
+        `;
+    }
+    html += `</div>`;
+
+    messageList.insertAdjacentHTML('afterbegin', html);
+  }
+
+  // Fills in the message with the user's data
+  setUserDataInMessage = (data: any): void => {
+    const message = this.element.querySelector(`[data-message-id=${data.messageId}]`);
+    if (!message) return;
+
+    const img = message.querySelector('img');
+    img.setAttribute('src', data.avatar);
+    img.setAttribute('alt', data.name);
+
+    const name = message.querySelector('.message__user-name');
+    name.textContent = data.name;
+
+    if (data.isReceive) {
+      const btn = message.querySelector('.answer-button');
+      btn.setAttribute('data-user-uid', data.key);
+    }
+  }
+
+  // Add Recipient User Name+Avatar in Message Form
   addUserForSendMessage = (userData: any): void => {
     const userWrapper: HTMLElement = document.querySelector('.recipient-user');
 
@@ -185,6 +223,7 @@ export class Messenger extends Page {
     `;
   }
 
+  // Displays an error message in the form
   errorAddUserForSendMessage = (message: string): void => {
     const userWrapper: HTMLElement = document.querySelector('.recipient-user');
     userWrapper.innerHTML = `
@@ -192,7 +231,8 @@ export class Messenger extends Page {
     `;
   }
 
-  answerModal = (data: any): void => {
+  // Calls a modal window for a response with the recipient's data filled in
+  callAnswerModal = (data: any): void => {
     const formRecipient: HTMLFormElement = this.element.querySelector('#formRecipient');
     formRecipient.value = data.account;
 
