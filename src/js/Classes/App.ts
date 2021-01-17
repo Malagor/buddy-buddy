@@ -204,21 +204,24 @@ export class App {
     this.authPage.render();
   }
 
-  onCreateNewGroup(data: IGroupData) {
+  onCreateNewGroup(data: any) { // исправить any
     const userArray: string[] = data.userList;
     const userId = this.database.uid;
+
     // check self in Users List
     if (!userArray.includes(userId)) {
       userArray.push(userId);
     }
+/*     data.userList = userArray.map(user => {
+      return user;
+      //console.log('user',user)
+      }
 
-    data.userList = userArray.map(user => {
       return {
         userId: user,
         state: 'pending'
       };
-    });
-
+    }); */
     this.database.createNewGroup(data);
   }
 

@@ -204,9 +204,9 @@ export class Database {
     return accountName;
   }
 
-  createNewGroup(data: IGroupData) {
+  createNewGroup(data: any) { // исправить any
     console.log('createNewGroup - data\n', data);
-    const file: any = data.icon;
+    const file: any = data.groupData.icon;
 
     const metadata = {
       'contentType': file.type,
@@ -218,30 +218,50 @@ export class Database {
       .then((snapshot) => {
         snapshot.ref.getDownloadURL()
           .then((url) => {
-            data['icon'] = url;
+            data.groupData['icon'] = url;
             return data;
           })
           .then(data => {
             this.firebase
               .database()
               .ref('Groups')
-              .push(data)
+              .push(data.groupData)
+              .then(group => {
+
+                data.userList.forEach((userId: string) => {
+                  this.firebase
+                  .database()
+                  .ref(`Groups/${group.key}/userList/${userId}`)
+                  .set({state: 'pending'})
+                });
+                return group;
+
+              })
               .then(group => {
                 const groupKey = group.key;
-
-                this.firebase.database().ref(`Groups/${groupKey}`)
+                this.firebase
+                  .database()
+                  .ref(`Groups/${groupKey}`)
                   .on('value', (group) => {
                     const users: any = group.val().userList;
 
-                    users.forEach((userInData: any) => {      
+                    console.log('users', Object.keys(users))
+                    
+                    Object.keys(users).forEach((userId: any) => {
+                      
+                      this.firebase.database()
+                      .ref(`User/${userId}/groupList/${groupKey}`)
+                      .set({state: 'pending'})
+                    })
+                    /* users.forEach((userInData: any) => {      
                       const user = this.firebase.database()
                         .ref('User')
                         .child(userInData.userId);
 
-                      const userGroup = user.child('groupList');
+                      const userGroup = user.child(`groupList`);
                       userGroup.transaction(groupList => {
                         const groupInfo = {
-                          groupId: groupKey,
+                          groupKey: groupKey,
                           state: 'pending'
                         };
                         if (groupList) {
@@ -253,47 +273,16 @@ export class Database {
                           return arrGroup;
                         }
                       });
-                    });
+                    }); */
                   });
+                })
               })
               .catch(error => {
                 console.log(error.code);
                 console.log(error.message);
               });
           });
-      });
   }
-
-
-  /* createNewGroup(data: IGroupData) {
-    console.log('createNewGroup - data\n', data);
-    this.firebase
-      .database()
-      .ref('Groups')
-      .push(data)
-      .then(group => {
-        const groupKey = group.key;
-        const users = data.userList;
-        users.forEach(userId => {
-          const user = this.firebase.database().ref('User').child(userId);
-          const userGroup = user.child('groupList');
-          userGroup.transaction(groupList => {
-            if (groupList) {
-              groupList.push(groupKey);
-              return groupList;
-            } else {
-              let arrGroup: string[] = [];
-              arrGroup.push(groupKey);
-              return arrGroup;
-            }
-          });
-        });
-      })
-      .catch(error => {
-        console.log(error.code);
-        console.log(error.message);
-      });
-  } */
 
   getGroupList(handlerFunc: any): void {
     this.firebase
@@ -311,19 +300,11 @@ export class Database {
     const base = this.firebase.database();
 
     return ((snapshot: any) => {
-      const users: string[] = [] 
-      
-      snapshot.val().userList.forEach(element => {
-        //console.log(element.userId)
-        users.push(element.userId)  
-      });
-
+      const users: string[] = Object.keys(snapshot.val().userList) // по каждой группе список  юзеров
 
       if (users.includes(this.uid)) {
         const dataGroup = snapshot.val();
-        const dataUserListGroup: any[] =  dataGroup.userList.map((userElement: any) => {
-          return userElement.userId;
-        } )
+        const dataUserListGroup: any[] = Object.keys(snapshot.val().userList)
 
         base
         .ref('User')
@@ -357,55 +338,6 @@ export class Database {
     })
   }
    
-
-/*     const uid = this.uid;
-    const base = this.firebase.database();
-
-    return (snapshot: { val: () => any; key: any; }) => {
-      const messageObj = snapshot.val();
-      const messageId = snapshot.key;
-      const { fromUser, toUser } = messageObj;
-
-      if (fromUser === uid || toUser === uid) {
-        let isReceive: boolean = toUser === uid;
-
-        const messageData: IMessage = {
-          messageId,
-          message: messageObj.message,
-          date: messageObj.date,
-          isRead: messageObj.isRead,
-          isReceive,
-        };
-
-        renderMessage(messageData);
-
-        const secondUserId = isReceive ? fromUser : toUser;
-
-        base.ref(`User/${secondUserId}`)
-          .once('value', (userData: { key: any; val: () => { (): any; new(): any; name: any; avatar: any; }; }) => {
-            const userDataForMessage = {
-              messageId,
-              key: userData.key,
-              name: userData.val().name,
-              avatar: userData.val().avatar,
-              isReceive,
-            };
-            setUserData(userDataForMessage);
-          });
-
-        // if user get and read message, status is toggle to "true"
-        if (isReceive) {
-          base.ref(`Messages/${messageId}`)
-            .child('isRead')
-            .transaction((curStatus: boolean) => {
-              curStatus = true;
-              return curStatus;
-            });
-        }
-      }
-    }; */
-
-
   countGroupsInvite(setNotificationMark: { (type: TypeOfNotifications, num: number): void; (arg0: TypeOfNotifications, arg1: number): void; }): void {
     this.firebase
       .database()

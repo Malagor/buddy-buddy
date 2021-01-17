@@ -3,7 +3,6 @@ export interface IGroupData {
   description: string;
   dateCreate: number;
   dateClose: number | null;
-  userList: string[] | [];
   transactionList: string[] | [];
   icon: string;
 }

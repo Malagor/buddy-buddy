@@ -248,11 +248,15 @@ export class MyGroups extends Page {
         description,
         dateCreate: Date.now(),
         dateClose: null,
-        userList: users,
         transactionList: [],
         icon: logoGroupImgData ? logoGroupImgData.logoGroup : '',
+      } 
+
+      const groupDataAll = {
+        groupData: groupData,
+        userList: users,
       };
-      this.onCreateNewGroup(groupData);
+      this.onCreateNewGroup(groupDataAll);
       modal.hide();
     };
 
