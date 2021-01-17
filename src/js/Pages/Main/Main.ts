@@ -13,7 +13,36 @@ export class Main extends Page {
     const newIndex: number = length - index - 1;
     const elemIndex: number =
       newIndex % 2 === 0 ? newIndex / 2 : (newIndex - 1) / 2;
-    elems[elemIndex].innerHTML += `
+
+    const avatarsBlock: any = (list: any): string => {
+      let result: string = '';
+      list.forEach((item: any, ind: number) => {
+        if (list.length >= 3) {
+          if (ind < 3) {
+            result += `
+            <div class="avatars__wrapper--slider">
+              <img src="${item}" alt="user avatar" width="25px">
+            </div>
+            `;
+          } else if (ind === 3) {
+            result += `
+            <div class="avatars__wrapper--slider-digit">
+              <span>+${userList.length - 3}</span>
+            </div>
+            `;
+          }
+        } else {
+          result += `
+          <div class="avatars__wrapper--single">
+            <img src="${item}" alt="user avatar" width="25px">
+          </div>
+          `;
+        }
+      });
+      return result;
+    };
+
+    const group: string = `
     <div class="main__slider__item">
       <div class="slider__item__img">
         <i class="material-icons">groups</i>
@@ -22,35 +51,20 @@ export class Main extends Page {
         <span>${title}</span>
       </p>
       <div class="slider__item__avatars">
+      ${avatarsBlock(userList)}
       </div>
     </div>
     `;
 
-    const avatarsBlock = document.querySelectorAll('.slider__item__avatars');
-
-    userList.forEach((item: any, ind: number) => {
-      if (userList.length >= 3) {
-        if (ind < 3) {
-          avatarsBlock[newIndex].innerHTML += `
-          <div class="avatars__wrapper--slider">
-            <img src="${item}" alt="user avatar" width="25px">
-          </div>
-          `;
-        } else if (ind === 3) {
-          avatarsBlock[newIndex].innerHTML += `
-          <div class="avatars__wrapper--slider-digit">
-            <span>+${userList.length - 3}</span>
-          </div>
-          `;
-        }
-      } else {
-        avatarsBlock[newIndex].innerHTML += `
-        <div class="avatars__wrapper--single">
-          <img src="${item}" alt="user avatar" width="25px">
-        </div>
-        `;
-      }
-    });
+    if (length % 2 === 0) {
+      index % 2 !== 0
+        ? elems[elemIndex].insertAdjacentHTML('afterbegin', group)
+        : elems[elemIndex].insertAdjacentHTML('beforeend', group);
+    } else {
+      index % 2 !== 0
+        ? elems[elemIndex].insertAdjacentHTML('beforeend', group)
+        : elems[elemIndex].insertAdjacentHTML('afterbegin', group);
+    }
   }
 
   getDataForCurrency(callback: any, current: string): void {
@@ -134,7 +148,7 @@ export class Main extends Page {
 
       const carouselItemCount: number =
         dt.groupList.length % 2 === 0
-          ? dt.groupList.length - 1
+          ? dt.groupList.length / 2
           : (dt.groupList.length + 1) / 2;
       for (let i = 0; i < carouselItemCount; i += 1) {
         elem.querySelector('.carousel-inner').innerHTML += `
@@ -190,8 +204,7 @@ export class Main extends Page {
   }
 
   renderTransactions(data: any): void {
-    const dt: any = data;
-    if (!dt.length) {
+    if (!data.length) {
       document.querySelector('.main__group-transactions').innerHTML = `
       <div class="card">
         <div class="card-body d-flex align-items-center flex-column justify-content-center">
@@ -200,7 +213,7 @@ export class Main extends Page {
       </div>
       `;
     } else {
-      dt.forEach((item: any, index: number) => {
+      data.forEach((item: any, index: number) => {
         if (index < 10) {
           const date: Date = new Date(item.date);
           document.querySelector('.main__group-transactions').innerHTML += `
