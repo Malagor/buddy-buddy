@@ -137,16 +137,16 @@ export class App {
     localStorage.setItem('currentPage', name);
   }
 
-  onMainPage() {
+  async onMainPage() {
     this.setCurrentPage('Main');
     this.deleteHandlers();
     const uid: string = this.database.uid;
-    this.database.getUserInfo(uid, [this.mainPage.render]);
-    this.database.getUserTransactions(uid, [
+    await this.database.getUserInfo(uid, [this.mainPage.render]);
+    await this.database.getUserGroups(uid, this.mainPage.renderGroups);
+    await this.database.getUserTransactions(uid, [
       this.mainPage.renderTransactions,
       this.mainPage.renderAvatarsBlock,
     ]);
-    this.database.getUserGroups(uid, this.mainPage.renderGroups);
   }
 
   onAccountPage() {
