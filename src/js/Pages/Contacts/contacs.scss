@@ -14,7 +14,8 @@
 .contacts-list {
   display: grid;
   grid-template-columns: 1fr;
-  column-gap: 1rem;
+  //column-gap: 1rem;
+  grid-gap: 1rem;
 
   @include laptop{
     grid-template-columns: 1fr 1fr;
@@ -23,11 +24,13 @@
 
 .contact {
   display: grid;
-  grid-template-columns: 1fr 2fr 1fr;
+  grid-template-columns: 4rem 2fr 1fr;
   grid-template-rows: 1fr 1fr;
   grid-template-areas: "avatar name button" "avatar account button";
 
-
+  &--pending {
+    box-shadow: 0 0 3px green;
+  }
 }
 
 .contact__avatar-wrapper {

@@ -282,8 +282,7 @@ export class Database {
       .ref('Groups')
       .on('child_added', snapshot => {
         let count: number = 0;
-        console.log(`countGroupsInvite`, snapshot.val());
-
+        snapshot.val();
         setNotificationMark(TypeOfNotifications.Group, count);
       }, (error: { code: string; message: any; }) => {
         console.log('Error:\n ' + error.code);
@@ -309,7 +308,23 @@ export class Database {
         console.log('Error:\n ' + error.code);
         console.log(error.message);
       });
+  }
 
+  countContactsInvite(setNotificationMark: { (type: TypeOfNotifications, num: number): void; (arg0: TypeOfNotifications, arg1: number): void; }): void {
+    this.firebase.database()
+      .ref(`User/${this.uid}/contacts`)
+      .on('child_added', snapshot => {
+        const state = snapshot.val().state;
+
+        if (state === 'pending') {
+          setNotificationMark(TypeOfNotifications.Contact, 1);
+        } else {
+          setNotificationMark(TypeOfNotifications.Contact, 0);
+        }
+      }, (error: { code: string; message: any; }) => {
+        console.log('Error:\n ' + error.code);
+        console.log(error.message);
+      });
   }
 
   countNewMessage(setNotificationMark: { (type: TypeOfNotifications, num: number): void; (arg0: TypeOfNotifications, arg1: number): void; }): void {
@@ -345,10 +360,14 @@ export class Database {
       base.ref('Transactions')
         .off('child_added', handlers.transactions);
     }
+
+    if (handlers.contacts) {
+      base.ref('Transactions')
+        .off('child_added', handlers.contacts);
+    }
   }
 
   getMessageList(addMessageToListFunc: { (snapshot: any): void; (a: firebase.database.DataSnapshot, b?: string): any; }): void {
-
     this.firebase
       .database()
       .ref('Messages')
@@ -411,19 +430,22 @@ export class Database {
   }
 
   contactsHandler = (renderContact: any): any => {
-    const base = this.firebase.database();
     return (snapshot: any): void => {
       if (snapshot) {
-        const contact = snapshot.val();
+        const key: string = snapshot.key;
+        const state = snapshot.val().state;
 
-        base
-          .ref(`User/${contact}`)
+        this.firebase
+          .database()
+          .ref(`User/${key}`)
           .once('value', snapshot => {
-            const key = snapshot.key;
+            // const key = snapshot.key;
             const userData = snapshot.val();
             userData.key = key;
-            console.log(userData);
+            userData.state = state;
+            // if (state !== 'decline') {
             renderContact(userData);
+            // }
           });
       } else {
         console.log('No Contacts');
@@ -443,6 +465,37 @@ export class Database {
           console.log('Error:\n ' + error.code);
           console.log(error.message);
         });
+  }
+
+  changeContactState(contsctId: string, newState: string, userId?: string): void {
+    let uid: string;
+    if (userId) {
+      uid = userId;
+    } else {
+      uid = this.uid;
+    }
+    this.firebase.database()
+      .ref(`User/${uid}/contacts/${contsctId}`)
+      .transaction(state => {
+        state = { state: newState };
+        return state;
+      });
+  }
+
+  deleteContact(userId: string, contactId: string) {
+    this.changeContactState(contactId, 'decline');
+    this.changeContactState(userId, 'decline', contactId);
+
+    // this.firebase
+    //   .database()
+    //   .ref(`User/${userId}/contacts/${contactId}`)
+    //   .remove(error => {
+    //     if (error) {
+    //       console.log(error.message);
+    //     } else {
+    //       console.log('Delete contact successful');
+    //     }
+    //   });
   }
 
   createNewMessage(data: INewMessage): void {
@@ -603,28 +656,26 @@ export class Database {
         });
 
         if (userKey.length) {
-          const userContacts = userTable
-            .child(this.uid)
-            .child('contacts');
-
-          userContacts.transaction(contactList => {
-            if (contactList) {
-              // If User not exists
-              if (!contactList.includes(userKey[0])) {
-                contactList.push(userKey[0]);
-              } else {
-                errorHandler('The user is already in your contacts.');
-              }
-              return contactList;
-            } else {
-              const newList: string[] = [];
-              newList.push(userKey[0]);
-              return newList;
-            }
-
-          });
+          this.addNewContactToContactList(this.uid, userKey[0], 'approve', errorHandler);
+          this.addNewContactToContactList(userKey[0], this.uid, 'pending', errorHandler);
         } else {
           errorHandler('The user is not found.');
+        }
+      })
+      .catch(error => {
+        errorHandler(error.message);
+      });
+  }
+
+  addNewContactToContactList(userId: string, newContactId: string, state: string, errorHandler?: (message: string) => void) {
+    this.firebase.database()
+      .ref(`User/${userId}/contacts/${newContactId}`)
+      .set({ state: state })
+      .catch(error => {
+        console.log(error.code);
+        console.log(error.message);
+        if (errorHandler) {
+          errorHandler(error.message);
         }
       })
       .catch(error => {

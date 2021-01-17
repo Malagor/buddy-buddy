@@ -37,10 +37,10 @@ export class Layout extends Page {
         <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
           <div class="position-sticky pt-3 sidebar__header">
             <div class="sidebar-avatar__wrapper">
-              <img class="sidebar-avatar__image" src="${defAvatar}" alt="Alex Malagor">
+              <img class="sidebar-avatar__image" src="${defAvatar}" alt="">
             </div>
             <h3 class="sidebar__user-name"></h3>
-            <h6 class="sidebar__account">@malagor</h6>
+            <h6 class="sidebar__account"></h6>
           </div>
           <hr>
           <ul class="nav flex-column">
@@ -57,6 +57,7 @@ export class Layout extends Page {
               <li class="nav-item">
                 <a class="nav-link sidebarContactsLink" href="#">
                   <i class="material-icons">contacts</i><span class="nav-link__text">Контакты</span>
+                  <span class="badge bg-danger"></span>
                 </a>
               </li>
               <li class="nav-item">

@@ -11,8 +11,6 @@ import { TransactionsList } from '../Pages/TransactionsList/transactionsList';
 import { dataTransList } from '../Data/dataTransList';
 import { INotification, Notifications, TypeOfNotifications } from './Notifications';
 import { INewMessage, Messenger } from '../Pages/Messenger/Messenger';
-import { INotification, Notifications } from './Notifications';
-import { Messenger } from '../Pages/Messenger/Messenger';
 import { Contacts, ISearchUserData } from '../Pages/Contacts/Contacts';
 
 
@@ -20,6 +18,7 @@ export interface IHandlers {
   messages: any;
   groups: any;
   transactions: any;
+  contacts: any;
 }
 
 export class App {
@@ -72,6 +71,7 @@ export class App {
       this.layout.onSignOut = this.onSignOut.bind(this);
       this.layout.onAccountPage = this.onAccountPage.bind(this);
       this.layout.onMessagesPage = this.onMessagesPage.bind(this);
+      this.layout.onContactsPage = this.onContactsPage.bind(this);
 
       this.accountPage = AccountPage.create('.main');
       this.mainPage = Main.create('.main');
@@ -95,6 +95,7 @@ export class App {
 
       this.contacts = Contacts.create('.main');
       this.contacts.addUserToContacts = this.onAddUserToContacts.bind(this);
+      this.contacts.onChangeContactState = this.onChangeContactState.bind(this);
 
     } else {
       console.log(`isUserLogon = ${state}`);
@@ -176,7 +177,6 @@ export class App {
     this.database.getCurrencyList(this.transactionsList.newTrans.addCurrencyList);
     this.database.getGroupsListForTransaction(this.transactionsList.newTrans.addGroupList);
     this.database.getMembersOfGroupFirst(this.transactionsList.newTrans.addMembersOfGroup);
-
   }
 
   onMessagesPage() {
@@ -187,7 +187,6 @@ export class App {
     this.messenger.render();
     this.messageHandler = this.database.messageHandler(this.messenger.addMessageToList, this.messenger.setUserDataInMessage);
     this.database.getMessageList(this.messageHandler);
-
   }
 
   onStatisticsPage() {
@@ -229,10 +228,6 @@ export class App {
     this.database.createNewGroup(data);
   }
 
-  // onAddGroupMember(name: string) {
-  //   this.database.findUserByName(name, this.groupsPage.addMembersGroup);
-  // }
-
   onTransactionSubmit(i: number) {
     dataTransList.transactions[i].submit = true;
     console.log('submit transaction');
@@ -266,15 +261,20 @@ export class App {
     const groupsEl: NodeListOf<Element> = document.querySelectorAll('.sidebarGroupsLink .badge');
     const transactionsEl: NodeListOf<Element> = document.querySelectorAll('.sidebarTransactionsLink .badge');
     const messagesEl: NodeListOf<Element> = document.querySelectorAll('.sidebarMessagesLink .badge');
-    const notiData: INotification = {
+    const contactsEl: NodeListOf<Element> = document.querySelectorAll('.sidebarContactsLink .badge');
+
+    const notificationElements: INotification = {
       groupsEl,
       transactionsEl,
       messagesEl,
+      contactsEl,
     };
-    this.notifications = Notifications.create(notiData);
+    this.notifications = Notifications.create(notificationElements);
+
     this.database.countNewMessage(this.notifications.setNotificationMark);
     this.database.countGroupsInvite(this.notifications.setNotificationMark);
     this.database.countTransactionInvite(this.notifications.setNotificationMark);
+    this.database.countContactsInvite(this.notifications.setNotificationMark);
   }
 
   deleteHandlers() {
@@ -282,6 +282,7 @@ export class App {
       messages: this.messageHandler,
       groups: this.groupHandler,
       transactions: this.transactionHandler,
+      contacts: this.contactsHandler,
     };
 
     this.database.deleteHandlers(handlers);
@@ -291,13 +292,16 @@ export class App {
     this.database.addUserToContacts(userData, errorHandler);
   }
 
-  // loadMainPage() {
-  //   this.mainPage.render();
-  // }
-
-  // loadGroupPage() {
-  //   this.groupsPage.render();
-  // }
+  onChangeContactState(contactId: string, state: string): void {
+    if (state === 'approve') {
+      this.notifications.decreaseNotificationMark(TypeOfNotifications.Contact);
+    }
+    if (state === 'decline') {
+      this.database.deleteContact(this.database.uid, contactId);
+    } else {
+      this.database.changeContactState(contactId, state);
+    }
+  }
 
   // createUser(uid: string) {
   //   const form: HTMLFormElement = document.querySelector('#my-form');
