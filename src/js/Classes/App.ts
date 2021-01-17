@@ -212,16 +212,6 @@ export class App {
     if (!userArray.includes(userId)) {
       userArray.push(userId);
     }
-/*     data.userList = userArray.map(user => {
-      return user;
-      //console.log('user',user)
-      }
-
-      return {
-        userId: user,
-        state: 'pending'
-      };
-    }); */
     this.database.createNewGroup(data);
   }
 

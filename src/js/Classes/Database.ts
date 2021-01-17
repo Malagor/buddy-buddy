@@ -253,27 +253,6 @@ export class Database {
                       .ref(`User/${userId}/groupList/${groupKey}`)
                       .set({state: 'pending'})
                     })
-                    /* users.forEach((userInData: any) => {      
-                      const user = this.firebase.database()
-                        .ref('User')
-                        .child(userInData.userId);
-
-                      const userGroup = user.child(`groupList`);
-                      userGroup.transaction(groupList => {
-                        const groupInfo = {
-                          groupKey: groupKey,
-                          state: 'pending'
-                        };
-                        if (groupList) {
-                          groupList.push(groupInfo);
-                          return groupList;
-                        } else {
-                          let arrGroup: any[] = [];
-                          arrGroup.push(groupInfo);
-                          return arrGroup;
-                        }
-                      });
-                    }); */
                   });
                 })
               })
@@ -320,13 +299,6 @@ export class Database {
               arrayUsers.push(snapshotUser[user]);
             }
           });
-
-         /*  const arrayUsers: any[] = userList.map((user) => {
-            if (dataUserListGroup.includes(user)) {
-              console.log(snapshotUser[user])
-              return snapshotUser[user];
-            }
-          }) */
 
           const dataForGroup = {
             'dataGroup': dataGroup,
