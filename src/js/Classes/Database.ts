@@ -299,56 +299,112 @@ export class Database {
     this.firebase
       .database()
       .ref('Groups')
-      .on('child_added', (snapshot) => {
-        const users: string[] = [] 
-        
-        snapshot.val().userList.forEach(element => {
-          console.log(element.userId)
-          users.push(element.userId)  
-        });
-
-
-        if (users.includes(this.uid)) {
-          const dataGroup = snapshot.val();
-          const dataUserListGroup: any[] =  dataGroup.userList.map((userElement: any) => {
-            return userElement.userId;
-          } )
-
-          this.firebase
-          .database()
-          .ref('User')
-          .once('value', (snapshot) => {
-            const snapshotUser = snapshot.val();
-            const userList = Object.keys(snapshotUser); // all users in DB
-
-            // const arrayUserImg: string[] = userList.filter(user => dataUserListGroup.includes(user));
-            const arrayUsers: any[] = [];
-            userList.forEach(user => {
-              if (dataUserListGroup.includes(user)) {
-
-                arrayUsers.push(snapshotUser[user]);
-              }
-            });
-
-           /*  const arrayUsers: any[] = userList.map((user) => {
-              if (dataUserListGroup.includes(user)) {
-                console.log(snapshotUser[user])
-                return snapshotUser[user];
-              }
-            }) */
-
-            const dataForGroup = {
-              'dataGroup': dataGroup,
-              'arrayUsers': arrayUsers
-            };
-            handlerFunc(dataForGroup);
-          });
-        }
-      }, (error: { code: string; message: any; }) => {
+      .on('child_added', handlerFunc, 
+      (error: { code: string; message: any; }) => {
         console.log('Error:\n ' + error.code);
         console.log(error.message);
       });
+      
   }
+
+  groupHandler = (createGroupList: any) => {
+    const base = this.firebase.database();
+
+    return ((snapshot: any) => {
+      const users: string[] = [] 
+      
+      snapshot.val().userList.forEach(element => {
+        //console.log(element.userId)
+        users.push(element.userId)  
+      });
+
+
+      if (users.includes(this.uid)) {
+        const dataGroup = snapshot.val();
+        const dataUserListGroup: any[] =  dataGroup.userList.map((userElement: any) => {
+          return userElement.userId;
+        } )
+
+        base
+        .ref('User')
+        .once('value', (snapshot) => {
+          const snapshotUser = snapshot.val();
+          const userList = Object.keys(snapshotUser); // all users in DB
+
+          // const arrayUserImg: string[] = userList.filter(user => dataUserListGroup.includes(user));
+          const arrayUsers: any[] = [];
+          userList.forEach(user => {
+            if (dataUserListGroup.includes(user)) {
+
+              arrayUsers.push(snapshotUser[user]);
+            }
+          });
+
+         /*  const arrayUsers: any[] = userList.map((user) => {
+            if (dataUserListGroup.includes(user)) {
+              console.log(snapshotUser[user])
+              return snapshotUser[user];
+            }
+          }) */
+
+          const dataForGroup = {
+            'dataGroup': dataGroup,
+            'arrayUsers': arrayUsers
+          };
+          createGroupList(dataForGroup);
+        });
+      }
+    })
+  }
+   
+
+/*     const uid = this.uid;
+    const base = this.firebase.database();
+
+    return (snapshot: { val: () => any; key: any; }) => {
+      const messageObj = snapshot.val();
+      const messageId = snapshot.key;
+      const { fromUser, toUser } = messageObj;
+
+      if (fromUser === uid || toUser === uid) {
+        let isReceive: boolean = toUser === uid;
+
+        const messageData: IMessage = {
+          messageId,
+          message: messageObj.message,
+          date: messageObj.date,
+          isRead: messageObj.isRead,
+          isReceive,
+        };
+
+        renderMessage(messageData);
+
+        const secondUserId = isReceive ? fromUser : toUser;
+
+        base.ref(`User/${secondUserId}`)
+          .once('value', (userData: { key: any; val: () => { (): any; new(): any; name: any; avatar: any; }; }) => {
+            const userDataForMessage = {
+              messageId,
+              key: userData.key,
+              name: userData.val().name,
+              avatar: userData.val().avatar,
+              isReceive,
+            };
+            setUserData(userDataForMessage);
+          });
+
+        // if user get and read message, status is toggle to "true"
+        if (isReceive) {
+          base.ref(`Messages/${messageId}`)
+            .child('isRead')
+            .transaction((curStatus: boolean) => {
+              curStatus = true;
+              return curStatus;
+            });
+        }
+      }
+    }; */
+
 
   countGroupsInvite(setNotificationMark: { (type: TypeOfNotifications, num: number): void; (arg0: TypeOfNotifications, arg1: number): void; }): void {
     this.firebase

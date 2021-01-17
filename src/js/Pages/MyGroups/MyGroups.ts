@@ -65,7 +65,7 @@ export class MyGroups extends Page {
   }
 
   createGroupList = (data: any) => {
-    console.log('createGroupList data', data)
+    //console.log('createGroupList data', data)
     document.querySelector('.data-is-not').classList.add('closed-group-hidden');
 
     const HTMLListOpenGroups = document.getElementById('divForListOpenGroups');
@@ -85,7 +85,7 @@ export class MyGroups extends Page {
     const date: Date = new Date(data.dataGroup.dateCreate);
     const dataCreateGroup: string = date.toLocaleString();
     const listUsers = data.arrayUsers;
-    console.log('data.arrayUsers', data.arrayUsers)
+    //console.log('data.arrayUsers', data.arrayUsers)
 
     const participantsImg: string[] = [];
     listUsers.forEach((user: any) => {

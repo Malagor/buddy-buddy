@@ -146,8 +146,10 @@ export class App {
     this.notifications.setNotificationMark(TypeOfNotifications.Group, 0);
 
     this.groups.render();
-    this.database.getGroupList(this.groups.createGroupList);
+    //this.database.getGroupList(this.groups.createGroupList);
+    this.groupHandler = this.database.groupHandler(this.groups.createGroupList);
 
+    this.database.getGroupList(this.groupHandler)
   }
 
   onTransactionsPage() {
