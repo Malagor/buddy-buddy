@@ -6,6 +6,24 @@ export class AccountPage extends Page {
     return new AccountPage(element);
   }
 
+  renderCurrencyOrLang(data: any, currentCurrency: string): void {
+    const el =
+      data[0].length === 2
+        ? document.querySelector('.form-select--lang')
+        : document.querySelector('.form-select--curr');
+
+    data.forEach((item: any) => {
+      el.innerHTML += `
+      <option value="${item}">${item}</option>`;
+    });
+
+    el.querySelectorAll('option').forEach((option) => {
+      if (option.textContent === currentCurrency) {
+        option.setAttribute('checked', 'true');
+      }
+    });
+  }
+
   render = (data: any): void => {
     this.element.innerHTML = `
     <div class="block__wrapper">
@@ -39,7 +57,17 @@ export class AccountPage extends Page {
                 <div class="col-sm-10">
                   <input type="text" name="name" aria-label="Last name" value="${data.name}" class="form-control account__info__input" placeholder="Name" required>
                 </div>
-              </div>  
+              </div>
+              <p class="block__element-gap d-flex align-items-center align-self-start">
+                <span>Current currency:</span>
+                <select class="form-select--curr w-auto" aria-label="Default select example">
+                </select>
+              </p>   
+              <p class="block__element-gap d-flex align-items-center align-self-start">
+                <span>Language:</span>
+                <select class="form-select--lang w-auto" aria-label="Default select example">
+                </select>
+              </p>            
             </div>            
           </div>
           </form>
