@@ -2,8 +2,6 @@ import { Page } from '../../Classes/Page';
 import { Modal } from 'bootstrap';
 import { getFormData } from '../../Util/getFormData';
 
-const defAvatar = require('../../../assets/images/default-user-avatar.jpg');
-
 export interface IMessage {
   messageId: string | undefined;
   key?: string;
@@ -27,6 +25,7 @@ export class Messenger extends Page {
   onAddRecipient: any;
   sendNewMessage: any;
   onAnswerMessage: any;
+  fillContactsList: any;
 
   static create(element: string): Messenger {
     const page = new Messenger(element);
@@ -67,17 +66,10 @@ export class Messenger extends Page {
           </div>
           <div class="modal-body">
             <form id="messageForm">
-<!--              <div class="col-12 mb-3">-->
-<!--                <input type="text" class="form-control" id="formRecipient" placeholder="Recipient" aria-label="Account Name" aria-describedby="account-user">-->
-<!--              </div>-->
               <div class="dropdown">
                 <input class="form-control dropdown-toggle" type="text" id="formRecipient" data-bs-toggle="dropdown" aria-expanded="false" placeholder="Recipient" autocomplete="off" name="name">
                 <input type="text" name="key" class="contact-user-id" hidden>
                 <ul class="dropdown-menu contacts-user-list" aria-labelledby="formRecipient">
-                  <li class="contact-list__item" data-user-id="xuUwNecRyxfaWkuBMyhOGybGukQ2">
-                    <img class="contact-list__avatar" src="${defAvatar}" alt="Alex Malagor">
-                    <span class="contact-list__name">Alex Malagor1</span>
-                  </li>
                 </ul>
               </div>
               <div class="mb-3">
@@ -107,13 +99,17 @@ export class Messenger extends Page {
 
     // Auto-search Recipient of message
     const formRecipient: HTMLInputElement = document.querySelector('#formRecipient');
-    const li: NodeListOf<Element> = document.querySelectorAll('.contact-list__item');
     formRecipient.onkeyup = () => {
+      const li: NodeListOf<Element> = document.querySelectorAll('.contact-list__item');
       const val: string = formRecipient.value.toLowerCase();
+
       if (val.length > 1) {
         li.forEach(item => {
+          const isValInName = item.querySelector('.contact-list__name').textContent.toLowerCase().includes(val);
+          const isValInAccount = item.querySelector('.contact-list__account').textContent.toLowerCase().includes(val);
+
           item.setAttribute('hidden', '');
-          if (item.querySelector('.contact-list__name').textContent.toLowerCase().includes(val)) {
+          if (isValInName || isValInAccount) {
             item.removeAttribute('hidden');
           }
         });
@@ -134,7 +130,10 @@ export class Messenger extends Page {
         const formRecipient: HTMLInputElement = document.querySelector('#formRecipient');
         const keyInput: HTMLInputElement = document.querySelector('.contact-user-id');
 
-        formRecipient.value = item.querySelector('.contact-list__name').textContent;
+        const name = item.querySelector('.contact-list__name').textContent;
+        const account = item.querySelector('.contact-list__account').textContent;
+
+        formRecipient.value = `${name} ${account}`;
         keyInput.value = item.getAttribute('data-user-id');
       }
     });
@@ -143,6 +142,9 @@ export class Messenger extends Page {
     const addMessageBtn = document.querySelector('.message__addBtn');
     const modal = new Modal(this.element.querySelector('#messageModal'));
     addMessageBtn.addEventListener('click', () => {
+
+      document.querySelector('.contacts-user-list').innerHTML = '';
+      this.fillContactsList();
       modal.show();
     });
 
@@ -169,6 +171,18 @@ export class Messenger extends Page {
       this.sendNewMessage(messageData);
       modal.hide();
     };
+  }
+
+  // Add contact to user list in Modal
+  addContactsToList = (data: any): void => {
+    const list = document.querySelector('.contacts-user-list');
+    const html = `
+      <li class="contact-list__item" data-user-id="${data.key}">
+        <img class="contact-list__avatar" src="${data.avatar}" alt="${data.name}">
+        <span class="contact-list__name">${data.name}</span><span class="contact-list__account"><@${data.account}></span>
+      </li>
+    `;
+    list.insertAdjacentHTML('afterbegin', html);
   }
 
   // Displays the current message on the page
@@ -235,7 +249,7 @@ export class Messenger extends Page {
       const btn = message.querySelector('.answer-button');
       btn.setAttribute('data-user-uid', data.key);
     }
-  };
+  }
 
   // Add Recipient User Name+Avatar in Message Form
   addUserForSendMessage = (userData: any): void => {

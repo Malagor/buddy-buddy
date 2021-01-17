@@ -92,6 +92,7 @@ export class App {
       this.messenger.onAddRecipient = this.onAddRecipientToMessage.bind(this);
       this.messenger.sendNewMessage = this.onSendNewMessage.bind(this);
       this.messenger.onAnswerMessage = this.onAnswerMessage.bind(this);
+      this.messenger.fillContactsList = this.fillContactsList.bind(this);
 
       this.contacts = Contacts.create('.main');
       this.contacts.addUserToContacts = this.onAddUserToContacts.bind(this);
@@ -301,6 +302,13 @@ export class App {
     } else {
       this.database.changeContactState(contactId, state);
     }
+  }
+
+  fillContactsList() {
+
+    const renderContact = this.database.contactsHandler(this.messenger.addContactsToList);
+
+    this.database.getContactsList(renderContact);
   }
 
   // createUser(uid: string) {

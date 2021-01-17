@@ -439,7 +439,6 @@ export class Database {
           .database()
           .ref(`User/${key}`)
           .once('value', snapshot => {
-            // const key = snapshot.key;
             const userData = snapshot.val();
             userData.key = key;
             userData.state = state;
@@ -512,32 +511,7 @@ export class Database {
       });
   }
 
-
-  // addTheme(nameTheme: string) {
-  //
-  // }
-  //
-  // getThemeList() {
-  //
-  // }
-  //
-  // getThemeByID(themeID: string) {
-  //
-  // }
-  //
-  // getThemeByName(themeName: string) {
-  //
-  // }
-  //
-  // addCurrency() {
-  //
-  // }
-  //
-  // getCurrency(curID?: string, curAbbreviation?: string) {
-  //
-  // }
-
-  getCurrencyList(renderCurrencyList: { (currID: string, icon: string): void; (arg0: string, arg1: any): void; }): void {
+   getCurrencyList(renderCurrencyList: { (currID: string, icon: string): void; (arg0: string, arg1: any): void; }): void {
     this.firebase
       .database()
       .ref('Currency')
