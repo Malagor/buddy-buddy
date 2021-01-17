@@ -133,8 +133,8 @@ export class Database {
     this.firebase.database().ref(`User/${uid}`).set(data);
   }
 
-  getUserInfo(uid: string, callbacks: any[]): any {
-    this.firebase
+  async getUserInfo(uid: string, callbacks: any[]) {
+    await this.firebase
       .database()
       .ref(`User/${uid}`)
       .once(
@@ -153,7 +153,7 @@ export class Database {
   }
 
   async getUserTransactions(uid: string, callbacks: any) {
-    let dat: any = await this.firebase
+    const dat: any = await this.firebase
       .database()
       .ref(`Transactions`)
       .once(
@@ -165,18 +165,21 @@ export class Database {
           console.log('Error: ' + error.code);
         },
       );
-
-    let dataUser: any = dat.val();
-    dataUser = Object.entries(dataUser);
-    dataUser = dataUser
-      .filter((item: any) =>
-        item[1].toUserList.find(
-          (it: any) => it.userID === uid || item.userID === uid,
-        ),
-      )
+    const dataUser: any = dat.val();
+    const value: any = await Object.entries(dataUser)
       .map((item: any) => {
-        item[1].uid = uid;
+        Object.entries(item[1].toUserList);
         return item[1];
+      })
+      .filter((item: any) => {
+        if (
+          item.toUserList.some(
+            (it: any) => it.userID === uid || item.userID === uid,
+          )
+        ) {
+          item.uid = uid;
+          return item;
+        }
       })
       .map(async (item: any) => {
         const request: any = await this.firebase
@@ -186,14 +189,13 @@ export class Database {
             return snapshot;
           });
         item.groupTitle = request.val().title;
-
         return item;
       });
 
-    const result = Promise.all(dataUser).then((data) => {
+    await Promise.all(value).then((data) => {
       data.reverse();
       callbacks[0](data);
-      this.getUsersAvatars(data, callbacks[1]);
+      if (data.length) this.getUsersAvatars(data, callbacks[1]);
     });
   }
 
@@ -238,8 +240,8 @@ export class Database {
     const data: any = dat.val();
     const value: any = Object.entries(data)
       .filter((item: any) => item[1].userList.find((it: any) => it === uid))
-      .map((item: any) => {
-        const elem: any = item[1].userList.map(async (it: any) => {
+      .map(async (item: any, index: number) => {
+        const elem: any = await item[1].userList.map(async (it: any) => {
           const res: any = await this.firebase
             .database()
             .ref(`User/${it}`)
@@ -249,15 +251,9 @@ export class Database {
           it = res.val().avatar;
           return it;
         });
-        item[1].userList = elem;
-        return item[1];
-      })
-      .map(async (item: any, index: number) => {
-        item.userList = await Promise.all(item.userList).then(
-          (userList: any) => {
-            callback(userList, index, item.title, value.length);
-          },
-        );
+        await Promise.all(elem).then((userList: any) => {
+          callback(userList, index, item[1].title, value.length);
+        });
       });
   }
 
