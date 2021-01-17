@@ -208,8 +208,14 @@ export class App {
     // check self in Users List
     if (!userArray.includes(userId)) {
       userArray.push(userId);
-      data.userList = userArray;
     }
+
+    data.userList = userArray.map(user => {
+      return {
+        userId: user,
+        state: 'pending'
+      };
+    });
 
     this.database.createNewGroup(data);
   }

@@ -206,6 +206,67 @@ export class Database {
 
   createNewGroup(data: IGroupData) {
     console.log('createNewGroup - data\n', data);
+    const file: any = data.icon;
+
+    const metadata = {
+      'contentType': file.type,
+    };
+    this.firebase.storage()
+      .ref()
+      .child('groups/' + file.name)
+      .put(file, metadata)
+      .then((snapshot) => {
+        snapshot.ref.getDownloadURL()
+          .then((url) => {
+            data['icon'] = url;
+            return data;
+          })
+          .then(data => {
+            this.firebase
+              .database()
+              .ref('Groups')
+              .push(data)
+              .then(group => {
+                const groupKey = group.key;
+
+                this.firebase.database().ref(`Groups/${groupKey}`)
+                  .on('value', (group) => {
+                    const users: any = group.val().userList;
+
+                    users.forEach((userInData: any) => {      
+                      const user = this.firebase.database()
+                        .ref('User')
+                        .child(userInData.userId);
+
+                      const userGroup = user.child('groupList');
+                      userGroup.transaction(groupList => {
+                        const groupInfo = {
+                          groupId: groupKey,
+                          state: 'pending'
+                        };
+                        if (groupList) {
+                          groupList.push(groupInfo);
+                          return groupList;
+                        } else {
+                          let arrGroup: any[] = [];
+                          arrGroup.push(groupInfo);
+                          return arrGroup;
+                        }
+                      });
+                    });
+                  });
+              })
+              .catch(error => {
+                console.log(error.code);
+                console.log(error.message);
+              });
+          });
+      });
+  }
+
+
+  /* createNewGroup(data: IGroupData) {
+    console.log('createNewGroup - data\n', data);
     this.firebase
       .database()
       .ref('Groups')
@@ -232,42 +293,56 @@ export class Database {
         console.log(error.code);
         console.log(error.message);
       });
-  }
+  } */
 
   getGroupList(handlerFunc: any): void {
     this.firebase
       .database()
       .ref('Groups')
       .on('child_added', (snapshot) => {
-        const users: string[] = snapshot.val().userList;
+        const users: string[] = [] 
+        
+        snapshot.val().userList.forEach(element => {
+          console.log(element.userId)
+          users.push(element.userId)  
+        });
+
 
         if (users.includes(this.uid)) {
           const dataGroup = snapshot.val();
-          const dataUserListGroup = dataGroup.userList;
+          const dataUserListGroup: any[] =  dataGroup.userList.map((userElement: any) => {
+            return userElement.userId;
+          } )
 
           this.firebase
-            .database()
-            .ref('User')
-            .once('value', (snapshot) => {
-              const snapshotUser = snapshot.val();
-              const userList = Object.keys(snapshotUser); // all users in DB
+          .database()
+          .ref('User')
+          .once('value', (snapshot) => {
+            const snapshotUser = snapshot.val();
+            const userList = Object.keys(snapshotUser); // all users in DB
 
+            // const arrayUserImg: string[] = userList.filter(user => dataUserListGroup.includes(user));
+            const arrayUsers: any[] = [];
+            userList.forEach(user => {
+              if (dataUserListGroup.includes(user)) {
 
-              // const arrayUserImg: string[] = userList.filter(user => dataUserListGroup.includes(user));
-              const arrayUsers: any[] = [];
-              userList.forEach(user => {
-                if (dataUserListGroup.includes(user)) {
-                  arrayUsers.push(snapshotUser[user]);
-                }
-              });
-
-              const dataForGroup = {
-                'dataGroup': dataGroup,
-                'arrayUsers': arrayUsers,
-              };
-              handlerFunc(dataForGroup);
+                arrayUsers.push(snapshotUser[user]);
+              }
             });
 
+           /*  const arrayUsers: any[] = userList.map((user) => {
+              if (dataUserListGroup.includes(user)) {
+                console.log(snapshotUser[user])
+                return snapshotUser[user];
+              }
+            }) */
+
+            const dataForGroup = {
+              'dataGroup': dataGroup,
+              'arrayUsers': arrayUsers
+            };
+            handlerFunc(dataForGroup);
+          });
         }
       }, (error: { code: string; message: any; }) => {
         console.log('Error:\n ' + error.code);
