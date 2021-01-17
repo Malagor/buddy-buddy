@@ -328,8 +328,8 @@ export class Database {
 
     this.firebase
     .database()
-    .ref(`User/${userId}`)
-    .set({currentGroup: groupKey})  
+    .ref(`User/${userId}/currentGroup`)
+    .set(groupKey)  
   }
    
   countGroupsInvite(setNotificationMark: { (type: TypeOfNotifications, num: number): void; (arg0: TypeOfNotifications, arg1: number): void; }): void {
