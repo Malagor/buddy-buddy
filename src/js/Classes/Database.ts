@@ -509,7 +509,7 @@ export class Database {
     data.userID = this.uid; 
     data.toUserList.forEach((user: any) => {
       if(user.userID === this.uid) {
-        user.state === 'approve';
+        user.state = 'approve';
       }
     });
 
@@ -700,6 +700,53 @@ export class Database {
       console.log('Error:\n ' + error.code);
       console.log(error.message);
     });
+  }
+
+
+  getUserInfoTrans(uid: string, callback: any): any {
+    this.firebase
+      .database()
+      .ref(`User/${uid}`)
+      .once('value', (snapshot) => {
+        // console.log('snapshot "getUserInfo" -  User Data:', snapshot.val());
+        const dataUser = snapshot.val();
+        dataUser.key = uid;
+        callback(dataUser);
+        // callback(snapshot.val());
+      }, (error: { code: string; }) => {
+        console.log('Error: ' + error.code);
+      });
+  }
+
+
+  getTransInfoModal(trans:any, transID:string, groupID: string, renderGroupTitle: any, renderUser: any) {
+    this.firebase
+      .database()
+      .ref(`Groups/${groupID}`)
+      .once('value', (snapshot) => {
+        console.log('snapshot group in DB', snapshot.val());
+        const title = snapshot.val().title;
+        renderGroupTitle(transID, title);
+        const userList: any[] = snapshot.val().userList;
+        userList.forEach ((userID: string) => {
+          this.firebase
+            .database()
+            .ref(`User/${userID}`)
+            .once('value', (snapshot) => {
+              // console.log('snapshot "getUserInfo" -  User Data:', snapshot.val());
+              const dataUser = snapshot.val();
+              dataUser.key = userID;
+              renderUser(transID, trans, dataUser);
+              // callback(snapshot.val());
+            });
+            
+        });
+
+
+        
+      }, (error: { code: string; }) => {
+        console.log('Error: ' + error.code);
+      });
   }
 
 }

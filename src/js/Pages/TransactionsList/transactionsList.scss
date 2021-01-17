@@ -227,55 +227,112 @@
 
 }
 
-// .new-trans-btn {
-//   position: fixed;
-//   right: rem(20px);
-//   bottom: rem(70px);
-//   align-self: flex-end;
-//   width: rem(50px);
-//   height: rem(50px);
-//   border-radius: 50%;
- 
 
-//   span {
-//     font-size: rem(30px);
-//     position: relative;
-//     right: 3px;
-//     top: 3px;
-//   }
-// }
 
-.add-list {
-  .add-user {
-    margin-bottom: rem(5px);
-    &__image {
-      width: rem(40px);
-      height: rem(40px);
-      background-color: grey;
-      border: 1px solid black;
-      border-radius: 50%;
 
-@include phones {
-        width: rem(50px);
-        height: rem(50px);
-      }
+.details {
+
+  &__icon-wrapper {
+     width: rem(40px);
+    height: rem(40px);
+    margin-left: rem(10px);
+    border: 1px solid gray;
+    border-radius: 5px;
+    &:hover {
+      cursor: pointer;
     }
 
-    &__name {
-      margin-top: rem(2px);
-      font-size: rem(14px);
+    & > img {
+      width: 100%;
+      height: 100%;
 
-@include phones {
-        font-size: rem(16px);
-      }
-    }
-
-    &__comment {
-      font-size: rem(12px);
-
-@include phones {
-        font-size: rem(14px);
-      }
+      object-fit: cover;
     }
   }
+ 
+  &__members {
+    margin-top: rem(10px);
+  }
+
+  &__memb-wrapper {
+    margin-bottom: rem(5px);
+    height: rem(70px);
+    align-items: center;
+  }
+
+  &__member {
+    width: rem(70px);
+  }
+
+  &__avatar {
+    width: rem(35px);
+    height: rem(35px);
+    margin-bottom: rem(5px);
+    overflow: hidden;
+    background-color: blue;
+    border-radius: 50%;
+    transition: transform 0.3s ease-out;
+
+    @include phones {
+      width: rem(40px);
+      height: rem(40px);
+    }
+  }
+
+  &__avatar > img {
+    width: 100%;
+    height: 100%;
+
+    object-fit: contain;
+  }
+
+  &__name {
+    max-width: rem(50px);
+    font-size: rem(12px);
+    line-height: 1rem;
+    text-align: center;
+
+    // @include phones {
+    //   font-size: rem(14px);
+    // }
+  }
+
+  &__member-cost {
+    // width: rem(100px);
+    width: 18%;
+  }
+
+  &__member-comment {
+    font-size: rem(14px);
+    width: 30%;
+     @include phones {
+       font-size: rem(16px);
+       width: 40%;
+    }
+  }
+
+  &__member-state {
+    font-size: rem(12px);
+    width: 18%;
+
+     @include phones {
+       font-size: rem(14px);
+       width: 15%;
+    }
+  }
+
+  &__member-delete {
+    // width: rem(150px);
+    width: rem(20px);
+    height: rem(20px);
+    padding: 0;
+
+    & > i {
+      font-size: rem(12px);
+    }
+  }
+
+
 }
+
+
