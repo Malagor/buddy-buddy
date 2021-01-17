@@ -122,8 +122,7 @@ export class Main extends Page {
       elem.innerHTML = `
       <div class="card">
         <div class="card-body d-flex align-items-center flex-column">
-          <h6 class="card-title main--font-size">No groups yet.</h6>
-          <button type="button" class="btn btn-secondary btn-sm">Go to group's page</button>
+          <h6 class="card-title m-0 main--font-size">No groups yet.</h6>
         </div>
       </div>
       `;
