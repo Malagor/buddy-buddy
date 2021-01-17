@@ -99,7 +99,7 @@ export class MyGroups extends Page {
       <div class="card mb-3 card-group">
         <div class="row g-0 col">
           <div class="col-3 card-group__box-logo-group">
-            <img class="card-group__img-avatar" src="${data.dataGroup.icon ? data.dataGroup.icon: defaultGroupLogo}" alt="icon-group">
+            <img class="card-group__img-avatar" src="${data.dataGroup.icon ? data.dataGroup.icon : defaultGroupLogo}" alt="icon-group">
           </div>
 
           <div class="col-9 card-group__box-content">
@@ -247,7 +247,7 @@ export class MyGroups extends Page {
         dateClose: null,
         userList: users,
         transactionList: [],
-        icon: logoGroupImgData ? logoGroupImgData.logoGroup: '',
+        icon: logoGroupImgData ? logoGroupImgData.logoGroup : '',
       };
       this.onCreateNewGroup(groupData);
       modal.hide();

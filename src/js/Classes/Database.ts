@@ -3,6 +3,9 @@ import 'firebase/auth';
 import { default as CyrillicToTranslit } from 'cyrillic-to-translit-js/CyrillicToTranslit';
 import { IGroupData } from '../Interfaces/IGroupData';
 import { ISearchUserData } from '../Pages/Contacts/Contacts';
+import { IMessage, INewMessage } from '../Pages/Messenger/Messenger';
+import { IHandlers } from './App';
+import { TypeOfNotifications } from './Notifications';
 
 const defaultAvatar: string = require('../../assets/images/default-user-avatar.jpg');
 
@@ -166,7 +169,7 @@ export class Database {
       });
   }
 
-  findUserByName(accountName: string, func: any, errorFunc?: any) {
+  findUserByName(accountName: string, handlerFunc: any, errorFunc?: any) {
     this.firebase
       .database()
       .ref(`User`)
@@ -183,7 +186,7 @@ export class Database {
           account: snapshot.val()[`${key}`].account,
           key: key,
         };
-        func(data);
+        handlerFunc(data);
       })
       .catch(error => {
         console.log('Error retrieving user data');
@@ -232,9 +235,7 @@ export class Database {
       });
   }
 
-  getGroupList(callbacks: any): void {
-    const arrayUsersInfo: any = [];
-
+  getGroupList(handlerFunc: any): void {
     this.firebase
       .database()
       .ref('Groups')
@@ -265,7 +266,7 @@ export class Database {
                 'dataGroup': dataGroup,
                 'arrayUsers': arrayUsers,
               };
-              callbacks(dataForGroup);
+              handlerFunc(dataForGroup);
             });
 
         }
@@ -275,109 +276,138 @@ export class Database {
       });
   }
 
-  // countGroupsInvite(callback: any): void {
-  //
-  // }
-  // countTransactionInvite(callback: any): void {
-  //
-  // }
+  countGroupsInvite(setNotificationMark: { (type: TypeOfNotifications, num: number): void; (arg0: TypeOfNotifications, arg1: number): void; }): void {
+    this.firebase
+      .database()
+      .ref('Groups')
+      .on('child_added', snapshot => {
+        let count: number = 0;
+        console.log(`countGroupsInvite`, snapshot.val());
 
-  countNewMessage(callback: any): void {
-    let countMessage: number = 0;
+        setNotificationMark(TypeOfNotifications.Group, count);
+      }, (error: { code: string; message: any; }) => {
+        console.log('Error:\n ' + error.code);
+        console.log(error.message);
+      });
+  }
+
+  countTransactionInvite(setNotificationMark: { (type: TypeOfNotifications, num: number): void; (arg0: TypeOfNotifications, arg1: number): void; }): void {
+    this.firebase
+      .database()
+      .ref('Transactions')
+      .on('child_added', snapshot => {
+        const userList = snapshot.val().toUserList;
+        const hasUserId = userList.find((user: { userID: string; state: string; }) => {
+          return (user.userID === this.uid && user.state !== 'approve');
+        });
+        if (hasUserId) {
+          setNotificationMark(TypeOfNotifications.Transaction, 1);
+        } else {
+          setNotificationMark(TypeOfNotifications.Transaction, 0);
+        }
+      }, (error: { code: string; message: any; }) => {
+        console.log('Error:\n ' + error.code);
+        console.log(error.message);
+      });
+
+  }
+
+  countNewMessage(setNotificationMark: { (type: TypeOfNotifications, num: number): void; (arg0: TypeOfNotifications, arg1: number): void; }): void {
     this.firebase
       .database()
       .ref('Messages')
       .on('child_added', (snapshot) => {
         const toUser: string = snapshot.val().toUser;
-        const status: boolean = snapshot.val().status;
+        const status: boolean = snapshot.val().isRead;
 
         if (toUser === this.uid && status === false) {
-          countMessage += 1;
-          callback(countMessage);
+          setNotificationMark(TypeOfNotifications.Message, 1);
+        } else {
+          setNotificationMark(TypeOfNotifications.Message, 0);
         }
       });
   }
 
-  getMessageList(renderMessage: any): void {
+  deleteHandlers(handlers: IHandlers) {
+    const base = this.firebase.database();
+
+    if (handlers.messages) {
+      base.ref('Messages')
+        .off('child_added', handlers.messages);
+    }
+
+    if (handlers.groups) {
+      base.ref('Groups')
+        .off('child_added', handlers.groups);
+    }
+
+    if (handlers.transactions) {
+      base.ref('Transactions')
+        .off('child_added', handlers.transactions);
+    }
+  }
+
+  getMessageList(addMessageToListFunc: { (snapshot: any): void; (a: firebase.database.DataSnapshot, b?: string): any; }): void {
+
     this.firebase
       .database()
       .ref('Messages')
-      .on('child_added', (snapshot) => {
-        const messageObj = snapshot.val();
-        const messageId = snapshot.key;
-        const { fromUser, toUser } = messageObj;
+      .on('child_added', addMessageToListFunc,
+        (error: { code: string; message: any; }) => {
+          console.log('Error:\n ' + error.code);
+          console.log(error.message);
+        });
+  }
 
-        // console.log('message', messageObj.message);
+  messageHandler = (renderMessage: (arg0: IMessage) => void,
+                    setUserData: (arg0: { messageId: any; key: any; name: any; avatar: any; isReceive: boolean; }) => void) => {
 
-        if (fromUser === this.uid || toUser === this.uid) {
+    const uid = this.uid;
+    const base = this.firebase.database();
 
-          const fromUserData = this.firebase
-            .database()
-            .ref(`User/${fromUser}`)
-            .once('value', snapshot => {
-              return snapshot;
-            });
+    return (snapshot: { val: () => any; key: any; }) => {
+      const messageObj = snapshot.val();
+      const messageId = snapshot.key;
+      const { fromUser, toUser } = messageObj;
 
-          const toUserData = this.firebase
-            .database()
-            .ref(`User/${toUser}`)
-            .once('value', snapshot => {
-              return snapshot;
-            });
+      if (fromUser === uid || toUser === uid) {
+        let isReceive: boolean = toUser === uid;
 
-          const users = Promise.all([fromUserData, toUserData])
-            .then(data => {
-              return {
-                fromUser: data[0],
-                toUser: data[1],
-              };
-            });
+        const messageData: IMessage = {
+          messageId,
+          message: messageObj.message,
+          date: messageObj.date,
+          isRead: messageObj.isRead,
+          isReceive,
+        };
 
-          users.then(users => {
-            const { fromUser, toUser } = users;
+        renderMessage(messageData);
 
-            const direction: boolean = toUser.key === this.uid;
-            let key: string;
-            let name: string;
-            let avatar: string;
+        const secondUserId = isReceive ? fromUser : toUser;
 
-            if (direction) {
-              key = fromUser.key;
-              name = fromUser.val().name;
-              avatar = fromUser.val().avatar;
-            } else {
-              key = toUser.key;
-              name = toUser.val().name;
-              avatar = toUser.val().avatar;
-            }
-
-            const messageData = {
+        base.ref(`User/${secondUserId}`)
+          .once('value', (userData: { key: any; val: () => { (): any; new(): any; name: any; avatar: any; }; }) => {
+            const userDataForMessage = {
               messageId,
-              message: messageObj.message,
-              date: messageObj.date,
-              status: messageObj.status,
-              key,
-              avatar,
-              name,
-              direction,
+              key: userData.key,
+              name: userData.val().name,
+              avatar: userData.val().avatar,
+              isReceive,
             };
-
-            renderMessage(messageData);
-
-            this.firebase
-              .database()
-              .ref(`Messages/${messageId}`)
-              .child('status')
-              .transaction(curStatus => {
-                curStatus = true;
-                return curStatus;
-              });
+            setUserData(userDataForMessage);
           });
+
+        // if user get and read message, status is toggle to "true"
+        if (isReceive) {
+          base.ref(`Messages/${messageId}`)
+            .child('isRead')
+            .transaction((curStatus: boolean) => {
+              curStatus = true;
+              return curStatus;
+            });
         }
-      }, (error: { code: string; message: any; }) => {
-        console.log('Error:\n ' + error.code);
-        console.log(error.message);
-      });
+      }
+    };
   }
 
   contactsHandler = (renderContact: any): any => {
@@ -415,7 +445,8 @@ export class Database {
         });
   }
 
-  createNewMessage(data: any): void {
+  createNewMessage(data: INewMessage): void {
+    console.log('createNewMessage', data);
     data.fromUser = this.uid;
 
     this.firebase
@@ -453,7 +484,7 @@ export class Database {
   //
   // }
 
-  getCurrencyList(renderCurrencyList: any): void {
+  getCurrencyList(renderCurrencyList: { (currID: string, icon: string): void; (arg0: string, arg1: any): void; }): void {
     this.firebase
       .database()
       .ref('Currency')
@@ -465,7 +496,7 @@ export class Database {
       });
   }
 
-  getGroupsListForTransaction(renderGroupList: any): void {
+  getGroupsListForTransaction(renderGroupList: { (groupID: string, groupTitle: string, currentGroup: string): void; (arg0: any, arg1: any, arg2: any): void; }): void {
     this.firebase
       .database()
       .ref(`User/${this.uid}`)
@@ -486,7 +517,7 @@ export class Database {
       });
   }
 
-  getMembersOfGroupFirst(renderMembers: any) {
+  getMembersOfGroupFirst(renderMembers: { (userID: string, userName: string, userAvatar: string): void; (arg0: string, arg1: any, arg2: any): void; }) {
     this.firebase
       .database()
       .ref(`User/${this.uid}`)
@@ -506,7 +537,6 @@ export class Database {
                 });
             });
           });
-
       }, (error: { code: string; message: any; }) => {
         console.log('Error:\n ' + error.code);
         console.log(error.message);
@@ -600,7 +630,5 @@ export class Database {
       .catch(error => {
         errorHandler(error.message);
       });
-
-
   }
 }

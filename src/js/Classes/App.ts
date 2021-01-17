@@ -9,9 +9,18 @@ import { AccountPage } from '../Pages/AccountPage/AccountPage';
 import { IGroupData } from '../Interfaces/IGroupData';
 import { TransactionsList } from '../Pages/TransactionsList/transactionsList';
 import { dataTransList } from '../Data/dataTransList';
+import { INotification, Notifications, TypeOfNotifications } from './Notifications';
+import { INewMessage, Messenger } from '../Pages/Messenger/Messenger';
 import { INotification, Notifications } from './Notifications';
 import { Messenger } from '../Pages/Messenger/Messenger';
 import { Contacts, ISearchUserData } from '../Pages/Contacts/Contacts';
+
+
+export interface IHandlers {
+  messages: any;
+  groups: any;
+  transactions: any;
+}
 
 export class App {
   private database: Database;
@@ -26,6 +35,9 @@ export class App {
   private messenger: Messenger;
   private contacts: Contacts;
   private contactsHandler: void;
+  private messageHandler: (snapshot: any) => void;
+  private transactionHandler: (snapshot: any) => void;
+  private groupHandler: (snapshot: any) => void;
 
   constructor() {
     this.database = Database.create();
@@ -47,6 +59,8 @@ export class App {
       this.layout = Layout.create('#app');
       this.layout.render();
 
+      this.startNotification();
+
       // SIDEBAR
       this.layout.onSignOut = this.onSignOut.bind(this);
       this.layout.onStatisticsPage = this.onStatisticsPage.bind(this);
@@ -58,7 +72,6 @@ export class App {
       this.layout.onSignOut = this.onSignOut.bind(this);
       this.layout.onAccountPage = this.onAccountPage.bind(this);
       this.layout.onMessagesPage = this.onMessagesPage.bind(this);
-      this.layout.onContactsPage = this.onContactsPage.bind(this);
 
       this.accountPage = AccountPage.create('.main');
       this.mainPage = Main.create('.main');
@@ -83,23 +96,6 @@ export class App {
       this.contacts = Contacts.create('.main');
       this.contacts.addUserToContacts = this.onAddUserToContacts.bind(this);
 
-
-      // Notifications Init
-      setTimeout(() => {
-        const groupsEl: NodeListOf<Element> = document.querySelectorAll('.sidebarGroupsLink .badge');
-        const transactionsEl: NodeListOf<Element> = document.querySelectorAll('.sidebarTransactionsLink .badge');
-        const messagesEl: NodeListOf<Element> = document.querySelectorAll('.sidebarMessagesLink .badge');
-
-        const notiData: INotification = {
-          groupsEl,
-          transactionsEl,
-          messagesEl,
-        };
-
-        this.notifications = Notifications.create(notiData);
-
-        this.database.countNewMessage(this.notifications.sentMessageNotification);
-      }, 2000);
     } else {
       console.log(`isUserLogon = ${state}`);
       this.authPage = AuthPage.create('#app');
@@ -139,28 +135,41 @@ export class App {
   }
 
   onMainPage() {
+    this.deleteHandlers();
     const uid: string = this.database.uid;
     this.database.getUserInfo(uid, [this.mainPage.render]);
+
   }
 
   onAccountPage() {
+    this.deleteHandlers();
     const uid: string = this.database.uid;
     this.database.getUserInfo(uid, [this.accountPage.render]);
+
   }
 
   onContactsPage() {
-
+    this.deleteHandlers();
     this.contacts.render();
     this.contactsHandler = this.database.contactsHandler(this.contacts.addContactToList);
     this.database.getContactsList(this.contactsHandler);
   }
 
   onGroupsPage() {
+    this.deleteHandlers();
+    this.notifications.groupCount = 0;
+    this.notifications.setNotificationMark(TypeOfNotifications.Group, 0);
+
     this.groups.render();
     this.database.getGroupList(this.groups.createGroupList);
+
   }
 
   onTransactionsPage() {
+    this.deleteHandlers();
+    this.notifications.transactionCount = 0;
+    this.notifications.setNotificationMark(TypeOfNotifications.Transaction, 0);
+
     this.transactionsList.render(dataTransList);
     this.transactionsList.newTrans.onCreateTransaction = this.onCreateTransaction.bind(this);
     this.transactionsList.newTrans.onShowMembersOfGroup = this.onShowMembersOfGroup.bind(this);
@@ -171,19 +180,28 @@ export class App {
   }
 
   onMessagesPage() {
+    this.deleteHandlers();
+    this.notifications.messageCount = 0;
+    this.notifications.setNotificationMark(TypeOfNotifications.Message, 0);
+
     this.messenger.render();
-    this.database.getMessageList(this.messenger.printMessage);
+    this.messageHandler = this.database.messageHandler(this.messenger.addMessageToList, this.messenger.setUserDataInMessage);
+    this.database.getMessageList(this.messageHandler);
+
   }
 
   onStatisticsPage() {
+    this.deleteHandlers();
     console.log('Load Statistics Page!');
   }
 
   onSettingsPage() {
+    this.deleteHandlers();
     console.log('Load Settings Page!');
   }
 
   onHelpPage() {
+    this.deleteHandlers();
     console.log('Load Help Page!');
   }
 
@@ -236,12 +254,37 @@ export class App {
     this.database.findUserByName(accountName, this.messenger.addUserForSendMessage, this.messenger.errorAddUserForSendMessage);
   }
 
-  onSendNewMessage(data: any): void {
+  onSendNewMessage(data: INewMessage): void {
     this.database.createNewMessage(data);
   }
 
   onAnswerMessage(userId: string) {
-    this.database.getUserInfo(userId, [this.messenger.answerModal]);
+    this.database.getUserInfo(userId, [this.messenger.callAnswerModal]);
+  }
+
+  startNotification(): void {
+    const groupsEl: NodeListOf<Element> = document.querySelectorAll('.sidebarGroupsLink .badge');
+    const transactionsEl: NodeListOf<Element> = document.querySelectorAll('.sidebarTransactionsLink .badge');
+    const messagesEl: NodeListOf<Element> = document.querySelectorAll('.sidebarMessagesLink .badge');
+    const notiData: INotification = {
+      groupsEl,
+      transactionsEl,
+      messagesEl,
+    };
+    this.notifications = Notifications.create(notiData);
+    this.database.countNewMessage(this.notifications.setNotificationMark);
+    this.database.countGroupsInvite(this.notifications.setNotificationMark);
+    this.database.countTransactionInvite(this.notifications.setNotificationMark);
+  }
+
+  deleteHandlers() {
+    const handlers: IHandlers = {
+      messages: this.messageHandler,
+      groups: this.groupHandler,
+      transactions: this.transactionHandler,
+    };
+
+    this.database.deleteHandlers(handlers);
   }
 
   onAddUserToContacts(userData: ISearchUserData, errorHandler: (message: string) => void): void {
