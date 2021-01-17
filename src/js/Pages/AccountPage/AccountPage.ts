@@ -26,7 +26,7 @@ export class AccountPage extends Page {
           </div>
           <p class="block__title">@${data.account}</p>
         </div>
-        <div class="block__main">        
+        <div class="block__main">
           <form class="account__form-change-info block--width-85">
             <div class="form-group row block--margin-adaptive">
               <label for="account" class="col-sm-2 col-form-label">Account</label>
@@ -82,7 +82,7 @@ export class AccountPage extends Page {
                 </div>
               </div>
             </fieldset>
-          </form> 
+          </form>
         </div>
         <div class="block__footer">
           <div class="form-group row">

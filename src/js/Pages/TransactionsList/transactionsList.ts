@@ -142,7 +142,7 @@ export class TransactionsList extends Page {
     this.events();
   }
 
- 
+
 
 
 
