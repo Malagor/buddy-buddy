@@ -22,7 +22,7 @@ export class Contacts extends Page {
             <p class="block__title">Contacts</p>
           </div>
           <div class="block__main">
-            <form id="contactForm" class="search-form">
+            <form id="contactForm" class="search-form block--width-85">
               <div class="input-group">
                 <span class="input-group-text" id="basic-addon1">@</span>
                 <input type="text" class="form-control" placeholder="Account" aria-label="Account contact" aria-describedby="basic-addon1" name="account">
@@ -116,15 +116,5 @@ export class Contacts extends Page {
   errorMessageForm(message: string): void {
     const errorField: HTMLElement = document.querySelector('.error-message');
     errorField.textContent = message;
-  }
-
-  getHtmlContactInputList(element: string) {
-    const html = `
-      <div class="dropdown">
-        <input class="form-control dropdown-toggle" type="text" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false" placeholder="Recipient">
-        <ul class="dropdown-menu contacts-user-list" aria-labelledby="dropdownMenuButton">
-        </ul>
-      </div>
-    `;
   }
 }

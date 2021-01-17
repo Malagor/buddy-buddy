@@ -14,7 +14,6 @@
 .contacts-list {
   display: grid;
   grid-template-columns: 1fr;
-  //column-gap: 1rem;
   grid-gap: 1rem;
 
   @include laptop{
