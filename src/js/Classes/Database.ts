@@ -248,21 +248,28 @@ export class Database {
             return data;
           })
           .then(data => {
+
+            console.log('data.groupData', data.groupData)
+            data.groupData
+
+            const userObj: any = {}
+
+            data.userList.forEach((userId: string) => {
+                  
+              if(userId === userIdAuthor) {
+                userObj[userId] = { state: 'approve' }
+              } else {
+                userObj[userId] = { state: 'pending' }
+              }
+            })
+              
+            data.groupData['userList'] = userObj;
+
+
             this.firebase
               .database()
               .ref('Groups')
               .push(data.groupData)
-              .then(group => {
-
-                data.userList.forEach((userId: string) => {
-                  this.firebase
-                    .database()
-                    .ref(`Groups/${group.key}/userList/${userId}`)
-                    .set({ state: 'pending' });
-                });
-
-                return group;
-              })
               .then(group => {
                 const groupKey = group.key;
                 this.firebase
@@ -320,7 +327,7 @@ export class Database {
 
     return ((snapshot: any) => {
 
-      console.log( '!!!!!!!!!!!!!!!!!!!!!____snapshot.val()', snapshot.val())
+      console.log( '!!!!!!!!!!groupHandler!!!!!!!!!!!____snapshot.val()', snapshot.val())
 
       const users: string[] = Object.keys(snapshot.val().userList); // по каждой группе список  юзеров
       // при создании новой группы не доходит userList // разобраться
