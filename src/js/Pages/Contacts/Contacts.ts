@@ -43,7 +43,7 @@ export class Contacts extends Page {
   }
 
   addContactToList = (data: any): void => {
-    console.log('addContactToList - data', data);
+    // console.log('addContactToList - data', data);
     if (data) {
       const list = this.element.querySelector('.contacts-list');
       if (!list) return;
@@ -116,5 +116,17 @@ export class Contacts extends Page {
   errorMessageForm(message: string): void {
     const errorField: HTMLElement = document.querySelector('.error-message');
     errorField.textContent = message;
+  }
+
+  // Add contact to user list in Modal
+  addContactsToList = (data: any): void => {
+    const list = document.querySelector('.contacts-user-list');
+    const html = `
+      <li class="contact-list__item" data-user-id="${data.key}">
+        <img class="contact-list__avatar" src="${data.avatar}" alt="${data.name}">
+        <span class="contact-list__name">${data.name}</span><span class="contact-list__account"><@${data.account}></span>
+      </li>
+    `;
+    list.insertAdjacentHTML('afterbegin', html);
   }
 }

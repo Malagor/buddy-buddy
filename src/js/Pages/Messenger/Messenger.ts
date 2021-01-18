@@ -1,6 +1,8 @@
 import { Page } from '../../Classes/Page';
 import { Modal } from 'bootstrap';
 import { getFormData } from '../../Util/getFormData';
+import { eventForContactsList } from '../Contacts/eventForContactsList';
+import { onClickContactInContactsList } from '../Contacts/onClickContactInContactsList';
 
 export interface IMessage {
   messageId: string | undefined;
@@ -42,10 +44,11 @@ export class Messenger extends Page {
         </div>
         <div class="block__main">
           <div class="message-list block--width-85 d-flex flex-column"></div>
-      </div>
-      <div class="block__footer">
+        </div>
+        <div class="block__footer">
           <button type="button" class="btn btn-primary message__addBtn">New message</button>
         </div>
+      </div>
     </div>
     `;
 
@@ -67,9 +70,9 @@ export class Messenger extends Page {
           <div class="modal-body">
             <form id="messageForm">
               <div class="dropdown">
-                <input class="form-control dropdown-toggle" type="text" id="formRecipient" data-bs-toggle="dropdown" aria-expanded="false" placeholder="Recipient" autocomplete="off" name="name">
+                <input class="form-control dropdown-toggle" type="text" id="activeContact" data-bs-toggle="dropdown" aria-expanded="false" placeholder="Recipient" autocomplete="off" name="name">
                 <input type="text" name="key" class="contact-user-id" hidden>
-                <ul class="dropdown-menu contacts-user-list" aria-labelledby="formRecipient">
+                <ul class="dropdown-menu contacts-user-list" aria-labelledby="activeContact">
                 </ul>
               </div>
               <div class="mb-3">
@@ -98,45 +101,12 @@ export class Messenger extends Page {
     });
 
     // Auto-search Recipient of message
-    const formRecipient: HTMLInputElement = document.querySelector('#formRecipient');
-    formRecipient.onkeyup = () => {
-      const li: NodeListOf<Element> = document.querySelectorAll('.contact-list__item');
-      const val: string = formRecipient.value.toLowerCase();
-
-      if (val.length > 1) {
-        li.forEach(item => {
-          const isValInName = item.querySelector('.contact-list__name').textContent.toLowerCase().includes(val);
-          const isValInAccount = item.querySelector('.contact-list__account').textContent.toLowerCase().includes(val);
-
-          item.setAttribute('hidden', '');
-          if (isValInName || isValInAccount) {
-            item.removeAttribute('hidden');
-          }
-        });
-      } else {
-        li.forEach(item => {
-          item.removeAttribute('hidden');
-        });
-      }
-    };
+    const formRecipient: HTMLInputElement = document.querySelector('#activeContact');
+    eventForContactsList(formRecipient);
 
     // select user as Recipient for message
-    const contactList = document.querySelector('.contacts-user-list');
-    contactList.addEventListener('click', event => {
-      const { target }: any = event;
+    onClickContactInContactsList();
 
-      if (target.closest('.contact-list__item')) {
-        const item: HTMLElement = target.closest('.contact-list__item');
-        const formRecipient: HTMLInputElement = document.querySelector('#formRecipient');
-        const keyInput: HTMLInputElement = document.querySelector('.contact-user-id');
-
-        const name = item.querySelector('.contact-list__name').textContent;
-        const account = item.querySelector('.contact-list__account').textContent;
-
-        formRecipient.value = `${name} ${account}`;
-        keyInput.value = item.getAttribute('data-user-id');
-      }
-    });
 
     // Show modal event
     const addMessageBtn = document.querySelector('.message__addBtn');
@@ -171,18 +141,6 @@ export class Messenger extends Page {
       this.sendNewMessage(messageData);
       modal.hide();
     };
-  }
-
-  // Add contact to user list in Modal
-  addContactsToList = (data: any): void => {
-    const list = document.querySelector('.contacts-user-list');
-    const html = `
-      <li class="contact-list__item" data-user-id="${data.key}">
-        <img class="contact-list__avatar" src="${data.avatar}" alt="${data.name}">
-        <span class="contact-list__name">${data.name}</span><span class="contact-list__account"><@${data.account}></span>
-      </li>
-    `;
-    list.insertAdjacentHTML('afterbegin', html);
   }
 
   // Displays the current message on the page
