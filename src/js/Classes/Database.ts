@@ -524,7 +524,6 @@ export class Database {
           .database()
           .ref(`User/${key}`)
           .once('value', snapshot => {
-            console.log('contactsHandler', snapshot);
             const userData = snapshot.val();
             userData.key = key;
             userData.state = state;
