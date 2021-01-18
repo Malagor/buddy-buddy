@@ -2,7 +2,6 @@ import firebase from 'firebase';
 import 'firebase/auth';
 import { default as CyrillicToTranslit } from 'cyrillic-to-translit-js/CyrillicToTranslit';
 import { IDataForCreateGroup } from '../Interfaces/IGroupData';
-import { IGroupData } from '../Interfaces/IGroupData';
 import { ISearchUserData } from '../Pages/Contacts/Contacts';
 import { IMessage, INewMessage } from '../Pages/Messenger/Messenger';
 import { IHandlers } from './App';
@@ -199,6 +198,30 @@ export class Database {
       });
   }
 
+  findUserById(userId: string, handlerFunc: any, errorFunc?: any) {
+    this.firebase
+      .database()
+      .ref(`User/${userId}`)
+      .once('value', (snapshot) => {
+        const key = snapshot.key;
+
+        const data = {
+          name: snapshot.val().name,
+          avatar: snapshot.val().avatar,
+          account: snapshot.val().account,
+          key: key,
+        };
+        handlerFunc(data);
+      })
+      .catch(error => {
+        console.log(error.code);
+        console.log(error.message);
+        if (errorFunc) {
+          errorFunc(`Error retrieving user data.`);
+        }
+      });
+  }
+
   _createAccountName(name: string): string {
     let accountName: string = cyrillicToTranslit.transform(name).toLowerCase();
     accountName += (Math.floor(Math.random() * (999 + 1)) + 1).toString();
@@ -233,9 +256,9 @@ export class Database {
 
                 data.userList.forEach((userId: string) => {
                   this.firebase
-                  .database()
-                  .ref(`Groups/${group.key}/userList/${userId}`)
-                  .set({state: 'pending'});
+                    .database()
+                    .ref(`Groups/${group.key}/userList/${userId}`)
+                    .set({ state: 'pending' });
                 });
 
                 return group;
@@ -251,29 +274,29 @@ export class Database {
                     Object.keys(users).forEach((userId: any) => {
 
                       this.firebase.database()
-                      .ref(`User/${userId}/groupList/${groupKey}`)
-                      .set({state: 'pending'});
+                        .ref(`User/${userId}/groupList/${groupKey}`)
+                        .set({ state: 'pending' });
 
                     });
                   });
-                  return group;
-                })
+                return group;
+              })
               .then(data => {
                 const dataForAddCurrentGroup = {
                   groupKey: data.key,
-                  userId: userId
+                  userId: userId,
                 };
                 if (currentGroup) {
                   this.addCurrentGroup(dataForAddCurrentGroup);
                 }
               });
 
-              })
-              .catch(error => {
-                console.log(error.code);
-                console.log(error.message);
-              });
+          })
+          .catch(error => {
+            console.log(error.code);
+            console.log(error.message);
           });
+      });
   }
 
   getGroupList(handlerFunc: any): void {
@@ -281,10 +304,10 @@ export class Database {
       .database()
       .ref('Groups')
       .on('child_added', handlerFunc,
-      (error: { code: string; message: any; }) => {
-        console.log('Error:\n ' + error.code);
-        console.log(error.message);
-      });
+        (error: { code: string; message: any; }) => {
+          console.log('Error:\n ' + error.code);
+          console.log(error.message);
+        });
   }
 
   groupHandler = (createGroupList: any) => {
@@ -299,25 +322,25 @@ export class Database {
         const dataUserListGroup: any[] = Object.keys(snapshot.val().userList);
 
         base
-        .ref('User')
-        .once('value', (snapshot) => {
-          const snapshotUser = snapshot.val();
-          const userList = Object.keys(snapshotUser); // all users in DB
+          .ref('User')
+          .once('value', (snapshot) => {
+            const snapshotUser = snapshot.val();
+            const userList = Object.keys(snapshotUser); // all users in DB
 
-          // const arrayUserImg: string[] = userList.filter(user => dataUserListGroup.includes(user));
-          const arrayUsers: any[] = [];
-          userList.forEach(user => {
-            if (dataUserListGroup.includes(user)) {
-              arrayUsers.push(snapshotUser[user]);
-            }
+            // const arrayUserImg: string[] = userList.filter(user => dataUserListGroup.includes(user));
+            const arrayUsers: any[] = [];
+            userList.forEach(user => {
+              if (dataUserListGroup.includes(user)) {
+                arrayUsers.push(snapshotUser[user]);
+              }
+            });
+
+            const dataForGroup = {
+              'dataGroup': dataGroup,
+              'arrayUsers': arrayUsers,
+            };
+            createGroupList(dataForGroup);
           });
-
-          const dataForGroup = {
-            'dataGroup': dataGroup,
-            'arrayUsers': arrayUsers,
-          };
-          createGroupList(dataForGroup);
-        });
       }
     });
   }
@@ -327,9 +350,9 @@ export class Database {
     const groupKey = data.groupKey;
 
     this.firebase
-    .database()
-    .ref(`User/${userId}/currentGroup`)
-    .set(groupKey);
+      .database()
+      .ref(`User/${userId}/currentGroup`)
+      .set(groupKey);
   }
 
   countGroupsInvite(setNotificationMark: { (type: TypeOfNotifications, num: number): void; (arg0: TypeOfNotifications, arg1: number): void; }): void {
@@ -337,10 +360,13 @@ export class Database {
       .database()
       .ref('Groups')
       .on('child_added', snapshot => {
-        let count: number = 0;
-        console.log(`countGroupsInvite`, snapshot.val());
-
-        setNotificationMark(TypeOfNotifications.Group, count);
+        const userList = snapshot.val().userList;
+        // console.log('countGroupsInvite', userList);
+        Object.keys(userList).forEach(user => {
+          if (user === this.uid && userList[user].state !== 'approve') {
+            setNotificationMark(TypeOfNotifications.Group, 1);
+          }
+        });
       }, (error: { code: string; message: any; }) => {
         console.log('Error:\n ' + error.code);
         console.log(error.message);
@@ -353,14 +379,19 @@ export class Database {
       .ref('Transactions')
       .on('child_added', snapshot => {
         const userList = snapshot.val().toUserList;
-        const hasUserId = userList.find((user: { userID: string; state: string; }) => {
-          return (user.userID === this.uid && user.state !== 'approve');
+        Object.keys(userList).forEach(user => {
+          if (user === this.uid && userList[user].state !== 'approve') {
+            setNotificationMark(TypeOfNotifications.Group, 1);
+          }
         });
-        if (hasUserId) {
-          setNotificationMark(TypeOfNotifications.Transaction, 1);
-        } else {
-          setNotificationMark(TypeOfNotifications.Transaction, 0);
-        }
+        // const hasUserId = userList.find((user: { userID: string; state: string; }) => {
+        //   return (user.userID === this.uid && user.state !== 'approve');
+        // });
+        // if (hasUserId) {
+        //   setNotificationMark(TypeOfNotifications.Transaction, 1);
+        // } else {
+        //   setNotificationMark(TypeOfNotifications.Transaction, 0);
+        // }
       }, (error: { code: string; message: any; }) => {
         console.log('Error:\n ' + error.code);
         console.log(error.message);
@@ -496,6 +527,7 @@ export class Database {
           .database()
           .ref(`User/${key}`)
           .once('value', snapshot => {
+      console.log('contactsHandler', snapshot);
             const userData = snapshot.val();
             userData.key = key;
             userData.state = state;
@@ -568,7 +600,7 @@ export class Database {
       });
   }
 
-   getCurrencyList(renderCurrencyList: { (currID: string, icon: string): void; (arg0: string, arg1: any): void; }): void {
+  getCurrencyList(renderCurrencyList: { (currID: string, icon: string): void; (arg0: string, arg1: any): void; }): void {
     this.firebase
       .database()
       .ref('Currency')
