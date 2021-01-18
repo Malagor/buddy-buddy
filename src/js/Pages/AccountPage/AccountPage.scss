@@ -19,6 +19,33 @@
 }
 
 .account--input-size {
-  width: 80%;
+  width: 100%;
   margin-left: auto;
+
+  @media (min-width: 576px) {
+    width: 77%;
+  }
+}
+
+.account__form-change-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.account__user {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 1.5rem;
+  padding: 0;
+
+  gap: 1rem;
+
+  .block__title {
+    @include desktop {
+      font-size: 1.6rem;
+    }
+  }
 }
