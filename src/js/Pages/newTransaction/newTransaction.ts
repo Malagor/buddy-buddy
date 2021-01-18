@@ -24,6 +24,8 @@ export class NewTransaction extends Page {
         </div>
         <div class="modal-body">
 
+        <form class="all-forms">
+
           <div class="form-group row block--margin-adaptive">
             <label for="group" class="new-trans__label col-sm-2 col-form-label">Группа</label>
             <div class="col-sm-10">
@@ -67,6 +69,8 @@ export class NewTransaction extends Page {
               </div>
             </div>
 
+
+            </form>
           </div>
 
           <div class="new-trans__members">

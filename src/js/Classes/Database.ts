@@ -502,7 +502,8 @@ export class Database {
   // getCurrency(curID?: string, curAbbreviation?: string) {
   //
   // }
-
+  
+  // готово
   getCurrencyList(renderCurrencyList: { (currID: string, icon: string): void; (arg0: string, arg1: any): void; }): void {
     this.firebase
       .database()
@@ -520,10 +521,12 @@ export class Database {
       .database()
       .ref(`User/${this.uid}`)
       .once('value', (snapshot) => {
-        const groupsIDList = snapshot.val().groupList; 
+        const groupsIDList:string[] = Object.keys(snapshot.val().groupList);
+        console.log('groupList', groupsIDList);
+    
         let currGroup = snapshot.val().currentGroup;
         if (!currGroup) {
-          currGroup = snapshot.val().groupList[0];
+          currGroup = groupsIDList[0];
         }      
         groupsIDList.forEach((groupID: any) => {
           this.firebase
@@ -546,14 +549,15 @@ export class Database {
       .once('value', (snapshot) => {
         let currGroup = snapshot.val().currentGroup;
         if (!currGroup) {
-          currGroup = snapshot.val().groupList[0];
+          currGroup = Object.keys(snapshot.val().groupList)[0];
         }
 
         this.firebase
           .database()
           .ref(`Groups/${currGroup}`) 
           .once('value', (snapshot) => {
-            const memberList: string[] = snapshot.val().userList;
+            const memberList: string[] = Object.keys(snapshot.val().userList);
+            console.log('memberlist', memberList);
             memberList.forEach((userID) => {
               this.firebase
                 .database()
@@ -574,7 +578,7 @@ export class Database {
       .database()
       .ref(`Groups/${groupID}`)
       .once('value', (snapshot) => {
-        const memberList: string[] = snapshot.val().userList;
+        const memberList: string[] = Object.keys(snapshot.val().userList);
         memberList.forEach((userID) => {
           this.firebase
             .database()
@@ -649,7 +653,7 @@ export class Database {
       }
     });
     const setData = {
-      userID: data.userID,
+      userID: this.uid,
       date: data.date,
       totalCost: data.totalCost,
       description: data.description,
@@ -676,7 +680,7 @@ export class Database {
         console.log('Error: ' + error.code);
       });
 
-      const userRef = this.firebase.database().ref(`User/${user.userID}/transactionList/${transKey}`);
+      const userRef = this.firebase.database().ref(`User/${user.userID}/transactionList/${transKey}/state`);
       userRef.set(user.state);
     })
     

@@ -161,7 +161,7 @@ export class App {
 
     this.transactionsList.newTrans.onCreateTransaction = this.onCreateTransaction.bind(this);
     this.transactionsList.newTrans.onShowMembersOfGroup = this.onShowMembersOfGroup.bind(this);
-    this.database.getCurrencyList(this.transactionsList.newTrans.addCurrencyList);
+    this.database.getCurrencyList(this.transactionsList.newTrans.addCurrencyList); /* + */
     this.database.getGroupsListForTransaction(this.transactionsList.newTrans.addGroupList);
     this.database.getMembersOfGroupFirst(this.transactionsList.newTrans.addMembersOfGroup);
 
