@@ -7,10 +7,9 @@ export class AccountPage extends Page {
   }
 
   renderCurrencyOrLang(data: any, currentCurrency: string): void {
-    const el =
-      data[0].length === 2
-        ? document.querySelector('.form-select--lang')
-        : document.querySelector('.form-select--curr');
+    const el = data.some((item: any) => item === 'RU')
+      ? document.querySelector('.form-select--lang')
+      : document.querySelector('.form-select--curr');
 
     data.forEach((item: any) => {
       el.innerHTML += `
@@ -19,7 +18,7 @@ export class AccountPage extends Page {
 
     el.querySelectorAll('option').forEach((option) => {
       if (option.textContent === currentCurrency) {
-        option.setAttribute('checked', 'true');
+        option.setAttribute('selected', 'true');
       }
     });
   }
@@ -45,7 +44,7 @@ export class AccountPage extends Page {
             <div class="account__form-wrapper block--width-85">
               <div class="form-group row block--margin-adaptive">
                 <label for="account" class="col-sm-2 col-form-label">Account</label>
-                <div class="account__double-form col-sm-10">
+                <div class="account__double-form col-sm-10 account--input-size">
                   <div class="input-group-prepend account__double-form--first">
                     <span class="input-group-text" id="addon-wrapping">@</span>
                   </div>
@@ -54,20 +53,30 @@ export class AccountPage extends Page {
               </div>
               <div class="form-group row block--margin-adaptive">
                 <label for="surname" class="col-sm-2 col-form-label">Name</label>
-                <div class="col-sm-10">
+                <div class="col-sm-10 account--input-size">
                   <input type="text" name="name" aria-label="Last name" value="${data.name}" class="form-control account__info__input" placeholder="Name" required>
                 </div>
               </div>
-              <p class="block__element-gap d-flex align-items-center align-self-start">
-                <span>Current currency:</span>
-                <select class="form-select--curr w-auto" aria-label="Default select example">
-                </select>
-              </p>   
-              <p class="block__element-gap d-flex align-items-center align-self-start">
-                <span>Language:</span>
-                <select class="form-select--lang w-auto" aria-label="Default select example">
-                </select>
-              </p>            
+              <div class="form-group row block--margin-adaptive">
+                <span class="col-sm-2 col-form-label">Currency</span>
+                <div class="col-sm-10 account--input-size">
+                  <select class="form-select form-select--curr w-auto account--input-size mx-0" aria-label="Default select example">
+                  </select>
+                </div>
+              </div>   
+              <div class="form-group row block--margin-adaptive">
+                <span class="col-sm-2 col-form-label">Language</span>
+                <div class="col-sm-10 account--input-size">
+                  <select class="form-select form-select--lang w-auto account--input-size mx-0" aria-label="Default select example">
+                  </select>
+                </div>
+              </div>
+              <div class="form-switch form-group row px-0">
+                <span class="col-sm-2 col-form-label">Theme</span>
+                <div class="col-sm-10 account--input-size account__switcher-wrapper">
+                  <input class="form-check-input m-0 float-none account__switcher" type="checkbox" id="flexSwitchCheckDefault"> 
+                </div>                             
+              </div>             
             </div>            
           </div>
           </form>

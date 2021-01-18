@@ -18,18 +18,18 @@
   }
 }
 
-.account__date--margin {
-  margin-bottom: 0.5rem;
+.account--input-size {
+  width: 80%;
+  margin-left: auto;
+}
 
-@include phones {
-    margin-bottom: 1rem;
-  }
+.account__switcher-wrapper {
+  display: flex;
+  align-items: center;
+}
 
-@include tablets {
-    margin-bottom: 1rem;
-  }
-
-@include laptop {
-    margin-bottom: 1rem;
-  }
+.account__switcher {
+  width: 3.3rem !important;
+  height: 70%;
+  cursor: pointer;
 }
