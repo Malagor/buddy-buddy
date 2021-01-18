@@ -209,7 +209,7 @@ export class Database {
   createNewGroup(data: IDataForCreateGroup) {
     const file: File = data.groupData.icon;
     const currentGroup: boolean = data.currentGroup;
-    const userId: string = data.userId;
+    const userIdAuthor: string = data.userId;
 
     const metadata = {
       'contentType': file.type,
@@ -250,23 +250,29 @@ export class Database {
 
                     Object.keys(users).forEach((userId: any) => {
 
-                      this.firebase.database()
-                      .ref(`User/${userId}/groupList/${groupKey}`)
-                      .set({state: 'pending'});
+                      if(userId === userIdAuthor) {
+                        this.firebase.database()
+                        .ref(`User/${userId}/groupList/${groupKey}`)
+                        .set({state: 'approve'});
+                      } else {
+                        this.firebase.database()
+                        .ref(`User/${userId}/groupList/${groupKey}`)
+                        .set({state: 'pending'});
+                      }
 
                     });
                   });
                   return group;
                 })
-              .then(data => {
-                const dataForAddCurrentGroup = {
-                  groupKey: data.key,
-                  userId: userId
-                };
-                if (currentGroup) {
-                  this.addCurrentGroup(dataForAddCurrentGroup);
-                }
-              });
+                .then(data => {
+                  const dataForAddCurrentGroup = {
+                    groupKey: data.key,
+                    userId: userIdAuthor
+                  };
+                  if (currentGroup) {
+                    this.addCurrentGroup(dataForAddCurrentGroup);
+                  }
+                });
 
               })
               .catch(error => {
@@ -288,9 +294,12 @@ export class Database {
   }
 
   groupHandler = (createGroupList: any) => {
+    console.log('!!!!!!!!!!!___createGroupList', createGroupList)
     const base = this.firebase.database();
 
     return ((snapshot: any) => {
+
+      console.log( '!!!!!!!!!!!!!!!!!!!!!____snapshot.val()', snapshot.val())
 
       const users: string[] = Object.keys(snapshot.val().userList); // по каждой группе список  юзеров
       // при создании новой группы не доходит userList // разобраться
@@ -316,6 +325,7 @@ export class Database {
             'dataGroup': dataGroup,
             'arrayUsers': arrayUsers,
           };
+          console.log('!!!!!!!!!!!___dataForGroup', dataForGroup)
           createGroupList(dataForGroup);
         });
       }
@@ -323,12 +333,12 @@ export class Database {
   }
 
   addCurrentGroup(data: any) {
-    const userId: string = data.userId;
+    const userIdAuthor: string = data.userId;
     const groupKey = data.groupKey;
 
     this.firebase
     .database()
-    .ref(`User/${userId}/currentGroup`)
+    .ref(`User/${userIdAuthor}/currentGroup`)
     .set(groupKey);
   }
 
