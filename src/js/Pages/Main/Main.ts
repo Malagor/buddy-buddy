@@ -7,18 +7,13 @@ export class Main extends Page {
     return page;
   }
 
-  renderGroups(
-    userList: any,
-    index: number,
-    title: string,
-    length: number,
-  ): void {
+  renderGroups(userList: any, index: number, title: string, length: number, groupIcon: string): void {
     if (!userList) return;
-    const elems: any = document.querySelectorAll('.carousel-item__inner');
+    const elems: any = document.querySelectorAll('.carousel-item__inner');   
     const newIndex: number = length - index - 1;
     const elemIndex: number =
       newIndex % 2 === 0 ? newIndex / 2 : (newIndex - 1) / 2;
-
+      
     const avatarsBlock: any = (list: any): string => {
       let result: string = '';
       list.forEach((item: any, ind: number) => {
@@ -50,7 +45,7 @@ export class Main extends Page {
     const group: string = `
     <div class="main__slider__item">
       <div class="slider__item__img">
-        <i class="material-icons">groups</i>
+        <img src="${groupIcon}" alt="group icon" width="100%">
       </div>
       <p class="slider__item__title">
         <span>${title}</span>
@@ -123,7 +118,8 @@ export class Main extends Page {
   }
 
   renderSlider(elem: HTMLElement, dt: any): void {
-    if (!dt.groupList.length) {
+    const dataLength = Object.values(dt.groupList).filter((item: any) => item.state === 'approve').length; 
+    if (!dataLength) {
       elem.innerHTML = `
       <div class="card">
         <div class="card-body d-flex align-items-center flex-column">
@@ -147,13 +143,13 @@ export class Main extends Page {
       </div>`;
 
       elem.querySelectorAll('.arrow-color').forEach((item: any) => {
-        if (dt.groupList.length < 3) item.classLis.add('arrows-visibility');
+        if (dataLength < 3) item.classLis.add('arrows-visibility');
       });
 
       const carouselItemCount: number =
-        dt.groupList.length % 2 === 0
-          ? dt.groupList.length / 2
-          : (dt.groupList.length + 1) / 2;
+        dataLength % 2 === 0
+          ? dataLength / 2
+          : (dataLength + 1) / 2;
       for (let i = 0; i < carouselItemCount; i += 1) {
         elem.querySelector('.carousel-inner').innerHTML += `
         <div class="carousel-item h-100">

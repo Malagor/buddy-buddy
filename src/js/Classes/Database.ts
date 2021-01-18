@@ -155,6 +155,7 @@ export class Database {
   }
 
   async getUserTransactions(uid: string, callbacks: any) {
+    return;
     const dat: any = await this.firebase
       .database()
       .ref(`Transactions`)
@@ -238,12 +239,16 @@ export class Database {
         (error: { code: string }) => {
           console.log('Error: ' + error.code);
         },
-      );
+      );      
     const data: any = dat.val();
     const value: any = Object.entries(data)
-      .filter((item: any) => item[1].userList.find((it: any) => it === uid))
-      .map(async (item: any, index: number) => {
-        const elem: any = await item[1].userList.map(async (it: any) => {
+      .map((item: any) => {
+        item[1].userList = Object.entries(item[1].userList);        
+        return item[1];
+      })
+      .filter((item: any) => item.userList.find((it: any) => it[0] === uid && it[1] === 'approve'))
+      .map(async (item: any, index: number) => {       
+        const elem: any = await item.userList.map(async (it: any) => {
           const res: any = await this.firebase
             .database()
             .ref(`User/${it}`)
@@ -254,7 +259,7 @@ export class Database {
           return it;
         });
         await Promise.all(elem).then((userList: any) => {
-          callback(userList, index, item[1].title, value.length);
+          callback(userList, index, item.title, value.length, item.icon);
         });
       });
   }
