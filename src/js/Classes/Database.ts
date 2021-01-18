@@ -423,10 +423,9 @@ export class Database {
       });
   }
 
-  async getCurrenciesOrLangs(uid: string, callback: any, counter: number) {
-    const array = ['currency', 'language'];
+  async getCurrenciesOrLangsOrThemes(uid: string, callback: any, elem: string) {
     const neededQuery =
-      array[counter][0].toUpperCase() + array[counter].slice(1);
+      elem[0].toUpperCase() + elem.slice(1);
     const curr: any = await this.firebase
       .database()
       .ref(neededQuery)
@@ -455,7 +454,7 @@ export class Database {
           console.log(error.message);
         },
       );
-    const currentCurrency = current.val()[array[counter]];
+    const currentCurrency = current.val()[elem];
     callback(values, currentCurrency);
   }
 

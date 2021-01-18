@@ -138,8 +138,9 @@ export class App {
     const uid: string = this.database.uid;
     this.database.getUserInfo(uid, [this.accountPage.render]);
 
-    this.database.getCurrenciesOrLangs(uid, this.accountPage.renderCurrencyOrLang, 0);
-    this.database.getCurrenciesOrLangs(uid, this.accountPage.renderCurrencyOrLang, 1);
+    this.database.getCurrenciesOrLangsOrThemes(uid, this.accountPage.renderCurrencyOrLangOrTheme, 'currency');
+    this.database.getCurrenciesOrLangsOrThemes(uid, this.accountPage.renderCurrencyOrLangOrTheme, 'language');
+    this.database.getCurrenciesOrLangsOrThemes(uid, this.accountPage.renderCurrencyOrLangOrTheme, 'theme');
   }
 
   onGroupsPage() {
