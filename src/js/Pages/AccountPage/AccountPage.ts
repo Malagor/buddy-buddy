@@ -70,21 +70,21 @@ export class AccountPage extends Page {
                 <div class="form-group row block--margin-adaptive w-100">
                   <span class="col-sm-2 col-form-label">Currency</span>
                   <div class="col-sm-10 account--input-size">
-                    <select name="currency" class="form-select form-select--curr w-auto account--input-size mx-0 account__info__input" aria-label="Default select example">
+                    <select name="currency" class="form-select form-select--curr account--input-size mx-0 account__info__input" aria-label="Default select example">
                     </select>
                   </div>
                 </div>   
                 <div class="form-group row block--margin-adaptive w-100">
                   <span class="col-sm-2 col-form-label">Language</span>
                   <div class="col-sm-10 account--input-size">
-                    <select name="language" class="form-select form-select--lang w-auto account--input-size mx-0 account__info__input" aria-label="Default select example">
+                    <select name="language" class="form-select form-select--lang account--input-size mx-0 account__info__input" aria-label="Default select example">
                     </select>
                   </div>
                 </div>
                 <div class="form-group row block--margin-adaptive w-100">
                   <span class="col-sm-2 col-form-label">Theme</span>
                   <div class="col-sm-10 account--input-size">
-                    <select name="theme" class="form-select form-select--theme w-auto account--input-size mx-0 account__info__input" aria-label="Default select example">
+                    <select name="theme" class="form-select form-select--theme account--input-size mx-0 account__info__input" aria-label="Default select example">
                     </select>
                   </div>
                 </div>            

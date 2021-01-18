@@ -22,6 +22,10 @@
   width: 100%;
   margin-left: auto;
 
+  & > .form-select {
+    width: 6.9rem;
+  }
+
   @media (min-width: 576px) {
     width: 77%;
   }
