@@ -16,16 +16,19 @@ export const getFormData = (
     ) {
       formData[field.name] = field.value;
       if (field.type === 'file') {
-
-        const reader: FileReader = new FileReader();
-        reader.onload = (function (aImg: HTMLImageElement) {
-          return (e: any): void => {
-            aImg.src = e.target.result;
-            const file = field.files[0];
-            formData[field.name] = file;
-          };
-        })(imageElement);
-        reader.readAsDataURL(field.files[0]);
+        const file = field.files[0];
+        if (!file) {
+          formData[field.name] = imageElement.src;
+        } else {
+          formData[field.name] = file;
+          const reader: FileReader = new FileReader();
+          reader.onload = (function (aImg: HTMLImageElement) {
+            return (e: any): void => {
+              aImg.src = e.target.result;
+            };
+          })(imageElement);
+          reader.readAsDataURL(file);
+        }
       }
     }
   });
