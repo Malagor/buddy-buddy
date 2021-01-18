@@ -85,8 +85,6 @@
     "core-js": "^3.4.7",
     "cyrillic-to-translit-js": "^3.1.0",
     "firebase": "^8.2.1",
-    "framework7": "^5.7.14",
-    "material-components-web": "^9.0.0",
     "normalize.css": "^8.0.1",
     "regenerator-runtime": "^0.13.3"
   }
