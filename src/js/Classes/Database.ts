@@ -381,7 +381,8 @@ export class Database {
         const userList = snapshot.val().toUserList;
         Object.keys(userList).forEach(user => {
           if (user === this.uid && userList[user].state !== 'approve') {
-            setNotificationMark(TypeOfNotifications.Group, 1);
+            // if (user === this.uid) {
+            setNotificationMark(TypeOfNotifications.Transaction, 1);
           }
         });
         // const hasUserId = userList.find((user: { userID: string; state: string; }) => {
@@ -402,12 +403,8 @@ export class Database {
     this.firebase.database()
       .ref(`User/${this.uid}/contacts`)
       .on('child_added', snapshot => {
-        const state = snapshot.val().state;
-
-        if (state === 'pending') {
+        if (snapshot.val().state === 'pending') {
           setNotificationMark(TypeOfNotifications.Contact, 1);
-        } else {
-          setNotificationMark(TypeOfNotifications.Contact, 0);
         }
       }, (error: { code: string; message: any; }) => {
         console.log('Error:\n ' + error.code);
@@ -527,7 +524,7 @@ export class Database {
           .database()
           .ref(`User/${key}`)
           .once('value', snapshot => {
-      console.log('contactsHandler', snapshot);
+            console.log('contactsHandler', snapshot);
             const userData = snapshot.val();
             userData.key = key;
             userData.state = state;
@@ -587,7 +584,6 @@ export class Database {
   }
 
   createNewMessage(data: INewMessage): void {
-    console.log('createNewMessage', data);
     data.fromUser = this.uid;
 
     this.firebase
@@ -743,6 +739,128 @@ export class Database {
       })
       .catch(error => {
         errorHandler(error.message);
+      });
+  }
+
+  getBalanceInGroup(groupId: string, funcForRender: (balance: number) => void, errorHandler?: (message: string) => void) {
+    const base = this.firebase.database();
+
+    base.ref(`Groups/${groupId}`)
+      .once('value', snapshot => {
+        const usersList = snapshot.val().userList;
+        const transactionsId: string[] = snapshot.val().transactions;
+
+        transactionsId.forEach(transID => {
+          base.ref(`Transactions/${transID}`)
+            .once('value', snapshot => {
+              const transactionData = snapshot.val();
+              const fromUserId = transactionData.userID;
+              const fromCost = transactionData.totalCost;
+
+              // increase balance "User FROM"
+              if (usersList[fromUserId].sum == null) {
+                usersList[fromUserId].sum = 0;
+              }
+              usersList[fromUserId].sum += fromCost;
+
+              const toUserList = transactionData.toUserList;
+              const toUserIdList = Object.keys(toUserList);
+
+              // decrease balances "Users TO"
+              toUserIdList.forEach(userId => {
+                const cost = toUserList[userId].cost;
+                if (usersList[userId].sum == null) {
+                  usersList[userId].sum = 0;
+                }
+                usersList[userId].sum -= cost;
+              });
+            });
+        });
+
+        // Total group Balances
+        const userListArray: { state: string, sum: number }[] = Object.values(usersList);
+        const balance: number = userListArray.reduce((sum: number, userData: { sum: number }) => {
+          if (userData.sum > 0) {
+            sum += userData.sum;
+          }
+          return sum;
+        }, 0);
+
+        funcForRender(balance);
+      })
+      .catch(error => {
+        console.log(error.code);
+        console.log(error.message);
+        if (errorHandler) {
+          errorHandler(error.message);
+        }
+      });
+  }
+
+  getBalanceForUserInGroup(userId: string, groupId: string, funcForRender: (balance: number) => void, errorHandler?: (message: string) => void) {
+    const base = this.firebase.database();
+
+    base.ref(`Groups/${groupId}/`)
+      .child(`transactions`)
+      .once('value', snapshot => {
+        const transactionArray: string[] = snapshot.val();
+        let balance: number = 0;
+
+        transactionArray.forEach(transId => {
+          base.ref(`Transactions/${transId}`)
+            .once('value', snapshot => {
+              const transData = snapshot.val();
+              if (transData.userID === userId) {
+                balance += transData.totalCost;
+              } else {
+                balance -= transData.toUserList[userId].cost;
+              }
+            });
+        });
+
+        funcForRender(balance);
+      })
+      .catch(error => {
+        console.log(error.code);
+        console.log(error.message);
+        if (errorHandler) {
+          errorHandler(error.message);
+        }
+      });
+
+  }
+
+  getBalanceForUserTotal(userId: string, funcForRender: (balance: number) => void, errorHandler?: (message: string) => void) {
+    console.log('getBalanceForUserTotal ...');
+    const base = this.firebase.database();
+
+    base.ref(`User/${userId}`)
+      .child('transactionList')
+      .once('value', snapshot => {
+        const transactionList = snapshot.val();
+        const transId = Object.keys(transactionList);
+        let balance: number = 0;
+
+        transId.forEach(key => {
+          base.ref(`Transactions/${key}`)
+            .once('value', snapshot => {
+              const transData = snapshot.val();
+              if (transData.userID === userId) {
+                balance += transData.totalCost;
+              } else {
+                balance -= transData.toUserList[userId].cost;
+              }
+            });
+        });
+
+        funcForRender(balance);
+      })
+      .catch(error => {
+        console.log(error.code);
+        console.log(error.message);
+        if (errorHandler) {
+          errorHandler(error.message);
+        }
       });
   }
 }
