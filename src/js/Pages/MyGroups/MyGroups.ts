@@ -1,13 +1,17 @@
 import { Page } from '../../Classes/Page';
 import { IGroupData, IGroupDataAll } from '../../Interfaces/IGroupData';
-import { getFormData } from  '../../Util/getFormData';
+import { getFormData } from '../../Util/getFormData';
 
 import { Modal } from 'bootstrap';
+import { eventForContactsList } from '../Contacts/eventForContactsList';
+import { onClickContactInContactsList } from '../Contacts/onClickContactInContactsList';
+
 const defaultGroupLogo = require('../../../assets/images/default-group-logo.png');
 
 export class MyGroups extends Page {
   onCreateNewGroup: any;
   onAddMember: any;
+  fillContactsList: any;
 
   static create(el: string): MyGroups {
     const page = new MyGroups(el);
@@ -19,45 +23,40 @@ export class MyGroups extends Page {
   render(): void {
 
     let html = `
-      <div class="block__wrapper d-flex align-items-center flex-column">
-        <div class="block__content d-flex align-items-center flex-column w-100">
-          <div id="contentGroup" class="container">
-            <div class="row justify-content-between block__title">
-              <div class="col-6">
-                <h2 class="block__h2-indents">Groups</h2>
+      <div class="block__wrapper">
+        <div class="block__content">
+          <div class="block__header block__header--main">
+            <p class="block__title">Groups</p>
+          </div>
+          <div class="block__main">
+            <div id="contentGroup" class="container">
+              <div id="divForListOpenGroups">
+                <div class="card-body data-is-not">
+                  <h5 class="card-title">No groups yet.</h5>
+                  <p class="card-text">Would you like to create the first group?</p>
+                </div>
               </div>
-            </div>
-
-            <div id="divForListOpenGroups">
-              <div class="card-body data-is-not">
-                <h5 class="card-title">No groups yet.</h5>
-                <p class="card-text">Would you like to create the first group?</p>
-              </div>
-            </div>
-
-            <div class="accordion closed-group-hidden" id="accordionExample">
-              <div class="accordion-item">
-                <h2 class="accordion-header" id="headingOne">
-                  <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
-                    Closed Group
-                  </button>
-                </h2>
-                <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
-                  <div id="divForListClosedGroups" class="accordion-body">
-
+              <div class="accordion closed-group-hidden" id="accordionExample">
+                <div class="accordion-item">
+                  <h2 class="accordion-header" id="headingOne">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                      Closed Group
+                    </button>
+                  </h2>
+                  <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                    <div id="divForListClosedGroups" class="accordion-body">
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
+          </div>
+          <div class="block__footer">
+            <button type="button" class="btn btn-primary add-new-group" data-bs-toggle="modal" data-bs-target="#addNewGroupModal">New group</button>
+          </div>
+        </div>
+      </div>
     `;
-
-    html += `
-    <button type="button" class="btn btn-success add-new-group" data-bs-toggle="modal" data-bs-target="#addNewGroupModal">
-      <i class="material-icons add-new-group__icon">add</i>
-    </button>
-    `;
-
-    html += `</div></div></div>`;
 
     html += this.modal();
     this.element.innerHTML = html;
@@ -98,7 +97,7 @@ export class MyGroups extends Page {
       participantsImg.push(String(listUsers.length - NUM_OF_IMG_IN_GROUP_CARD));
     }
 
-    const groupCard = `
+    return `
       <div class="card mb-3 card-group">
         <div class="row g-0 col">
           <div class="col-3 card-group__box-logo-group">
@@ -130,8 +129,6 @@ export class MyGroups extends Page {
         </div>
       </div>
     `;
-
-    return groupCard;
   }
 
   modal() {
@@ -160,9 +157,8 @@ export class MyGroups extends Page {
                 </div>
               </div>
 
-              <div class="form-floating col-9 form-title">
-                <input type="text" class="form-control" id="formTitle" name="title" placeholder="Title" required>
-                <label for="formTitle" class="form-label">Title*</label>
+              <div class="col-9 form-title">
+                <input type="text" class="form-control" id="formTitle" name="title" placeholder="Title*" required>
                 <div class="invalid-feedback">
                   Please input title.
                 </div>
@@ -181,11 +177,16 @@ export class MyGroups extends Page {
                 </div>
               </div>
 
-              <div class="input-group col-12">
-                <span class="input-group-text" id="basic-addon1">@</span>
-                <input type="text" class="form-control" id="formMembers" placeholder="Members" aria-label="Username" aria-describedby="basic-addon1">
+              <div class="col-12">
+                <div class="dropdown col-10">
+                  <input class="form-control dropdown-toggle" type="text" id="activeContact" data-bs-toggle="dropdown" aria-expanded="false" placeholder="Members" autocomplete="off" name="name">
+                  <input type="text" name="key" class="contact-user-id" hidden>
+                  <ul class="dropdown-menu contacts-user-list" aria-labelledby="Group Members">
+                  </ul>
+                </div>
+<!--                <input type="text" class="form-control" id="formMembers" placeholder="Members" aria-label="Username" aria-describedby="basic-addon1">-->
 <!--                <label for="formMembers">Members</label>-->
-                <button type="button" class="btn btn-primary" id="addNewGroupMember"><span class="material-icons">person_search</span></button>
+                <button type="button" class="btn btn-primary col-1" id="addNewGroupMember"><span class="material-icons">add</span></button>
               </div>
 
                <div class="row col-12 group-members-avatar"></div>
@@ -206,8 +207,17 @@ export class MyGroups extends Page {
 
     const btnAddNewGroup = document.querySelector('.add-new-group');
     btnAddNewGroup.addEventListener('click', () => {
+
+      document.querySelector('.contacts-user-list').innerHTML = '';
+      this.fillContactsList();
       modal.show();
     });
+
+    // Auto-filter contacts in member group list
+    const formMembers: HTMLInputElement = document.querySelector('#activeContact');
+    eventForContactsList(formMembers);
+    // Add user contact to Member input
+    onClickContactInContactsList();
 
     // Set focus in Input when modal is open
     const myModal = document.getElementById('addNewGroupModal');
@@ -274,7 +284,8 @@ export class MyGroups extends Page {
     addGroupMember.addEventListener('click', (ev) => {
       ev.preventDefault();
       console.log('Add new Member');
-      const member: HTMLFormElement = document.querySelector('#formMembers');
+      const member: HTMLFormElement = document.querySelector('.contact-user-id');
+      console.log('member.value', member.value);
       this.onAddMember(member.value);
     });
   }
@@ -291,7 +302,7 @@ export class MyGroups extends Page {
       <div class="member__name text-center">${data.name}</div>
     </div>
     `);
-      const input: HTMLFormElement = document.querySelector('#formMembers');
+      const input: HTMLFormElement = document.querySelector('#activeContact');
       input.value = '';
     }
   }

@@ -8,7 +8,7 @@
 .position-material-icons {
   position: absolute;
   right: 0;
-  bottom: 0;   
+  bottom: 0;
 }
 
 .group__button-change-photo {
@@ -78,16 +78,16 @@
 }
 
 .add-new-group {
-  position: fixed;
-  right: 14%;
-  bottom: rem(90px);
-  width: rem(51px);
-  height: rem(51px);
-  border-radius: 50%;
+  //position: fixed;
+  //right: 14%;
+  //bottom: rem(90px);
+  //width: rem(51px);
+  //height: rem(51px);
+  //border-radius: 50%;
 
-  &__icon {
-    margin: 5px 0 0 -1px;
-  }
+  //&__icon {
+  //  margin: 5px 0 0 -1px;
+  //}
 }
 
 .member {
