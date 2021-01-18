@@ -76,7 +76,7 @@ export class TransactionsList extends Page {
     transaction.setAttribute('data-time', trans.date);
     transaction.innerHTML = `
       <p class="trans-item__header align-self-start row">
-        <span class="trans-item__descr fw-bolder text-truncate">${trans.descripion}</span>
+        <span class="trans-item__descr fw-bolder text-truncate">${trans.description}</span>
       </p>
       <div class="trans-item__info row">
         <div class="date col-3 align-self-start">
@@ -242,10 +242,6 @@ export class TransactionsList extends Page {
     }
   }
 
-<<<<<<< HEAD
-=======
-
->>>>>>> develop
 
 
   renderInTrans = (transID: string, trans: any) => {
@@ -267,7 +263,7 @@ export class TransactionsList extends Page {
     const date: any = getDate(trans.date);
     const baseHTML = `    
       <div class="details__header modal-header">
-        <h5 class="details__descr modal-title">${trans.descripion}</h5>
+        <h5 class="details__descr modal-title">${trans.description}</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="details__info modal-body">
@@ -285,10 +281,24 @@ export class TransactionsList extends Page {
           <div>Чек: </div>
           <div class="details__icon-wrapper"><img class="details__icon" src=${trans.photo} alt="check"></div>
         </div>
+
+        <div class="modal fade details__modal" id="check" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content p-2 d-flex flex-column">
+                <button type="button" class="btn-close align-self-end details__close-modal" aria-label="Close"></button>
+                <div class="p-2 details__check-box">              
+                </div>
+            </div>
+          </div>
+        </div>
+
+
+
       </div>
 
       <div class="details__members modal-body">      
       </div>
+
 
       <div class="details__not-members modal-body">     
       </div>

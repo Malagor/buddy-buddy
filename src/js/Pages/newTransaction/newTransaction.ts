@@ -59,8 +59,8 @@ export class NewTransaction extends Page {
               <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content p-2 d-flex flex-column">
                     <button type="button" class="btn-close align-self-end add-check__close-modal" aria-label="Close"></button>
-                    <div class="p-2">
-                      <img class="add-check__image" src="#" alt="check">
+                    <div class="p-2 add-check__check-box">
+                     
                     </div>
 
                 </div>
@@ -169,6 +169,13 @@ export class NewTransaction extends Page {
         comment: commentInput.value,
         state: 'pending',
       };
+
+      // const user = {
+      //   userID: memb.getAttribute('user-id'),
+      //   cost: +sumInput.value || +sumInput.getAttribute('placeholder'),
+      //   comment: commentInput.value,
+      //   state: 'pending',
+      // };
       userList.push(user);
     });
 
@@ -176,7 +183,7 @@ export class NewTransaction extends Page {
       date: currentDate,
       totalCost: +totalSum.value,
       groupID: group.value,
-      descripion: descr.value,
+      description: descr.value,
       photo: checks,
       currency: currency.value,
       toUserList: userList,

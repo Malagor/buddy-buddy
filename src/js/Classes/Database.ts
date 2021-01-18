@@ -534,22 +534,97 @@ export class Database {
       });
   }
 
+  // setDataTransaction(data: any) {
+  //   data.userID = this.uid; 
+  //   data.toUserList.forEach((user: any) => {
+  //     if(user.userID === this.uid) {
+  //       user.state = 'approve';
+  //     }
+  //   });
+
+  //   const transRef = this.firebase.database().ref('Transactions');    
+  //   const transKey = transRef.push().key;
+  //   transRef.child(transKey)
+  //     .set(data)
+  //     .catch(error => {
+  //       console.log('Error: ' + error.code);
+  //     });
+
+  //   const groupRef = this.firebase.database().ref(`Groups/${data.groupID}/transactions`);
+  //   groupRef.transaction(list => {
+  //     if (list) {
+  //       list.push(transKey);
+  //       return list;
+  //     } else {
+  //       let arrTrans: string[] = [];
+  //       arrTrans.push(transKey);
+  //       return arrTrans;
+  //     }
+  //   })
+  //   .catch(error => {
+  //     console.log('Error: ' + error.code);
+  //   });
+
+  //   const files: any[] = data.photo;
+  //   files.forEach((file, i) => {
+  //     const metadata = {
+  //       'contentType': file.type,
+  //     };
+  //     this.firebase.storage()
+  //       .ref()
+  //       .child('transactions/' + file.name)
+  //       .put(file, metadata)
+  //       .then((snapshot) => {
+  //         snapshot.ref.getDownloadURL()
+  //           .then((url) => {
+  //             this.firebase.database().ref(`Transactions/${transKey}/photo/${i}`)
+  //             .set(url); 
+  //           })
+  //         })
+  //         .catch(error => {
+  //           console.log('Error: ' + error.code);
+  //         });
+  //   })      
+  // }
+
   setDataTransaction(data: any) {
-    data.userID = this.uid; 
     data.toUserList.forEach((user: any) => {
       if(user.userID === this.uid) {
         user.state = 'approve';
       }
     });
+    const setData = {
+      userID: data.userID,
+      date: data.date,
+      totalCost: data.totalCost,
+      description: data.description,
+      currency: data.currency,
+    }
 
     const transRef = this.firebase.database().ref('Transactions');    
     const transKey = transRef.push().key;
     transRef.child(transKey)
-      .set(data)
+      .set(setData)
       .catch(error => {
         console.log('Error: ' + error.code);
       });
 
+    data.toUserList.forEach((user: any) => {
+      const obj = {
+        cost:user.cost,
+        comment:user.comment,
+        state:user.state,
+      }
+      const base = this.firebase.database().ref(`Transactions/${transKey}/toUserList/${user.userID}`);    
+      base.set(obj)
+      .catch(error => {
+        console.log('Error: ' + error.code);
+      });
+
+      const userRef = this.firebase.database().ref(`User/${user.userID}/transactionList/${transKey}`);
+      userRef.set(user.state);
+    })
+    
     const groupRef = this.firebase.database().ref(`Groups/${data.groupID}/transactions`);
     groupRef.transaction(list => {
       if (list) {
