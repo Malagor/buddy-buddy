@@ -423,6 +423,41 @@ export class Database {
       });
   }
 
+  async getCurrenciesOrLangs(uid: string, callback: any, counter: number) {
+    const array = ['currency', 'language'];
+    const neededQuery =
+      array[counter][0].toUpperCase() + array[counter].slice(1);
+    const curr: any = await this.firebase
+      .database()
+      .ref(neededQuery)
+      .once(
+        'value',
+        (snapshot) => {
+          return snapshot;
+        },
+        (error: { code: string; message: any }) => {
+          console.log('Error:\n ' + error.code);
+          console.log(error.message);
+        },
+      );
+    const data = curr.val();
+    const values = Object.entries(data).map((item: any) => item[0]);
+    const current: any = await this.firebase
+      .database()
+      .ref(`User/${uid}`)
+      .once(
+        'value',
+        (snapshot) => {
+          return snapshot;
+        },
+        (error: { code: string; message: any }) => {
+          console.log('Error:\n ' + error.code);
+          console.log(error.message);
+        },
+      );
+    const currentCurrency = current.val()[array[counter]];
+    callback(values, currentCurrency);
+  }
 
   // addTheme(nameTheme: string) {
   //
