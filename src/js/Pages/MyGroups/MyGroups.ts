@@ -262,6 +262,8 @@ export class MyGroups extends Page {
         users.push(member.getAttribute('data-id'));
       });
 
+
+      console.log('logoGroupImgData', logoGroupImgData)
       const groupData: IGroupData = {
         title,
         description,
