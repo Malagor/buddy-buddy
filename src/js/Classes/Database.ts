@@ -128,6 +128,13 @@ export class Database {
       .set(data);
   }
 
+  updateUserInfo(uid: string, data: any) {
+    this.firebase
+      .database()
+      .ref(`User/${uid}`)
+      .update(data);
+  }
+
   getUserInfo(uid: string, callbacks: any[]): any {
     this.firebase
       .database()
@@ -348,6 +355,7 @@ export class Database {
   }
 
   countTransactionInvite(setNotificationMark: { (type: TypeOfNotifications, num: number): void; (arg0: TypeOfNotifications, arg1: number): void; }): void {
+    return;
     this.firebase
       .database()
       .ref('Transactions')

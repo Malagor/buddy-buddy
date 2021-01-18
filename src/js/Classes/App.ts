@@ -74,6 +74,7 @@ export class App {
       this.layout.onContactsPage = this.onContactsPage.bind(this);
 
       this.accountPage = AccountPage.create('.main');
+      this.accountPage.updateInfo = this.updateOnAccountPage.bind(this);
       this.mainPage = Main.create('.main');
 
       this.database.getUserInfo(uid, [
@@ -141,6 +142,12 @@ export class App {
     const uid: string = this.database.uid;
     this.database.getUserInfo(uid, [this.mainPage.render]);
 
+  }
+
+  updateOnAccountPage(data: any) {
+    const uid: string = this.database.uid;
+
+    this.database.updateUserInfo(uid, data);
   }
 
   async onAccountPage() {
