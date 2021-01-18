@@ -2,6 +2,8 @@ import firebase from 'firebase';
 import 'firebase/auth';
 import { default as CyrillicToTranslit } from 'cyrillic-to-translit-js/CyrillicToTranslit';
 import { IDataForCreateGroup } from '../Interfaces/IGroupData';
+import { IGroupData } from '../Interfaces/IGroupData';
+import { ISearchUserData } from '../Pages/Contacts/Contacts';
 import { IMessage, INewMessage } from '../Pages/Messenger/Messenger';
 import { IHandlers } from './App';
 import { TypeOfNotifications } from './Notifications';
@@ -363,7 +365,23 @@ export class Database {
         console.log('Error:\n ' + error.code);
         console.log(error.message);
       });
+  }
 
+  countContactsInvite(setNotificationMark: { (type: TypeOfNotifications, num: number): void; (arg0: TypeOfNotifications, arg1: number): void; }): void {
+    this.firebase.database()
+      .ref(`User/${this.uid}/contacts`)
+      .on('child_added', snapshot => {
+        const state = snapshot.val().state;
+
+        if (state === 'pending') {
+          setNotificationMark(TypeOfNotifications.Contact, 1);
+        } else {
+          setNotificationMark(TypeOfNotifications.Contact, 0);
+        }
+      }, (error: { code: string; message: any; }) => {
+        console.log('Error:\n ' + error.code);
+        console.log(error.message);
+      });
   }
 
   countNewMessage(setNotificationMark: { (type: TypeOfNotifications, num: number): void; (arg0: TypeOfNotifications, arg1: number): void; }): void {
@@ -399,10 +417,14 @@ export class Database {
       base.ref('Transactions')
         .off('child_added', handlers.transactions);
     }
+
+    if (handlers.contacts) {
+      base.ref('Transactions')
+        .off('child_added', handlers.contacts);
+    }
   }
 
   getMessageList(addMessageToListFunc: { (snapshot: any): void; (a: firebase.database.DataSnapshot, b?: string): any; }): void {
-
     this.firebase
       .database()
       .ref('Messages')
@@ -464,6 +486,74 @@ export class Database {
     };
   }
 
+  contactsHandler = (renderContact: any): any => {
+    return (snapshot: any): void => {
+      if (snapshot) {
+        const key: string = snapshot.key;
+        const state = snapshot.val().state;
+
+        this.firebase
+          .database()
+          .ref(`User/${key}`)
+          .once('value', snapshot => {
+            const userData = snapshot.val();
+            userData.key = key;
+            userData.state = state;
+            // if (state !== 'decline') {
+            renderContact(userData);
+            // }
+          });
+      } else {
+        console.log('No Contacts');
+      }
+    };
+  }
+
+  getContactsList(renderContact: any): void {
+    const base = this.firebase.database();
+    const uid = this.uid;
+
+    base
+      .ref(`User/${uid}`)
+      .child('contacts')
+      .on('child_added', renderContact,
+        (error: { code: string; message: any; }) => {
+          console.log('Error:\n ' + error.code);
+          console.log(error.message);
+        });
+  }
+
+  changeContactState(contsctId: string, newState: string, userId?: string): void {
+    let uid: string;
+    if (userId) {
+      uid = userId;
+    } else {
+      uid = this.uid;
+    }
+    this.firebase.database()
+      .ref(`User/${uid}/contacts/${contsctId}`)
+      .transaction(state => {
+        state = { state: newState };
+        return state;
+      });
+  }
+
+  deleteContact(userId: string, contactId: string) {
+    this.changeContactState(contactId, 'decline');
+    this.changeContactState(userId, 'decline', contactId);
+
+    // this.firebase
+    //   .database()
+    //   .ref(`User/${userId}/contacts/${contactId}`)
+    //   .remove(error => {
+    //     if (error) {
+    //       console.log(error.message);
+    //     } else {
+    //       console.log('Delete contact successful');
+    //     }
+    //   });
+  }
+
   createNewMessage(data: INewMessage): void {
     console.log('createNewMessage', data);
     data.fromUser = this.uid;
@@ -478,32 +568,7 @@ export class Database {
       });
   }
 
-
-  // addTheme(nameTheme: string) {
-  //
-  // }
-  //
-  // getThemeList() {
-  //
-  // }
-  //
-  // getThemeByID(themeID: string) {
-  //
-  // }
-  //
-  // getThemeByName(themeName: string) {
-  //
-  // }
-  //
-  // addCurrency() {
-  //
-  // }
-  //
-  // getCurrency(curID?: string, curAbbreviation?: string) {
-  //
-  // }
-
-  getCurrencyList(renderCurrencyList: { (currID: string, icon: string): void; (arg0: string, arg1: any): void; }): void {
+   getCurrencyList(renderCurrencyList: { (currID: string, icon: string): void; (arg0: string, arg1: any): void; }): void {
     this.firebase
       .database()
       .ref('Currency')
@@ -605,6 +670,47 @@ export class Database {
     })
       .catch(error => {
         console.log('Error: ' + error.code);
+      });
+  }
+
+  addUserToContacts(userData: ISearchUserData, errorHandler: (message: string) => void) {
+    const userTable = this.firebase.database().ref('User');
+    userTable
+      .once('value', (userList) => {
+        const userObjs = userList.val();
+        const keysList = Object.keys(userObjs);
+        const userKey: string[] = keysList.filter(key => {
+          if (userObjs[key].account === userData.account) return key;
+          if (userObjs[key].name === userData.name) return key;
+
+          return false;
+        });
+
+        if (userKey.length) {
+          this.addNewContactToContactList(this.uid, userKey[0], 'approve', errorHandler);
+          this.addNewContactToContactList(userKey[0], this.uid, 'pending', errorHandler);
+        } else {
+          errorHandler('The user is not found.');
+        }
+      })
+      .catch(error => {
+        errorHandler(error.message);
+      });
+  }
+
+  addNewContactToContactList(userId: string, newContactId: string, state: string, errorHandler?: (message: string) => void) {
+    this.firebase.database()
+      .ref(`User/${userId}/contacts/${newContactId}`)
+      .set({ state: state })
+      .catch(error => {
+        console.log(error.code);
+        console.log(error.message);
+        if (errorHandler) {
+          errorHandler(error.message);
+        }
+      })
+      .catch(error => {
+        errorHandler(error.message);
       });
   }
 }

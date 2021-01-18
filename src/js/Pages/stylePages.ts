@@ -6,3 +6,4 @@ import './TransactionsList/transactionsList.scss';
 import './MyGroups/myGroups.scss';
 import './newTransaction/newTransaction.scss';
 import './Messenger/messenger.scss';
+import './Contacts/contacs.scss';
