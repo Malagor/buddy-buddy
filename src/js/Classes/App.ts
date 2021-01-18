@@ -133,14 +133,16 @@ export class App {
 
   }
 
-  onAccountPage() {
+  async onAccountPage() {
     this.deleteHandlers();
     const uid: string = this.database.uid;
-    this.database.getUserInfo(uid, [this.accountPage.render]);
+    await this.database.getUserInfo(uid, [this.accountPage.render]);
 
-    this.database.getCurrenciesOrLangsOrThemes(uid, this.accountPage.renderCurrencyOrLangOrTheme, 'currency');
-    this.database.getCurrenciesOrLangsOrThemes(uid, this.accountPage.renderCurrencyOrLangOrTheme, 'language');
-    this.database.getCurrenciesOrLangsOrThemes(uid, this.accountPage.renderCurrencyOrLangOrTheme, 'theme');
+    await this.database.getCurrenciesOrLangsOrThemes(uid, this.accountPage.renderCurrencyOrLangOrTheme, 'currency');
+    await this.database.getCurrenciesOrLangsOrThemes(uid, this.accountPage.renderCurrencyOrLangOrTheme, 'language');
+    await this.database.getCurrenciesOrLangsOrThemes(uid, this.accountPage.renderCurrencyOrLangOrTheme, 'theme');
+
+    this.accountPage.events();
   }
 
   onGroupsPage() {
