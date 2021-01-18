@@ -143,6 +143,15 @@ export class AccountPage extends Page {
       .forEach((item: HTMLInputElement, index: number): void => {
         values.push(checkImg(item));
         item.addEventListener('input', () => {
+          if (item.type === 'file') {
+            const reader: FileReader = new FileReader();
+            reader.onload = (function (img: HTMLImageElement) {
+              return (e: any): void => {
+                img.src = e.target.result;
+              };
+            })(accountImg);
+            reader.readAsDataURL(item.files[0]);
+          }
           if (values[index] !== item.value) {
             submitInfo.removeAttribute('disabled');
           } else {
