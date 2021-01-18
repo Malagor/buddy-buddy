@@ -2,26 +2,31 @@ export interface INotification {
   groupsEl: NodeListOf<Element>;
   transactionsEl: NodeListOf<Element>;
   messagesEl: NodeListOf<Element>;
+  contactsEl: NodeListOf<Element>;
 }
 
 export enum TypeOfNotifications {
   Message,
   Group,
-  Transaction
+  Transaction,
+  Contact
 }
 
 export class Notifications {
   private readonly groupsEl: NodeListOf<Element>;
   private readonly transactionsEl: NodeListOf<Element>;
   private readonly messagesEl: NodeListOf<Element>;
+  private readonly contactsEl: NodeListOf<Element>;
   private _messageCount: number = 0;
   private _transactionCount: number = 0;
   private _groupCount: number = 0;
+  private _contactCount: number = 0;
 
   constructor(obj: INotification) {
     this.groupsEl = obj.groupsEl;
     this.transactionsEl = obj.transactionsEl;
     this.messagesEl = obj.messagesEl;
+    this.contactsEl = obj.contactsEl;
   }
 
   static create(elements: INotification): Notifications {
@@ -47,6 +52,11 @@ export class Notifications {
         elements = this.groupsEl;
         this.groupCount += num;
         counter = this.groupCount;
+        break;
+      case TypeOfNotifications.Contact:
+        elements = this.contactsEl;
+        this.contactCount += num;
+        counter = this.contactCount;
         break;
       default:
         elements = null;
@@ -83,6 +93,11 @@ export class Notifications {
         this.setNotificationMark(TypeOfNotifications.Transaction, 0);
         break;
 
+      case TypeOfNotifications.Contact:
+        this.contactCount -= 1;
+        this.setNotificationMark(TypeOfNotifications.Contact, 0);
+        break;
+
       default:
         return;
     }
@@ -110,5 +125,13 @@ export class Notifications {
 
   set groupCount(value: number) {
     this._groupCount = value;
+  }
+
+  get contactCount(): number {
+    return this._contactCount;
+  }
+
+  set contactCount(value: number) {
+    this._contactCount = value;
   }
 }

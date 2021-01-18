@@ -1,0 +1,60 @@
+@import "src/scss/_misc/mixins";
+
+.search-form {
+  display: grid;
+  grid-template-columns: 1fr 1fr rem(100px);
+  column-gap: 0.5rem;
+}
+
+.contact__message {
+  grid-column-start: 1;
+  grid-column-end: 4;
+}
+
+.contacts-list {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-gap: 1rem;
+
+  @include laptop{
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.contact {
+  display: grid;
+  grid-template-columns: 4rem 2fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  grid-template-areas: "avatar name button" "avatar account button";
+
+  &--pending {
+    box-shadow: 0 0 3px green;
+  }
+}
+
+.contact__avatar-wrapper {
+  grid-area: avatar;
+  width: 3rem;
+  height: 3rem;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    border-radius: 50%;
+  }
+}
+
+.contact__name {
+  grid-area: name;
+}
+
+.contact__account {
+  grid-area: account;
+}
+
+.contact__buttons {
+  grid-area: button;
+  display: flex;
+  align-items: center;
+}

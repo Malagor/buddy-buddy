@@ -1,7 +1,9 @@
 import firebase from 'firebase';
 import 'firebase/auth';
 import { default as CyrillicToTranslit } from 'cyrillic-to-translit-js/CyrillicToTranslit';
+import { IDataForCreateGroup } from '../Interfaces/IGroupData';
 import { IGroupData } from '../Interfaces/IGroupData';
+import { ISearchUserData } from '../Pages/Contacts/Contacts';
 import { IMessage, INewMessage } from '../Pages/Messenger/Messenger';
 import { IHandlers } from './App';
 import { TypeOfNotifications } from './Notifications';
@@ -327,77 +329,130 @@ export class Database {
     return accountName;
   }
 
-  createNewGroup(data: IGroupData) {
-    console.log('createNewGroup - data\n', data);
-    this.firebase
-      .database()
-      .ref('Groups')
-      .push(data)
-      .then((group) => {
-        const groupKey = group.key;
-        const users = data.userList;
-        users.forEach((userId) => {
-          const user = this.firebase.database().ref('User').child(userId);
-          const userGroup = user.child('groupList');
-          userGroup.transaction((groupList) => {
-            if (groupList) {
-              groupList.push(groupKey);
-              return groupList;
-            } else {
-              let arrGroup: string[] = [];
-              arrGroup.push(groupKey);
-              return arrGroup;
-            }
+  createNewGroup(data: IDataForCreateGroup) {
+    const file: File = data.groupData.icon;
+    const currentGroup: boolean = data.currentGroup;
+    const userId: string = data.userId;
+
+    const metadata = {
+      'contentType': file.type,
+    };
+    this.firebase.storage()
+      .ref()
+      .child('groups/' + file.name)
+      .put(file, metadata)
+      .then((snapshot) => {
+        snapshot.ref.getDownloadURL()
+          .then((url) => {
+            data.groupData['icon'] = url;
+            return data;
+          })
+          .then(data => {
+            this.firebase
+              .database()
+              .ref('Groups')
+              .push(data.groupData)
+              .then(group => {
+
+                data.userList.forEach((userId: string) => {
+                  this.firebase
+                  .database()
+                  .ref(`Groups/${group.key}/userList/${userId}`)
+                  .set({state: 'pending'});
+                });
+
+                return group;
+              })
+              .then(group => {
+                const groupKey = group.key;
+                this.firebase
+                  .database()
+                  .ref(`Groups/${groupKey}`)
+                  .on('value', (group) => {
+                    const users: any = group.val().userList;
+
+                    Object.keys(users).forEach((userId: any) => {
+
+                      this.firebase.database()
+                      .ref(`User/${userId}/groupList/${groupKey}`)
+                      .set({state: 'pending'});
+
+                    });
+                  });
+                  return group;
+                })
+              .then(data => {
+                const dataForAddCurrentGroup = {
+                  groupKey: data.key,
+                  userId: userId
+                };
+                if (currentGroup) {
+                  this.addCurrentGroup(dataForAddCurrentGroup);
+                }
+              });
+
+              })
+              .catch(error => {
+                console.log(error.code);
+                console.log(error.message);
+              });
           });
-        });
-      })
-      .catch((error) => {
-        console.log(error.code);
-        console.log(error.message);
-      });
   }
 
   getGroupList(handlerFunc: any): void {
     this.firebase
       .database()
       .ref('Groups')
-      .on(
-        'child_added',
-        (snapshot) => {
-          const users: string[] = snapshot.val().userList;
+      .on('child_added', handlerFunc,
+      (error: { code: string; message: any; }) => {
+        console.log('Error:\n ' + error.code);
+        console.log(error.message);
+      });
+  }
 
-          if (users.includes(this.uid)) {
-            const dataGroup = snapshot.val();
-            const dataUserListGroup = dataGroup.userList;
+  groupHandler = (createGroupList: any) => {
+    const base = this.firebase.database();
 
-            this.firebase
-              .database()
-              .ref('User')
-              .once('value', (snapshot) => {
-                const snapshotUser = snapshot.val();
-                const userList = Object.keys(snapshotUser); // all users in DB
+    return ((snapshot: any) => {
 
-                // const arrayUserImg: string[] = userList.filter(user => dataUserListGroup.includes(user));
-                const arrayUsers: any[] = [];
-                userList.forEach((user) => {
-                  if (dataUserListGroup.includes(user)) {
-                    arrayUsers.push(snapshotUser[user]);
-                  }
-                });
+      const users: string[] = Object.keys(snapshot.val().userList); // по каждой группе список  юзеров
+      // при создании новой группы не доходит userList // разобраться
+      if (users.includes(this.uid)) {
+        const dataGroup = snapshot.val();
+        const dataUserListGroup: any[] = Object.keys(snapshot.val().userList);
 
-                const dataForGroup = {
-                  dataGroup: dataGroup,
-                  arrayUsers: arrayUsers,
-                };
-                handlerFunc(dataForGroup);
-              });
-          }
-        },
-        (error: { code: string; message: any }) => {
-          console.log('Error:\n ' + error.code);
-          console.log(error.message);
-        },
-      );
+        base
+        .ref('User')
+        .once('value', (snapshot) => {
+          const snapshotUser = snapshot.val();
+          const userList = Object.keys(snapshotUser); // all users in DB
+
+          // const arrayUserImg: string[] = userList.filter(user => dataUserListGroup.includes(user));
+          const arrayUsers: any[] = [];
+          userList.forEach(user => {
+            if (dataUserListGroup.includes(user)) {
+              arrayUsers.push(snapshotUser[user]);
+            }
+          });
+
+          const dataForGroup = {
+            'dataGroup': dataGroup,
+            'arrayUsers': arrayUsers,
+          };
+          createGroupList(dataForGroup);
+        });
+      }
+    });
+  }
+
+  addCurrentGroup(data: any) {
+    const userId: string = data.userId;
+    const groupKey = data.groupKey;
+
+    this.firebase
+    .database()
+    .ref(`User/${userId}/currentGroup`)
+    .set(groupKey);
   }
 
   countGroupsInvite(setNotificationMark: {
@@ -429,26 +484,37 @@ export class Database {
     this.firebase
       .database()
       .ref('Transactions')
-      .on(
-        'child_added',
-        (snapshot) => {
-          const userList = snapshot.val().toUserList;
-          const hasUserId = userList.find(
-            (user: { userID: string; state: string }) => {
-              return user.userID === this.uid && user.state !== 'approve';
-            },
-          );
-          if (hasUserId) {
-            setNotificationMark(TypeOfNotifications.Transaction, 1);
-          } else {
-            setNotificationMark(TypeOfNotifications.Transaction, 0);
-          }
-        },
-        (error: { code: string; message: any }) => {
-          console.log('Error:\n ' + error.code);
-          console.log(error.message);
-        },
-      );
+      .on('child_added', snapshot => {
+        const userList = snapshot.val().toUserList;
+        const hasUserId = userList.find((user: { userID: string; state: string; }) => {
+          return (user.userID === this.uid && user.state !== 'approve');
+        });
+        if (hasUserId) {
+          setNotificationMark(TypeOfNotifications.Transaction, 1);
+        } else {
+          setNotificationMark(TypeOfNotifications.Transaction, 0);
+        }
+      }, (error: { code: string; message: any; }) => {
+        console.log('Error:\n ' + error.code);
+        console.log(error.message);
+      });
+  }
+
+  countContactsInvite(setNotificationMark: { (type: TypeOfNotifications, num: number): void; (arg0: TypeOfNotifications, arg1: number): void; }): void {
+    this.firebase.database()
+      .ref(`User/${this.uid}/contacts`)
+      .on('child_added', snapshot => {
+        const state = snapshot.val().state;
+
+        if (state === 'pending') {
+          setNotificationMark(TypeOfNotifications.Contact, 1);
+        } else {
+          setNotificationMark(TypeOfNotifications.Contact, 0);
+        }
+      }, (error: { code: string; message: any; }) => {
+        console.log('Error:\n ' + error.code);
+        console.log(error.message);
+      });
   }
 
   countNewMessage(setNotificationMark: {
@@ -484,12 +550,14 @@ export class Database {
     if (handlers.transactions) {
       base.ref('Transactions').off('child_added', handlers.transactions);
     }
+
+    if (handlers.contacts) {
+      base.ref('Transactions')
+        .off('child_added', handlers.contacts);
+    }
   }
 
-  getMessageList(addMessageToListFunc: {
-    (snapshot: any): void;
-    (a: firebase.database.DataSnapshot, b?: string): any;
-  }): void {
+  getMessageList(addMessageToListFunc: { (snapshot: any): void; (a: firebase.database.DataSnapshot, b?: string): any; }): void {
     this.firebase
       .database()
       .ref('Messages')
@@ -569,6 +637,74 @@ export class Database {
     };
   };
 
+  contactsHandler = (renderContact: any): any => {
+    return (snapshot: any): void => {
+      if (snapshot) {
+        const key: string = snapshot.key;
+        const state = snapshot.val().state;
+
+        this.firebase
+          .database()
+          .ref(`User/${key}`)
+          .once('value', snapshot => {
+            const userData = snapshot.val();
+            userData.key = key;
+            userData.state = state;
+            // if (state !== 'decline') {
+            renderContact(userData);
+            // }
+          });
+      } else {
+        console.log('No Contacts');
+      }
+    };
+  }
+
+  getContactsList(renderContact: any): void {
+    const base = this.firebase.database();
+    const uid = this.uid;
+
+    base
+      .ref(`User/${uid}`)
+      .child('contacts')
+      .on('child_added', renderContact,
+        (error: { code: string; message: any; }) => {
+          console.log('Error:\n ' + error.code);
+          console.log(error.message);
+        });
+  }
+
+  changeContactState(contsctId: string, newState: string, userId?: string): void {
+    let uid: string;
+    if (userId) {
+      uid = userId;
+    } else {
+      uid = this.uid;
+    }
+    this.firebase.database()
+      .ref(`User/${uid}/contacts/${contsctId}`)
+      .transaction(state => {
+        state = { state: newState };
+        return state;
+      });
+  }
+
+  deleteContact(userId: string, contactId: string) {
+    this.changeContactState(contactId, 'decline');
+    this.changeContactState(userId, 'decline', contactId);
+
+    // this.firebase
+    //   .database()
+    //   .ref(`User/${userId}/contacts/${contactId}`)
+    //   .remove(error => {
+    //     if (error) {
+    //       console.log(error.message);
+    //     } else {
+    //       console.log('Delete contact successful');
+    //     }
+    //   });
+  }
+
   createNewMessage(data: INewMessage): void {
     console.log('createNewMessage', data);
     data.fromUser = this.uid;
@@ -583,34 +719,7 @@ export class Database {
       });
   }
 
-  // addTheme(nameTheme: string) {
-  //
-  // }
-  //
-  // getThemeList() {
-  //
-  // }
-  //
-  // getThemeByID(themeID: string) {
-  //
-  // }
-  //
-  // getThemeByName(themeName: string) {
-  //
-  // }
-  //
-  // addCurrency() {
-  //
-  // }
-  //
-  // getCurrency(curID?: string, curAbbreviation?: string) {
-  //
-  // }
-
-  getCurrencyList(renderCurrencyList: {
-    (currID: string, icon: string): void;
-    (arg0: string, arg1: any): void;
-  }): void {
+  getCurrencyList(renderCurrencyList: { (currID: string, icon: string): void; (arg0: string, arg1: any): void; }): void {
     this.firebase
       .database()
       .ref('Currency')
@@ -746,6 +855,47 @@ export class Database {
       })
       .catch((error) => {
         console.log('Error: ' + error.code);
+      });
+  }
+
+  addUserToContacts(userData: ISearchUserData, errorHandler: (message: string) => void) {
+    const userTable = this.firebase.database().ref('User');
+    userTable
+      .once('value', (userList) => {
+        const userObjs = userList.val();
+        const keysList = Object.keys(userObjs);
+        const userKey: string[] = keysList.filter(key => {
+          if (userObjs[key].account === userData.account) return key;
+          if (userObjs[key].name === userData.name) return key;
+
+          return false;
+        });
+
+        if (userKey.length) {
+          this.addNewContactToContactList(this.uid, userKey[0], 'approve', errorHandler);
+          this.addNewContactToContactList(userKey[0], this.uid, 'pending', errorHandler);
+        } else {
+          errorHandler('The user is not found.');
+        }
+      })
+      .catch(error => {
+        errorHandler(error.message);
+      });
+  }
+
+  addNewContactToContactList(userId: string, newContactId: string, state: string, errorHandler?: (message: string) => void) {
+    this.firebase.database()
+      .ref(`User/${userId}/contacts/${newContactId}`)
+      .set({ state: state })
+      .catch(error => {
+        console.log(error.code);
+        console.log(error.message);
+        if (errorHandler) {
+          errorHandler(error.message);
+        }
+      })
+      .catch(error => {
+        errorHandler(error.message);
       });
   }
 }
