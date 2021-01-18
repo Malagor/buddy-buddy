@@ -569,11 +569,10 @@ export class Database {
   }
 
   async getCurrenciesOrLangsOrThemes(uid: string, callback: any, elem: string) {
-    const neededQuery =
-      elem[0].toUpperCase() + elem.slice(1);
+    const neededField = elem.toLowerCase();
     const curr: any = await this.firebase
       .database()
-      .ref(neededQuery)
+      .ref(elem)
       .once(
         'value',
         (snapshot) => {
@@ -599,7 +598,7 @@ export class Database {
           console.log(error.message);
         },
       );
-    const currentCurrency = current.val()[elem];
+    const currentCurrency = current.val()[neededField];
     callback(values, currentCurrency);
   }
 

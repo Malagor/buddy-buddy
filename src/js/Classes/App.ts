@@ -148,9 +148,9 @@ export class App {
     const uid: string = this.database.uid;
     await this.database.getUserInfo(uid, [this.accountPage.render]);
 
-    await this.database.getCurrenciesOrLangsOrThemes(uid, this.accountPage.renderCurrencyOrLangOrTheme, 'currency');
-    await this.database.getCurrenciesOrLangsOrThemes(uid, this.accountPage.renderCurrencyOrLangOrTheme, 'language');
-    await this.database.getCurrenciesOrLangsOrThemes(uid, this.accountPage.renderCurrencyOrLangOrTheme, 'theme');
+    await this.database.getCurrenciesOrLangsOrThemes(uid, this.accountPage.renderCurrencyOrLangOrTheme, 'Currency');
+    await this.database.getCurrenciesOrLangsOrThemes(uid, this.accountPage.renderCurrencyOrLangOrTheme, 'Language');
+    await this.database.getCurrenciesOrLangsOrThemes(uid, this.accountPage.renderCurrencyOrLangOrTheme, 'Theme');
 
     this.accountPage.events();
   }
