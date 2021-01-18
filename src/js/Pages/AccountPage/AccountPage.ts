@@ -6,10 +6,15 @@ export class AccountPage extends Page {
     return new AccountPage(element);
   }
 
-  renderCurrencyOrLang(data: any, currentCurrency: string): void {
-    const el = data.some((item: any) => item === 'RU')
-      ? document.querySelector('.form-select--lang')
-      : document.querySelector('.form-select--curr');
+  renderCurrencyOrLangOrTheme(data: any, currentCurrency: string): void {
+    let el: HTMLElement;
+    if (data.some((item: any) => item === 'RU')) {
+      el = document.querySelector('.form-select--lang');
+    } else if (data.some((item: any) => item === 'BYN')) {
+      el = document.querySelector('.form-select--curr');
+    } else {
+      el = document.querySelector('.form-select--theme');
+    }
 
     data.forEach((item: any) => {
       el.innerHTML += `
@@ -71,11 +76,12 @@ export class AccountPage extends Page {
                   </select>
                 </div>
               </div>
-              <div class="form-switch form-group row px-0">
+              <div class="form-group row block--margin-adaptive">
                 <span class="col-sm-2 col-form-label">Theme</span>
-                <div class="col-sm-10 account--input-size account__switcher-wrapper">
-                  <input class="form-check-input m-0 float-none account__switcher" type="checkbox" id="flexSwitchCheckDefault"> 
-                </div>                             
+                <div class="col-sm-10 account--input-size">
+                  <select class="form-select form-select--theme w-auto account--input-size mx-0" aria-label="Default select example">
+                  </select>
+                </div>
               </div>             
             </div>            
           </div>
@@ -83,7 +89,7 @@ export class AccountPage extends Page {
           <div class="block__footer">
             <div class="form-group row">
               <div class="col-sm-10 d-flex block--width-adaptive">
-                <button type="submit" class="account__input-submit btn btn-dark mx-auto" disabled>Save</button>
+                <button type="submit" class="account__input-submit btn btn-primary mx-auto" disabled>Save</button>
               </div>
             </div>
           </div>
