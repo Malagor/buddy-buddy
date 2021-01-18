@@ -68,3 +68,46 @@
 .message--not-read {
   box-shadow: 0 0 3px green;
 }
+
+
+ul.dropdown-search-box {
+  max-height: 300px;
+  width: 270px;
+  overflow-y: auto;
+}
+ul.dropdown-search-box .search-box {
+  padding: 0 5px 5px 5px;
+  border-bottom: 1px solid #ddd;
+}
+
+ul.contacts-user-list {
+  width: 90%;
+  max-height: rem(150px);
+  overflow-y: auto;
+}
+.contact-list__item {
+  padding: 0.5rem;
+  cursor: pointer;
+  transition: 0.3s;
+
+  &:hover {
+    background: #ddd;
+  }
+}
+
+.contact-list__avatar {
+  height: 1.5rem;
+  width: 1.5rem;
+  object-fit: cover;
+  border-radius: 50%;
+  margin-right: 0.5rem;
+}
+
+.contact-list__name {
+  margin-right: 0.5rem;
+}
+
+.contact-list__account {
+  font-size: 0.9rem;
+  opacity: 0.8;
+}
