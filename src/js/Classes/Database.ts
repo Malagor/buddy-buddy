@@ -1,7 +1,7 @@
 import firebase from 'firebase';
 import 'firebase/auth';
 import { default as CyrillicToTranslit } from 'cyrillic-to-translit-js/CyrillicToTranslit';
-import { IGroupData } from '../Interfaces/IGroupData';
+import { IDataForCreateGroup } from '../Interfaces/IGroupData';
 import { IMessage, INewMessage } from '../Pages/Messenger/Messenger';
 import { IHandlers } from './App';
 import { TypeOfNotifications } from './Notifications';
@@ -204,75 +204,130 @@ export class Database {
     return accountName;
   }
 
-  createNewGroup(data: IGroupData) {
-    console.log('createNewGroup - data\n', data);
-    this.firebase
-      .database()
-      .ref('Groups')
-      .push(data)
-      .then(group => {
-        const groupKey = group.key;
-        const users = data.userList;
-        users.forEach(userId => {
-          const user = this.firebase.database().ref('User').child(userId);
-          const userGroup = user.child('groupList');
-          userGroup.transaction(groupList => {
-            if (groupList) {
-              groupList.push(groupKey);
-              return groupList;
-            } else {
-              let arrGroup: string[] = [];
-              arrGroup.push(groupKey);
-              return arrGroup;
-            }
+  createNewGroup(data: IDataForCreateGroup) {
+    const file: File = data.groupData.icon;
+    const currentGroup: boolean = data.currentGroup;
+    const userId: string = data.userId;
+
+    const metadata = {
+      'contentType': file.type,
+    };
+    this.firebase.storage()
+      .ref()
+      .child('groups/' + file.name)
+      .put(file, metadata)
+      .then((snapshot) => {
+        snapshot.ref.getDownloadURL()
+          .then((url) => {
+            data.groupData['icon'] = url;
+            return data;
+          })
+          .then(data => {
+            this.firebase
+              .database()
+              .ref('Groups')
+              .push(data.groupData)
+              .then(group => {
+
+                data.userList.forEach((userId: string) => {
+                  this.firebase
+                  .database()
+                  .ref(`Groups/${group.key}/userList/${userId}`)
+                  .set({state: 'pending'});
+                });
+
+                return group;
+              })
+              .then(group => {
+                const groupKey = group.key;
+                this.firebase
+                  .database()
+                  .ref(`Groups/${groupKey}`)
+                  .on('value', (group) => {
+                    const users: any = group.val().userList;
+
+                    Object.keys(users).forEach((userId: any) => {
+
+                      this.firebase.database()
+                      .ref(`User/${userId}/groupList/${groupKey}`)
+                      .set({state: 'pending'});
+
+                    });
+                  });
+                  return group;
+                })
+              .then(data => {
+                const dataForAddCurrentGroup = {
+                  groupKey: data.key,
+                  userId: userId
+                };
+                if (currentGroup) {
+                  this.addCurrentGroup(dataForAddCurrentGroup);
+                }
+              });
+
+              })
+              .catch(error => {
+                console.log(error.code);
+                console.log(error.message);
+              });
           });
-        });
-      })
-      .catch(error => {
-        console.log(error.code);
-        console.log(error.message);
-      });
   }
 
   getGroupList(handlerFunc: any): void {
     this.firebase
       .database()
       .ref('Groups')
-      .on('child_added', (snapshot) => {
-        const users: string[] = snapshot.val().userList;
-
-        if (users.includes(this.uid)) {
-          const dataGroup = snapshot.val();
-          const dataUserListGroup = dataGroup.userList;
-
-          this.firebase
-            .database()
-            .ref('User')
-            .once('value', (snapshot) => {
-              const snapshotUser = snapshot.val();
-              const userList = Object.keys(snapshotUser); // all users in DB
-
-
-              // const arrayUserImg: string[] = userList.filter(user => dataUserListGroup.includes(user));
-              const arrayUsers: any[] = [];
-              userList.forEach(user => {
-                if (dataUserListGroup.includes(user)) {
-                  arrayUsers.push(snapshotUser[user]);
-                }
-              });
-
-              const dataForGroup = {
-                'dataGroup': dataGroup,
-                'arrayUsers': arrayUsers,
-              };
-              handlerFunc(dataForGroup);
-            });
-
-        }
-      }, (error: { code: string; message: any; }) => {
+      .on('child_added', handlerFunc,
+      (error: { code: string; message: any; }) => {
         console.log('Error:\n ' + error.code);
         console.log(error.message);
       });
+  }
+
+  groupHandler = (createGroupList: any) => {
+    const base = this.firebase.database();
+
+    return ((snapshot: any) => {
+
+      const users: string[] = Object.keys(snapshot.val().userList); // по каждой группе список  юзеров
+      // при создании новой группы не доходит userList // разобраться
+      if (users.includes(this.uid)) {
+        const dataGroup = snapshot.val();
+        const dataUserListGroup: any[] = Object.keys(snapshot.val().userList);
+
+        base
+        .ref('User')
+        .once('value', (snapshot) => {
+          const snapshotUser = snapshot.val();
+          const userList = Object.keys(snapshotUser); // all users in DB
+
+          // const arrayUserImg: string[] = userList.filter(user => dataUserListGroup.includes(user));
+          const arrayUsers: any[] = [];
+          userList.forEach(user => {
+            if (dataUserListGroup.includes(user)) {
+              arrayUsers.push(snapshotUser[user]);
+            }
+          });
+
+          const dataForGroup = {
+            'dataGroup': dataGroup,
+            'arrayUsers': arrayUsers,
+          };
+          createGroupList(dataForGroup);
+        });
+      }
+    });
+  }
+
+  addCurrentGroup(data: any) {
+    const userId: string = data.userId;
+    const groupKey = data.groupKey;
+
+    this.firebase
+    .database()
+    .ref(`User/${userId}/currentGroup`)
+    .set(groupKey);
   }
 
   countGroupsInvite(setNotificationMark: { (type: TypeOfNotifications, num: number): void; (arg0: TypeOfNotifications, arg1: number): void; }): void {
