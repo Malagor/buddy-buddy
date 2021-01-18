@@ -129,10 +129,25 @@ export class Database {
   }
 
   updateUserInfo(uid: string, data: any) {
-    this.firebase
-      .database()
-      .ref(`User/${uid}`)
-      .update(data);
+    const storageRef = this.firebase.storage().ref();
+    const userRef = this.firebase.database().ref(`User/${uid}`);
+    const file = data['avatar'];
+
+    const metadata = {
+      'contentType': file.type,
+    };
+
+    storageRef.child('avatars/' + uid).put(file, metadata).then(function(snapshot) {
+      snapshot.ref.getDownloadURL()
+        .then((url) => {
+          data['avatar'] = url;
+          userRef.update(data);
+        })
+        .catch(error => {
+          console.log(error.code);
+          console.log(error.message);
+        });
+    });
   }
 
   getUserInfo(uid: string, callbacks: any[]): any {
