@@ -6,7 +6,7 @@ import { Main } from '../Pages/Main/Main';
 import { MyGroups } from '../Pages/MyGroups/MyGroups';
 import { AccountPage } from '../Pages/AccountPage/AccountPage';
 
-import { IGroupData } from '../Interfaces/IGroupData';
+import { IGroupDataAll, IDataForCreateGroup } from '../Interfaces/IGroupData';
 import { TransactionsList } from '../Pages/TransactionsList/transactionsList';
 import { dataTransList } from '../Data/dataTransList';
 import { INotification, Notifications, TypeOfNotifications } from './Notifications';
@@ -146,10 +146,10 @@ export class App {
     this.notifications.setNotificationMark(TypeOfNotifications.Group, 0);
 
     this.groups.render();
-    //this.database.getGroupList(this.groups.createGroupList);
+    // this.database.getGroupList(this.groups.createGroupList);
     this.groupHandler = this.database.groupHandler(this.groups.createGroupList);
 
-    this.database.getGroupList(this.groupHandler)
+    this.database.getGroupList(this.groupHandler);
   }
 
   onTransactionsPage() {
@@ -204,7 +204,7 @@ export class App {
     this.authPage.render();
   }
 
-  onCreateNewGroup(data: any) { // исправить any
+  onCreateNewGroup(data: IGroupDataAll) {
     const userArray: string[] = data.userList;
     const userId = this.database.uid;
     const currentGroup = data.currentGroup;
@@ -214,22 +214,13 @@ export class App {
       userArray.push(userId);
     }
 
-    const dataForCreateGroup = {
+    const dataForCreateGroup: IDataForCreateGroup = {
       groupData: data.groupData,
       userList: userArray,
       currentGroup: currentGroup,
-      userId: userId 
-    }
+      userId: userId
+    };
     this.database.createNewGroup(dataForCreateGroup);
-
- /*    const dataForAddCurrentGroup = {
-      userId: userId,
-      groupData: data.groupData,
-    }
-
-    if(currentGroup){
-      this.database.addCurrentGroup(dataForAddCurrentGroup)
-    } */
   }
 
   // onAddGroupMember(name: string) {

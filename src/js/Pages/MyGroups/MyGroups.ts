@@ -1,5 +1,5 @@
 import { Page } from '../../Classes/Page';
-import { IGroupData } from '../../Interfaces/IGroupData';
+import { IGroupData, IGroupDataAll } from '../../Interfaces/IGroupData';
 import { getFormData } from  '../../Util/getFormData';
 
 import { Modal } from 'bootstrap';
@@ -65,7 +65,7 @@ export class MyGroups extends Page {
   }
 
   createGroupList = (data: any) => {
-    //console.log('createGroupList data', data)
+    // console.log('createGroupList data', data)
     document.querySelector('.data-is-not').classList.add('closed-group-hidden');
 
     const HTMLListOpenGroups = document.getElementById('divForListOpenGroups');
@@ -80,12 +80,12 @@ export class MyGroups extends Page {
   }
 
   createCard(data: any, balanceGroup: number | null = null) {
-    //console.log(data)
-    const NUM_OF_IMG_IN_GROUP_CARD: number = 3;
+    // console.log(data)
+    const NUM_OF_IMG_IN_GROUP_CARD: number = 7;
     const date: Date = new Date(data.dataGroup.dateCreate);
     const dataCreateGroup: string = date.toLocaleString();
     const listUsers = data.arrayUsers;
-    //console.log('data.arrayUsers', data.arrayUsers)
+    // console.log('data.arrayUsers', data.arrayUsers)
 
     const participantsImg: string[] = [];
     listUsers.forEach((user: any) => {
@@ -177,7 +177,7 @@ export class MyGroups extends Page {
               <div class=" col-12">
                 <div class="form-check form-switch">
                   <input class="form-check-input" type="checkbox" id="currentGroup" checked>
-                  <label class="form-check-label" for="flexSwitchCheckChecked">Make the group current</label>
+                  <label class="form-check-label" for="currentGroup">Make the group current</label>
                 </div>
               </div>
 
@@ -246,15 +246,7 @@ export class MyGroups extends Page {
       const description: string = (<HTMLInputElement>document.getElementById('formDesc')).value;
       const members: NodeListOf<HTMLElement> = document.querySelectorAll('.member');
       const users: string[] = [];
-
-
       const currentGroup: boolean = (<HTMLInputElement>document.getElementById('currentGroup')).checked;
-
-      if(currentGroup){
-        console.log(1)
-      } else {
-        console.log(2)
-      }
 
       members.forEach(member => {
         users.push(member.getAttribute('data-id'));
@@ -267,9 +259,9 @@ export class MyGroups extends Page {
         dateClose: null,
         transactionList: [],
         icon: logoGroupImgData ? logoGroupImgData.logoGroup : '',
-      } 
+      };
 
-      const groupDataAll = {
+      const groupDataAll: IGroupDataAll = {
         groupData: groupData,
         userList: users,
         currentGroup: currentGroup

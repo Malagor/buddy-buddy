@@ -1,7 +1,7 @@
 import firebase from 'firebase';
 import 'firebase/auth';
 import { default as CyrillicToTranslit } from 'cyrillic-to-translit-js/CyrillicToTranslit';
-import { IGroupData } from '../Interfaces/IGroupData';
+import { IDataForCreateGroup } from '../Interfaces/IGroupData';
 import { IMessage, INewMessage } from '../Pages/Messenger/Messenger';
 import { IHandlers } from './App';
 import { TypeOfNotifications } from './Notifications';
@@ -204,11 +204,10 @@ export class Database {
     return accountName;
   }
 
-  createNewGroup(data: any) { // исправить any
-    console.log('createNewGroup - data\n', data);
-    const file: any = data.groupData.icon;
+  createNewGroup(data: IDataForCreateGroup) {
+    const file: File = data.groupData.icon;
     const currentGroup: boolean = data.currentGroup;
-    const userId: string = data.userId
+    const userId: string = data.userId;
 
     const metadata = {
       'contentType': file.type,
@@ -234,7 +233,7 @@ export class Database {
                   this.firebase
                   .database()
                   .ref(`Groups/${group.key}/userList/${userId}`)
-                  .set({state: 'pending'})
+                  .set({state: 'pending'});
                 });
 
                 return group;
@@ -248,24 +247,24 @@ export class Database {
                     const users: any = group.val().userList;
 
                     Object.keys(users).forEach((userId: any) => {
-                      
+
                       this.firebase.database()
                       .ref(`User/${userId}/groupList/${groupKey}`)
-                      .set({state: 'pending'})
+                      .set({state: 'pending'});
 
-                    })
+                    });
                   });
-                  return group
+                  return group;
                 })
               .then(data => {
                 const dataForAddCurrentGroup = {
                   groupKey: data.key,
                   userId: userId
+                };
+                if (currentGroup) {
+                  this.addCurrentGroup(dataForAddCurrentGroup);
                 }
-                if(currentGroup) {
-                  this.addCurrentGroup(dataForAddCurrentGroup)
-                }
-              })
+              });
 
               })
               .catch(error => {
@@ -279,24 +278,23 @@ export class Database {
     this.firebase
       .database()
       .ref('Groups')
-      .on('child_added', handlerFunc, 
+      .on('child_added', handlerFunc,
       (error: { code: string; message: any; }) => {
         console.log('Error:\n ' + error.code);
         console.log(error.message);
-      });   
+      });
   }
 
   groupHandler = (createGroupList: any) => {
     const base = this.firebase.database();
 
     return ((snapshot: any) => {
-      console.log('snapshot.val()', snapshot.val())
 
-      const users: string[] = Object.keys(snapshot.val().userList) // по каждой группе список  юзеров
-      // при создании новой группы не доходит userList // разобраться 
+      const users: string[] = Object.keys(snapshot.val().userList); // по каждой группе список  юзеров
+      // при создании новой группы не доходит userList // разобраться
       if (users.includes(this.uid)) {
         const dataGroup = snapshot.val();
-        const dataUserListGroup: any[] = Object.keys(snapshot.val().userList)
+        const dataUserListGroup: any[] = Object.keys(snapshot.val().userList);
 
         base
         .ref('User')
@@ -314,24 +312,24 @@ export class Database {
 
           const dataForGroup = {
             'dataGroup': dataGroup,
-            'arrayUsers': arrayUsers, 
+            'arrayUsers': arrayUsers,
           };
           createGroupList(dataForGroup);
         });
       }
-    })
+    });
   }
 
   addCurrentGroup(data: any) {
-    const userId: string = data.userId
+    const userId: string = data.userId;
     const groupKey = data.groupKey;
 
     this.firebase
     .database()
     .ref(`User/${userId}/currentGroup`)
-    .set(groupKey)  
+    .set(groupKey);
   }
-   
+
   countGroupsInvite(setNotificationMark: { (type: TypeOfNotifications, num: number): void; (arg0: TypeOfNotifications, arg1: number): void; }): void {
     this.firebase
       .database()

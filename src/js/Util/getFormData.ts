@@ -16,9 +16,6 @@ export const getFormData = (
     ) {
       formData[field.name] = field.value;
       if (field.type === 'file') {
-        
-
-        //formData[field.name] = file;
 
         const reader: FileReader = new FileReader();
         reader.onload = (function (aImg: HTMLImageElement) {
@@ -26,17 +23,12 @@ export const getFormData = (
             aImg.src = e.target.result;
             const file = field.files[0];
             formData[field.name] = file;
-            console.log('If File');
-            console.log('name', file.name);
-            //formData[field.name] = e.target.result;
           };
         })(imageElement);
         reader.readAsDataURL(field.files[0]);
       }
     }
   });
-
   console.log('getFormData - formData:', formData);
-
   return formData;
 };
