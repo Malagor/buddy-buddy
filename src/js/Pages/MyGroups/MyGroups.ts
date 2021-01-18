@@ -1,5 +1,5 @@
 import { Page } from '../../Classes/Page';
-import { IGroupData } from '../../Interfaces/IGroupData';
+import { IGroupData, IGroupDataAll } from '../../Interfaces/IGroupData';
 import { getFormData } from  '../../Util/getFormData';
 
 import { Modal } from 'bootstrap';
@@ -65,6 +65,7 @@ export class MyGroups extends Page {
   }
 
   createGroupList = (data: any) => {
+    // console.log('createGroupList data', data)
     document.querySelector('.data-is-not').classList.add('closed-group-hidden');
 
     const HTMLListOpenGroups = document.getElementById('divForListOpenGroups');
@@ -79,10 +80,12 @@ export class MyGroups extends Page {
   }
 
   createCard(data: any, balanceGroup: number | null = null) {
-    const NUM_OF_IMG_IN_GROUP_CARD: number = 3;
+    // console.log(data)
+    const NUM_OF_IMG_IN_GROUP_CARD: number = 7;
     const date: Date = new Date(data.dataGroup.dateCreate);
     const dataCreateGroup: string = date.toLocaleString();
     const listUsers = data.arrayUsers;
+    // console.log('data.arrayUsers', data.arrayUsers)
 
     const participantsImg: string[] = [];
     listUsers.forEach((user: any) => {
@@ -170,12 +173,21 @@ export class MyGroups extends Page {
                 <textarea class="form-control" id="formDesc" rows="3" name="description" placeholder="Description"></textarea>
 <!--                <label for="formDesc-" class="form-label">Description</label>-->
               </div>
+
+              <div class=" col-12">
+                <div class="form-check form-switch">
+                  <input class="form-check-input" type="checkbox" id="currentGroup" checked>
+                  <label class="form-check-label" for="currentGroup">Make the group current</label>
+                </div>
+              </div>
+
               <div class="input-group col-12">
                 <span class="input-group-text" id="basic-addon1">@</span>
                 <input type="text" class="form-control" id="formMembers" placeholder="Members" aria-label="Username" aria-describedby="basic-addon1">
 <!--                <label for="formMembers">Members</label>-->
                 <button type="button" class="btn btn-primary" id="addNewGroupMember"><span class="material-icons">person_search</span></button>
               </div>
+
                <div class="row col-12 group-members-avatar"></div>
                <div class="modal-footer">
                   <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -234,7 +246,7 @@ export class MyGroups extends Page {
       const description: string = (<HTMLInputElement>document.getElementById('formDesc')).value;
       const members: NodeListOf<HTMLElement> = document.querySelectorAll('.member');
       const users: string[] = [];
-
+      const currentGroup: boolean = (<HTMLInputElement>document.getElementById('currentGroup')).checked;
 
       members.forEach(member => {
         users.push(member.getAttribute('data-id'));
@@ -245,11 +257,16 @@ export class MyGroups extends Page {
         description,
         dateCreate: Date.now(),
         dateClose: null,
-        userList: users,
         transactionList: [],
         icon: logoGroupImgData ? logoGroupImgData.logoGroup : '',
       };
-      this.onCreateNewGroup(groupData);
+
+      const groupDataAll: IGroupDataAll = {
+        groupData: groupData,
+        userList: users,
+        currentGroup: currentGroup
+      };
+      this.onCreateNewGroup(groupDataAll);
       modal.hide();
     };
 
