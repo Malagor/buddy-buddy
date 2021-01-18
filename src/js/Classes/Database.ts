@@ -763,16 +763,15 @@ export class Database {
               }
               usersList[fromUserId].sum += fromCost;
 
+              // decrease balances "Users TO"
               const toUserList = transactionData.toUserList;
               const toUserIdList = Object.keys(toUserList);
 
-              // decrease balances "Users TO"
               toUserIdList.forEach(userId => {
-                const cost = toUserList[userId].cost;
                 if (usersList[userId].sum == null) {
                   usersList[userId].sum = 0;
                 }
-                usersList[userId].sum -= cost;
+                usersList[userId].sum -= toUserList[userId].cost;
               });
             });
         });
@@ -827,7 +826,6 @@ export class Database {
           errorHandler(error.message);
         }
       });
-
   }
 
   getBalanceForUserTotal(userId: string, funcForRender: (balance: number) => void, errorHandler?: (message: string) => void) {
