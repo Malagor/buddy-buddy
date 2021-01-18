@@ -7,8 +7,10 @@ export class Main extends Page {
     return page;
   }
 
-  renderGroups(userList: any, index: number, title: string, length: number, groupIcon: string): void {
+  renderGroups(userList: any, index: number, title: string, length: number, groupIcon: string, groupID: string, currGroup: string): void {
     if (!userList) return;
+    console.log(groupID, currGroup);
+    
     const elems: any = document.querySelectorAll('.carousel-item__inner');   
     const newIndex: number = length - index - 1;
     const elemIndex: number =

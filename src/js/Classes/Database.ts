@@ -231,35 +231,31 @@ export class Database {
     const dat: any = await this.firebase
       .database()
       .ref(`Groups`)
-      .once(
-        'value',
-        (snapshot) => {
-          return snapshot;
-        },
-        (error: { code: string }) => {
-          console.log('Error: ' + error.code);
-        },
-      );      
+      .once('value', (snapshot) => snapshot);      
     const data: any = dat.val();
+
+    const currentGroups: any = await this.firebase
+      .database()
+      .ref(`User/${uid}`)
+      .once('value', (snapshot) => snapshot);   
+    const userCurrentGroup = currentGroups.val().currentGroup;
     const value: any = Object.entries(data)
       .map((item: any) => {
         item[1].userList = Object.entries(item[1].userList);        
-        return item[1];
+        return item;
       })
-      .filter((item: any) => item.userList.find((it: any) => it[0] === uid && it[1] === 'approve'))
+      .filter((item: any) => item[1].userList.find((it: any) => it[0] === uid && it[1] === 'approve'))
       .map(async (item: any, index: number) => {       
-        const elem: any = await item.userList.map(async (it: any) => {
+        const elem: any = await item[1].userList.map(async (it: any) => {
           const res: any = await this.firebase
             .database()
             .ref(`User/${it}`)
-            .once('value', (snapshot) => {
-              return snapshot;
-            });
+            .once('value', (snapshot) => snapshot);
           it = res.val().avatar;
           return it;
         });
         await Promise.all(elem).then((userList: any) => {
-          callback(userList, index, item.title, value.length, item.icon);
+          callback(userList, index, item[1].title, value.length, item[1].icon, item[0], userCurrentGroup);
         });
       });
   }
