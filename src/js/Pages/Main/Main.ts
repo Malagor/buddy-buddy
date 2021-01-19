@@ -167,12 +167,7 @@ export class Main extends Page {
     }
   }
 
-  renderAvatarsBlock(
-    data: any,
-    index: number,
-    uid: string,
-    currency: string,
-  ): void {
+  renderAvatarsBlock(data: any, index: number, uid: string, currency: string): void {
     const elems: any = document.querySelectorAll('.card-trans__main__avatars');
     const ELEMENTS_COUNT: number = 3;
     let html: string = '';
@@ -181,7 +176,7 @@ export class Main extends Page {
       if (ind < ELEMENTS_COUNT) {
         html += `
             <div class="avatars__wrapper">
-              <img src="${item.userAvatar}" alt="user avatar" width="40px">
+              <img src="${item[1].userAvatar}" alt="user avatar" width="40px">
             </div>
             `;
       } else if (ind === ELEMENTS_COUNT) {
@@ -197,9 +192,9 @@ export class Main extends Page {
     const userCosts: any = document.querySelectorAll('.cars-trans__main__cost');
 
     data.forEach((item: any) => {
-      if (item.userID === uid) {
+      if (item[0] === uid) {
         userCosts[index].innerHTML = `
-        <span>${item.cost} ${currency}</span>
+        <span>${item[1].cost} ${currency}</span>
       `;
       }
     });
@@ -222,7 +217,7 @@ export class Main extends Page {
             <div class="card main__card-trans">
               <p class="main__card-trans__header">
                 <span class="card-trans__header__title">${
-                  item.descripion
+                  item.description
                 }</span>
                 <span class="card-trans__header__title"> Group: ${
                   item.groupTitle

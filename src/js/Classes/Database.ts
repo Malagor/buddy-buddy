@@ -155,64 +155,54 @@ export class Database {
   }
 
   async getUserTransactions(uid: string, callbacks: any) {
-    return;
     const dat: any = await this.firebase
       .database()
-      .ref(`Transactions`)
-      .once(
-        'value',
-        (snapshot) => {
-          return snapshot;
-        },
-        (error: { code: string }) => {
-          console.log('Error: ' + error.code);
-        },
-      );
+      .ref(`User/${uid}/transactionList`)
+      .once('value', (snapshot) => snapshot);
     const dataUser: any = dat.val();
-    const value: any = await Object.entries(dataUser)
-      .map((item: any) => {
-        Object.entries(item[1].toUserList);
-        return item[1];
-      })
-      .filter((item: any) => {
-        if (
-          item.toUserList.some(
-            (it: any) => it.userID === uid || item.userID === uid,
-          )
-        ) {
-          item.uid = uid;
-          return item;
-        }
-      })
+    const keyList: any = Object.entries(dataUser)
+    .map(async (item: any) => {
+      const trans: any = await this.firebase
+      .database()
+      .ref(`Transactions/${item[0]}`)
+      .once('value', (snapshot) => snapshot);
+        item[0] = trans.val();
+        return item;    
+    });
+
+    await Promise.all(keyList).then(async (data) => {
+      const value: any = await data.filter((item: any) => item[0] !== null || item[1].state === 'approve')
+      .map((item: any) => item[0])
       .map(async (item: any) => {
+        item.uid = uid;
+        item.toUserList = Object.entries(item.toUserList);
         const request: any = await this.firebase
           .database()
           .ref(`Groups/${item.groupID}`)
-          .once('value', (snapshot) => {
-            return snapshot;
-          });
+          .once('value', (snapshot) => snapshot);
         item.groupTitle = request.val().title;
         return item;
       });
 
-    await Promise.all(value).then((data) => {
-      data.reverse();
-      callbacks[0](data);
-      if (data.length) this.getUsersAvatars(data, callbacks[1]);
+      await Promise.all(value).then((data) => {
+        data.reverse();
+        callbacks[0](data);
+        if (data.length) this.getUsersAvatars(data, callbacks[1]);
+      });
     });
   }
 
-  getUsersAvatars(data: any, callback: any) {
-    const resultData: any = data
+  async getUsersAvatars(data: any, callback: any) {
+    await data
       .map((item: any) => {
         const elem: any = item.toUserList.map(async (it: any) => {
           const res: any = await this.firebase
             .database()
-            .ref(`User/${it.userID}`)
+            .ref(`User/${it[0]}`)
             .once('value', (snapshot) => {
               return snapshot;
             });
-          it.userAvatar = res.val().avatar;
+          it[1].userAvatar = res.val().avatar;
           return it;
         });
         item.toUserList = elem;
