@@ -64,17 +64,11 @@ export class MyGroups extends Page {
   }
 
   createGroupList = (data: any) => {
-    //console.log(2)
-    //console.log('createGroupList data', data)
     document.querySelector('.data-is-not').classList.add('closed-group-hidden');
     
     //const HTMLListOpenGroups = document.getElementById('divForListOpenGroups');
-    const idDiv = data.idGroup ? data.idGroup : 'divForListOpenGroups'
-    const HTMLListOpenGroups = document.getElementById(`${idDiv}`);
-    console.log('idDiv',idDiv)
-    console.log('HTMLListOpenGroups',HTMLListOpenGroups)
+    const HTMLListOpenGroups = document.getElementById(`${data.idGroup}`);
     const HTMLListClosedGroups = document.getElementById('divForListClosedGroups');
-
 
     if (!data.dataGroup.dateClose) {
       HTMLListOpenGroups.insertAdjacentHTML('afterbegin', this.createCard(data));
@@ -83,10 +77,7 @@ export class MyGroups extends Page {
     }
   }
 
-  createCardIdUser(data){
-    console.log('id group', data)
-    console.log(1)
-
+  createCardIdUser(data: any){
     const createBlockIdGroup = (data: any) => {
       return `
         <div id=${data}>
@@ -97,21 +88,13 @@ export class MyGroups extends Page {
     const HTMLListOpenGroups = document.getElementById('divForListOpenGroups');
 
     HTMLListOpenGroups.insertAdjacentHTML('afterbegin', createBlockIdGroup(data));
-
-
-
-
   }
 
   createCard(data: any, balanceGroup: number | null = null) {
-    console.log(3)
-    console.log('data.idGroup__createCard', data.idGroup)
-    // console.log(data)
     const NUM_OF_IMG_IN_GROUP_CARD: number = 5;
     const date: Date = new Date(data.dataGroup.dateCreate);
     const dataCreateGroup: string = date.toLocaleString();
     const listUsers = data.arrayUsers;
-    // console.log('data.arrayUsers', data.arrayUsers)
 
     const participantsImg: string[] = [];
     listUsers.forEach((user: any) => {
@@ -157,59 +140,6 @@ export class MyGroups extends Page {
       </div>
     `;
   }
-
- /*  createCard(data: any, balanceGroup: number | null = null) {
-    // console.log(data)
-    const NUM_OF_IMG_IN_GROUP_CARD: number = 5;
-    const date: Date = new Date(data.dataGroup.dateCreate);
-    const dataCreateGroup: string = date.toLocaleString();
-    const listUsers = data.arrayUsers;
-    // console.log('data.arrayUsers', data.arrayUsers)
-
-    const participantsImg: string[] = [];
-    listUsers.forEach((user: any) => {
-      if (participantsImg.length < NUM_OF_IMG_IN_GROUP_CARD) {
-        participantsImg.push(`<img class="card-group__img-avatar--mini" src="${user.avatar}" alt="icon">`);
-      }
-    });
-    if (listUsers.length > NUM_OF_IMG_IN_GROUP_CARD) {
-      participantsImg.push('+');
-      participantsImg.push(String(listUsers.length - NUM_OF_IMG_IN_GROUP_CARD));
-    }
-
-    return `
-      <div class="card mb-3 card-group">
-        <div class="row g-0 col">
-          <div class="col-3 card-group__box-logo-group">
-            <img class="card-group__img-avatar" src="${data.dataGroup.icon ? data.dataGroup.icon : defaultGroupLogo}" alt="icon-group">
-          </div>
-
-          <div class="col-9 card-group__box-content">
-
-            <div class="row col">
-              <div class="col-7">
-                <h5>${data.dataGroup.title}</h5>
-              </div>
-              <div class="col-5">
-                <h5>${dataCreateGroup.slice(0, 10)}</h5>
-              </div>
-            </div>
-
-            <div class="row col">
-              <div class="col-7">
-                ${participantsImg.join('')}
-              </div>
-              <div class="col-5">
-                ${balanceGroup}
-              </div>
-            </div>
-
-          </div>
-
-        </div>
-      </div>
-    `;
-  } */
 
   modal() {
     return `
