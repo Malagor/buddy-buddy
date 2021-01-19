@@ -170,7 +170,7 @@ export class Database {
     });
 
     await Promise.all(keyList).then(async (data) => {
-      const value: any = await data.filter((item: any) => item[0] !== null || item[1].state === 'approve')
+      const value: any = await data.filter((item: any) => item[0] !== null && item[1].state === 'approve')
       .map((item: any) => item[0])
       .map(async (item: any) => {
         item.uid = uid;
@@ -219,34 +219,49 @@ export class Database {
   async getUserGroups(uid: string, callback: any) {
     const dat: any = await this.firebase
       .database()
-      .ref(`Groups`)
-      .once('value', (snapshot) => snapshot);      
-    const data: any = dat.val();
-
+      .ref(`User/${uid}/groupList`)
+      .once('value', (snapshot) => snapshot);
+    const dataUser: any = dat.val();
+    const keyList: any = Object.entries(dataUser)
+      .map(async (item: any) => {
+        const groups: any = await this.firebase
+        .database()
+        .ref(`Groups/${item[0]}`)
+        .once('value', (snapshot) => snapshot);
+          item[2] = groups.val();
+          return item;    
+      });
     const currentGroups: any = await this.firebase
       .database()
       .ref(`User/${uid}`)
-      .once('value', (snapshot) => snapshot);   
-    const userCurrentGroup = currentGroups.val().currentGroup;
-    const value: any = Object.entries(data)
-      .map((item: any) => {
-        item[1].userList = Object.entries(item[1].userList);        
-        return item;
-      })
-      .filter((item: any) => item[1].userList.find((it: any) => it[0] === uid && it[1] === 'approve'))
-      .map(async (item: any, index: number) => {       
-        const elem: any = await item[1].userList.map(async (it: any) => {
-          const res: any = await this.firebase
-            .database()
-            .ref(`User/${it[0]}`)
-            .once('value', (snapshot) => snapshot);
-          it[0] = res.val().avatar;
-          return it;
+      .once('value', (snapshot) => snapshot);
+
+    keyList.push(currentGroups.val().currentGroup);
+
+    await Promise.all(keyList).then(async (data) => {
+      const currentUserGroup = data.slice(-1)[0];
+      const value: any = data.slice(0, -1)
+        .filter((item: any) => item[1].state === 'approve')
+        .map((item: any) => {
+          item[2].userList = Object.entries(item[2].userList);
+          item[2].groupID = item[0];       
+          return item[2];
+        })
+        .map(async (item: any, index: number) => {      
+          console.log('map', item); 
+          const elem: any = await item.userList.map(async (it: any) => {
+            const res: any = await this.firebase
+              .database()
+              .ref(`User/${it[0]}`)
+              .once('value', (snapshot) => snapshot);
+            it = res.val().avatar;
+            return it;
+          });
+          await Promise.all(elem).then((userList: any) => {
+            callback(userList, index, item.title, value.length, item.icon, item.groupID, currentUserGroup);
+          });
         });
-        await Promise.all(elem).then((userList: any) => {
-          callback(userList, index, item[1].title, value.length, item[1].icon, item[0], userCurrentGroup);
-        });
-      });
+    });
   }
 
   hasUser(uid: string, callback: any) {
