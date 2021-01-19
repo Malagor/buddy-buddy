@@ -190,6 +190,9 @@ export class App {
     this.messenger.render();
     this.messageHandler = this.database.messageHandler(this.messenger.addMessageToList, this.messenger.setUserDataInMessage);
     this.database.getMessageList(this.messageHandler);
+
+    const userId = '6yiqUegBoWWdR5oiZgTVqUt871q2';
+    this.database.getBalanceForUserTotal(userId, 1, this.messenger.randerBalance);
   }
 
   onStatisticsPage() {
@@ -233,7 +236,7 @@ export class App {
       groupData: data.groupData,
       userList: userArray,
       currentGroup: currentGroup,
-      userId: userId
+      userId: userId,
     };
     this.database.createNewGroup(dataForCreateGroup);
   }

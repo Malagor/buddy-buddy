@@ -241,4 +241,8 @@ export class Messenger extends Page {
     formMessage.focus();
 
   }
+
+  randerBalance(balance: number) {
+    console.log('balance', balance);
+  }
 }
