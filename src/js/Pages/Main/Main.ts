@@ -7,6 +7,7 @@ export class Main extends Page {
   static create(element: string): Main {
     const page: Main = new Main(element);
     page.render = page.render.bind(page);
+    page.getDataForCurrency = page.getDataForCurrency.bind(page);
     return page;
   }
 
@@ -14,9 +15,10 @@ export class Main extends Page {
     const tds = document.querySelectorAll('.for-counter');
     const bal: HTMLElement = document.querySelector('.main__balance');
     const index: number = tds.length - 1 - counter;
+    const stringBalance: string = balance.toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
 
-    if (bal.lastElementChild.textContent === tds[index].textContent) bal.lastElementChild.textContent = `${balance.toFixed(2)} ${tds[index].textContent}`;
-    tds[index].textContent = `${balance.toFixed(2)} ${tds[index].textContent}`;
+    if (bal.lastElementChild.textContent === tds[index].textContent) bal.lastElementChild.textContent = `${stringBalance} ${tds[index].textContent}`;
+    tds[index].textContent = `${stringBalance} ${tds[index].textContent}`;
 
     counter++;
     if (counter === tds.length) counter = 0;
@@ -131,8 +133,9 @@ export class Main extends Page {
     }
   }
 
-  renderSlider(elem: HTMLElement, dt: any): void {
-    const dataLength = Object.values(dt.groupList).filter((item: any) => item.state === 'approve').length;
+  renderSlider(data: any): void {
+    const elem: HTMLElement = document.querySelector('.main__group-slider')
+    const dataLength = Object.values(data.groupList).filter((item: any) => item.state === 'approve').length;
     if (!dataLength) {
       elem.innerHTML = `
       <div class="card">
@@ -266,28 +269,34 @@ export class Main extends Page {
     }
   }
 
-  render(data: any): void {
+  addUserInfo(data: any): void {
+    document.querySelector('.block__title').textContent = `@${data.account}`;
+    document.querySelector('.block__image').setAttribute('src', data.avatar);
+    document.querySelector('.block__image').setAttribute('alt', data.name);
+    document.querySelector('.main__name__text').textContent = data.name;
+    document.querySelector('.main__balance__text').textContent = data.currency;
+  }
+
+  render(): void {
     this.element.innerHTML = `
     <div class="block__wrapper">
     <div class="block__content">
       <div class="block__header block__header--main">
-        <p class="block__title">@${data.account}</p>
+        <p class="block__title"></p>
       </div>
       <div class="block__main">
         <div class="block__card justify-content-between block--width-85 block__card--no-border">
           <div class="block__card block__element-gap flex-column block__card--no-border">
               <div class="block__image-wrapper">
-                <img src="${data.avatar}" alt="${
-      data.name && data.surname
-    }" class="block__image">
+                <img src="" alt="" class="block__image">
             </div>
             <h3 class="main__name">
-              <span>${data.name}</span>
+              <span class="main__name__text"></span>
             </h3>
           </div>
           <p class="main__balance align-self-start block__element-gap">
             <span>Balance</span> 
-            <span>${data.currency}</span>
+            <span class="main__balance__text"></span>
           </p>
         </div>
         <div class="block__card flex-column block--width-85">
@@ -321,7 +330,5 @@ export class Main extends Page {
     </div>
   </div>
   `;
-    this.getDataForCurrency(this.createCurrTable, data.currency);
-    this.renderSlider(this.element.querySelector('.main__group-slider'), data);
   }
 }

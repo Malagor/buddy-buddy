@@ -1070,4 +1070,13 @@ export class Database {
 
     return balance;
   }
+
+  getUserCurrentCurrency(uid: string, callback: any, innerCallback: any) {
+    this.firebase.database()
+    .ref(`User/${uid}/currency`)
+    .once('value', async snapshot => {
+      const data = snapshot.val();
+      callback(innerCallback, data);
+    });
+  }
 }
