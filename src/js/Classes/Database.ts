@@ -238,9 +238,9 @@ export class Database {
         const elem: any = await item[1].userList.map(async (it: any) => {
           const res: any = await this.firebase
             .database()
-            .ref(`User/${it}`)
+            .ref(`User/${it[0]}`)
             .once('value', (snapshot) => snapshot);
-          it = res.val().avatar;
+          it[0] = res.val().avatar;
           return it;
         });
         await Promise.all(elem).then((userList: any) => {

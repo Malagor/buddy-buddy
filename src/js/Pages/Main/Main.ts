@@ -176,7 +176,7 @@ export class Main extends Page {
       if (ind < ELEMENTS_COUNT) {
         html += `
             <div class="avatars__wrapper">
-              <img src="${item[1].userAvatar}" alt="user avatar" width="40px">
+              <img src="${item[1].userAvatar}" alt="user avatar" width="35px">
             </div>
             `;
       } else if (ind === ELEMENTS_COUNT) {
@@ -215,14 +215,19 @@ export class Main extends Page {
           const date: Date = new Date(item.date);
           document.querySelector('.main__group-transactions').innerHTML += `
             <div class="card main__card-trans">
-              <p class="main__card-trans__header">
-                <span class="card-trans__header__title">${
-                  item.description
-                }</span>
-                <span class="card-trans__header__title"> Group: ${
-                  item.groupTitle
-                }</span>
-              </p>
+              <div class="main__card-trans__header main--font-size">
+                <p class="card-trans__header__group">
+                  <span class="card-trans__header__title">${
+                    item.description
+                  }</span>
+                  <span class="card-trans__header__title">Group:</span>
+                </p>
+                <p class="card-trans__header__group">                  
+                  <span class="card-trans__header__title">${
+                    item.groupTitle
+                  }</span>
+                </p>                
+              </div>
               <div class="main__card-trans__main">
                 <p class="card-trans__main__loc">
                   <span class="card-trans__main__date">
@@ -234,10 +239,10 @@ export class Main extends Page {
                 </p>
                 <div class="card-trans__main__avatars">
                 </div>
-                <p class="cars-trans__main__cost">
+                <p class="cars-trans__main__cost main--font-size">
                 </p>
               </div>
-              <p class="main__card-trans__footer">
+              <p class="main__card-trans__footer main--font-size">
                 <span class="card-trans__footer__total">
                   Total: ${item.totalCost} ${item.currency}
                 </span>

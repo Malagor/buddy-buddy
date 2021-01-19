@@ -52,19 +52,6 @@
   background-color: rgba(0, 0, 0, 0.05);
 }
 
-.main__group-slider {
-  height: 11rem;
-  padding: 0;
-
-@include laptop {
-    height: 12rem;
-  }
-
-@include desktop {
-    height: 12rem;
-  }
-}
-
 .main__name {
   font-size: 1.2rem;
 
@@ -81,7 +68,8 @@
   }
 }
 
-.main__group-transactions {
+.main__group-transactions,
+.main__group-slider {
   gap: 0.9rem;
 }
 
@@ -93,7 +81,7 @@
   padding: 0.3rem 0.5rem;
   border-radius: rem(10px);
 
-  gap: 0.3rem;
+  gap: 0.4rem;
 }
 
 .main__card-trans__header,
@@ -103,6 +91,25 @@
   align-items: center;
   width: 100%;
   margin-bottom: 0;
+}
+
+.main__card-trans__header {
+  flex-direction: column;
+}
+
+.card-trans__header__group {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 0;
+}
+
+.card-trans__header__group:nth-child(1) {
+  justify-content: space-between;
+}
+
+.card-trans__header__group:nth-child(2) {
+  justify-content: flex-end;
 }
 
 .card-trans__header__title {
@@ -143,8 +150,8 @@
 
 .avatars__wrapper {
   position: relative;
-  width: rem(40px);
-  height: rem(40px);
+  width: rem(35px);
+  height: rem(35px);
   margin-left: -15px;
   overflow: hidden;
   border-radius: 50%;
@@ -205,9 +212,9 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  width: rem(40px);
-  height: rem(40px);
-  margin-left: -10px;
+  width: rem(35px);
+  height: rem(35px);
+  margin-left: -7.5px;
   border-radius: 50%;
 }
 
@@ -229,13 +236,18 @@
   margin-bottom: 0;
 }
 
-.card-trans__footer__total {
-  font-size: rem(16px);
-}
-
 .main__carousel {
   width: 100%;
-  height: 100%;
+  height: 11rem;
+  padding: 0;
+
+@include laptop {
+    height: 12rem;
+  }
+
+@include desktop {
+    height: 12rem;
+  }
 }
 
 .arrows-visibility {
