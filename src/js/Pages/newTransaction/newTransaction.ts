@@ -68,8 +68,6 @@ export class NewTransaction extends Page {
                 </div>
               </div>
             </div>
-
-
             </form>
           </div>
 
@@ -118,9 +116,13 @@ export class NewTransaction extends Page {
 
   }
 
-  addCurrencyList = (currID: string, icon: string): void => {
+  addCurrencyList = (currID: string, currCurrency: string): void => {
     const currencySelect: HTMLFormElement = document.querySelector('.new-trans__currency-list');
-    const optionHTML = `<option value=${currID}>${icon}</option>`;
+    let selectedOption = '';
+    if(currID === currCurrency) {
+      selectedOption = 'selected';
+    } 
+    const optionHTML = `<option ${selectedOption} value=${currID}>${currID}</option>`;
     currencySelect.insertAdjacentHTML('beforeend', optionHTML);
   }
 
@@ -163,15 +165,23 @@ export class NewTransaction extends Page {
     const currentDate  = +(new Date());
     const userList: Array<any> = [];
     const checkedMembers = document.querySelectorAll('.checked-member__wrapper');
+    let fix;
     checkedMembers.forEach((memb: HTMLElement) => {
       const sumInput: HTMLInputElement = memb.querySelector('.checked-member__sum');
       const commentInput: HTMLInputElement = memb.querySelector('.checked-member__comment');
+      if (sumInput.value) {
+        fix = 'fixed';
+      } else {
+        fix = 'non-fixed';
+      }
+
 
       const user = {
         userID: memb.getAttribute('user-id'),
         cost: +sumInput.value || +sumInput.getAttribute('placeholder'),
         comment: commentInput.value,
         state: 'pending',
+        costFix: fix,
       };
       userList.push(user);
     });

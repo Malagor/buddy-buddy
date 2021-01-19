@@ -429,7 +429,7 @@ export class TransactionsList extends Page {
       membersWrapper.append(member);
 
     } else {
-      member.className = 'details__memb-wrapper d-flex justify-content-between';
+      member.className = 'details__memb-wrapper details__memb--not-checked d-flex justify-content-between';
       member.setAttribute('id', user.key);
       member.innerHTML =`
         <div class="details__member d-flex flex-column align-items-center">
@@ -452,6 +452,8 @@ export class TransactionsList extends Page {
     } else {
       btnAddMembers.style.display = '';
     }
+
+    detailsEvents
   }
 
   protected events(): void {
