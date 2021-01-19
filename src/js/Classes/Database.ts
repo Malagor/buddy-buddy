@@ -250,7 +250,6 @@ export class Database {
       })
         
       data.groupData['userList'] = userObj;
-      console.log('!!!!!!!!!!!!!!!data', data)
 
       this.firebase
         .database()
@@ -332,35 +331,58 @@ export class Database {
         });
   }
 
-  groupHandler = (createGroupList: any) => {
+  groupHandler = (createCardIdUser: any, createGroupList: any) => {
     const base = this.firebase.database();
 
     return ((snapshot: any) => {
-      const users: string[] = Object.keys(snapshot.val().userList);
-      if (users.includes(this.uid)) {
-        const dataGroup = snapshot.val();
-        const dataUserListGroup: any[] = Object.keys(snapshot.val().userList);
+
+      const promise1 = new Promise((resolve, reject) => {
+        const snapshot_1 = snapshot;
 
         base
-          .ref('User')
-          .once('value', (snapshot) => {
-            const snapshotUser = snapshot.val();
-            const userList = Object.keys(snapshotUser);
+        .ref(`User/${this.uid}`)
+        .once('value', (snapshot) => {
+          const ArrIdGroupUser: string[] = Object.keys(snapshot.val().groupList)
 
-            const arrayUsers: any[] = [];
-            userList.forEach(user => {
-              if (dataUserListGroup.includes(user)) {
-                arrayUsers.push(snapshotUser[user]);
-              }
-            });
-          const dataForGroup = {
-            'dataGroup': dataGroup,
-            'arrayUsers': arrayUsers,
-          };
-          createGroupList(dataForGroup);
-        });
-      }
-    });
+          ArrIdGroupUser.forEach((idGroup) => {
+            createCardIdUser(idGroup)
+          })
+        })
+        
+        resolve(snapshot)
+      });
+
+      promise1.then((snapshot: any) => {
+
+        const users: string[] = Object.keys(snapshot.val().userList);
+        if (users.includes(this.uid)) {
+          const dataGroup = snapshot.val();
+          const idGroup = snapshot.key;
+          const dataUserListGroup: any[] = Object.keys(snapshot.val().userList);
+  
+          base
+            .ref('User')
+            .once('value', (snapshot) => {
+              const snapshotUser = snapshot.val();
+              const userList = Object.keys(snapshotUser);
+  
+              const arrayUsers: any[] = [];
+              userList.forEach(user => {
+                if (dataUserListGroup.includes(user)) {
+                  arrayUsers.push(snapshotUser[user]);
+                }
+              });
+            const dataForGroup = {
+              'dataGroup': dataGroup,
+              'arrayUsers': arrayUsers,
+              'idGroup': idGroup, 
+            };
+            createGroupList(dataForGroup);
+          });
+        }
+      });
+    })
+  
   }
 
   addCurrentGroup(data: any) {
