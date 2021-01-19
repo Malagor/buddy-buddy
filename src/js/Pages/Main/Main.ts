@@ -1,16 +1,30 @@
 import { Page } from '../../Classes/Page';
 
+let counter: number = 0;
 export class Main extends Page {
+  onMainGetBalance: any; 
+
   static create(element: string): Main {
     const page: Main = new Main(element);
     page.render = page.render.bind(page);
     return page;
   }
 
+  getBalance(balance: number): void {
+    const tds = document.querySelectorAll('.for-counter');
+    const bal: HTMLElement = document.querySelector('.main__balance');
+    const index: number = tds.length - 1 - counter;
+
+    if (bal.lastElementChild.textContent === tds[index].textContent) bal.lastElementChild.textContent = `${balance.toFixed(2)} ${tds[index].textContent}`;
+    tds[index].textContent = `${balance.toFixed(2)} ${tds[index].textContent}`;
+
+    counter++;
+    if (counter === tds.length) counter = 0;
+  }
+
   renderGroups(userList: any, index: number, title: string, length: number, groupIcon: string, groupID: string, currGroup: string): void {
     if (!userList) return;
-    console.log(groupID, currGroup);
-    
+    console.log(groupID, currGroup);    
     const elems: any = document.querySelectorAll('.carousel-item__inner');   
     const newIndex: number = length - index - 1;
     const elemIndex: number =
@@ -75,26 +89,23 @@ export class Main extends Page {
         return response.json();
       })
       .then((data: any) => {
-        callback(data, current);
+        callback(data, current , this.onMainGetBalance);
       });
   }
 
-  createCurrTable(data: any, current: string): void {
+  createCurrTable(data: any, current: string, call: any): void {
     const currencies: string[] = ['USD', 'EUR', 'RUB'];
     const dt: any = [];
-    const rateOfCurrent =
-      current !== 'BYN'
-        ? data.find((item: any) => item.Cur_Abbreviation === current)
-            .Cur_OfficialRate
-        : 1;
+    const usdRate = data.find((item: any) => item.Cur_Abbreviation === 'USD').Cur_OfficialRate;
 
-    let result: string = `
+    document.querySelector('tbody').innerHTML = `
     <tr>
       <th scope="row">1</th>
       <td>${current}</td>
       <td>1</td>
-      <td>${rateOfCurrent * (data.balance || 0)} ${current}</td>
+      <td class="for-counter">${current}</td>
     </tr>`;
+    call(usdRate);    
 
     data.forEach((item: any) => {
       currencies.forEach((it: any) => {
@@ -105,22 +116,23 @@ export class Main extends Page {
     });
 
     for (let i = 0; i < dt.length; i += 1) {
-      result += `
+      document.querySelector('tbody').innerHTML += `
       <tr>
         <th scope="row">${i + 2}</th>
         <td>${dt[i].Cur_Abbreviation}</td>
         <td>${dt[i].Cur_OfficialRate}</td>
-        <td>${dt[i].Cur_OfficialRate * (data.balance || 0)} ${
+        <td class="for-counter">${
         dt[i].Cur_Abbreviation
       }</td>
       </tr>
       `;
+      const elemRate = dt[i].Cur_Abbreviation === 'RUB' ? usdRate / dt[i].Cur_OfficialRate * 100 : usdRate / dt[i].Cur_OfficialRate;
+      call(elemRate);
     }
-    document.querySelector('tbody').innerHTML = result;
   }
 
   renderSlider(elem: HTMLElement, dt: any): void {
-    const dataLength = Object.values(dt.groupList).filter((item: any) => item.state === 'approve').length; 
+    const dataLength = Object.values(dt.groupList).filter((item: any) => item.state === 'approve').length;
     if (!dataLength) {
       elem.innerHTML = `
       <div class="card">
@@ -275,7 +287,7 @@ export class Main extends Page {
           </div>
           <p class="main__balance align-self-start block__element-gap">
             <span>Balance</span> 
-            <span>${data.balance || 0} ${data.currency}</span>
+            <span>${data.currency}</span>
           </p>
         </div>
         <div class="block__card flex-column block--width-85">
