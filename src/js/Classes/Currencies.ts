@@ -1,12 +1,13 @@
 export class Currencies {
-  static getCurrenciesList(handlerFunction: (data: any) => void, errorHandler?: (message: string) => void): void {
+  static getCurrenciesList(errorHandler?: (message: string) => void) {
     const url = 'https://openexchangerates.org/api/currencies.json';
-    fetch(url)
+
+    return fetch(url)
       .then(response => {
         return response.json();
       })
       .then(data => {
-        handlerFunction(data);
+        return data;
       })
       .catch(error => {
         if (errorHandler) {
@@ -17,15 +18,15 @@ export class Currencies {
       });
   }
 
-  static getCurrencyRateByCode(code: string, handlerFunction: (data: any) => void, errorHandler?: (message: string) => void) {
+  static getCurrencyRateByCode(code: string, errorHandler?: (message: string) => void) {
     const url = `https://openexchangerates.org/api/latest.json?app_id=376d918973ab407cb9515b65e53b88d8&symbols=${code}`;
-    fetch(url)
+
+    return fetch(url)
       .then(response => {
         return response.json();
       })
       .then(data => {
-        const rates = data.rates[code];
-        handlerFunction(rates);
+        return data.rates[code];
       })
       .catch(error => {
         if (errorHandler) {
@@ -36,16 +37,15 @@ export class Currencies {
       });
   }
 
-  static getCurrencyRates(handlerFunction: (data: any) => void, errorHandler?: (message: string) => void) {
+  static getCurrencyRates(errorHandler?: (message: string) => void) {
     const url = `https://openexchangerates.org/api/latest.json?app_id=376d918973ab407cb9515b65e53b88d8`;
-    fetch(url)
+
+    return fetch(url)
       .then(response => {
         return response.json();
       })
       .then(data => {
-        const rates = data.rates;
-
-        handlerFunction(rates);
+        return data.rates;
       })
       .catch(error => {
         if (errorHandler) {
@@ -56,15 +56,16 @@ export class Currencies {
       });
   }
 
-  static toUSD(sum: number, fromCurrency: string, handlerFunction: (sumInUsd: number) => void, errorHandler?: (message: string) => void) {
+  static toUSD(fromCurrency: string, errorHandler?: (message: string) => void) {
     const url = `https://openexchangerates.org/api/latest.json?app_id=376d918973ab407cb9515b65e53b88d8&symbols=${fromCurrency}`;
-    fetch(url)
+
+    return (sum: number) => fetch(url)
       .then(response => {
         return response.json();
       })
       .then(data => {
         const rate: number = data.rates[fromCurrency];
-        handlerFunction(sum / rate);
+        return sum / rate;
       })
       .catch(error => {
         if (errorHandler) {
@@ -75,15 +76,16 @@ export class Currencies {
       });
   }
 
-  static fromUSD(sum: number, toCurrency: string, handlerFunction: (sumFromUsd: number) => void, errorHandler?: (message: string) => void) {
+  static fromUSD(toCurrency: string, errorHandler?: (message: string) => void) {
     const url = `https://openexchangerates.org/api/latest.json?app_id=376d918973ab407cb9515b65e53b88d8&symbols=${toCurrency}`;
-    fetch(url)
+
+    return (sum: number) => fetch(url)
       .then(response => {
         return response.json();
       })
       .then(data => {
         const rate: number = data.rates[toCurrency];
-        handlerFunction(sum * rate);
+        return sum * rate;
       })
       .catch(error => {
         if (errorHandler) {

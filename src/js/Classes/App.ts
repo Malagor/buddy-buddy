@@ -13,7 +13,6 @@ import { INotification, Notifications, TypeOfNotifications } from './Notificatio
 import { INewMessage, Messenger } from '../Pages/Messenger/Messenger';
 import { Contacts, ISearchUserData } from '../Pages/Contacts/Contacts';
 
-
 export interface IHandlers {
   messages: any;
   groups: any;
