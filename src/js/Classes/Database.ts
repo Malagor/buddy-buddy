@@ -242,14 +242,15 @@ export class Database {
       data.userList.forEach((userId: string) => {
             
         if(userId === userIdAuthor) {
-          userObj[userId] = { state: 'approve' }
+          data.groupData.author = userIdAuthor;
+          userObj[userId] = { state: 'approve' };
         } else {
-          userObj[userId] = { state: 'pending' }
+          userObj[userId] = { state: 'pending' };
         }
       })
         
       data.groupData['userList'] = userObj;
-
+      console.log('!!!!!!!!!!!!!!!data', data)
 
       this.firebase
         .database()

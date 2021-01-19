@@ -80,7 +80,7 @@ export class MyGroups extends Page {
 
   createCard(data: any, balanceGroup: number | null = null) {
     // console.log(data)
-    const NUM_OF_IMG_IN_GROUP_CARD: number = 7;
+    const NUM_OF_IMG_IN_GROUP_CARD: number = 5;
     const date: Date = new Date(data.dataGroup.dateCreate);
     const dataCreateGroup: string = date.toLocaleString();
     const listUsers = data.arrayUsers;
