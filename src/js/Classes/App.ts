@@ -79,6 +79,7 @@ export class App {
 
       this.accountPage = AccountPage.create('.main');
       this.mainPage = Main.create('.main');
+      this.mainPage.onMainGetBalance = this.onMainGetBalance.bind(this);
 
       this.database.getUserInfo(uid, [this.layout.setSidebarData]);
 
@@ -161,6 +162,11 @@ export class App {
       this.mainPage.renderTransactions,
       this.mainPage.renderAvatarsBlock,
     ]);
+  }
+
+  onMainGetBalance(rank: number) {
+    const uid: string = this.database.uid;
+    this.database.getBalanceForUserTotal(uid, rank, this.mainPage.getBalance);
   }
 
   onAccountPage() {
