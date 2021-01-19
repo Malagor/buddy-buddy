@@ -173,13 +173,6 @@ export class NewTransaction extends Page {
         comment: commentInput.value,
         state: 'pending',
       };
-
-      // const user = {
-      //   userID: memb.getAttribute('user-id'),
-      //   cost: +sumInput.value || +sumInput.getAttribute('placeholder'),
-      //   comment: commentInput.value,
-      //   state: 'pending',
-      // };
       userList.push(user);
     });
 

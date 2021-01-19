@@ -162,10 +162,10 @@ export class App {
     this.transactionsList.newTrans.onCreateTransaction = this.onCreateTransaction.bind(this);
     this.transactionsList.newTrans.onShowMembersOfGroup = this.onShowMembersOfGroup.bind(this);
     this.database.getCurrencyList(this.transactionsList.newTrans.addCurrencyList); /* + */
-    this.database.getGroupsListForTransaction(this.transactionsList.newTrans.addGroupList);
-    this.database.getMembersOfGroupFirst(this.transactionsList.newTrans.addMembersOfGroup);
+    this.database.getGroupsListForTransaction(this.transactionsList.newTrans.addGroupList); /* + */
+    this.database.getMembersOfGroupFirst(this.transactionsList.newTrans.addMembersOfGroup); /* + */
 
-    this.database.getGroupsListForTransaction(this.transactionsList.addGroupToTransList);
+    this.database.getGroupsListForTransaction(this.transactionsList.addGroupToTransList); /* + */
     this.database.getMyTransactionsList(this.transactionsList.addMyTransactions, this.transactionsList.addUserToList);
 
     // this.transactionHandler = this.database.transactionHandler(this.transactionsList.addMyTransactions, this.transactionsList.addUserToList);
@@ -252,7 +252,8 @@ export class App {
 
   onGetTransInfo(trans: any, transID: string, groupID: string) {
     console.log ('ongettransinfo');
-    this.database.getTransInfoModal(trans, transID, groupID, this.transactionsList.addGroupTitle, this.transactionsList.addMemberOfTransaction);
+    this.database.getTransInfoModal(trans, transID, groupID, this.transactionsList.addGroupTitle, 
+      this.transactionsList.addMemberOfTransaction, this.transactionsList.addOwnerInfo);
   }
 
   // onGetMembers(transID: string, trans: any) {
