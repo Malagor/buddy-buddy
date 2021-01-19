@@ -161,9 +161,6 @@ export class App {
 
   onGroupsPage() {
     this.deleteHandlers();
-    this.notifications.groupCount = 0;
-    this.notifications.setNotificationMark(TypeOfNotifications.Group, 0);
-
     this.groups.render();
     this.groupHandler = this.database.groupHandler(this.groups.createGroupList);
     this.database.getGroupList(this.groupHandler);
@@ -171,9 +168,6 @@ export class App {
 
   onTransactionsPage() {
     this.deleteHandlers();
-    this.notifications.transactionCount = 0;
-    this.notifications.setNotificationMark(TypeOfNotifications.Transaction, 0);
-
     this.transactionsList.render(dataTransList);
     this.transactionsList.newTrans.onCreateTransaction = this.onCreateTransaction.bind(this);
     this.transactionsList.newTrans.onShowMembersOfGroup = this.onShowMembersOfGroup.bind(this);

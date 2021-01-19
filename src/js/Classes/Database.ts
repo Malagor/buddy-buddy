@@ -447,7 +447,7 @@ export class Database {
     }
 
     if (handlers.contacts) {
-      base.ref('Transactions')
+      base.ref(`User/${this.uid}`)
         .off('child_added', handlers.contacts);
     }
   }
