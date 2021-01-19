@@ -143,50 +143,55 @@ export class MyGroups extends Page {
           <div class="modal-body">
             <form class="form-floating row g-3 form-group" id="newGroupForm">
 
-            <div class="row modal-top">
+            <div class="row modal-top d-flex justify-content-between">
 
-              <div class="block__common-image-wrapper col-3">
-                <div class="block__image-wrapper">
-                  <img src="${defaultGroupLogo}" alt="logoGroup" class="block__image">
-                </div>
-                <div class="block__form-change-photo form-group">
-                  <label for="file" class="block__button-change-photo">
-                    <i class="material-icons">add_a_photo</i>
-                  </label>
-                  <input type="file" id="inputImg" name="logoGroup" class="block__form-change-photo input-logo-group">
+              <div class="col-3">
+                <div class="block__common-image-wrapper">
+                  <div class="block__image-wrapper">
+                    <img src="${defaultGroupLogo}" alt="logoGroup" class="block__image">
+                  </div>
+                  <div class="block__form-change-photo form-group">
+                    <label for="file" class="block__button-change-photo">
+                      <i class="material-icons">add_a_photo</i>
+                    </label>
+                    <input type="file" id="inputImg" name="logoGroup" class="block__form-change-photo input-logo-group">
+                  </div>
                 </div>
               </div>
 
               <div class="col-9 form-title">
-                <input type="text" class="form-control" id="formTitle" name="title" placeholder="Title*" required>
-                <div class="invalid-feedback">
-                  Please input title.
+                <div>
+                  <input type="text" class="form-control" id="formTitle" name="title" placeholder="Title*" required>
+                  <div class="invalid-feedback">
+                    Please input title.
+                  </div>
+                </div>
+
+                <div>
+                  <div class="form-check form-switch">
+                    <input class="form-check-input" type="checkbox" id="currentGroup" checked>
+                    <label class="form-check-label" for="currentGroup">Make the group current</label>
+                  </div>
                 </div>
               </div>
 
             </div>
-              <div class="<!--form-floating--> col-12">
-                <textarea class="form-control" id="formDesc" rows="3" name="description" placeholder="Description"></textarea>
-<!--                <label for="formDesc-" class="form-label">Description</label>-->
-              </div>
 
-              <div class=" col-12">
-                <div class="form-check form-switch">
-                  <input class="form-check-input" type="checkbox" id="currentGroup" checked>
-                  <label class="form-check-label" for="currentGroup">Make the group current</label>
+              <div class="row ">
+                <div class="dropdown col-10 modal-dropdown">
+                  <input class="form-control dropdown-toggle" type="text" id="activeContact" data-bs-toggle="dropdown" aria-expanded="false" placeholder="Members" autocomplete="off" name="name">
+                  <input type="text" name="key" class="contact-user-id" hidden>
+                  <ul id="members-dropdown-menu" class="dropdown-menu contacts-user-list members-dropdown-menu" aria-labelledby="Group Members">
+                  </ul>
                 </div>
+
+                <div class="col-2 modal-wrapper-btn">
+                  <button type="button" class="btn btn-primary modal-btn-primary" id="addNewGroupMember"><span>add</span></button>
+                </div> 
               </div>
 
               <div class="col-12">
-                <div class="dropdown col-10">
-                  <input class="form-control dropdown-toggle" type="text" id="activeContact" data-bs-toggle="dropdown" aria-expanded="false" placeholder="Members" autocomplete="off" name="name">
-                  <input type="text" name="key" class="contact-user-id" hidden>
-                  <ul class="dropdown-menu contacts-user-list" aria-labelledby="Group Members">
-                  </ul>
-                </div>
-<!--                <input type="text" class="form-control" id="formMembers" placeholder="Members" aria-label="Username" aria-describedby="basic-addon1">-->
-<!--                <label for="formMembers">Members</label>-->
-                <button type="button" class="btn btn-primary col-1" id="addNewGroupMember"><span class="material-icons">add</span></button>
+                <textarea class="form-control" id="formDesc" rows="3" name="description" placeholder="Description"></textarea>
               </div>
 
                <div class="row col-12 group-members-avatar"></div>
