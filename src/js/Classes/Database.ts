@@ -741,7 +741,7 @@ export class Database {
       });
   }
 
-  getBalanceInGroup(groupId: string, funcForRender: (balance: number) => void, errorHandler?: (message: string) => void) {
+  getBalanceInGroup(groupId: string, currencyRate: number = 1, funcForRender: (balance: number) => void, errorHandler?: (message: string) => void) {
     const base = this.firebase.database();
 
     base.ref(`Groups/${groupId}`)
@@ -777,13 +777,14 @@ export class Database {
 
         // Total group Balances
         const userListArray: { state: string, sum: number }[] = Object.values(usersList);
-        const balance: number = userListArray.reduce((sum: number, userData: { sum: number }) => {
+        let balance: number = userListArray.reduce((sum: number, userData: { sum: number }) => {
           if (userData.sum > 0) {
             sum += userData.sum;
           }
           return sum;
         }, 0);
 
+        balance *= currencyRate;
         funcForRender(balance);
       })
       .catch(error => {
@@ -795,17 +796,17 @@ export class Database {
       });
   }
 
-  getBalanceForUserInGroup(userId: string, groupId: string, funcForRender: (balance: number) => void, errorHandler?: (message: string) => void) {
+  getBalanceForUserInGroup(userId: string, groupId: string, currencyRate: number = 1, funcForRender: (balance: number) => void, errorHandler?: (message: string) => void) {
     const base = this.firebase.database();
 
     base.ref(`Groups/${groupId}/`)
       .child(`transactions`)
       .once('value', snapshot => {
-        const transactionArray: string[] = snapshot.val();
+        const transId: string[] = snapshot.val();
         let balance: number = 0;
 
-        transactionArray.forEach(transId => {
-          base.ref(`Transactions/${transId}`)
+        transId.forEach(key => {
+          base.ref(`Transactions/${key}`)
             .once('value', snapshot => {
               const transData = snapshot.val();
               if (transData.userID === userId) {
@@ -816,6 +817,7 @@ export class Database {
             });
         });
 
+        balance *= currencyRate;
         funcForRender(balance);
       })
       .catch(error => {
@@ -827,7 +829,7 @@ export class Database {
       });
   }
 
-  getBalanceForUserTotal(userId: string, funcForRender: (balance: number) => void, errorHandler?: (message: string) => void) {
+  getBalanceForUserTotal(userId: string, currencyRate: number = 1, funcForRender: (balance: number) => void, errorHandler?: (message: string) => void) {
     console.log('getBalanceForUserTotal ...');
     const base = this.firebase.database();
 
@@ -850,6 +852,8 @@ export class Database {
             });
         });
 
+
+        balance *= currencyRate;
         funcForRender(balance);
       })
       .catch(error => {
@@ -859,5 +863,24 @@ export class Database {
           errorHandler(error.message);
         }
       });
+  }
+
+  _calcBalance = (transId: string[], userId: string) => {
+    let balance: number = 0;
+
+    transId.forEach(key => {
+      this.firebase.database()
+        .ref(`Transactions/${key}`)
+        .once('value', async snapshot => {
+          const transData = snapshot.val();
+          if (transData.userID === userId) {
+            balance += await transData.totalCost;
+          } else {
+            balance -= await transData.toUserList[userId].cost;
+          }
+        });
+    });
+
+    return balance;
   }
 }
