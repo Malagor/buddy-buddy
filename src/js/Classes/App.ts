@@ -85,6 +85,8 @@ export class App {
       this.groups = MyGroups.create('.main');
       this.groups.onCreateNewGroup = this.onCreateNewGroup.bind(this);
       this.groups.onAddMember = this.onAddGroupMember.bind(this);
+      this.groups.fillContactsList = this.fillContactsList.bind(this);
+
 
       this.transactionsList = TransactionsList.create('.main');
       this.transactionsList.onTransactionSubmit = this.onTransactionSubmit.bind(
@@ -183,9 +185,7 @@ export class App {
     this.notifications.setNotificationMark(TypeOfNotifications.Group, 0);
 
     this.groups.render();
-    // this.database.getGroupList(this.groups.createGroupList);
     this.groupHandler = this.database.groupHandler(this.groups.createGroupList);
-
     this.database.getGroupList(this.groupHandler);
   }
 
@@ -215,6 +215,9 @@ export class App {
       this.messenger.setUserDataInMessage,
     );
     this.database.getMessageList(this.messageHandler);
+
+    const userId = '6yiqUegBoWWdR5oiZgTVqUt871q2';
+    this.database.getBalanceForUserTotal(userId, 1, this.messenger.randerBalance);
   }
 
   onStatisticsPage() {
@@ -258,7 +261,7 @@ export class App {
       groupData: data.groupData,
       userList: userArray,
       currentGroup: currentGroup,
-      userId: userId
+      userId: userId,
     };
     this.database.createNewGroup(dataForCreateGroup);
   }
@@ -268,8 +271,8 @@ export class App {
     console.log('submit transaction');
   }
 
-  onAddGroupMember(accountName: string) {
-    this.database.findUserByName(accountName, this.groups.addMembersGroup);
+  onAddGroupMember(userId: string) {
+    this.database.findUserById(userId, this.groups.addMembersGroup);
   }
 
   onCreateTransaction(data: any) {
@@ -347,7 +350,7 @@ export class App {
 
   fillContactsList() {
 
-    const renderContact = this.database.contactsHandler(this.messenger.addContactsToList);
+    const renderContact = this.database.contactsHandler(this.contacts.addContactsToList);
 
     this.database.getContactsList(renderContact);
   }
