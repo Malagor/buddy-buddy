@@ -152,18 +152,16 @@ export class App {
     localStorage.setItem('currentPage', name);
   }
 
-  onMainPage() {
+  async onMainPage() {
     this.setCurrentPage('Main');
     this.deleteHandlers();
     const uid: string = this.database.uid;
     this.mainPage.render();
-    this.database.getUserInfo(uid, [this.mainPage.addUserInfo, this.mainPage.renderSlider]);
+    this.database.getUserInfo(uid, [this.mainPage.addUserInfo, this.mainPage.renderSlider, this.mainPage.renderSliderItems]);
     this.database.getUserCurrentCurrency(uid, this.mainPage.getDataForCurrency, this.mainPage.createCurrTable);
-    this.database.getUserGroups(uid, this.mainPage.renderGroups);
-    this.database.getUserTransactions(uid, [
-      this.mainPage.renderTransactions,
-      this.mainPage.renderAvatarsBlock,
-    ]);
+    this.database.getUserGroups(uid, this.mainPage.renderAvatarsBlockForSlider, this.mainPage.renderOneGroup);
+    await this.database.getUserTransactions(uid, this.mainPage.renderTransactions);
+    this.mainPage.checkUserCost();
   }
 
   onMainGetBalance(rank: number) {

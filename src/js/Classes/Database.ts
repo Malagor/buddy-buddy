@@ -153,7 +153,7 @@ export class Database {
       );
   }
 
-  async getUserTransactions(uid: string, callbacks: any) {
+  async getUserTransactions(uid: string, callback: any) {
     const dat: any = await this.firebase
       .database()
       .ref(`User/${uid}/transactionList`)
@@ -170,7 +170,7 @@ export class Database {
     });
 
     await Promise.all(keyList).then(async (data) => {
-      const value: any = await data.filter((item: any) => item[0] !== null && item[1].state === 'approve')
+      const value: any = await data.filter((item: any) => item[0] !== null || item[1].state === 'approve')
       .map((item: any) => item[0])
       .map(async (item: any) => {
         item.uid = uid;
@@ -185,38 +185,12 @@ export class Database {
 
       await Promise.all(value).then((data) => {
         data.reverse();
-        callbacks[0](data);
-        if (data.length) this.getUsersAvatars(data, callbacks[1]);
+        callback(data);
       });
     });
   }
 
-  async getUsersAvatars(data: any, callback: any) {
-    await data
-      .map((item: any) => {
-        const elem: any = item.toUserList.map(async (it: any) => {
-          const res: any = await this.firebase
-            .database()
-            .ref(`User/${it[0]}`)
-            .once('value', (snapshot) => {
-              return snapshot;
-            });
-          it[1].userAvatar = res.val().avatar;
-          return it;
-        });
-        item.toUserList = elem;
-        return item;
-      })
-      .map(async (item: any, index: number) => {
-        item.toUserList = await Promise.all(
-          item.toUserList,
-        ).then((userList: any) =>
-          callback(userList, index, item.uid, item.currency),
-        );
-      });
-  }
-
-  async getUserGroups(uid: string, callback: any) {
+  async getUserGroups(uid: string, callback: any, callback2: any) {
     const dat: any = await this.firebase
       .database()
       .ref(`User/${uid}/groupList`)
@@ -258,7 +232,7 @@ export class Database {
             return it;
           });
           await Promise.all(elem).then((userList: any) => {
-            callback(userList, index, item.title, value.length, item.icon, item.groupID, currentUserGroup);
+            if (userList.length) callback2(callback(userList), index, item.title, value.length, item.icon, item.groupID, currentUserGroup);
           });
         });
     });

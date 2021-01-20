@@ -1,12 +1,13 @@
 import { Page } from '../../Classes/Page';
-
-let counter: number = 0;
 export class Main extends Page {
-  onMainGetBalance: any; 
+  onMainGetBalance: any;
+
+  counter: number = 0;
 
   static create(element: string): Main {
     const page: Main = new Main(element);
     page.render = page.render.bind(page);
+    page.getBalance = page.getBalance.bind(page);
     page.getDataForCurrency = page.getDataForCurrency.bind(page);
     return page;
   }
@@ -14,51 +15,49 @@ export class Main extends Page {
   getBalance(balance: number): void {
     const tds = document.querySelectorAll('.for-counter');
     const bal: HTMLElement = document.querySelector('.main__balance');
-    const index: number = tds.length - 1 - counter;
+    const index: number = tds.length - 1 - this.counter;
     const stringBalance: string = balance.toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
 
     if (bal.lastElementChild.textContent === tds[index].textContent) bal.lastElementChild.textContent = `${stringBalance} ${tds[index].textContent}`;
     tds[index].textContent = `${stringBalance} ${tds[index].textContent}`;
 
-    counter++;
-    if (counter === tds.length) counter = 0;
+    this.counter++;
+    if (this.counter === tds.length) this.counter = 0;
   }
 
-  renderGroups(userList: any, index: number, title: string, length: number, groupIcon: string, groupID: string, currGroup: string): void {
-    if (!userList) return;
-    console.log(groupID, currGroup);    
-    const elems: any = document.querySelectorAll('.carousel-item__inner');   
-    const newIndex: number = length - index - 1;
-    const elemIndex: number =
-      newIndex % 2 === 0 ? newIndex / 2 : (newIndex - 1) / 2;
-      
-    const avatarsBlock: any = (list: any): string => {
-      let result: string = '';
-      list.forEach((item: any, ind: number) => {
-        if (list.length >= 3) {
-          if (ind < 3) {
-            result += `
-            <div class="avatars__wrapper--slider">
-              <img src="${item}" alt="user avatar" width="25px">
-            </div>
-            `;
-          } else if (ind === 3) {
-            result += `
-            <div class="avatars__wrapper--slider-digit">
-              <span>+${userList.length - 3}</span>
-            </div>
-            `;
-          }
-        } else {
+  renderAvatarsBlockForSlider(list: any): string {
+    let result: string = '';
+    list.forEach((item: any, ind: number) => {
+      if (list.length >= 3) {
+        if (ind < 3) {
           result += `
-          <div class="avatars__wrapper--single">
+          <div class="avatars__wrapper--slider">
             <img src="${item}" alt="user avatar" width="25px">
           </div>
           `;
+        } else if (ind === 3) {
+          result += `
+          <div class="avatars__wrapper--slider-digit">
+            <span>+${list.length - 3}</span>
+          </div>
+          `;
         }
-      });
-      return result;
-    };
+      } else {
+        result += `
+        <div class="avatars__wrapper--single">
+          <img src="${item}" alt="user avatar" width="25px">
+        </div>
+        `;
+      }
+    });
+    return result;
+  }
+
+  renderOneGroup(avatars: string, index: number, title: string, length: number, groupIcon: string, groupID: string, currGroup: string): void {
+    const elems: any = document.querySelectorAll('.carousel-item__inner');
+    const newIndex: number = length - index - 1;
+    const elemIndex: number = newIndex % 2 === 0 ? newIndex / 2 : (newIndex - 1) / 2;
+    console.log(groupID, currGroup);
 
     const group: string = `
     <div class="main__slider__item">
@@ -69,7 +68,7 @@ export class Main extends Page {
         <span>${title}</span>
       </p>
       <div class="slider__item__avatars">
-      ${avatarsBlock(userList)}
+      ${avatars}
       </div>
     </div>
     `;
@@ -134,7 +133,7 @@ export class Main extends Page {
   }
 
   renderSlider(data: any): void {
-    const elem: HTMLElement = document.querySelector('.main__group-slider')
+    const elem: HTMLElement = document.querySelector('.main__group-slider');
     const dataLength = Object.values(data.groupList).filter((item: any) => item.state === 'approve').length;
     if (!dataLength) {
       elem.innerHTML = `
@@ -162,57 +161,26 @@ export class Main extends Page {
       elem.querySelectorAll('.arrow-color').forEach((item: any) => {
         if (dataLength < 3) item.classLis.add('arrows-visibility');
       });
-
-      const carouselItemCount: number =
-        dataLength % 2 === 0
-          ? dataLength / 2
-          : (dataLength + 1) / 2;
-      for (let i = 0; i < carouselItemCount; i += 1) {
-        elem.querySelector('.carousel-inner').innerHTML += `
-        <div class="carousel-item h-100">
-          <div class="carousel-item__inner">
-          </div>
-        </div>
-        `;
-      }
-      elem
-        .querySelector('.carousel-inner')
-        .querySelectorAll('.carousel-item')[0]
-        .classList.add('active');
     }
   }
 
-  renderAvatarsBlock(data: any, index: number, uid: string, currency: string): void {
-    const elems: any = document.querySelectorAll('.card-trans__main__avatars');
-    const ELEMENTS_COUNT: number = 3;
-    let html: string = '';
+  renderSliderItems(data: any): void {
+    const elem: HTMLElement = document.querySelector('.main__group-slider');
+    const dataLength = Object.values(data.groupList).filter((item: any) => item.state === 'approve').length;
+    const carouselItemCount: number = dataLength % 2 === 0 ? dataLength / 2 : (dataLength + 1) / 2;
 
-    data.forEach((item: any, ind: number) => {
-      if (ind < ELEMENTS_COUNT) {
-        html += `
-            <div class="avatars__wrapper">
-              <img src="${item[1].userAvatar}" alt="user avatar" width="35px">
-            </div>
-            `;
-      } else if (ind === ELEMENTS_COUNT) {
-        html += `
-            <div class="avatars__wrapper--digit">
-              <span>+${data.length - ELEMENTS_COUNT}</span>
-            </div>
-            `;
-      }
-    });
-    elems[index].innerHTML = html;
-
-    const userCosts: any = document.querySelectorAll('.cars-trans__main__cost');
-
-    data.forEach((item: any) => {
-      if (item[0] === uid) {
-        userCosts[index].innerHTML = `
-        <span>${item[1].cost} ${currency}</span>
+    for (let i = 0; i < carouselItemCount; i += 1) {
+      elem.querySelector('.carousel-inner').innerHTML += `
+      <div class="carousel-item h-100">
+        <div class="carousel-item__inner">
+        </div>
+      </div>
       `;
-      }
-    });
+    }
+    elem
+      .querySelector('.carousel-inner')
+      .querySelectorAll('.carousel-item')[0]
+      .classList.add('active');
   }
 
   renderTransactions(data: any): void {
@@ -226,47 +194,54 @@ export class Main extends Page {
       `;
     } else {
       data.forEach((item: any, index: number) => {
+        const userCost: string = item.toUserList.find((it: any) => it[0] === item.uid) ?
+        `-${item.toUserList.find((it: any) => it[0] === item.uid)[1].cost} ${item.currency}` :
+        `+${item.totalCost} ${item.currency}`;
         if (index < 10) {
           const date: Date = new Date(item.date);
           document.querySelector('.main__group-transactions').innerHTML += `
             <div class="card main__card-trans">
-              <div class="main__card-trans__header main--font-size">
-                <p class="card-trans__header__group">
-                  <span class="card-trans__header__title">${
-                    item.description
-                  }</span>
-                  <span class="card-trans__header__title">Group:</span>
-                </p>
-                <p class="card-trans__header__group">                  
-                  <span class="card-trans__header__title">${
-                    item.groupTitle
-                  }</span>
-                </p>                
-              </div>
-              <div class="main__card-trans__main">
-                <p class="card-trans__main__loc">
-                  <span class="card-trans__main__date">
-                  ${date.toLocaleDateString()}
-                  </span>
-                  <span class="card-trans__main__time">
-                  ${date.toLocaleTimeString().slice(0, 5)}
-                    </span>
-                </p>
-                <div class="card-trans__main__avatars">
+              <div class="main__card-trans__wrapper">
+                <div class="main__card-trans__header main--font-size">
+                  <p class="card-trans__header__trans-name">
+                    <span class="card-trans__header__title">${
+                      item.description
+                    }</span>
+                  </p>               
                 </div>
-                <p class="cars-trans__main__cost main--font-size">
+                <div class="main__card-trans__main main--font-size">
+                  <p class="card-trans__main__cost">
+                    <span>
+                    ${userCost}
+                    </span>
+                  </p>
+                  <p class="card-trans__main__loc">
+                    <span class="card-trans__main__date">
+                    ${date.toLocaleDateString()} ${date.toLocaleTimeString().slice(0, 5)}
+                    </span>
+                  </p>
+                </div>
+                <p class="main__card-trans__footer">                  
+                  <span>${
+                    item.groupTitle
+                  } group</span>
                 </p>
-              </div>
-              <p class="main__card-trans__footer main--font-size">
-                <span class="card-trans__footer__total">
-                  Total: ${item.totalCost} ${item.currency}
-                </span>
-              </p>
+              </div>   
             </div>
-            `;
+            `; 
         }
       });
     }
+  }
+
+  checkUserCost(): void {
+    document.querySelectorAll('.card-trans__main__cost').forEach((item: HTMLElement) => {
+      if (item.firstElementChild.textContent.trim()[0] === '-') {
+        item.firstElementChild.classList.add('minus-cost');
+      } else {
+        item.firstElementChild.classList.add('plus-cost');
+      }
+    });     
   }
 
   addUserInfo(data: any): void {
@@ -322,7 +297,7 @@ export class Main extends Page {
         </div>
         <div class="block__card flex-column block--width-85">
           <p class="align-self-start main--font-size">
-            <span>My transactions</span>
+            <span>My last transactions</span>
           </p>
           <div class="main__group-transactions flex-column main__inner-card">
           </div>
