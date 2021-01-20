@@ -26,6 +26,7 @@ export class TransactionsList extends Page {
 
         <div class="block__groups block--width-85">
           <select class="trans-list__groups form-select w-75" aria-label="Default select example">
+            <option value="all-trans">Все </option>
           </select>
           <div class="user-balance text-center w-25"></div>
         </div>
@@ -50,12 +51,12 @@ export class TransactionsList extends Page {
     this.events();
   }
 
-  addGroupToTransList = (groupID: string, groupTitle: string, currentGroup: string) => {
+  addGroupToTransList = (groupID: string, groupTitle: string) => {
     const groups: HTMLFormElement = document.querySelector('.trans-list__groups');
     const groupElement = document.createElement('option');
-    if (groupID === currentGroup) {
-      groupElement.setAttribute('selected', '');
-    }
+    // if (groupID === currentGroup) {
+    //   groupElement.setAttribute('selected', '');
+    // }
     groupElement.classList.add('trans-list__group');
     groupElement.value = groupID;
     groupElement.innerText = groupTitle;
@@ -69,12 +70,12 @@ export class TransactionsList extends Page {
     listOfTrans.prepend(transaction);
   }
 
-  addMyTransactions = (transID: string, trans: any, currentGroup: string, owner: boolean, ownUID: string): void => {
+  addMyTransactions = (transID: string, trans: any, owner: boolean, ownUID: string): void => {
 
-    const styles = this.setStyles(trans, currentGroup, owner, ownUID);
+    const styles = this.setStyles(trans, owner, ownUID);
     const date: any = getDate(trans.date);
     const transaction: HTMLElement = document.getElementById(transID);
-    transaction.className = `trans-item ${styles.transDisplay} ${styles.border} flex-column justify-content-between block--width-85`;
+    transaction.className = `trans-item ${styles.border} flex-column justify-content-between block--width-85`;
     transaction.setAttribute('group-id', trans.groupID);
     transaction.setAttribute('data-time', trans.date);
     transaction.innerHTML = `
@@ -94,7 +95,7 @@ export class TransactionsList extends Page {
         <div class="trans-item__addform ${styles.btnDisplay}">
           <select class="trans-item__state form-select" aria-label="Default select example">
             <option ${styles.selectPending} value="pending">ожидание</option>
-            <option value="approve">подтвердить</option>
+            <option ${styles.selectApprove} value="approve">подтвердить</option>
             <option ${styles.selectAbort} value="abort">отклонить</option>
           </select>
         </div>
@@ -114,11 +115,15 @@ export class TransactionsList extends Page {
     const detailsModalWrapper: HTMLElement = transaction.querySelector('.details__wrapper');
     const btnDetails: HTMLElement = transaction.querySelector('.trans-item__more');
     btnDetails.addEventListener('click', () => {
-
-      this.renderOutTrans(detailsModalWrapper, transID, trans, owner, ownUID, selectState.value);
-      detailsModal.show();
+      // const { target } = e;
+      // if(!target.closest('.trans-item__state')) {
+        this.renderOutTrans(detailsModalWrapper, transID, trans, owner, ownUID, selectState.value);
+        detailsModal.show();
 
       // this.modalEvents(detailsModalWrapper);
+      // }
+
+      
 
     });
   }
@@ -168,15 +173,15 @@ export class TransactionsList extends Page {
       }
   }
 
-  setStyles = (trans: any, currentGroup: string, owner: boolean, ownUID: string) => {
-    let currentG: string;
+  setStyles = (trans: any, owner: boolean, ownUID: string) => {
+    // let currentG: string;
     const transList: HTMLFormElement = document.querySelector('.trans-list__groups');
-    if (transList.value) {
-      currentG = transList.value;
-
-    } else {
-      currentG = currentGroup;
-    }
+    // if (transList.value) {
+    //   currentG = transList.value;
+    // } 
+    //   else {
+    //   currentG = currentGroup;
+    // }
 
     let btnDisplay: string;
     let cost: string;
@@ -194,14 +199,15 @@ export class TransactionsList extends Page {
       colorCost = 'text-danger';
     }
 
-    if (trans.groupID === currentG) {
-      transDisplay = 'd-flex';
-    } else {
-      transDisplay = 'd-none';
-    }
+    // if (trans.groupID === currentG) {
+    //   transDisplay = 'd-flex';
+    // } else {
+    //   transDisplay = 'd-none';
+    // }
 
     let selectPending: string = '';
     let selectAbort: string = '';
+    let selectApprove: string = '';
     let border: string = '';
     if (!owner) {
       Object.entries(trans.toUserList).forEach((user: any) => {
@@ -213,6 +219,7 @@ export class TransactionsList extends Page {
             selectAbort = 'selected';
             border = 'border border-2 border-danger';
           } else if (user[1].state === 'approve') {
+            selectApprove = 'selected';
             btnDisplay = 'd-none';
           }
         }
@@ -224,14 +231,15 @@ export class TransactionsList extends Page {
     }
 
     return {
-      currentG,
+      // currentG,
       btnDisplay,
       cost,
       colorCost,
-      transDisplay,
+      // transDisplay,
       border,
       selectPending,
-      selectAbort
+      selectAbort,
+      selectApprove
     };
   }
 
@@ -313,11 +321,16 @@ export class TransactionsList extends Page {
           <div class="details__comment">${ownComment}</div>
         </div>
 
-        <select class="${selectDisplay} details__state form-select" aria-label="Default select example">
+        <div class="${selectDisplay} details__state-wrapper">
+          
+          <select class="${selectDisplay} details__state form-select" aria-label="Default select example">
             <option value="pending">ожидание</option>
             <option value="approve">подтвердить</option>
             <option value="abort">отклонить</option>
-        </select>
+          </select>
+        </div>
+        
+      
 
         <div class="details__check ${checkDisplay} align-items-center">
           <div>Чек: </div>
@@ -346,12 +359,18 @@ export class TransactionsList extends Page {
     `;
     wrapper.insertAdjacentHTML('beforeend', baseHTML);
     this.onGetTransInfo(trans, transID, trans.groupID);
+    const detailsSelectWrapper: HTMLElement = wrapper.querySelector('.details__state-wrapper');
     const detailsSelect: HTMLElement = wrapper.querySelector('.details__state');
     const options: NodeListOf<HTMLElement> = detailsSelect.querySelectorAll('option');
     options.forEach((opt: HTMLOptionElement) => {
+      console.log ('selectvalue', selectValue);
       if (opt.value === selectValue) {
         opt.setAttribute('selected', '');
       }
+      if (selectValue === 'approve') {
+        detailsSelectWrapper.innerHTML = 'Подтверждено';
+      }
+    
     });
 
     const checkBox = wrapper.querySelector('.details__check-box');
@@ -463,15 +482,19 @@ export class TransactionsList extends Page {
     groups.addEventListener('change', () => {
       const transList: NodeListOf<HTMLElement> = document.querySelectorAll('.trans-item');
       const groupID = groups.value;
+
+
+
       transList.forEach((transItem: HTMLElement) => {
         const itemGroupID = transItem.getAttribute('group-id');
-        if (itemGroupID === groupID) {
+        
+        if (itemGroupID === groupID || groups.value === "all-trans") {
           transItem.classList.add('d-flex');
           transItem.classList.remove('d-none');
         } else {
           transItem.classList.add('d-none');
           transItem.classList.remove('d-flex');
-        }
+        } 
       });
 
       const groupsInModal: HTMLElement = document.querySelector('.new-trans__groups-list');
@@ -479,16 +502,21 @@ export class TransactionsList extends Page {
       optionsModal.forEach((opt: HTMLOptionElement) => {
         if (opt.value === groupID) {
           opt.setAttribute('selected', '');
+          const members: HTMLElement = document.querySelector('.new-trans__members-list');
+          const checkedMembersList: HTMLElement = document.querySelector('.checked-members');
+          members.innerHTML = '';
+          checkedMembersList.innerHTML = '';
+          this.newTrans.onShowMembersOfGroup(groupID);
         } else {
           opt.removeAttribute('selected');
         }
       });
 
-      const members: HTMLElement = document.querySelector('.new-trans__members-list');
-      const checkedMembersList: HTMLElement = document.querySelector('.checked-members');
-      members.innerHTML = '';
-      checkedMembersList.innerHTML = '';
-      this.newTrans.onShowMembersOfGroup(groupID);
+      // const members: HTMLElement = document.querySelector('.new-trans__members-list');
+      // const checkedMembersList: HTMLElement = document.querySelector('.checked-members');
+      // members.innerHTML = '';
+      // checkedMembersList.innerHTML = '';
+      // this.newTrans.onShowMembersOfGroup(groupID);
     });
   }
 }

@@ -118,6 +118,7 @@ export class App {
   }
 
   onSignOut(): any {
+    this.deleteHandlers();
     this.database.signOut();
     this.database.init();
   }

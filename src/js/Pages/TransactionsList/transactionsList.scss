@@ -67,7 +67,7 @@
   padding: 0.5rem;
   border: 1px solid rgba(0, 0, 0, 0.05);
   border-radius: rem(10px);
-  min-height: rem(130px);
+  // min-height: rem(130px);
    @include desktop {
     margin:rem(5px);
 
@@ -325,11 +325,19 @@
     }
   }
 
+
+  &__owner-name {
+    max-width: rem(50px);
+    font-size: rem(12px);
+    line-height: 1rem;
+    text-align: center;
+  }
+
   &__comment {
     margin-left: rem(5px);
   }
 
-  &__state {
+  &__state-wrapper {
     margin-top: rem(10px);
     width: 35%;
   }

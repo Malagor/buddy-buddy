@@ -617,7 +617,7 @@ export class Database {
       });
   }
 
-  getGroupsListForTransaction(renderGroupList: { (groupID: string, groupTitle: string, currentGroup: string): void; (arg0: any, arg1: any, arg2: any): void; }): void {
+  getGroupsListForTransaction(renderGroupList: any): void {
     this.firebase
       .database()
       .ref(`User/${this.uid}`)
@@ -632,7 +632,7 @@ export class Database {
             .database()
             .ref(`Groups/${groupID}`)
             .once('value', (snapshot) => {
-              renderGroupList(groupID, snapshot.val().title, currGroup);
+              renderGroupList(groupID, snapshot.val().title, currGroup );
             });
         });
       }, (error: { code: string; message: any; }) => {
@@ -807,13 +807,13 @@ export class Database {
         const trans = snapshot.val();
         const userList: string[] = Object.keys(snapshot.val().toUserList);
         if (snapshot.val().userID === this.uid) {
-          userRef.child(`${this.uid}`)
-          .once('value', (snapshot) => {
-              let currGroup = snapshot.val().currentGroup;
-              if (!currGroup) {
-                currGroup = Object.keys(snapshot.val().groupList)[0];
-              }
-              renderTransaction(transID, trans, currGroup, true, this.uid);
+          // userRef.child(`${this.uid}`)
+          // .once('value', (snapshot) => {
+          //     let currGroup = snapshot.val().currentGroup;
+          //     if (!currGroup) {
+          //       currGroup = Object.keys(snapshot.val().groupList)[0];
+          //     }
+              renderTransaction(transID, trans, true, this.uid);
               const numbOfUsers = userList.length;
               userList.forEach((userID: any) => {
                    userRef.child(`${userID}`)
@@ -826,15 +826,15 @@ export class Database {
                     renderUser(transID, user, numbOfUsers, true);
                   });
               });
-          });
+          // });
         } else if (Object.keys(snapshot.val().toUserList).some((user: any) => user === this.uid)) {
-            userRef.child(`${this.uid}`)
-            .once('value', (snapshot) => {
-              let currGroup = snapshot.val().currentGroup;
-              if (!currGroup) {
-                currGroup = Object.keys(snapshot.val().groupList)[0];
-              }
-              renderTransaction(transID, trans, currGroup, false, this.uid);
+            // userRef.child(`${this.uid}`)
+            // .once('value', (snapshot) => {
+            //   let currGroup = snapshot.val().currentGroup;
+            //   if (!currGroup) {
+            //     currGroup = Object.keys(snapshot.val().groupList)[0];
+            //   }
+              renderTransaction(transID, trans, false, this.uid);
                 const userID = trans.userID;
                      userRef.child(`${userID}`)
                     .once('value', (snapshot) => {
@@ -845,7 +845,7 @@ export class Database {
                       };
                       renderUser(transID, user, 0, false);
                     });
-            });
+            // });
         } else return;
       })
       .catch(error => {
