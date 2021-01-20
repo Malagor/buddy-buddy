@@ -12,6 +12,7 @@ import { dataTransList } from '../Data/dataTransList';
 import { INotification, Notifications, TypeOfNotifications } from './Notifications';
 import { INewMessage, Messenger } from '../Pages/Messenger/Messenger';
 import { Contacts, ISearchUserData } from '../Pages/Contacts/Contacts';
+import { Help } from '../Pages/Help/Help';
 
 export interface IHandlers {
   messages: any;
@@ -32,6 +33,7 @@ export class App {
   private notifications: Notifications;
   private messenger: Messenger;
   private contacts: Contacts;
+  private helpPage: Help;
   private contactsHandler: void;
   private messageHandler: (snapshot: any) => void;
   private transactionHandler: (snapshot: any) => void;
@@ -99,6 +101,8 @@ export class App {
       this.contacts = Contacts.create('.main');
       this.contacts.addUserToContacts = this.onAddUserToContacts.bind(this);
       this.contacts.onChangeContactState = this.onChangeContactState.bind(this);
+
+      this.helpPage = Help.create('.main');
 
     } else {
       console.log(`isUserLogon = ${state}`);
@@ -204,7 +208,7 @@ export class App {
 
   onHelpPage() {
     this.deleteHandlers();
-    console.log('Load Help Page!');
+    this.helpPage.render();
   }
 
   onGoogleReg() {
