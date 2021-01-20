@@ -6,8 +6,6 @@ import { ISearchUserData } from '../Pages/Contacts/Contacts';
 import { IMessage, INewMessage } from '../Pages/Messenger/Messenger';
 import { IHandlers } from './App';
 import { TypeOfNotifications } from './Notifications';
-import { resolve } from '../../../webpack.config';
-import { rejects } from 'assert';
 
 const defaultAvatar: string = require('../../assets/images/default-user-avatar.jpg');
 
