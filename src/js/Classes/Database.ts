@@ -120,7 +120,10 @@ export class Database {
   }
 
   protected _registrationUser(uid: string, data: object) {
-    this.firebase.database().ref(`User/${uid}`).set(data);
+    this.firebase
+    .database()
+    .ref(`User/${uid}`)
+    .set(data);
   }
 
   async getUserInfo(uid: string, callbacks: any[]) {
@@ -229,14 +232,13 @@ export class Database {
       .database()
       .ref(`User/${uid}`)
       .once('value', (snapshot) => {
-          if (!snapshot.key) {
+        if (!snapshot.key) {
             callback(snapshot.val());
           }
-        }, (error: { code: string; message: string }) => {
-          console.log('Error: ' + error.code);
-          console.log('Message: ' + error.message);
-        },
-      );
+      }, (error: { code: string; message: string }) => {
+        console.log('Error: ' + error.code);
+        console.log('Message: ' + error.message);
+      });
   }
 
   signOut() {
@@ -244,11 +246,11 @@ export class Database {
       .auth()
       .signOut()
       .then(function () {
-          console.log('Signout Succesfull');
+        console.log('Signout Succesfull');
       }, function (error) {
-          console.log('Signout Failed');
-          console.log(error.code);
-          console.log(error.message);
+        console.log('Signout Failed');
+        console.log(error.code);
+        console.log(error.message);
       });
   }
 
@@ -515,15 +517,18 @@ export class Database {
     const base = this.firebase.database();
 
     if (handlers.messages) {
-      base.ref('Messages').off('child_added', handlers.messages);
+      base.ref('Messages')
+      .off('child_added', handlers.messages);
     }
 
     if (handlers.groups) {
-      base.ref('Groups').off('child_added', handlers.groups);
+      base.ref('Groups')
+      .off('child_added', handlers.groups);
     }
 
     if (handlers.transactions) {
-      base.ref('Transactions').off('child_added', handlers.transactions);
+      base.ref('Transactions')
+      .off('child_added', handlers.transactions);
     }
 
     if (handlers.contacts) {
@@ -540,8 +545,7 @@ export class Database {
         (error: { code: string; message: any }) => {
           console.log('Error:\n ' + error.code);
           console.log(error.message);
-        },
-      );
+        });
   }
 
   messageHandler = (renderMessage: (arg0: IMessage) => void,
