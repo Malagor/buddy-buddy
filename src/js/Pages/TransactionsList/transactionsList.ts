@@ -399,7 +399,7 @@ export class TransactionsList extends Page {
 
 
   addMemberOfTransaction = (transID: string, trans: any, user: any) => {
-    console.log ('trans', trans);
+    // console.log ('trans', trans);
     const modalWrapper: HTMLElement = document.getElementById(transID);
     const membersWrapper: HTMLElement = modalWrapper.querySelector('.details__members');
     const notMembersWrapper: HTMLElement = modalWrapper.querySelector('.details__not-members');
@@ -449,7 +449,7 @@ export class TransactionsList extends Page {
     }
     const btnAddMembers: HTMLButtonElement = modalWrapper.querySelector('.details__add-memb');
     const notMembers: NodeListOf<HTMLElement> = notMembersWrapper.querySelectorAll('.details__memb-wrapper');
-    console.log ('not memb', notMembers);
+    // console.log ('not memb', notMembers);
     if (notMembers.length === 0) {
       btnAddMembers.style.display = 'none';
     } else {
