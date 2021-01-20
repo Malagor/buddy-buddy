@@ -36,7 +36,6 @@ export class AccountPage extends Page {
     document.querySelector('.account__user-id').textContent = `@${data.account}`;
     document.querySelector('.account__input-id').setAttribute('value', data.account);
     document.querySelector('.account__input-name').setAttribute('value', data.name);
-
   }
 
   render (): void {
