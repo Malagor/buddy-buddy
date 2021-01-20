@@ -166,10 +166,10 @@ export class App {
     this.database.getMembersOfGroupFirst(this.transactionsList.newTrans.addMembersOfGroup); /* + */
 
     this.database.getGroupsListForTransaction(this.transactionsList.addGroupToTransList); /* + */
-    this.database.getMyTransactionsList(this.transactionsList.addMyTransactions, this.transactionsList.addUserToList);
+    // this.database.getMyTransactionsList(this.transactionsList.addTransactionWrapper, this.transactionsList.addMyTransactions, this.transactionsList.addUserToList);
 
-    // this.transactionHandler = this.database.transactionHandler(this.transactionsList.addMyTransactions, this.transactionsList.addUserToList);
-    // this.database.getMyTransactionsList(this.transactionHandler);
+    this.transactionHandler = this.database.transactionHandler (this.transactionsList.addTransactionWrapper,this.transactionsList.addMyTransactions, this.transactionsList.addUserToList);
+    this.database.getMyTransactionsList(this.transactionHandler);
   }
 
 

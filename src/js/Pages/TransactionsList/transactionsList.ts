@@ -47,8 +47,6 @@ export class TransactionsList extends Page {
    
     this.newTrans = NewTransaction.create('.modal-wrapper');
     this.newTrans.render();
-
-
     this.events();
   }
 
@@ -61,21 +59,23 @@ export class TransactionsList extends Page {
     groupElement.classList.add('trans-list__group');
     groupElement.value = groupID;
     groupElement.innerText = groupTitle;
-    groups.append(groupElement);
+    groups.prepend(groupElement);
   }
 
+  addTransactionWrapper = (transID:string) => {
+    const listOfTrans: HTMLElement = document.querySelector('.trans-list__list');
+    const transaction = document.createElement('div');
+    transaction.setAttribute('id', transID);
+    listOfTrans.prepend(transaction);
+  }
 
   addMyTransactions = (transID:string, trans: any, currentGroup: string, owner: boolean, ownUID:string):void => {
 
-    // console.log ('transstyle', trans);
-    console.log ('owner', owner);
     const styles = this.setStyles(trans, currentGroup, owner, ownUID);
     const date: any = getDate(trans.date);
-    const listOfTrans: HTMLElement = document.querySelector('.trans-list__list');
-    const transaction = document.createElement('div');
+    const transaction = document.getElementById(transID);
     transaction.className = `trans-item ${styles.transDisplay} ${styles.border} flex-column justify-content-between block--width-85`;
     transaction.setAttribute('group-id', trans.groupID);
-    transaction.setAttribute('id', transID);
     transaction.setAttribute('data-time', trans.date);
     transaction.innerHTML = `
       <p class="trans-item__header align-self-start row">
@@ -108,16 +108,18 @@ export class TransactionsList extends Page {
       </div> 
     `;
 
-    listOfTrans.prepend(transaction);
     const selectState: HTMLSelectElement = transaction.querySelector('.trans-item__state');
     this.changeSelectState(selectState, transaction, transID);
-    const detailsModal = new Modal(document.querySelector('.details'));
-    const detailsModalWrapper:HTMLElement = document.querySelector('.details__wrapper');
-    const btnDetails: HTMLElement = document.querySelector('.trans-item__more');
+    const detailsModal = new Modal(transaction.querySelector('.details'));
+    const detailsModalWrapper:HTMLElement = transaction.querySelector('.details__wrapper');
+    const btnDetails: HTMLElement = transaction.querySelector('.trans-item__more');
     btnDetails.addEventListener('click',() => {
 
       this.renderOutTrans(detailsModalWrapper, transID, trans, owner, ownUID, selectState.value);
       detailsModal.show();
+
+      // this.modalEvents(detailsModalWrapper);
+
     });
   }
 
@@ -167,7 +169,6 @@ export class TransactionsList extends Page {
   }
 
   setStyles = (trans: any, currentGroup: string, owner: boolean, ownUID:string) => {
-    // console.log ('transstyle', trans);
     let currentG;
     const transList: HTMLFormElement = document.querySelector('.trans-list__groups');
     if (transList.value) {    
@@ -189,7 +190,6 @@ export class TransactionsList extends Page {
     } else {
       btnDisplay = 'd-flex';
       const user:any[] = Object.entries(trans.toUserList).find((user: any) => user[0] === ownUID);
-      // console.log ('userX = ', user);
       cost = `-${(+user[1].cost).toFixed(2)}`;
       colorCost = 'text-danger';
     }
@@ -243,12 +243,14 @@ export class TransactionsList extends Page {
     }
     const userList: any[] = Object.entries(trans.toUserList);
     let ownComment = '';
+    let ownCost = '';
     userList.forEach ((user) => {
       if (user[0] === ownUID) {
         ownComment = user[1].comment;
+        ownCost = user[1].cost;
       } 
     });
-  
+   
     let ownerDisplay; 
     let colorText;
     let cost;
@@ -268,7 +270,7 @@ export class TransactionsList extends Page {
       ownerDisplay = '';
 
       colorText = 'text-danger';
-      cost = `-${trans.totalCost}`;
+      cost = `-${ownCost}`;
       membDisplay = 'd-none';
       commentDisplay = '';
       selectDisplay = '';
@@ -377,6 +379,8 @@ export class TransactionsList extends Page {
       checkModal.hide();
     });
 
+    
+
   }
 
   addGroupTitle = (transID: string, title: string) =>  {
@@ -452,8 +456,7 @@ export class TransactionsList extends Page {
     } else {
       btnAddMembers.style.display = '';
     }
-
-    detailsEvents
+   
   }
 
   protected events(): void {
