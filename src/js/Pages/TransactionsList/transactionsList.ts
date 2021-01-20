@@ -27,7 +27,7 @@ export class TransactionsList extends Page {
         <div class="block__groups block--width-85">
           <select class="trans-list__groups form-select w-75" aria-label="Default select example">
           </select>
-          <div class="user-balance text-center w-25">250$</div>
+          <div class="user-balance text-center w-25"></div>
         </div>
 
         <div class="trans-list__list">              
