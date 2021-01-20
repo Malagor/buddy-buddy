@@ -757,27 +757,27 @@ export class Database {
                 if (transactionData) {
                   const fromUserId = transactionData.userID;
                   const fromCost = transactionData.totalCost;
-    
+
                   // increase balance "User FROM"
                   if (usersList[fromUserId].sum == null) {
                     usersList[fromUserId].sum = 0;
                   }
                   usersList[fromUserId].sum += fromCost;
-    
+
                   // decrease balances "Users TO"
                   const toUserList = transactionData.toUserList;
                   const toUserIdList = Object.keys(toUserList);
-    
+
                   toUserIdList.forEach(userId => {
                     if (usersList[userId].sum == null) {
                       usersList[userId].sum = 0;
                     }
                     usersList[userId].sum -= toUserList[userId].cost;
                   });
-                }                
+                }
               });
           });
-        }        
+        }
 
         // Total group Balances
         const userListArray: { state: string, sum: number }[] = usersList.length ? Object.values(usersList) : [];
@@ -820,10 +820,10 @@ export class Database {
                   } else {
                     balance -= transData.toUserList[userId].cost;
                   }
-                }                
+                }
               });
           });
-        }        
+        }
 
         balance *= currencyRate;
         funcForRender(balance);
@@ -859,7 +859,7 @@ export class Database {
                   } else {
                     balance -= transData.toUserList[userId].cost;
                   }
-                }                
+                }
               });
           });
         }
@@ -890,7 +890,7 @@ export class Database {
             } else {
               balance -= await transData.toUserList[userId].cost;
             }
-          }          
+          }
         });
     });
 
