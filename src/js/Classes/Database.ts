@@ -789,40 +789,44 @@ export class Database {
         const usersList = snapshot.val().userList;
         const transactionsId: string[] = snapshot.val().transactions;
 
-        transactionsId.forEach(transID => {
-          base.ref(`Transactions/${transID}`)
-            .once('value', snapshot => {
-              const transactionData = snapshot.val();
-              const fromUserId = transactionData.userID;
-              const fromCost = transactionData.totalCost;
-
-              // increase balance "User FROM"
-              if (usersList[fromUserId].sum == null) {
-                usersList[fromUserId].sum = 0;
-              }
-              usersList[fromUserId].sum += fromCost;
-
-              // decrease balances "Users TO"
-              const toUserList = transactionData.toUserList;
-              const toUserIdList = Object.keys(toUserList);
-
-              toUserIdList.forEach(userId => {
-                if (usersList[userId].sum == null) {
-                  usersList[userId].sum = 0;
-                }
-                usersList[userId].sum -= toUserList[userId].cost;
+        if (transactionsId.length) {
+          transactionsId.forEach(transID => {
+            base.ref(`Transactions/${transID}`)
+              .once('value', snapshot => {
+                const transactionData = snapshot.val();
+                if (transactionData) {
+                  const fromUserId = transactionData.userID;
+                  const fromCost = transactionData.totalCost;
+    
+                  // increase balance "User FROM"
+                  if (usersList[fromUserId].sum == null) {
+                    usersList[fromUserId].sum = 0;
+                  }
+                  usersList[fromUserId].sum += fromCost;
+    
+                  // decrease balances "Users TO"
+                  const toUserList = transactionData.toUserList;
+                  const toUserIdList = Object.keys(toUserList);
+    
+                  toUserIdList.forEach(userId => {
+                    if (usersList[userId].sum == null) {
+                      usersList[userId].sum = 0;
+                    }
+                    usersList[userId].sum -= toUserList[userId].cost;
+                  });
+                }                
               });
-            });
-        });
+          });
+        }        
 
         // Total group Balances
-        const userListArray: { state: string, sum: number }[] = Object.values(usersList);
-        let balance: number = userListArray.reduce((sum: number, userData: { sum: number }) => {
+        const userListArray: { state: string, sum: number }[] = usersList.length ? Object.values(usersList) : [];
+        let balance: number = userListArray.length ? userListArray.reduce((sum: number, userData: { sum: number }) => {
           if (userData.sum > 0) {
             sum += userData.sum;
           }
           return sum;
-        }, 0);
+        }, 0) : 0;
 
         balance *= currencyRate;
         funcForRender(balance);
@@ -845,17 +849,21 @@ export class Database {
         const transId: string[] = snapshot.val();
         let balance: number = 0;
 
-        transId.forEach(key => {
-          base.ref(`Transactions/${key}`)
-            .once('value', snapshot => {
-              const transData = snapshot.val();
-              if (transData.userID === userId) {
-                balance += transData.totalCost;
-              } else {
-                balance -= transData.toUserList[userId].cost;
-              }
-            });
-        });
+        if (transId.length) {
+          transId.forEach(key => {
+            base.ref(`Transactions/${key}`)
+              .once('value', snapshot => {
+                const transData = snapshot.val();
+                if (transData) {
+                  if (transData.userID === userId) {
+                    balance += transData.totalCost;
+                  } else {
+                    balance -= transData.toUserList[userId].cost;
+                  }
+                }                
+              });
+          });
+        }        
 
         balance *= currencyRate;
         funcForRender(balance);
@@ -880,18 +888,21 @@ export class Database {
         const transId = Object.keys(transactionList);
         let balance: number = 0;
 
-        transId.forEach(key => {
-          base.ref(`Transactions/${key}`)
-            .once('value', snapshot => {
-              const transData = snapshot.val();
-              if (transData.userID === userId) {
-                balance += transData.totalCost;
-              } else {
-                balance -= transData.toUserList[userId].cost;
-              }
-            });
-        });
-
+        if (transId.length) {
+          transId.forEach(key => {
+            base.ref(`Transactions/${key}`)
+              .once('value', snapshot => {
+                const transData = snapshot.val();
+                if (transData) {
+                  if (transData.userID === userId) {
+                    balance += transData.totalCost;
+                  } else {
+                    balance -= transData.toUserList[userId].cost;
+                  }
+                }                
+              });
+          });
+        }
 
         balance *= currencyRate;
         funcForRender(balance);
@@ -913,14 +924,94 @@ export class Database {
         .ref(`Transactions/${key}`)
         .once('value', async snapshot => {
           const transData = snapshot.val();
-          if (transData.userID === userId) {
-            balance += await transData.totalCost;
-          } else {
-            balance -= await transData.toUserList[userId].cost;
-          }
+          if (transData) {
+            if (transData.userID === userId) {
+              balance += await transData.totalCost;
+            } else {
+              balance -= await transData.toUserList[userId].cost;
+            }
+          }          
         });
     });
 
     return balance;
+  }
+
+
+  createBasicTables() {
+    //   // THEMES
+    //   const themeData1 = {
+    //     name: 'Light',
+    //   };
+    //   const themeData2 = {
+    //     name: 'Dark',
+    //   };
+    //   const themeBase1 = firebase.database().ref(`Theme/Light`);
+    //   const themeBase2 = firebase.database().ref(`Theme/Dark`);
+    //   themeBase1.set(themeData1);
+    //   themeBase2.set(themeData2);
+    //
+    //  CURRENCY
+    // const currencyArray = [
+    //   {
+    //     code: 'USD',
+    //     name: 'United States Dollar',
+    //   },
+    //   {
+    //     code: 'EUR',
+    //     name: 'Euro',
+    //   },
+    //   {
+    //     code: 'BYN',
+    //     name: 'Belarusian Ruble',
+    //   },
+    //   {
+    //     code: 'RUB',
+    //     name: 'Russian Ruble',
+    //   },
+    // ];
+    // currencyArray.forEach(cur => {
+    //   this.firebase.database()
+    //     .ref(`Currency/${cur.code}`)
+    //     .set({ name: cur.name })
+    //     .catch(error => {
+    //       console.log(error);
+    //     });
+    // });
+
+    // Currencies.getCurrenciesList(this.addCurrencyToBase);
+
+
+    //   //
+    //   // LANGUAGE
+    //   const lang1 = {
+    //     name: 'ENG',
+    //   };
+    //   const lang2 = {
+    //     name: 'RU',
+    //   };
+    //   const lang3 = {
+    //     name: 'BEL',
+    //   };
+    //   const langBase1 = firebase.database().ref(`Language/ENG`);
+    //   const langBase2 = firebase.database().ref(`Language/RU`);
+    //   const langBase3 = firebase.database().ref(`Language/BEL`);
+    //   langBase1.set(lang1);
+    //   langBase2.set(lang2);
+    //   langBase3.set(lang3);
+  }
+
+  addCurrencyToBase = (data: any): void => {
+    console.log(data);
+    const keys = Object.keys(data);
+
+    keys.forEach(key => {
+      this.firebase.database()
+        .ref(`Currency/${key}`)
+        .set({ name: data[key] })
+        .catch(error => {
+          console.log(error);
+        });
+    });
   }
 }
