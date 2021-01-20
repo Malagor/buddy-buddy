@@ -62,9 +62,7 @@ export class Database {
       currency: 'BYN',
     };
 
-    this.firebase
-      .auth()
-      .createUserWithEmailAndPassword(email, password)
+    this.firebase.auth().createUserWithEmailAndPassword(email, password)
       .then((data: { user: { uid: string } }) => {
         const uid: string = data.user.uid;
         // saveUID(uid);
@@ -110,11 +108,7 @@ export class Database {
       });
   }
 
-  loginUserByEmail(
-    email: string,
-    password: string,
-    errorHandleFunction: any,
-  ): void {
+  loginUserByEmail(email: string, password: string, errorHandleFunction: any): void {
     this.firebase
       .auth()
       .signInWithEmailAndPassword(email, password)
@@ -234,14 +228,11 @@ export class Database {
     this.firebase
       .database()
       .ref(`User/${uid}`)
-      .once(
-        'value',
-        (snapshot) => {
+      .once('value', (snapshot) => {
           if (!snapshot.key) {
             callback(snapshot.val());
           }
-        },
-        (error: { code: string; message: string }) => {
+        }, (error: { code: string; message: string }) => {
           console.log('Error: ' + error.code);
           console.log('Message: ' + error.message);
         },
@@ -252,16 +243,13 @@ export class Database {
     this.firebase
       .auth()
       .signOut()
-      .then(
-        function () {
+      .then(function () {
           console.log('Signout Succesfull');
-        },
-        function (error) {
+      }, function (error) {
           console.log('Signout Failed');
           console.log(error.code);
           console.log(error.message);
-        },
-      );
+      });
   }
 
   findUserByName(accountName: string, handlerFunc: any, errorFunc?: any) {
@@ -450,10 +438,7 @@ export class Database {
       .set(groupKey);
   }
 
-  countGroupsInvite(setNotificationMark: {
-    (type: TypeOfNotifications, num: number): void;
-    (arg0: TypeOfNotifications, arg1: number): void;
-  }): void {
+  countGroupsInvite(setNotificationMark: { (type: TypeOfNotifications, num: number): void; (arg0: TypeOfNotifications, arg1: number): void; }): void {
     this.firebase
       .database()
       .ref('Groups')
@@ -471,10 +456,7 @@ export class Database {
       });
   }
 
-  countTransactionInvite(setNotificationMark: {
-    (type: TypeOfNotifications, num: number): void;
-    (arg0: TypeOfNotifications, arg1: number): void;
-  }): void {
+  countTransactionInvite(setNotificationMark: { (type: TypeOfNotifications, num: number): void; (arg0: TypeOfNotifications, arg1: number): void; }): void {
     this.firebase
       .database()
       .ref('Transactions')
@@ -513,10 +495,7 @@ export class Database {
       });
   }
 
-  countNewMessage(setNotificationMark: {
-    (type: TypeOfNotifications, num: number): void;
-    (arg0: TypeOfNotifications, arg1: number): void;
-  }): void {
+  countNewMessage(setNotificationMark: { (type: TypeOfNotifications, num: number): void; (arg0: TypeOfNotifications, arg1: number): void; }): void {
     this.firebase
       .database()
       .ref('Messages')
@@ -557,9 +536,7 @@ export class Database {
     this.firebase
       .database()
       .ref('Messages')
-      .on(
-        'child_added',
-        addMessageToListFunc,
+      .on('child_added', addMessageToListFunc,
         (error: { code: string; message: any }) => {
           console.log('Error:\n ' + error.code);
           console.log(error.message);
@@ -567,16 +544,8 @@ export class Database {
       );
   }
 
-  messageHandler = (
-    renderMessage: (arg0: IMessage) => void,
-    setUserData: (arg0: {
-      messageId: any;
-      key: any;
-      name: any;
-      avatar: any;
-      isReceive: boolean;
-    }) => void,
-  ) => {
+  messageHandler = (renderMessage: (arg0: IMessage) => void,
+  setUserData: (arg0: { messageId: any; key: any; name: any; avatar: any; isReceive: boolean; }) => void) => {
     const uid = this.uid;
     const base = this.firebase.database();
 
@@ -600,14 +569,8 @@ export class Database {
 
         const secondUserId = isReceive ? fromUser : toUser;
 
-        base
-          .ref(`User/${secondUserId}`)
-          .once(
-            'value',
-            (userData: {
-              key: any;
-              val: () => { (): any; new (): any; name: any; avatar: any };
-            }) => {
+        base.ref(`User/${secondUserId}`)
+        .once('value', (userData: { key: any; val: () => { (): any; new(): any; name: any; avatar: any; }; }) => {
               const userDataForMessage = {
                 messageId,
                 key: userData.key,
@@ -621,8 +584,7 @@ export class Database {
 
         // if user get and read message, status is toggle to "true"
         if (isReceive) {
-          base
-            .ref(`Messages/${messageId}`)
+          base.ref(`Messages/${messageId}`)
             .child('isRead')
             .transaction((curStatus: boolean) => {
               curStatus = true;
@@ -718,22 +680,15 @@ export class Database {
     this.firebase
       .database()
       .ref('Currency')
-      .on(
-        'child_added',
-        (snapshot) => {
+      .on('child_added', (snapshot) => {
           renderCurrencyList(snapshot.key, snapshot.val().icon);
-        },
-        (error: { code: string; message: any }) => {
+        }, (error: { code: string; message: any }) => {
           console.log('Error:\n ' + error.code);
           console.log(error.message);
-        },
-      );
+        });
   }
 
-  getGroupsListForTransaction(renderGroupList: {
-    (groupID: string, groupTitle: string, currentGroup: string): void;
-    (arg0: any, arg1: any, arg2: any): void;
-  }): void {
+  getGroupsListForTransaction(renderGroupList: { (groupID: string, groupTitle: string, currentGroup: string): void; (arg0: any, arg1: any, arg2: any): void; }): void {
     this.firebase
       .database()
       .ref(`User/${this.uid}`)
