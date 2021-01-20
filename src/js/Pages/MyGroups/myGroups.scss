@@ -130,6 +130,21 @@
   margin-top: 0.5rem;
 }
 
+.card-detail{
+
+  &__img-avatar{
+    width: rem(85px);
+    height: rem(85px);
+    border-radius: 50%;
+
+    &--user{
+      width: rem(60px);
+      height: rem(60px);
+      border-radius: 50%;
+    }
+  }
+}
+
 @media(max-width: 450px) {
   .form-title{
     width: 60%;

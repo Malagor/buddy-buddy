@@ -7,6 +7,7 @@ import { eventForContactsList } from '../Contacts/eventForContactsList';
 import { onClickContactInContactsList } from '../Contacts/onClickContactInContactsList';
 
 const defaultGroupLogo = require('../../../assets/images/default-group-logo.png');
+const defaultUserAvatar =  require('../../../assets/images/default-user-avatar.jpg');
 
 export class MyGroups extends Page {
   onCreateNewGroup: any;
@@ -58,7 +59,8 @@ export class MyGroups extends Page {
       </div>
     `;
 
-    html += this.modal();
+    html += this.modalGroupDetail()
+    html += this.modalNewGroup();
     this.element.innerHTML = html;
     this.events();
   }
@@ -72,9 +74,11 @@ export class MyGroups extends Page {
 
     if (!data.dataGroup.dateClose) {
       HTMLListOpenGroups.insertAdjacentHTML('afterbegin', this.createCard(data));
+      this.eventsAddEventListenerForGroup(data)
     } else {
       HTMLListClosedGroups.insertAdjacentHTML('afterbegin', this.createCard(data));
     }
+
   }
 
   createCardIdUser(data: any){
@@ -141,7 +145,7 @@ export class MyGroups extends Page {
     `;
   }
 
-  modal() {
+  modalNewGroup() {
     return `
     <div class="modal fade" id="addNewGroupModal" tabindex="-1">
       <div class="modal-dialog modal-dialog modal-dialog-centered modal-dialog-scrollable">
@@ -217,15 +221,37 @@ export class MyGroups extends Page {
     `;
   }
 
+  modalGroupDetail() {
+    return `
+      <div class="modal" id="modalGroupDetail" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">Group details</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div id="modalContent" class="modal-body">
+              <p>Modal body text goes here.</p>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-primary">Save changes</button>
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
   protected events(): void {
-    const modal = new Modal(document.getElementById('addNewGroupModal'));
+    const modalNewGroup = new Modal(document.getElementById('addNewGroupModal'));
 
     const btnAddNewGroup = document.querySelector('.add-new-group');
     btnAddNewGroup.addEventListener('click', () => {
 
       document.querySelector('.contacts-user-list').innerHTML = '';
       this.fillContactsList();
-      modal.show();
+      modalNewGroup.show();
     });
 
     // Auto-filter contacts in member group list
@@ -294,7 +320,7 @@ export class MyGroups extends Page {
         currentGroup: currentGroup
       };
       this.onCreateNewGroup(groupDataAll);
-      modal.hide();
+      modalNewGroup.hide();
     };
 
     const addGroupMember = document.querySelector('#addNewGroupMember');
@@ -305,6 +331,71 @@ export class MyGroups extends Page {
       console.log('member.value', member.value);
       this.onAddMember(member.value);
     });
+  }
+
+  protected eventsAddEventListenerForGroup(data: string) {
+    console.log('eventsAddEventListenerForGroup__data',data)
+    const divGroupDetail = document.getElementById('modalGroupDetail') 
+    const modalGroupDetail = new Modal(divGroupDetail)
+
+
+
+////////////////////////
+    const divModalContent =  document.getElementById('modalContent')
+
+    const dateCreate: Date = new Date(data.dataGroup.dateCreate);
+    const dataCreateGroup: string = dateCreate.toLocaleString();
+    const dateClose: Date = new Date(data.dataGroup.dateClose);
+    const dataCloseGroup: string = dateClose.toLocaleString();
+    
+    const listUsers = data.arrayUsers;
+    const participantsCards: string[] = [];
+    listUsers.forEach((user: any) => {
+      console.log('user', user )
+      const htmlUser = `
+      <div class="row">
+        <div class="col-3">
+          <img class="card-detail__img-avatar--user" src="${user.avatar ? user.avatar : defaultUserAvatar}" alt="icon-group">
+        </div>
+        <div class="col-9 ">
+          <p>${user.name}</p>
+        </div>
+      </div>
+      `
+      participantsCards.push(htmlUser)
+    });
+
+    //const listUsers = data.arrayUsers;
+    divModalContent.innerHTML = `
+      <div class="card mb-3 card-detail">
+        <div class="row g-0 col">
+          <div class="col-4 card-detail__box-logo-group">
+            <img class="card-detail__img-avatar" src="${data.dataGroup.icon ? data.dataGroup.icon : defaultGroupLogo}" alt="icon-group">
+          </div>
+          <div class="col-8 card-detail__box-logo-group">
+            <h5>${data.dataGroup.title}</h5>
+            <p>Create date ${ dataCreateGroup }</p>
+            <p>Close date  ${ dataCloseGroup ? dataCloseGroup : "group is active" }</p>
+          </div>
+        </div>
+      
+        <div class="row g-0 col">
+          <h5>Description</h5>
+          <p class="card-text">${data.dataGroup.description ? data.dataGroup.description : "No description..."}</p>
+        </div>
+        <div class="card-detail__user-list">
+          ${participantsCards.join('')}
+        </div>
+
+
+      </div>
+
+    `
+
+    const divGroup = document.getElementById(`${data.idGroup}`);
+    divGroup.addEventListener('click', () => {  
+    modalGroupDetail.show();
+    })
   }
 
   addMembersGroup(data: any): void {
@@ -341,4 +432,10 @@ if (element.balance < 0) {
       ${element.balance ? element.currency : ''}<span class="card-group__balance--positive">${element.balance ? element.balance : formatDate(element.dateCreate)}</span>
     </h5>
   `;
-} */
+} 
+
+
+
+
+
+*/
