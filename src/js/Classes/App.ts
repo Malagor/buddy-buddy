@@ -174,7 +174,7 @@ export class App {
   onGroupsPage() {
     this.deleteHandlers();
     this.groups.render();
-    this.groupHandler = this.database.groupHandler(this.groups.createGroupList);
+    this.groupHandler = this.database.groupHandler(this.groups.createGroupList, this.groups.addUserInGroupCard);
     this.database.getGroupList(this.groupHandler);
   }
 
