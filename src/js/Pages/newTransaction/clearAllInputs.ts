@@ -4,8 +4,8 @@ export const clearAllInputs = (): void => {
   const userAvatars: NodeListOf<HTMLFormElement> = document.querySelectorAll('.member__avatar');
   const checkedMembersList: HTMLElement = document.querySelector('.checked-members');
   const checksWrapper: HTMLElement = document.querySelector('.add-check__check-box');
-  
-  
+
+
   userAvatars.forEach((avatar: HTMLElement) => {
     avatar.classList.remove('checked');
   });

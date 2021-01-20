@@ -170,8 +170,6 @@ export class App {
   onTransactionsPage() {
     this.transactionsList.render();
     this.deleteHandlers();
-    this.notifications.transactionCount = 0;
-    this.notifications.setNotificationMark(TypeOfNotifications.Transaction, 0);
 
     this.transactionsList.newTrans.onCreateTransaction = this.onCreateTransaction.bind(this);
     this.transactionsList.newTrans.onShowMembersOfGroup = this.onShowMembersOfGroup.bind(this);
@@ -179,7 +177,7 @@ export class App {
     this.database.getGroupsListForTransaction(this.transactionsList.newTrans.addGroupList);
     this.database.getMembersOfGroupFirst(this.transactionsList.newTrans.addMembersOfGroup);
     this.database.getGroupsListForTransaction(this.transactionsList.addGroupToTransList);
-    this.transactionHandler = this.database.transactionHandler (this.transactionsList.addTransactionWrapper,this.transactionsList.addMyTransactions, this.transactionsList.addUserToList);
+    this.transactionHandler = this.database.transactionHandler (this.transactionsList.addTransactionWrapper, this.transactionsList.addMyTransactions, this.transactionsList.addUserToList);
     this.database.getMyTransactionsList(this.transactionHandler);
   }
 

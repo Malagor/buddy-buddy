@@ -11,9 +11,9 @@ export const checkData = () => {
       if (+input.getAttribute('placeholder') === 0) {
         isZero += 1;
       }
-    })
-    
-    if (+sumInput.value > 0 && descrInput.value.length > 0 && Math.abs(+sumInput.value - sum) < 0.01 
+    });
+
+    if (+sumInput.value > 0 && descrInput.value.length > 0 && Math.abs(+sumInput.value - sum) < 0.01
         && isZero === 0) {
       createTransBtn.removeAttribute('disabled');
     } else {
