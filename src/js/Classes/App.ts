@@ -10,11 +10,13 @@ import { IGroupDataAll, IDataForCreateGroup } from '../Interfaces/IGroupData';
 import { TransactionsList } from '../Pages/TransactionsList/transactionsList';
 import { INotification, Notifications, TypeOfNotifications } from './Notifications';
 import { INewMessage, Messenger } from '../Pages/Messenger/Messenger';
+import { Contacts, ISearchUserData } from '../Pages/Contacts/Contacts';
 
 export interface IHandlers {
   messages: any;
   groups: any;
   transactions: any;
+  contacts: any;
 }
 
 export class App {
@@ -28,6 +30,8 @@ export class App {
   private transactionsList: TransactionsList;
   private notifications: Notifications;
   private messenger: Messenger;
+  private contacts: Contacts;
+  private contactsHandler: void;
   private messageHandler: (snapshot: any) => void;
   private transactionHandler: (snapshot: any) => void;
   private groupHandler: (snapshot: any) => void;
@@ -44,6 +48,7 @@ export class App {
   init() {
     this.database.onUserIsLogin = this.isUserLogin.bind(this);
     this.database.init();
+    // this.database.createBasicTables();
   }
 
   isUserLogin(state: boolean, uid?: string) {
@@ -65,6 +70,7 @@ export class App {
       this.layout.onSignOut = this.onSignOut.bind(this);
       this.layout.onAccountPage = this.onAccountPage.bind(this);
       this.layout.onMessagesPage = this.onMessagesPage.bind(this);
+      this.layout.onContactsPage = this.onContactsPage.bind(this);
 
       this.accountPage = AccountPage.create('.main');
       this.mainPage = Main.create('.main');
@@ -77,6 +83,8 @@ export class App {
       this.groups = MyGroups.create('.main');
       this.groups.onCreateNewGroup = this.onCreateNewGroup.bind(this);
       this.groups.onAddMember = this.onAddGroupMember.bind(this);
+      this.groups.fillContactsList = this.fillContactsList.bind(this);
+
 
       this.transactionsList = TransactionsList.create('.main');
       this.transactionsList.onChangeState = this.onChangeState.bind(this);
@@ -87,7 +95,11 @@ export class App {
       this.messenger.onAddRecipient = this.onAddRecipientToMessage.bind(this);
       this.messenger.sendNewMessage = this.onSendNewMessage.bind(this);
       this.messenger.onAnswerMessage = this.onAnswerMessage.bind(this);
+      this.messenger.fillContactsList = this.fillContactsList.bind(this);
 
+      this.contacts = Contacts.create('.main');
+      this.contacts.addUserToContacts = this.onAddUserToContacts.bind(this);
+      this.contacts.onChangeContactState = this.onChangeContactState.bind(this);
 
     } else {
       console.log(`isUserLogon = ${state}`);
@@ -141,15 +153,20 @@ export class App {
 
   }
 
+  onContactsPage() {
+    this.deleteHandlers();
+    this.contacts.render();
+    this.contactsHandler = this.database.contactsHandler(this.contacts.addContactToList);
+    this.database.getContactsList(this.contactsHandler);
+  }
+
   onGroupsPage() {
     this.deleteHandlers();
     this.notifications.groupCount = 0;
     this.notifications.setNotificationMark(TypeOfNotifications.Group, 0);
 
     this.groups.render();
-    // this.database.getGroupList(this.groups.createGroupList);
     this.groupHandler = this.database.groupHandler(this.groups.createGroupList);
-
     this.database.getGroupList(this.groupHandler);
   }
 
@@ -161,13 +178,10 @@ export class App {
 
     this.transactionsList.newTrans.onCreateTransaction = this.onCreateTransaction.bind(this);
     this.transactionsList.newTrans.onShowMembersOfGroup = this.onShowMembersOfGroup.bind(this);
-    this.database.getCurrencyList(this.transactionsList.newTrans.addCurrencyList); /* + */
-    this.database.getGroupsListForTransaction(this.transactionsList.newTrans.addGroupList); /* + */
-    this.database.getMembersOfGroupFirst(this.transactionsList.newTrans.addMembersOfGroup); /* + */
-
-    this.database.getGroupsListForTransaction(this.transactionsList.addGroupToTransList); /* + */
-    // this.database.getMyTransactionsList(this.transactionsList.addTransactionWrapper, this.transactionsList.addMyTransactions, this.transactionsList.addUserToList);
-
+    this.database.getCurrencyList(this.transactionsList.newTrans.addCurrencyList); 
+    this.database.getGroupsListForTransaction(this.transactionsList.newTrans.addGroupList); 
+    this.database.getMembersOfGroupFirst(this.transactionsList.newTrans.addMembersOfGroup); 
+    this.database.getGroupsListForTransaction(this.transactionsList.addGroupToTransList); 
     this.transactionHandler = this.database.transactionHandler (this.transactionsList.addTransactionWrapper,this.transactionsList.addMyTransactions, this.transactionsList.addUserToList);
     this.database.getMyTransactionsList(this.transactionHandler);
   }
@@ -181,7 +195,6 @@ export class App {
     this.messenger.render();
     this.messageHandler = this.database.messageHandler(this.messenger.addMessageToList, this.messenger.setUserDataInMessage);
     this.database.getMessageList(this.messageHandler);
-
   }
 
   onStatisticsPage() {
@@ -225,17 +238,13 @@ export class App {
       groupData: data.groupData,
       userList: userArray,
       currentGroup: currentGroup,
-      userId: userId
+      userId: userId,
     };
     this.database.createNewGroup(dataForCreateGroup);
   }
 
-  // onAddGroupMember(name: string) {
-  //   this.database.findUserByName(name, this.groupsPage.addMembersGroup);
-  // }
-
-  onAddGroupMember(accountName: string) {
-    this.database.findUserByName(accountName, this.groups.addMembersGroup);
+  onAddGroupMember(userId: string) {
+    this.database.findUserById(userId, this.groups.addMembersGroup);
   }
 
   onCreateTransaction(data: any) {
@@ -256,10 +265,6 @@ export class App {
       this.transactionsList.addMemberOfTransaction, this.transactionsList.addOwnerInfo);
   }
 
-  // onGetMembers(transID: string, trans: any) {
-  //   this.database.getUserInfoTrans(transID, trans, this.transactionsList.addMemberOfTransaction)
-  // }
-
   onAddRecipientToMessage(accountName: string) {
     this.database.findUserByName(accountName, this.messenger.addUserForSendMessage, this.messenger.errorAddUserForSendMessage);
   }
@@ -276,15 +281,20 @@ export class App {
     const groupsEl: NodeListOf<Element> = document.querySelectorAll('.sidebarGroupsLink .badge');
     const transactionsEl: NodeListOf<Element> = document.querySelectorAll('.sidebarTransactionsLink .badge');
     const messagesEl: NodeListOf<Element> = document.querySelectorAll('.sidebarMessagesLink .badge');
-    const notiData: INotification = {
+    const contactsEl: NodeListOf<Element> = document.querySelectorAll('.sidebarContactsLink .badge');
+
+    const notificationElements: INotification = {
       groupsEl,
       transactionsEl,
       messagesEl,
+      contactsEl,
     };
-    this.notifications = Notifications.create(notiData);
+    this.notifications = Notifications.create(notificationElements);
+
     this.database.countNewMessage(this.notifications.setNotificationMark);
     this.database.countGroupsInvite(this.notifications.setNotificationMark);
     this.database.countTransactionInvite(this.notifications.setNotificationMark);
+    this.database.countContactsInvite(this.notifications.setNotificationMark);
   }
 
   deleteHandlers() {
@@ -292,18 +302,33 @@ export class App {
       messages: this.messageHandler,
       groups: this.groupHandler,
       transactions: this.transactionHandler,
+      contacts: this.contactsHandler,
     };
 
     this.database.deleteHandlers(handlers);
   }
 
-  // loadMainPage() {
-  //   this.mainPage.render();
-  // }
+  onAddUserToContacts(userData: ISearchUserData, errorHandler: (message: string) => void): void {
+    this.database.addUserToContacts(userData, errorHandler);
+  }
 
-  // loadGroupPage() {
-  //   this.groupsPage.render();
-  // }
+  onChangeContactState(contactId: string, state: string): void {
+    if (state === 'approve') {
+      this.notifications.decreaseNotificationMark(TypeOfNotifications.Contact);
+    }
+    if (state === 'decline') {
+      this.database.deleteContact(this.database.uid, contactId);
+    } else {
+      this.database.changeContactState(contactId, state);
+    }
+  }
+
+  fillContactsList() {
+
+    const renderContact = this.database.contactsHandler(this.contacts.addContactsToList);
+
+    this.database.getContactsList(renderContact);
+  }
 
   // createUser(uid: string) {
   //   const form: HTMLFormElement = document.querySelector('#my-form');
@@ -333,46 +358,5 @@ export class App {
   //   });
   // }
 
-  // createBasicTables() {
-  //   // THEMES
-  //   const themeData1 = {
-  //     name: 'Light',
-  //   };
-  //   const themeData2 = {
-  //     name: 'Dark',
-  //   };
-  //   const themeBase1 = firebase.database().ref(`Theme/Light`);
-  //   const themeBase2 = firebase.database().ref(`Theme/Dark`);
-  //   themeBase1.set(themeData1);
-  //   themeBase2.set(themeData2);
-  //
-  //   //  CURRENCY
-  //   const currency1 = {
-  //     name: 'Доллар США',
-  //   };
-  //   const currency2 = {
-  //     name: 'Беларусский Рубль',
-  //   };
-  //   const currencyBase1 = firebase.database().ref(`Currency/USD`);
-  //   const currencyBase2 = firebase.database().ref(`Currency/BYN`);
-  //   currencyBase1.set(currency1);
-  //   currencyBase2.set(currency2);
-  //   //
-  //   // LANGUAGE
-  //   const lang1 = {
-  //     name: 'ENG',
-  //   };
-  //   const lang2 = {
-  //     name: 'RU',
-  //   };
-  //   const lang3 = {
-  //     name: 'BEL',
-  //   };
-  //   const langBase1 = firebase.database().ref(`Language/ENG`);
-  //   const langBase2 = firebase.database().ref(`Language/RU`);
-  //   const langBase3 = firebase.database().ref(`Language/BEL`);
-  //   langBase1.set(lang1);
-  //   langBase2.set(lang2);
-  //   langBase3.set(lang3);
-  // }
+
 }
