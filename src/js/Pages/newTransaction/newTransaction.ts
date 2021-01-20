@@ -23,6 +23,7 @@ export class NewTransaction extends Page {
           <button type="button" class="btn-close new-trans__close-modal" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
+
         <form class="all-forms">
 
           <div class="form-group row block--margin-adaptive">
@@ -31,7 +32,6 @@ export class NewTransaction extends Page {
               <select id="group" class="new-trans__groups-list form-select"></select>
             </div>
           </div>
-
 
           <div class="form-group row block--margin-adaptive align-items-center">
             <label for="descr" class="new-trans__label col-sm-2 col-form-label">Описание</label>
@@ -48,30 +48,27 @@ export class NewTransaction extends Page {
             </div>
           </div>
 
-
-
           <div class="add-check d-flex align-items-center mb-3">
             <div class="add-check__wrapper input-group">
               <label class="add-check__label" for="input-file">
                 <div class="add-check__text">Добавить чек</div>
-                <input id="input-file" type="file" accept="image/*" class="add-check__file" name="check">
+                <input id="input-file" type="file" accept="image/*" class="add-check__file" name="check" multiple>
               </label>
             </div>
             <div class="add-check__icon-wrapper hidden" ><img class="add-check__icon" src="#" alt="check"></div>
-
 
             <div class="modal fade add-check__modal" id="check" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
               <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content p-2 d-flex flex-column">
                     <button type="button" class="btn-close align-self-end add-check__close-modal" aria-label="Close"></button>
-                    <div class="p-2">
-                      <img class="add-check__image" src="#" alt="check">
+                    <div class="p-2 add-check__check-box">
+
                     </div>
 
                 </div>
               </div>
             </div>
-
+            </form>
           </div>
 
           <div class="new-trans__members">
@@ -80,10 +77,7 @@ export class NewTransaction extends Page {
           </div>
 
           <div class="checked-members"></div>
-
         </div>
-
-        </form>
 
         <div class="modal-footer">
           <button type="button" class="new-trans__create-btn btn btn-primary w-100" data-bs-dismiss="modal" disabled>Создать транзакцию</button>
@@ -122,9 +116,13 @@ export class NewTransaction extends Page {
 
   }
 
-  addCurrencyList = (currID: string, icon: string): void => {
+  addCurrencyList = (currID: string, currCurrency: string): void => {
     const currencySelect: HTMLFormElement = document.querySelector('.new-trans__currency-list');
-    const optionHTML = `<option value=${currID}>${icon}</option>`;
+    let selectedOption = '';
+    if (currID === currCurrency) {
+      selectedOption = 'selected';
+    }
+    const optionHTML = `<option ${selectedOption} value=${currID}>${currID}</option>`;
     currencySelect.insertAdjacentHTML('beforeend', optionHTML);
   }
 
@@ -139,7 +137,7 @@ export class NewTransaction extends Page {
         const checkedMembersList: HTMLElement = document.querySelector('.checked-members');
         checkedMembersList.insertAdjacentHTML('beforeend', checkedUserHTML);
       } else {
-        const checkedMembers = document.querySelectorAll('.checked-member-wrapper');
+        const checkedMembers = document.querySelectorAll('.checked-member__wrapper');
         checkedMembers.forEach((memb) => {
           if (memb.querySelector('.checked-member__name').innerHTML === userName) {
             memb.remove();
@@ -157,29 +155,43 @@ export class NewTransaction extends Page {
     const totalSum: HTMLFormElement = document.querySelector('.new-trans__total-sum');
     const currency: HTMLFormElement = document.querySelector('.new-trans__currency-list');
     const inputCheck: HTMLFormElement = document.querySelector('.add-check__file');
-    const currentDate = +(new Date());
-    const userList: Array<any> = [];
-    const checkedMembers = document.querySelectorAll('.checked-member-wrapper');
+    let checks;
+    if (inputCheck.files) {
+      checks = Object.entries(inputCheck.files).map((check) => check[1]);
+    } else {
+      checks = false;
+    }
 
+    const currentDate  = +(new Date());
+    const userList: Array<any> = [];
+    const checkedMembers = document.querySelectorAll('.checked-member__wrapper');
+    let fix;
     checkedMembers.forEach((memb: HTMLElement) => {
       const sumInput: HTMLInputElement = memb.querySelector('.checked-member__sum');
       const commentInput: HTMLInputElement = memb.querySelector('.checked-member__comment');
+      if (sumInput.value) {
+        fix = 'fixed';
+      } else {
+        fix = 'non-fixed';
+      }
+
 
       const user = {
         userID: memb.getAttribute('user-id'),
-        cost: sumInput.value || sumInput.getAttribute('placeholder'),
+        cost: +sumInput.value || +sumInput.getAttribute('placeholder'),
         comment: commentInput.value,
         state: 'pending',
+        costFix: fix,
       };
       userList.push(user);
     });
 
     return {
       date: currentDate,
-      totalCost: totalSum.value,
+      totalCost: +totalSum.value,
       groupID: group.value,
-      descripion: descr.value,
-      tillSlip: inputCheck.files[0] ? inputCheck.files[0] : false,
+      description: descr.value,
+      photo: checks,
       currency: currency.value,
       toUserList: userList,
     };
@@ -197,7 +209,6 @@ export class NewTransaction extends Page {
     const btnCloseCheck: HTMLElement = document.querySelector('.add-check__close-modal');
     const newTransModal = new Modal(document.querySelector('.new-trans__modal'));
     const btnCloseNewTrans: HTMLElement = document.querySelector('.new-trans__close-modal');
-
 
     groups.addEventListener('change', () => {
       members.innerHTML = '';
@@ -228,18 +239,36 @@ export class NewTransaction extends Page {
     });
 
     inputCheck.addEventListener('change', () => {
-      if (inputCheck.value) {
+      if (inputCheck.files) {
+        console.log ('files', inputCheck.files );
+        const files = Object.entries(inputCheck.files);
         document.querySelector('.add-check__icon-wrapper').classList.remove('hidden');
-        const checkInModal: HTMLImageElement = document.querySelector('.add-check__image');
+
         const checkIcon: HTMLImageElement = document.querySelector('.add-check__icon');
         const reader: FileReader = new FileReader();
-        reader.onload = (function(aImg1: HTMLImageElement, aImg2: HTMLImageElement) {
+        reader.onload = (function (aImg1: HTMLImageElement) {
           return (e: any): void => {
             aImg1.src = e.target.result;
-            aImg2.src = e.target.result;
           };
-        })(checkInModal, checkIcon);
+        })(checkIcon);
         reader.readAsDataURL(inputCheck.files[0]);
+
+        const checksWrapper = document.querySelector('.add-check__check-box');
+        files.forEach((file: any) => {
+            const checkWrap: HTMLElement = document.createElement('div');
+            checkWrap.classList.add('add-check__image-wrap');
+            checkWrap.innerHTML = `<img class="add-check__image" src="#" alt="check">`;
+            checksWrapper.append(checkWrap);
+            const imgCheck: HTMLImageElement = checkWrap.querySelector('.add-check__image');
+            const readerCheck: FileReader = new FileReader();
+            readerCheck.onload = (function (imgCheck: HTMLImageElement) {
+              return (e: any): void => {
+                imgCheck.src = e.target.result;
+
+              };
+            })(imgCheck);
+            readerCheck.readAsDataURL(file[1]);
+        });
       }
     });
 

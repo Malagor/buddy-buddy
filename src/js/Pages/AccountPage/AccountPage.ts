@@ -30,7 +30,16 @@ export class AccountPage extends Page {
     });
   }
 
-  render = (data: any): void => {
+  addUserInfo(data: any): void {
+    document.querySelector('.account__image').setAttribute('src', data.avatar);
+    document.querySelector('.account__image').setAttribute('alt', data.name);
+    document.querySelector('.account__user-id').textContent = `@${data.account}`;
+    document.querySelector('.account__input-id').setAttribute('value', data.account);
+    document.querySelector('.account__input-name').setAttribute('value', data.name);
+
+  }
+
+  render = (): void => {
     this.element.innerHTML = `
     <div class="block__wrapper">
       <div class="block__content">
@@ -43,14 +52,14 @@ export class AccountPage extends Page {
                 <div class="account__user">
                   <div class="block__common-image-wrapper">
                     <div class="block__image-wrapper">
-                      <img src="${data.avatar}" alt="${data.name}" class="block__image account__image">
+                      <img class="block__image account__image">
                     </div>
                     <label for="file" class="block__button-change-photo">
                       <i class="material-icons">add_a_photo</i>
                     </label>
-                    <input type="file" name="avatar" id="file" class="block__input-photo account__info__input">
+                    <input type="file" name="avatar" id="file" class="block__input-photo account__input">
                   </div>
-                  <p class="block__title">@${data.account}</p>
+                  <p class="block__title account__user-id"></p>
                 </div>
                 <div class="form-group row block--margin-adaptive w-100">
                   <label for="account" class="col-sm-2 col-form-label">Account</label>
@@ -58,33 +67,33 @@ export class AccountPage extends Page {
                     <div class="input-group-prepend account__double-form--first">
                       <span class="input-group-text" id="addon-wrapping">@</span>
                     </div>
-                    <input type="text" name="account" value="${data.account}" class="account__double-form--second form-control account__info__input account__info__input-id" placeholder="Username" aria-label="Username" aria-describedby="addon-wrapping" required>
+                    <input type="text" name="account" class="account__double-form--second form-control account__input account__input-id" placeholder="Username" aria-label="Username" aria-describedby="addon-wrapping" required>
                   </div>
                 </div>
                 <div class="form-group row block--margin-adaptive w-100">
                   <label for="surname" class="col-sm-2 col-form-label">Name</label>
                   <div class="col-sm-10 account--input-size">
-                    <input type="text" name="name" aria-label="Last name" value="${data.name}" class="form-control account__info__input" placeholder="Name" required>
+                    <input type="text" name="name" aria-label="Last name" class="form-control account__input account__input-name" placeholder="Name" required>
                   </div>
                 </div>
                 <div class="form-group row block--margin-adaptive w-100">
                   <span class="col-sm-2 col-form-label">Currency</span>
                   <div class="col-sm-10 account--input-size">
-                    <select name="currency" class="form-select form-select--curr account--input-size mx-0 account__info__input" aria-label="Default select example">
+                    <select name="currency" class="form-select form-select--curr account--input-size mx-0 account__input" aria-label="Default select example">
                     </select>
                   </div>
                 </div>   
                 <div class="form-group row block--margin-adaptive w-100">
                   <span class="col-sm-2 col-form-label">Language</span>
                   <div class="col-sm-10 account--input-size">
-                    <select name="language" class="form-select form-select--lang account--input-size mx-0 account__info__input" aria-label="Default select example">
+                    <select name="language" class="form-select form-select--lang account--input-size mx-0 account__input" aria-label="Default select example">
                     </select>
                   </div>
                 </div>
                 <div class="form-group row block--margin-adaptive w-100">
                   <span class="col-sm-2 col-form-label">Theme</span>
                   <div class="col-sm-10 account--input-size">
-                    <select name="theme" class="form-select form-select--theme account--input-size mx-0 account__info__input" aria-label="Default select example">
+                    <select name="theme" class="form-select form-select--theme account--input-size mx-0 account__input" aria-label="Default select example">
                     </select>
                   </div>
                 </div>            
@@ -104,21 +113,15 @@ export class AccountPage extends Page {
   };
 
   events(): void {
-    let values: string[] = [];
-    const submitInfo: HTMLElement = this.element.querySelector(
-      '.account__input-submit',
-    );
-    const formInfo: HTMLFormElement = this.element.querySelector(
-      '.account__form-change-info',
-    );
-    const idValue: HTMLInputElement = this.element.querySelector(
-      '.block__title',
-    );
-    const accountImg: HTMLImageElement = this.element.querySelector(
-      '.account__image',
-    );
+    const submitInfo: HTMLElement = document.querySelector('.account__input-submit');
+    const formInfo: HTMLFormElement = document.querySelector('.account__form-change-info');
+    const idValue: HTMLInputElement = document.querySelector('.block__title');
+    const accountImg: HTMLImageElement = document.querySelector('.account__image');
+    const pageInputs: any = document.querySelectorAll('.account__input');
 
-    const checkImg = (item: any) => {
+    let values: string[] = [];
+
+    const checkImg = (item: any): string => {
       if (item.type === 'file') {
         return accountImg.src;
       } else {
@@ -129,9 +132,7 @@ export class AccountPage extends Page {
     submitInfo.addEventListener('click', (e): void => {
       e.preventDefault();
       const newData: any = getFormData(formInfo, accountImg);
-      document
-        .querySelectorAll('.account__info__input')
-        .forEach((item: HTMLInputElement): void => {
+      pageInputs.forEach((item: HTMLInputElement): void => {
           values.push(checkImg(item));
         });
       this.updateInfo(newData);
@@ -139,11 +140,9 @@ export class AccountPage extends Page {
       submitInfo.setAttribute('disabled', 'true');
     });
 
-    document
-      .querySelectorAll('.account__info__input')
-      .forEach((item: HTMLInputElement, index: number): void => {
+    pageInputs.forEach((item: HTMLInputElement, index: number): void => {
         values.push(checkImg(item));
-        item.addEventListener('input', () => {
+        item.addEventListener('input', (): void => {
           if (item.type === 'file') {
             const reader: FileReader = new FileReader();
             reader.onload = (function (img: HTMLImageElement) {
