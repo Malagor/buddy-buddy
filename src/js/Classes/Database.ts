@@ -237,18 +237,18 @@ export class Database {
     const userIdAuthor: string = data.userId;
 
     const sendDataInDB = (data: any) => {
-      const userObj: any = {}
+      const userObj: any = {};
 
       data.userList.forEach((userId: string) => {
-            
-        if(userId === userIdAuthor) {
+
+        if (userId === userIdAuthor) {
           data.groupData.author = userIdAuthor;
           userObj[userId] = { state: 'approve' };
         } else {
           userObj[userId] = { state: 'pending' };
         }
-      })
-        
+      });
+
       data.groupData['userList'] = userObj;
 
       this.firebase
@@ -264,7 +264,7 @@ export class Database {
               const users: any = group.val().userList;
 
               Object.keys(users).forEach((userId: any) => {
-                if(userId === userIdAuthor) {
+                if (userId === userIdAuthor) {
                   this.firebase.database()
                   .ref(`User/${userId}/groupList/${groupKey}`)
                   .set({state: 'approve'});
@@ -293,12 +293,12 @@ export class Database {
           });
     };
 
-    if(file) {
-      console.log('isFile')
+    if (file) {
+      console.log('isFile');
       const metadata = {
         'contentType': file.type,
       };
-  
+
       this.firebase.storage()
         .ref()
         .child('groups/' + file.name)
@@ -310,13 +310,13 @@ export class Database {
               return data;
             })
             .then((data) => {
-              console.log("foto- data", data)
-              sendDataInDB(data)
-            })
+              console.log('foto- data', data);
+              sendDataInDB(data);
+            });
         });
     } else {
-      console.log('no File')
-      sendDataInDB(data) 
+      console.log('no File');
+      sendDataInDB(data);
     }
   }
 
@@ -331,58 +331,37 @@ export class Database {
         });
   }
 
-  groupHandler = (createCardIdUser: any, createGroupList: any) => {
+  groupHandler = (createGroupList: any, addUserInGroupCard: any) => {
     const base = this.firebase.database();
 
     return ((snapshot: any) => {
+      const dataUserListGroup: any[] = Object.keys(snapshot.val().userList);
+      const groupKey = snapshot.key;
+      const data = {
+        dataGroup: snapshot.val(),
+        groupKey: groupKey
+      };
 
-      const promise1 = new Promise((resolve, reject) => {
-        const snapshot_1 = snapshot;
+      createGroupList(data);
 
-        base
-        .ref(`User/${this.uid}`)
-        .once('value', (snapshot) => {
-          const ArrIdGroupUser: string[] = Object.keys(snapshot.val().groupList)
+      base
+      .ref('User')
+      .once('value', (snapshot) => {
 
-          ArrIdGroupUser.forEach((idGroup) => {
-            createCardIdUser(idGroup)
-          })
-        })
-        
-        resolve(snapshot)
+        const snapshotUser = snapshot.val();
+        const userList = Object.keys(snapshotUser);
+
+        const arrayUsers: any[] = [];
+        userList.forEach(user => {
+          if (dataUserListGroup.includes(user)) {
+            arrayUsers.push(snapshotUser[user]);
+          }
+        });
+        data.arrayUsers = arrayUsers;
+
+        addUserInGroupCard(data);
       });
-
-      promise1.then((snapshot: any) => {
-
-        const users: string[] = Object.keys(snapshot.val().userList);
-        if (users.includes(this.uid)) {
-          const dataGroup = snapshot.val();
-          const idGroup = snapshot.key;
-          const dataUserListGroup: any[] = Object.keys(snapshot.val().userList);
-  
-          base
-            .ref('User')
-            .once('value', (snapshot) => {
-              const snapshotUser = snapshot.val();
-              const userList = Object.keys(snapshotUser);
-  
-              const arrayUsers: any[] = [];
-              userList.forEach(user => {
-                if (dataUserListGroup.includes(user)) {
-                  arrayUsers.push(snapshotUser[user]);
-                }
-              });
-            const dataForGroup = {
-              'dataGroup': dataGroup,
-              'arrayUsers': arrayUsers,
-              'idGroup': idGroup, 
-            };
-            createGroupList(dataForGroup);
-          });
-        }
-      });
-    })
-  
+    });
   }
 
   addCurrentGroup(data: any) {
@@ -797,27 +776,27 @@ export class Database {
                 if (transactionData) {
                   const fromUserId = transactionData.userID;
                   const fromCost = transactionData.totalCost;
-    
+
                   // increase balance "User FROM"
                   if (usersList[fromUserId].sum == null) {
                     usersList[fromUserId].sum = 0;
                   }
                   usersList[fromUserId].sum += fromCost;
-    
+
                   // decrease balances "Users TO"
                   const toUserList = transactionData.toUserList;
                   const toUserIdList = Object.keys(toUserList);
-    
+
                   toUserIdList.forEach(userId => {
                     if (usersList[userId].sum == null) {
                       usersList[userId].sum = 0;
                     }
                     usersList[userId].sum -= toUserList[userId].cost;
                   });
-                }                
+                }
               });
           });
-        }        
+        }
 
         // Total group Balances
         const userListArray: { state: string, sum: number }[] = usersList.length ? Object.values(usersList) : [];
@@ -860,10 +839,10 @@ export class Database {
                   } else {
                     balance -= transData.toUserList[userId].cost;
                   }
-                }                
+                }
               });
           });
-        }        
+        }
 
         balance *= currencyRate;
         funcForRender(balance);
@@ -899,7 +878,7 @@ export class Database {
                   } else {
                     balance -= transData.toUserList[userId].cost;
                   }
-                }                
+                }
               });
           });
         }
@@ -930,7 +909,7 @@ export class Database {
             } else {
               balance -= await transData.toUserList[userId].cost;
             }
-          }          
+          }
         });
     });
 
