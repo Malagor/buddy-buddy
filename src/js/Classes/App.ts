@@ -17,7 +17,6 @@ import {
 import { INewMessage, Messenger } from '../Pages/Messenger/Messenger';
 import { Contacts, ISearchUserData } from '../Pages/Contacts/Contacts';
 
-
 export interface IHandlers {
   messages: any;
   groups: any;
@@ -54,6 +53,7 @@ export class App {
   init() {
     this.database.onUserIsLogin = this.isUserLogin.bind(this);
     this.database.init();
+    // this.database.createBasicTables();
   }
 
   isUserLogin(state: boolean, uid?: string) {
@@ -223,9 +223,6 @@ export class App {
       this.messenger.setUserDataInMessage,
     );
     this.database.getMessageList(this.messageHandler);
-
-    const userId = '6yiqUegBoWWdR5oiZgTVqUt871q2';
-    this.database.getBalanceForUserTotal(userId, 1, this.messenger.randerBalance);
   }
 
   onStatisticsPage() {
@@ -391,46 +388,5 @@ export class App {
   //   });
   // }
 
-  // createBasicTables() {
-  //   // THEMES
-  //   const themeData1 = {
-  //     name: 'Light',
-  //   };
-  //   const themeData2 = {
-  //     name: 'Dark',
-  //   };
-  //   const themeBase1 = firebase.database().ref(`Theme/Light`);
-  //   const themeBase2 = firebase.database().ref(`Theme/Dark`);
-  //   themeBase1.set(themeData1);
-  //   themeBase2.set(themeData2);
-  //
-  //   //  CURRENCY
-  //   const currency1 = {
-  //     name: 'Доллар США',
-  //   };
-  //   const currency2 = {
-  //     name: 'Беларусский Рубль',
-  //   };
-  //   const currencyBase1 = firebase.database().ref(`Currency/USD`);
-  //   const currencyBase2 = firebase.database().ref(`Currency/BYN`);
-  //   currencyBase1.set(currency1);
-  //   currencyBase2.set(currency2);
-  //   //
-  //   // LANGUAGE
-  //   const lang1 = {
-  //     name: 'ENG',
-  //   };
-  //   const lang2 = {
-  //     name: 'RU',
-  //   };
-  //   const lang3 = {
-  //     name: 'BEL',
-  //   };
-  //   const langBase1 = firebase.database().ref(`Language/ENG`);
-  //   const langBase2 = firebase.database().ref(`Language/RU`);
-  //   const langBase3 = firebase.database().ref(`Language/BEL`);
-  //   langBase1.set(lang1);
-  //   langBase2.set(lang2);
-  //   langBase3.set(lang3);
-  // }
+
 }

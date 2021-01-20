@@ -242,7 +242,11 @@ export class Messenger extends Page {
 
   }
 
-  randerBalance(balance: number) {
-    console.log('balance', balance);
+  renderCarrency(data: any) {
+    console.log(data);
+  }
+
+  errorHandler(message: string): void {
+    console.error(message);
   }
 }
