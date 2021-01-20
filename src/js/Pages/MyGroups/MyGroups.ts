@@ -273,8 +273,6 @@ export class MyGroups extends Page {
         users.push(member.getAttribute('data-id'));
       });
 
-
-      console.log('logoGroupImgData', logoGroupImgData);
       const groupData: IGroupData = {
         title,
         description,
@@ -296,15 +294,15 @@ export class MyGroups extends Page {
     const addGroupMember = document.querySelector('#addNewGroupMember');
     addGroupMember.addEventListener('click', (ev) => {
       ev.preventDefault();
-      console.log('Add new Member');
+      //console.log('Add new Member');
       const member: HTMLFormElement = document.querySelector('.contact-user-id');
-      console.log('member.value', member.value);
+      //console.log('member.value', member.value);
       this.onAddMember(member.value);
     });
   }
 
   addMembersGroup(data: any): void {
-    console.log('addMembersGroup - data:', data);
+    //console.log('addMembersGroup - data:', data);
     if (data) {
       const members = document.querySelector('.group-members-avatar');
       members.insertAdjacentHTML('beforeend', `
