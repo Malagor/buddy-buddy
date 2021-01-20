@@ -127,6 +127,28 @@ export class Database {
       .set(data);
   }
 
+  updateUserInfo(uid: string, data: any) {
+    const storageRef = this.firebase.storage().ref(`avatars/${uid}`);
+    const userRef = this.firebase.database().ref(`User/${uid}`);
+    const file = data['avatar'];
+
+    const metadata = {
+      'contentType': file.type,
+    };
+
+    storageRef.put(file, metadata).then((snapshot) => {
+      snapshot.ref.getDownloadURL()
+        .then((url) => {
+          data['avatar'] = url;
+          userRef.update(data);
+        })
+        .catch(error => {
+          console.log(error.code);
+          console.log(error.message);
+        });
+    });
+  }
+
   getUserInfo(uid: string, callbacks: any[]): any {
     this.firebase
       .database()
@@ -593,6 +615,31 @@ export class Database {
         console.log('Error:\n ' + error.code);
         console.log(error.message);
       });
+  }
+
+  async getCurrenciesOrLangsOrThemes(uid: string, callback: any, elem: string) {
+    const neededField = elem.toLowerCase();
+    const curr: any = await this.firebase
+      .database()
+      .ref(elem)
+      .once('value', (snapshot) => {
+        return snapshot;
+      }, (error: { code: string; message: any }) => {
+        console.log('Error:\n ' + error.code);
+        console.log(error.message);
+      });
+    const values = Object.entries(curr.val()).map((item: any) => item[0]);
+    const current: any = await this.firebase
+      .database()
+      .ref(`User/${uid}`)
+      .once('value', (snapshot) => {
+        return snapshot;
+      }, (error: { code: string; message: any }) => {
+        console.log('Error:\n ' + error.code);
+        console.log(error.message);
+      });
+    const currentCurrency = current.val()[neededField];
+    callback(values, currentCurrency);
   }
 
   // запросы по транзакциям
