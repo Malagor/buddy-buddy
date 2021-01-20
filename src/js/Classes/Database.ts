@@ -1042,8 +1042,8 @@ export class Database {
 
     base.ref(`Groups/${groupId}`)
       .once('value', snapshot => {
-        const usersList = snapshot.val().userList;
-        const transactionsId: string[] = snapshot.val().transactions;
+        const usersList = snapshot.val().userList || [];
+        const transactionsId: string[] = snapshot.val().transactions || [];
 
         if (transactionsId.length) {
           transactionsId.forEach(transID => {
@@ -1102,7 +1102,7 @@ export class Database {
     base.ref(`Groups/${groupId}/`)
       .child(`transactions`)
       .once('value', snapshot => {
-        const transId: string[] = snapshot.val();
+        const transId: string[] = snapshot.val() || [];
         let balance: number = 0;
 
         if (transId.length) {
@@ -1140,7 +1140,7 @@ export class Database {
     base.ref(`User/${userId}`)
       .child('transactionList')
       .once('value', snapshot => {
-        const transactionList = snapshot.val();
+        const transactionList = snapshot.val() || [];
         const transId = Object.keys(transactionList);
         let balance: number = 0;
 
