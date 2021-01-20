@@ -4,7 +4,7 @@
 .main__balance {
   margin: 2rem 0 0;
   font-size: 1.1rem;
-
+  text-align: end;
 @include phones {
     font-size: 1.35rem;
   }
@@ -41,6 +41,10 @@
 @include desktop {
     font-size: 1rem;
   }
+}
+
+.main__block-name-photo {
+  min-width: rem(120px);
 }
 
 .main__inner-card {
