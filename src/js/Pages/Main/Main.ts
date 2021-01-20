@@ -134,7 +134,7 @@ export class Main extends Page {
 
   renderSlider(data: any): void {
     const elem: HTMLElement = document.querySelector('.main__group-slider');
-    const dataLength = Object.values(data.groupList).filter((item: any) => item.state === 'approve').length;
+    const dataLength: number = data.groupList ? Object.values(data.groupList).filter((item: any) => item.state === 'approve').length : 0;
     if (!dataLength) {
       elem.innerHTML = `
       <div class="card">
@@ -166,27 +166,29 @@ export class Main extends Page {
 
   renderSliderItems(data: any): void {
     const elem: HTMLElement = document.querySelector('.main__group-slider');
-    const dataLength = Object.values(data.groupList).filter((item: any) => item.state === 'approve').length;
+    const dataLength: number = data.groupList ? Object.values(data.groupList).filter((item: any) => item.state === 'approve').length: 0;
     const carouselItemCount: number = dataLength % 2 === 0 ? dataLength / 2 : (dataLength + 1) / 2;
 
-    for (let i = 0; i < carouselItemCount; i += 1) {
-      elem.querySelector('.carousel-inner').innerHTML += `
-      <div class="carousel-item h-100">
-        <div class="carousel-item__inner">
+    if (dataLength) {
+      for (let i = 0; i < carouselItemCount; i += 1) {
+        elem.querySelector('.carousel-inner').innerHTML += `
+        <div class="carousel-item h-100">
+          <div class="carousel-item__inner">
+          </div>
         </div>
-      </div>
-      `;
-    }
-    elem
-      .querySelector('.carousel-inner')
-      .querySelectorAll('.carousel-item')[0]
-      .classList.add('active');
+        `;
+      }
+      elem
+        .querySelector('.carousel-inner')
+        .querySelectorAll('.carousel-item')[0]
+        .classList.add('active');
+    }    
   }
 
   renderTransactions(data: any): void {
     if (!data.length) {
       document.querySelector('.main__group-transactions').innerHTML = `
-      <div class="card">
+      <div class="card main__card-no-trans">
         <div class="card-body d-flex align-items-center flex-column justify-content-center">
           <h6 class="card-title m-0 main--font-size">No transactions yet.</h6>
         </div>

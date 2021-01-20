@@ -148,7 +148,7 @@ export class Database {
       .database()
       .ref(`User/${uid}/transactionList`)
       .once('value', (snapshot) => snapshot);
-    const dataUser: any = dat.val();
+    const dataUser: any = dat.val() || [];
     const keyList: any = Object.entries(dataUser)
     .map(async (item: any) => {
       const trans: any = await this.firebase
@@ -185,7 +185,7 @@ export class Database {
       .database()
       .ref(`User/${uid}/groupList`)
       .once('value', (snapshot) => snapshot);
-    const dataUser: any = dat.val();
+    const dataUser: any = dat.val() || [];
     const keyList: any = Object.entries(dataUser)
       .map(async (item: any) => {
         const groups: any = await this.firebase
