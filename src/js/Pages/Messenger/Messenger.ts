@@ -241,4 +241,12 @@ export class Messenger extends Page {
     formMessage.focus();
 
   }
+
+  renderCarrency(data: any) {
+    console.log(data);
+  }
+
+  errorHandler(message: string): void {
+    console.error(message);
+  }
 }
