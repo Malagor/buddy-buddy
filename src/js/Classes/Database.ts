@@ -51,12 +51,7 @@ export class Database {
     });
   }
 
-  createUserByEmail(
-    email: string,
-    password: string,
-    nameUser: string = '',
-    errorHandleFunction: any,
-  ) {
+  createUserByEmail(email: string, password: string, nameUser: string = '', errorHandleFunction: any) {
     console.log(email + ' : ' + password + ' : ' + nameUser);
     const userData = {
       name: nameUser,
@@ -141,11 +136,9 @@ export class Database {
       .once(
         'value',
         (snapshot) => {
-          console.log('snapshot "getUserInfo" -  User Data:', snapshot.val());
           const dataUser = snapshot.val();
           dataUser.key = uid;
           callbacks.forEach((fn) => fn(dataUser));
-          // callback(snapshot.val());
         },
         (error: { code: string }) => {
           console.log('Error: ' + error.code);
@@ -222,7 +215,6 @@ export class Database {
           return item[2];
         })
         .map(async (item: any, index: number) => {      
-          console.log('map', item); 
           const elem: any = await item.userList.map(async (it: any) => {
             const res: any = await this.firebase
               .database()
