@@ -18,18 +18,38 @@
   }
 }
 
-.account__date--margin {
-  margin-bottom: 0.5rem;
+.account--input-size {
+  width: 100%;
+  margin-left: auto;
 
-@include phones {
-    margin-bottom: 1rem;
+  & > .form-select {
+    width: 6.9rem;
   }
 
-@include tablets {
-    margin-bottom: 1rem;
+  @media (min-width: 576px) {
+    width: 77%;
   }
+}
 
-@include laptop {
-    margin-bottom: 1rem;
+.account__form-change-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.account__user {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 1.5rem;
+  padding: 0;
+
+  gap: 1rem;
+
+  .block__title {
+    @include desktop {
+      font-size: 1.6rem;
+    }
   }
 }
