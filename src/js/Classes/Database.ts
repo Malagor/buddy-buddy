@@ -896,4 +896,82 @@ export class Database {
 
     return balance;
   }
+
+
+  createBasicTables() {
+    //   // THEMES
+    //   const themeData1 = {
+    //     name: 'Light',
+    //   };
+    //   const themeData2 = {
+    //     name: 'Dark',
+    //   };
+    //   const themeBase1 = firebase.database().ref(`Theme/Light`);
+    //   const themeBase2 = firebase.database().ref(`Theme/Dark`);
+    //   themeBase1.set(themeData1);
+    //   themeBase2.set(themeData2);
+    //
+    //  CURRENCY
+    // const currencyArray = [
+    //   {
+    //     code: 'USD',
+    //     name: 'United States Dollar',
+    //   },
+    //   {
+    //     code: 'EUR',
+    //     name: 'Euro',
+    //   },
+    //   {
+    //     code: 'BYN',
+    //     name: 'Belarusian Ruble',
+    //   },
+    //   {
+    //     code: 'RUB',
+    //     name: 'Russian Ruble',
+    //   },
+    // ];
+    // currencyArray.forEach(cur => {
+    //   this.firebase.database()
+    //     .ref(`Currency/${cur.code}`)
+    //     .set({ name: cur.name })
+    //     .catch(error => {
+    //       console.log(error);
+    //     });
+    // });
+
+    // Currencies.getCurrenciesList(this.addCurrencyToBase);
+
+
+    //   //
+    //   // LANGUAGE
+    //   const lang1 = {
+    //     name: 'ENG',
+    //   };
+    //   const lang2 = {
+    //     name: 'RU',
+    //   };
+    //   const lang3 = {
+    //     name: 'BEL',
+    //   };
+    //   const langBase1 = firebase.database().ref(`Language/ENG`);
+    //   const langBase2 = firebase.database().ref(`Language/RU`);
+    //   const langBase3 = firebase.database().ref(`Language/BEL`);
+    //   langBase1.set(lang1);
+    //   langBase2.set(lang2);
+    //   langBase3.set(lang3);
+  }
+
+  addCurrencyToBase = (data: any): void => {
+    console.log(data);
+    const keys = Object.keys(data);
+
+    keys.forEach(key => {
+      this.firebase.database()
+        .ref(`Currency/${key}`)
+        .set({ name: data[key] })
+        .catch(error => {
+          console.log(error);
+        });
+    });
+  }
 }
