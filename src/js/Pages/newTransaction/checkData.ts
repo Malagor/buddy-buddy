@@ -13,7 +13,7 @@ export const checkData = () => {
       }
     })
     
-    if (+sumInput.value > 0 && descrInput.value.length > 0 && Math.abs(+sumInput.value - sum) < 0.5 
+    if (+sumInput.value > 0 && descrInput.value.length > 0 && Math.abs(+sumInput.value - sum) < 0.01 
         && isZero === 0) {
       createTransBtn.removeAttribute('disabled');
     } else {

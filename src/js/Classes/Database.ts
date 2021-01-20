@@ -697,6 +697,7 @@ export class Database {
     const userRef = base.ref('User');
     const transRef = base.ref('Transactions');
     const groupRef = base.ref('Groups');
+    const storageRef = this.firebase.storage().ref();
 
     data.toUserList.forEach((user: any) => {
       if(user.userID === this.uid) {
@@ -767,9 +768,7 @@ export class Database {
       const metadata = {
         'contentType': file.type,
       };
-      this.firebase.storage()
-        .ref()
-        .child('transactions/' + file.name)
+      storageRef.child('transactions/' + file.name)
         .put(file, metadata)
         .then((snapshot) => {
           snapshot.ref.getDownloadURL()

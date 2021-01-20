@@ -64,7 +64,7 @@ export class TransactionsList extends Page {
 
   addTransactionWrapper = (transID:string) => {
     const listOfTrans: HTMLElement = document.querySelector('.trans-list__list');
-    const transaction = document.createElement('div');
+    const transaction: HTMLElement = document.createElement('div');
     transaction.setAttribute('id', transID);
     listOfTrans.prepend(transaction);
   }
@@ -73,7 +73,7 @@ export class TransactionsList extends Page {
 
     const styles = this.setStyles(trans, currentGroup, owner, ownUID);
     const date: any = getDate(trans.date);
-    const transaction = document.getElementById(transID);
+    const transaction: HTMLElement = document.getElementById(transID);
     transaction.className = `trans-item ${styles.transDisplay} ${styles.border} flex-column justify-content-between block--width-85`;
     transaction.setAttribute('group-id', trans.groupID);
     transaction.setAttribute('data-time', trans.date);
@@ -140,14 +140,14 @@ export class TransactionsList extends Page {
 
   addUserToList = (transID: string, user: any, i:number, owner: boolean) => {
    
-    let nameDisplay;
+    let nameDisplay: string;
     if (owner) {
       nameDisplay = 'd-none';
     } else {
       nameDisplay = 'd-block';   
     }
-    const usersList = document.getElementById(transID).querySelector('.trans-item__users');
-    const userWrapper = document.createElement('div');
+    const usersList: HTMLElement = document.getElementById(transID).querySelector('.trans-item__users');
+    const userWrapper: HTMLElement = document.createElement('div');
       userWrapper.classList.add('user');
       userWrapper.setAttribute('user-id', user.id); 
       userWrapper.innerHTML = `
@@ -169,7 +169,7 @@ export class TransactionsList extends Page {
   }
 
   setStyles = (trans: any, currentGroup: string, owner: boolean, ownUID:string) => {
-    let currentG;
+    let currentG: string;
     const transList: HTMLFormElement = document.querySelector('.trans-list__groups');
     if (transList.value) {    
       currentG = transList.value;
@@ -178,10 +178,10 @@ export class TransactionsList extends Page {
       currentG = currentGroup;   
     }
 
-    let btnDisplay;
-    let cost;
-    let colorCost;
-    let transDisplay;
+    let btnDisplay: string;
+    let cost: string;
+    let colorCost: string;
+    let transDisplay: string;
     
     if (owner) {
       btnDisplay = 'd-none';
@@ -200,9 +200,9 @@ export class TransactionsList extends Page {
       transDisplay = 'd-none';
     }
 
-    let selectPending = '';
-    let selectAbort = '';
-    let border = '';
+    let selectPending: string = '';
+    let selectAbort: string = '';
+    let border: string = '';
     if (!owner) {
       Object.entries(trans.toUserList).forEach((user: any) => {
         if(user[0] === ownUID) {
@@ -242,8 +242,8 @@ export class TransactionsList extends Page {
       trans.photo = '';
     }
     const userList: any[] = Object.entries(trans.toUserList);
-    let ownComment = '';
-    let ownCost = '';
+    let ownComment: string = '';
+    let ownCost: string = '';
     userList.forEach ((user) => {
       if (user[0] === ownUID) {
         ownComment = user[1].comment;
@@ -251,12 +251,12 @@ export class TransactionsList extends Page {
       } 
     });
    
-    let ownerDisplay; 
-    let colorText;
-    let cost;
-    let membDisplay;
-    let commentDisplay;
-    let selectDisplay;
+    let ownerDisplay: string; 
+    let colorText: string;
+    let cost: string;
+    let membDisplay: string;
+    let commentDisplay: string;
+    let selectDisplay: string;
     if(owner) {
       ownerDisplay = 'd-none';
     
@@ -277,7 +277,7 @@ export class TransactionsList extends Page {
     } 
 
 
-    let checkDisplay;
+    let checkDisplay: string;
     if (trans.photo && owner) {
       checkDisplay = 'd-flex';
     } else {
@@ -347,9 +347,9 @@ export class TransactionsList extends Page {
     `;
     wrapper.insertAdjacentHTML('beforeend', baseHTML);
     this.onGetTransInfo(trans, transID, trans.groupID);
-    const detailsSelect = wrapper.querySelector('.details__state');
-    const options = detailsSelect.querySelectorAll('option');
-    options.forEach((opt) => {
+    const detailsSelect: HTMLElement = wrapper.querySelector('.details__state');
+    const options: NodeListOf<HTMLElement> = detailsSelect.querySelectorAll('option');
+    options.forEach((opt: HTMLOptionElement) => {
       if(opt.value === selectValue) {
         opt.setAttribute('selected', '');
       }
@@ -362,7 +362,7 @@ export class TransactionsList extends Page {
          console.log ('photo', photo);
          const photoElement: string = `
             <div class="details__check-wrapper">
-              <img class="details__check-image" src=${photo} alt="#">
+              <img class="details__check-image" src=${photo} alt="check">
             </div>
          `;
          checkBox.insertAdjacentHTML('beforeend', photoElement);
@@ -370,8 +370,8 @@ export class TransactionsList extends Page {
     }
 
     const checkModal = new Modal(wrapper.querySelector('.details__check-modal'));
-    const checkIcon  = wrapper.querySelector('.details__icon-wrapper');
-    const closeCheckBtn = wrapper.querySelector('.details__close-check');
+    const checkIcon: HTMLElement  = wrapper.querySelector('.details__icon-wrapper');
+    const closeCheckBtn: HTMLElement = wrapper.querySelector('.details__close-check');
     checkIcon.addEventListener('click', () => {
       checkModal.show();
     });
@@ -391,9 +391,9 @@ export class TransactionsList extends Page {
 
   addOwnerInfo = (transID:string, owner: any) => {
     const modalWrapper: HTMLElement = document.getElementById(transID);
-    const ownerWrapper = modalWrapper.querySelector('.details__owner-info');
+    const ownerWrapper: HTMLElement = modalWrapper.querySelector('.details__owner-info');
     ownerWrapper.innerHTML = `
-      <div class="details__owner-avatar"><img src="${owner.avatar}" alt="#"></div>
+      <div class="details__owner-avatar"><img src="${owner.avatar}" alt=${owner.name}></div>
       <div class="details__owner-name">${owner.name}</div>
     `;
   }
@@ -404,7 +404,7 @@ export class TransactionsList extends Page {
     const modalWrapper: HTMLElement = document.getElementById(transID);
     const membersWrapper: HTMLElement = modalWrapper.querySelector('.details__members');
     const notMembersWrapper: HTMLElement = modalWrapper.querySelector('.details__not-members');
-    const member = document.createElement('div');
+    const member: HTMLElement = document.createElement('div');
     const currUser: any[] = Object.entries(trans.toUserList).find((userTrans: any) => userTrans[0] === user.key)
 
     if (currUser){
@@ -413,7 +413,7 @@ export class TransactionsList extends Page {
       member.setAttribute('id', user.key);
       member.innerHTML =`
         <div class="details__member d-flex flex-column align-items-center">
-          <div class="details__avatar"><img src="${user.avatar}" alt="#"></div>
+          <div class="details__avatar"><img src="${user.avatar}" alt=${user.name}></div>
           <div class="details__name">${user.name}</div>
         </div>
         <input class="details__member-cost form-control form-control-sm" type="text" value=${currUser[1].cost.toFixed(2)}>
@@ -422,7 +422,7 @@ export class TransactionsList extends Page {
         <button class="details__member-delete btn btn-outline-secondary btn-sm"><i class="material-icons">clear</i></button>
       `;
 
-      const state = member.querySelector('.details__member-state');
+      const state: HTMLElement = member.querySelector('.details__member-state');
       if (currUser[1].state === 'pending') {
         state.innerHTML = 'pending';
       } else if (currUser[1].state === 'approve'){
@@ -437,7 +437,7 @@ export class TransactionsList extends Page {
       member.setAttribute('id', user.key);
       member.innerHTML =`
         <div class="details__member d-flex flex-column align-items-center">
-          <div class="details__avatar"><img src="${user.avatar}" alt="#"></div>
+          <div class="details__avatar"><img src="${user.avatar}" alt=${user.name}></div>
           <div class="details__name">${user.name}</div>
         </div>
         <input class="details__member-cost form-control form-control-sm" type="text" value="0.00">
@@ -449,7 +449,7 @@ export class TransactionsList extends Page {
       notMembersWrapper.append(member);
     }
     const btnAddMembers:HTMLButtonElement = modalWrapper.querySelector('.details__add-memb');
-    const notMembers = notMembersWrapper.querySelectorAll('.details__memb-wrapper');
+    const notMembers: NodeListOf<HTMLElement> = notMembersWrapper.querySelectorAll('.details__memb-wrapper');
     console.log ('not memb', notMembers);
     if (notMembers.length === 0) {
       btnAddMembers.style.display = 'none';
@@ -475,8 +475,8 @@ export class TransactionsList extends Page {
         }
       });
 
-      const groupsInModal = document.querySelector('.new-trans__groups-list');
-      const optionsModal = groupsInModal.querySelectorAll('option');
+      const groupsInModal: HTMLElement = document.querySelector('.new-trans__groups-list');
+      const optionsModal: NodeListOf<HTMLOptionElement> = groupsInModal.querySelectorAll('option');
       optionsModal.forEach((opt: HTMLOptionElement) => {
         if (opt.value === groupID) {
           opt.setAttribute('selected', '');
@@ -485,7 +485,7 @@ export class TransactionsList extends Page {
         }
       });
 
-      const members = document.querySelector('.new-trans__members-list');
+      const members: HTMLElement = document.querySelector('.new-trans__members-list');
       const checkedMembersList: HTMLElement = document.querySelector('.checked-members');
       members.innerHTML = '';
       checkedMembersList.innerHTML = '';
