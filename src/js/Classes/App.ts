@@ -162,9 +162,6 @@ export class App {
 
   onGroupsPage() {
     this.deleteHandlers();
-    this.notifications.groupCount = 0;
-    this.notifications.setNotificationMark(TypeOfNotifications.Group, 0);
-
     this.groups.render();
     this.groupHandler = this.database.groupHandler(this.groups.createGroupList);
     this.database.getGroupList(this.groupHandler);
@@ -173,19 +170,16 @@ export class App {
   onTransactionsPage() {
     this.transactionsList.render();
     this.deleteHandlers();
-    this.notifications.transactionCount = 0;
-    this.notifications.setNotificationMark(TypeOfNotifications.Transaction, 0);
 
     this.transactionsList.newTrans.onCreateTransaction = this.onCreateTransaction.bind(this);
     this.transactionsList.newTrans.onShowMembersOfGroup = this.onShowMembersOfGroup.bind(this);
-    this.database.getCurrencyList(this.transactionsList.newTrans.addCurrencyList); 
-    this.database.getGroupsListForTransaction(this.transactionsList.newTrans.addGroupList); 
-    this.database.getMembersOfGroupFirst(this.transactionsList.newTrans.addMembersOfGroup); 
-    this.database.getGroupsListForTransaction(this.transactionsList.addGroupToTransList); 
-    this.transactionHandler = this.database.transactionHandler (this.transactionsList.addTransactionWrapper,this.transactionsList.addMyTransactions, this.transactionsList.addUserToList);
+    this.database.getCurrencyList(this.transactionsList.newTrans.addCurrencyList);
+    this.database.getGroupsListForTransaction(this.transactionsList.newTrans.addGroupList);
+    this.database.getMembersOfGroupFirst(this.transactionsList.newTrans.addMembersOfGroup);
+    this.database.getGroupsListForTransaction(this.transactionsList.addGroupToTransList);
+    this.transactionHandler = this.database.transactionHandler (this.transactionsList.addTransactionWrapper, this.transactionsList.addMyTransactions, this.transactionsList.addUserToList);
     this.database.getMyTransactionsList(this.transactionHandler);
   }
-
 
   onMessagesPage() {
     this.deleteHandlers();
@@ -261,7 +255,7 @@ export class App {
 
   onGetTransInfo(trans: any, transID: string, groupID: string) {
     console.log ('ongettransinfo');
-    this.database.getTransInfoModal(trans, transID, groupID, this.transactionsList.addGroupTitle, 
+    this.database.getTransInfoModal(trans, transID, groupID, this.transactionsList.addGroupTitle,
       this.transactionsList.addMemberOfTransaction, this.transactionsList.addOwnerInfo);
   }
 

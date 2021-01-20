@@ -52,8 +52,8 @@ export class NewTransaction extends Page {
             <div class="add-check__wrapper input-group">
               <label class="add-check__label" for="input-file">
                 <div class="add-check__text">Добавить чек</div>
-                <input id="input-file" type="file" accept="image/*" class="add-check__file" name="check" multiple>                 
-              </label>              
+                <input id="input-file" type="file" accept="image/*" class="add-check__file" name="check" multiple>
+              </label>
             </div>
             <div class="add-check__icon-wrapper hidden" ><img class="add-check__icon" src="#" alt="check"></div>
 
@@ -62,7 +62,7 @@ export class NewTransaction extends Page {
                 <div class="modal-content p-2 d-flex flex-column">
                     <button type="button" class="btn-close align-self-end add-check__close-modal" aria-label="Close"></button>
                     <div class="p-2 add-check__check-box">
-                     
+
                     </div>
 
                 </div>
@@ -78,7 +78,7 @@ export class NewTransaction extends Page {
 
           <div class="checked-members"></div>
         </div>
-       
+
         <div class="modal-footer">
           <button type="button" class="new-trans__create-btn btn btn-primary w-100" data-bs-dismiss="modal" disabled>Создать транзакцию</button>
         </div>
@@ -119,9 +119,9 @@ export class NewTransaction extends Page {
   addCurrencyList = (currID: string, currCurrency: string): void => {
     const currencySelect: HTMLFormElement = document.querySelector('.new-trans__currency-list');
     let selectedOption = '';
-    if(currID === currCurrency) {
+    if (currID === currCurrency) {
       selectedOption = 'selected';
-    } 
+    }
     const optionHTML = `<option ${selectedOption} value=${currID}>${currID}</option>`;
     currencySelect.insertAdjacentHTML('beforeend', optionHTML);
   }
@@ -161,7 +161,7 @@ export class NewTransaction extends Page {
     } else {
       checks = false;
     }
-   
+
     const currentDate  = +(new Date());
     const userList: Array<any> = [];
     const checkedMembers = document.querySelectorAll('.checked-member__wrapper');
@@ -209,7 +209,7 @@ export class NewTransaction extends Page {
     const btnCloseCheck: HTMLElement = document.querySelector('.add-check__close-modal');
     const newTransModal = new Modal(document.querySelector('.new-trans__modal'));
     const btnCloseNewTrans: HTMLElement = document.querySelector('.new-trans__close-modal');
-      
+
     groups.addEventListener('change', () => {
       members.innerHTML = '';
       checkedMembersList.innerHTML = '';
@@ -241,35 +241,35 @@ export class NewTransaction extends Page {
     inputCheck.addEventListener('change', () => {
       if (inputCheck.files) {
         console.log ('files', inputCheck.files );
-        const files = Object.entries(inputCheck.files);     
-        document.querySelector('.add-check__icon-wrapper').classList.remove('hidden');        
-       
-        const checkIcon:HTMLImageElement = document.querySelector('.add-check__icon');
+        const files = Object.entries(inputCheck.files);
+        document.querySelector('.add-check__icon-wrapper').classList.remove('hidden');
+
+        const checkIcon: HTMLImageElement = document.querySelector('.add-check__icon');
         const reader: FileReader = new FileReader();
         reader.onload = (function (aImg1: HTMLImageElement) {
           return (e: any): void => {
             aImg1.src = e.target.result;
           };
         })(checkIcon);
-        reader.readAsDataURL(inputCheck.files[0]); 
+        reader.readAsDataURL(inputCheck.files[0]);
 
         const checksWrapper = document.querySelector('.add-check__check-box');
         files.forEach((file: any) => {
             const checkWrap: HTMLElement = document.createElement('div');
             checkWrap.classList.add('add-check__image-wrap');
-            checkWrap.innerHTML = `<img class="add-check__image src="#" alt="check">`;
+            checkWrap.innerHTML = `<img class="add-check__image" src="#" alt="check">`;
             checksWrapper.append(checkWrap);
             const imgCheck: HTMLImageElement = checkWrap.querySelector('.add-check__image');
             const readerCheck: FileReader = new FileReader();
             readerCheck.onload = (function (imgCheck: HTMLImageElement) {
               return (e: any): void => {
                 imgCheck.src = e.target.result;
-                
+
               };
             })(imgCheck);
-            readerCheck.readAsDataURL(file[1]);            
-        });        
-      }     
+            readerCheck.readAsDataURL(file[1]);
+        });
+      }
     });
 
     const createTransBtn = document.querySelector('.new-trans__create-btn');
