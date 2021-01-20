@@ -39,77 +39,95 @@ export class AccountPage extends Page {
 
   }
 
-  render = (): void => {
+  render (): void {
     this.element.innerHTML = `
     <div class="block__wrapper">
       <div class="block__content">
         <div class="block__header">
-          <p class="block__title">Account</p>
+          <p class="block__title">
+            Account
+          </p>
         </div>
-          <div class="block__main">
-            <div class="account__form-wrapper block--width-85">
-              <form class="account__form-change-info">
-                <div class="account__user">
-                  <div class="block__common-image-wrapper">
-                    <div class="block__image-wrapper">
-                      <img class="block__image account__image">
-                    </div>
-                    <label for="file" class="block__button-change-photo">
-                      <i class="material-icons">add_a_photo</i>
-                    </label>
-                    <input type="file" name="avatar" id="file" class="block__input-photo account__input">
+        <div class="block__main">
+          <div class="account__form-wrapper block--width-85">
+            <form class="account__form-change-info">
+              <div class="account__user">
+                <div class="block__common-image-wrapper">
+                  <div class="block__image-wrapper">
+                    <img class="block__image account__image">
                   </div>
-                  <p class="block__title account__user-id"></p>
+                  <label for="file" class="block__button-change-photo">
+                    <i class="material-icons">
+                      add_a_photo
+                    </i>
+                  </label>
+                  <input type="file" name="avatar" id="file" class="block__input-photo account__input">
                 </div>
-                <div class="form-group row block--margin-adaptive w-100">
-                  <label for="account" class="col-sm-2 col-form-label">Account</label>
-                  <div class="account__double-form col-sm-10 account--input-size">
-                    <div class="input-group-prepend account__double-form--first">
-                      <span class="input-group-text" id="addon-wrapping">@</span>
-                    </div>
-                    <input type="text" name="account" class="account__double-form--second form-control account__input account__input-id" placeholder="Username" aria-label="Username" aria-describedby="addon-wrapping" required>
-                  </div>
-                </div>
-                <div class="form-group row block--margin-adaptive w-100">
-                  <label for="surname" class="col-sm-2 col-form-label">Name</label>
-                  <div class="col-sm-10 account--input-size">
-                    <input type="text" name="name" aria-label="Last name" class="form-control account__input account__input-name" placeholder="Name" required>
-                  </div>
-                </div>
-                <div class="form-group row block--margin-adaptive w-100">
-                  <span class="col-sm-2 col-form-label">Currency</span>
-                  <div class="col-sm-10 account--input-size">
-                    <select name="currency" class="form-select form-select--curr account--input-size mx-0 account__input" aria-label="Default select example">
-                    </select>
-                  </div>
-                </div>   
-                <div class="form-group row block--margin-adaptive w-100">
-                  <span class="col-sm-2 col-form-label">Language</span>
-                  <div class="col-sm-10 account--input-size">
-                    <select name="language" class="form-select form-select--lang account--input-size mx-0 account__input" aria-label="Default select example">
-                    </select>
-                  </div>
-                </div>
-                <div class="form-group row block--margin-adaptive w-100">
-                  <span class="col-sm-2 col-form-label">Theme</span>
-                  <div class="col-sm-10 account--input-size">
-                    <select name="theme" class="form-select form-select--theme account--input-size mx-0 account__input" aria-label="Default select example">
-                    </select>
-                  </div>
-                </div>            
-              </form> 
-            </div>           
-          </div>
-          <div class="block__footer">
-            <div class="form-group row">
-              <div class="col-sm-10 d-flex block--width-adaptive">
-                <button type="submit" class="account__input-submit btn btn-primary mx-auto" disabled>Save</button>
+                <p class="block__title account__user-id">
+                </p>
               </div>
+              <div class="form-group row block--margin-adaptive w-100">
+                <label for="account" class="col-sm-2 col-form-label">
+                  Account
+                </label>
+                <div class="account__double-form col-sm-10 account--input-size">
+                  <div class="input-group-prepend account__double-form--first">
+                    <span class="input-group-text" id="addon-wrapping">
+                      @
+                    </span>
+                  </div>
+                  <input type="text" name="account" class="account__double-form--second form-control account__input account__input-id" placeholder="Username" aria-label="User ID" aria-describedby="addon-wrapping" required>
+                </div>
+              </div>
+              <div class="form-group row block--margin-adaptive w-100">
+                <label for="surname" class="col-sm-2 col-form-label">
+                  Name
+                </label>
+                <div class="col-sm-10 account--input-size">
+                  <input type="text" name="name" aria-label="Username" class="form-control account__input account__input-name" placeholder="Name" required>
+                </div>
+              </div>
+              <div class="form-group row block--margin-adaptive w-100">
+                <span class="col-sm-2 col-form-label">
+                  Currency
+                </span>
+                <div class="col-sm-10 account--input-size">
+                  <select name="currency" class="form-select form-select--curr account--input-size mx-0 account__input" aria-label="Currencies select">
+                  </select>
+                </div>
+              </div>   
+              <div class="form-group row block--margin-adaptive w-100">
+                <span class="col-sm-2 col-form-label">
+                  Language
+                </span>
+                <div class="col-sm-10 account--input-size">
+                  <select name="language" class="form-select form-select--lang account--input-size mx-0 account__input" aria-label="Languages select">
+                  </select>
+                </div>
+              </div>
+              <div class="form-group row block--margin-adaptive w-100">
+                <span class="col-sm-2 col-form-label">
+                  Theme
+                </span>
+                <div class="col-sm-10 account--input-size">
+                  <select name="theme" class="form-select form-select--theme account--input-size mx-0 account__input" aria-label="Themes select">
+                  </select>
+                </div>
+              </div>            
+            </form> 
+          </div>           
+        </div>
+        <div class="block__footer">
+          <div class="form-group row">
+            <div class="col-sm-10 d-flex block--width-adaptive">
+              <button type="submit" class="account__input-submit btn btn-primary mx-auto" disabled>
+                Save
+              </button>
             </div>
           </div>
         </div>
-    </div>
-      `;
+      </div>
+    </div>`;
   };
 
   events(): void {

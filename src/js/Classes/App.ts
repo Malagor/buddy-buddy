@@ -149,7 +149,6 @@ export class App {
 
   updateOnAccountPage(data: any) {
     const uid: string = this.database.uid;
-
     this.database.updateUserInfo(uid, data);
   }
 
@@ -158,9 +157,9 @@ export class App {
     const uid: string = this.database.uid;
     this.accountPage.render();
     this.database.getUserInfo(uid, [this.accountPage.addUserInfo]);
-    this.database.getCurrenciesOrLangsOrThemes(uid, this.accountPage.renderCurrencyOrLangOrTheme, 'Currency');
-    this.database.getCurrenciesOrLangsOrThemes(uid, this.accountPage.renderCurrencyOrLangOrTheme, 'Language');
-    this.database.getCurrenciesOrLangsOrThemes(uid, this.accountPage.renderCurrencyOrLangOrTheme, 'Theme');
+    await this.database.getCurrenciesOrLangsOrThemes(uid, this.accountPage.renderCurrencyOrLangOrTheme, 'Currency');
+    await this.database.getCurrenciesOrLangsOrThemes(uid, this.accountPage.renderCurrencyOrLangOrTheme, 'Language');
+    await this.database.getCurrenciesOrLangsOrThemes(uid, this.accountPage.renderCurrencyOrLangOrTheme, 'Theme');
 
     this.accountPage.events();
   }

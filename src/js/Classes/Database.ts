@@ -128,7 +128,7 @@ export class Database {
   }
 
   updateUserInfo(uid: string, data: any) {
-    const storageRef = this.firebase.storage().ref();
+    const storageRef = this.firebase.storage().ref(`avatars/${uid}`);
     const userRef = this.firebase.database().ref(`User/${uid}`);
     const file = data['avatar'];
 
@@ -136,7 +136,7 @@ export class Database {
       'contentType': file.type,
     };
 
-    storageRef.child('avatars/' + uid).put(file, metadata).then(function(snapshot) {
+    storageRef.put(file, metadata).then((snapshot) => {
       snapshot.ref.getDownloadURL()
         .then((url) => {
           data['avatar'] = url;
@@ -622,31 +622,22 @@ export class Database {
     const curr: any = await this.firebase
       .database()
       .ref(elem)
-      .once(
-        'value',
-        (snapshot) => {
-          return snapshot;
-        },
-        (error: { code: string; message: any }) => {
-          console.log('Error:\n ' + error.code);
-          console.log(error.message);
-        },
-      );
-    const data = curr.val();
-    const values = Object.entries(data).map((item: any) => item[0]);
+      .once('value', (snapshot) => {
+        return snapshot;
+      }, (error: { code: string; message: any }) => {
+        console.log('Error:\n ' + error.code);
+        console.log(error.message);
+      });
+    const values = Object.entries(curr.val()).map((item: any) => item[0]);
     const current: any = await this.firebase
       .database()
       .ref(`User/${uid}`)
-      .once(
-        'value',
-        (snapshot) => {
-          return snapshot;
-        },
-        (error: { code: string; message: any }) => {
-          console.log('Error:\n ' + error.code);
-          console.log(error.message);
-        },
-      );
+      .once('value', (snapshot) => {
+        return snapshot;
+      }, (error: { code: string; message: any }) => {
+        console.log('Error:\n ' + error.code);
+        console.log(error.message);
+      });
     const currentCurrency = current.val()[neededField];
     callback(values, currentCurrency);
   }
