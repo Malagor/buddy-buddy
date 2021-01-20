@@ -78,7 +78,7 @@ export class MyGroups extends Page {
 
 
   addUserInGroupCard(data: any) {
-    const NUM_OF_IMG_IN_GROUP_CARD: number = 2;
+    const NUM_OF_IMG_IN_GROUP_CARD: number = 5;
     const listUsers = data.arrayUsers;
 
     const cardGroup: HTMLElement = document.getElementById(`${data.groupKey}`);
