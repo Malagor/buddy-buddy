@@ -251,7 +251,7 @@ export class Main extends Page {
     document.querySelector('.block__image').setAttribute('src', data.avatar);
     document.querySelector('.block__image').setAttribute('alt', data.name);
     document.querySelector('.main__name__text').textContent = data.name;
-    document.querySelector('.main__balance__text').textContent = data.currency;
+    document.querySelector('.balance__text').textContent = data.currency;
   }
 
   render(): void {
@@ -273,7 +273,7 @@ export class Main extends Page {
           </div>
           <p class="main__balance align-self-start block__element-gap">
             <span>Balance</span> 
-            <span class="main__balance__text d-block"></span>
+            <span class="balance__text d-block"></span>
           </p>
         </div>
         <div class="block__card flex-column block--width-85">
