@@ -53,7 +53,7 @@ export class AccountPage extends Page {
               <div class="account__user">
                 <div class="block__common-image-wrapper">
                   <div class="block__image-wrapper">
-                    <img class="block__image account__image">
+                    <img class="block__image account__image" src="#" alt="">
                   </div>
                   <label for="file" class="block__button-change-photo">
                     <i class="material-icons">
@@ -94,7 +94,7 @@ export class AccountPage extends Page {
                   <select name="currency" class="form-select form-select--curr account--input-size mx-0 account__input" aria-label="Currencies select">
                   </select>
                 </div>
-              </div>   
+              </div>
               <div class="form-group row block--margin-adaptive w-100">
                 <span class="col-sm-2 col-form-label">
                   Language
@@ -112,9 +112,9 @@ export class AccountPage extends Page {
                   <select name="theme" class="form-select form-select--theme account--input-size mx-0 account__input" aria-label="Themes select">
                   </select>
                 </div>
-              </div>            
-            </form> 
-          </div>           
+              </div>
+            </form>
+          </div>
         </div>
         <div class="block__footer">
           <div class="form-group row">
@@ -127,7 +127,7 @@ export class AccountPage extends Page {
         </div>
       </div>
     </div>`;
-  };
+  }
 
   events(): void {
     const submitInfo: HTMLElement = document.querySelector('.account__input-submit');
@@ -144,7 +144,7 @@ export class AccountPage extends Page {
       } else {
         return item.value;
       }
-    }
+    };
 
     submitInfo.addEventListener('click', (e): void => {
       e.preventDefault();
