@@ -101,7 +101,6 @@ export class MyGroups extends Page {
   createCard(data: any) {
     const date: Date = new Date(data.dataGroup.dateCreate);
     const dataCreateGroup: string = date.toLocaleString();
-    const listUsers = data.arrayUsers;
 
     return `
       <div id=${data.groupKey} class="card mb-3 card-group">
@@ -294,15 +293,15 @@ export class MyGroups extends Page {
     const addGroupMember = document.querySelector('#addNewGroupMember');
     addGroupMember.addEventListener('click', (ev) => {
       ev.preventDefault();
-      //console.log('Add new Member');
+      // console.log('Add new Member');
       const member: HTMLFormElement = document.querySelector('.contact-user-id');
-      //console.log('member.value', member.value);
+      // console.log('member.value', member.value);
       this.onAddMember(member.value);
     });
   }
 
   addMembersGroup(data: any): void {
-    //console.log('addMembersGroup - data:', data);
+    // console.log('addMembersGroup - data:', data);
     if (data) {
       const members = document.querySelector('.group-members-avatar');
       members.insertAdjacentHTML('beforeend', `
