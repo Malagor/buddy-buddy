@@ -310,6 +310,7 @@ export class Layout extends Page {
   }
 
   setSidebarData(data: any): void {
+    console.log('setSidebarData', data);
     const menuAvatar: Element = document.querySelector(
       '.sidebar-avatar__image',
     );

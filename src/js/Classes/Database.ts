@@ -638,20 +638,17 @@ export class Database {
       });
   }
 
-  deleteContact(userId: string, contactId: string) {
-    this.changeContactState(contactId, 'decline');
-    this.changeContactState(userId, 'decline', contactId);
+  deleteUserFromContactsList(contactId: string, userId?: string) {
+    let user: string;
 
-    // this.firebase
-    //   .database()
-    //   .ref(`User/${userId}/contacts/${contactId}`)
-    //   .remove(error => {
-    //     if (error) {
-    //       console.log(error.message);
-    //     } else {
-    //       console.log('Delete contact successful');
-    //     }
-    //   });
+    if (userId) {
+      user = userId;
+    } else {
+      user = this.uid;
+    }
+
+    this.changeContactState(contactId, 'decline');
+    this.changeContactState(user, 'decline', contactId);
   }
 
   createNewMessage(data: INewMessage): void {
