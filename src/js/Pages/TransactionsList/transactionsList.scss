@@ -17,6 +17,30 @@
   // }
 }
 
+.translist__header {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+
+
+.translist__header--main {
+  position: sticky;
+  padding: 0.5rem 1.5rem 0.5rem 2.3rem;
+  background-color: rgba(255, 255, 255, 1);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+@include laptop {
+    padding: 0.5rem 2rem 0.5rem 2.5rem;
+  }
+
+@include desktop {
+    padding: 0.5rem 1rem 0.5rem 1.5rem;
+  }
+}
+
 
 
 

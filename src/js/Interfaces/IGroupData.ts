@@ -4,7 +4,7 @@ export interface IGroupData {
   dateCreate: number;
   dateClose: number | null;
   transactionList: string[] | [];
-  icon: string;
+  icon: File;
 }
 
 export interface IGroupDataAll {

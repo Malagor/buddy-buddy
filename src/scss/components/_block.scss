@@ -39,39 +39,12 @@
 
 .block__header {
   position: relative;
+  position: sticky;
   z-index: 1;
   display: flex;
   align-items: center;
   width: 100%;
-}
-
-.block__header--account {
-  padding: 1rem;
-  background-color: rgba(0, 0, 0, 0.05);
-
-@include tablets {
-    padding: 1rem 1.5rem;
-  }
-
-@include laptop {
-    padding: 1rem 2rem;
-  }
-
-@include desktop {
-    padding: 1rem 10%;
-  }
-
-  .block__title {
-    @include desktop {
-      font-size: 1.6rem;
-    }
-  }
-}
-
-.block__header--main {
-  position: sticky;
   padding: 0.5rem 1.5rem 0.5rem 2.3rem;
-  background-color: rgba(255, 255, 255, 1);
   border-bottom: 1px solid rgba(0, 0, 0, 0.05);
 
 @include laptop {
@@ -90,6 +63,7 @@
   width: 100%;
   height: 100%;
   padding: 1.5rem 0;
+  overflow-x: hidden;
   overflow-y: auto;
 
   gap: 1rem;
@@ -114,7 +88,7 @@
   height: rem(80px);
 }
 
-.block__form-change-photo {
+.block__button-change-photo {
   position: absolute;
   right: -0.3rem;
   bottom: -0.5rem;
@@ -128,25 +102,20 @@
   border: none;
   border-radius: 50%;
   outline: none;
+  cursor: pointer;
 
-  & > .block__button-change-photo {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-
-    & > .material-icons {
-      font-size: 1.4rem;
-      color: rgb(0, 0, 0);
-    }
-  }
-
-  & > .block__input-photo {
-    position: absolute;
-    visibility: hidden;
-    opacity: 0;
+  & > .material-icons {
+    font-size: 1.4rem;
+    color: rgb(0, 0, 0);
   }
 }
+
+.block__button-change-photo + .block__input-photo {
+  position: absolute;
+  visibility: hidden;
+  opacity: 0;
+}
+
 
 .block__image-wrapper {
   position: relative;

@@ -20,7 +20,7 @@ export class TransactionsList extends Page {
     this.element.innerHTML = `
     <div class="block__wrapper">
       <div class="block__content">
-        <div class="block__header block__header--main">
+        <div class="translist__header translist__header--main">
           <p class="block__title">Список транзакций</p>
         </div>
 
