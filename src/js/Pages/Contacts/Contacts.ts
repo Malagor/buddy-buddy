@@ -48,6 +48,8 @@ export class Contacts extends Page {
 
     this.element.innerHTML = html;
 
+    this.deleteUserModal = new Modal(document.getElementById('deleteUserModal'));
+
     this.events();
   }
 
@@ -135,8 +137,6 @@ export class Contacts extends Page {
           userAccount: '@' + cardContact.querySelector('.contact__account').textContent,
           userAvatar: cardContact.querySelector('img').getAttribute('src'),
         };
-
-        this.deleteUserModal = new Modal(document.getElementById('deleteUserModal'));
 
         this._setDataModalDeleteUser(userData);
 
