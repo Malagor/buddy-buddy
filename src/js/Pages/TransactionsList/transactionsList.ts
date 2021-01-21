@@ -2,11 +2,12 @@ import { Page } from '../../Classes/Page';
 import { NewTransaction } from '../newTransaction/newTransaction';
 import { Modal } from 'bootstrap';
 import { getDate } from './getDate';
+import { throws } from 'assert';
 
 export class TransactionsList extends Page {
   onChangeState: any;
   onGetTransInfo: any;
-  // onGetMembers: any;
+  detailsModal:any;
 
   public newTrans: NewTransaction;
 
@@ -44,11 +45,20 @@ export class TransactionsList extends Page {
       <div class="modal-wrapper modal-dialog modal-dialog-centered modal-dialog-scrollable">
       </div>
     </div>
+
+    <div class="details modal fade" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content details__wrapper">
+        </div>
+      </div>
+    </div>
     `;
 
     this.newTrans = NewTransaction.create('.modal-wrapper');
     this.newTrans.render();
     this.events();
+    this.detailsModal = new Modal(document.querySelector('.details'));
+
   }
 
   addGroupToTransList = (groupID: string, groupTitle: string) => {
@@ -90,8 +100,8 @@ export class TransactionsList extends Page {
         <div class="trans-item__users col-5  d-flex align-self-center justify-content-center"></div>
         <div class="trans-item__cost col-4  align-self-center ${styles.colorCost}  justify-content-end text-end">${styles.cost} ${trans.currency}</div>
       </div>
-      <div class="trans-item__buttons d-flex justify-content-between">
-        <button type="button" class="trans-item__more btn btn-outline-secondary btn-sm">Подробнее</button>
+      <div class="trans-item__buttons d-flex w-100 justify-content-between">
+        <div></div>
         <div class="trans-item__addform ${styles.btnDisplay}">
           <select class="trans-item__state form-select" aria-label="Default select example">
             <option ${styles.selectPending} value="pending">ожидание</option>
@@ -101,30 +111,19 @@ export class TransactionsList extends Page {
         </div>
       </div>
 
-      <div class="details modal fade" id=${transID} data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-          <div class="modal-content details__wrapper">
-          </div>
-        </div>
-      </div>
+     
     `;
 
     const selectState: HTMLSelectElement = transaction.querySelector('.trans-item__state');
     this.changeSelectState(selectState, transaction, transID);
-    const detailsModal = new Modal(transaction.querySelector('.details'));
-    const detailsModalWrapper: HTMLElement = transaction.querySelector('.details__wrapper');
-    const btnDetails: HTMLElement = transaction.querySelector('.trans-item__more');
-    btnDetails.addEventListener('click', () => {
-      // const { target } = e;
-      // if(!target.closest('.trans-item__state')) {
+    const detailsModalWrapper: HTMLElement = document.querySelector('.details__wrapper');
+    transaction.addEventListener('click', (e) => {
+      const { target } = e;
+      if(!target.closest('.trans-item__state')) {
+        this.detailsModal.show();
         this.renderOutTrans(detailsModalWrapper, transID, trans, owner, ownUID, selectState.value);
-        detailsModal.show();
-
       // this.modalEvents(detailsModalWrapper);
-      // }
-
-      
-
+      }
     });
   }
 
@@ -132,13 +131,13 @@ export class TransactionsList extends Page {
     select.addEventListener('change', () => {
       this.onChangeState(select.value, transID);
       if (select.value === 'approve') {
-        trans.classList.remove('border', 'border-2', 'border-success', 'border-danger');
+        trans.classList.remove('border-success', 'border-danger');
       } else if (select.value === 'abort') {
         trans.classList.remove('border-success');
-        trans.classList.add('border', 'border-2', 'border-danger');
+        trans.classList.add('border-danger');
       } else if (select.value === 'pending') {
         trans.classList.remove('border-danger');
-        trans.classList.add('border', 'border-2', 'border-success');
+        trans.classList.add('border-success');
       }
     });
   }
@@ -174,19 +173,12 @@ export class TransactionsList extends Page {
   }
 
   setStyles = (trans: any, owner: boolean, ownUID: string) => {
-    // let currentG: string;
-    const transList: HTMLFormElement = document.querySelector('.trans-list__groups');
-    // if (transList.value) {
-    //   currentG = transList.value;
-    // } 
-    //   else {
-    //   currentG = currentGroup;
-    // }
+    // const transList: HTMLFormElement = document.querySelector('.trans-list__groups');
 
     let btnDisplay: string;
     let cost: string;
     let colorCost: string;
-    let transDisplay: string;
+    // let transDisplay: string;
 
     if (owner) {
       btnDisplay = 'd-none';
@@ -199,12 +191,6 @@ export class TransactionsList extends Page {
       colorCost = 'text-danger';
     }
 
-    // if (trans.groupID === currentG) {
-    //   transDisplay = 'd-flex';
-    // } else {
-    //   transDisplay = 'd-none';
-    // }
-
     let selectPending: string = '';
     let selectAbort: string = '';
     let selectApprove: string = '';
@@ -214,10 +200,10 @@ export class TransactionsList extends Page {
         if (user[0] === ownUID) {
           if (user[1].state === 'pending') {
             selectPending = 'selected';
-            border = 'border border-2 border-success';
+            border = 'border-success';
           } else if (user[1].state === 'abort') {
             selectAbort = 'selected';
-            border = 'border border-2 border-danger';
+            border = 'border-danger';
           } else if (user[1].state === 'approve') {
             selectApprove = 'selected';
             btnDisplay = 'd-none';
@@ -225,17 +211,15 @@ export class TransactionsList extends Page {
         }
       });
     } else if (Object.entries(trans.toUserList).some((user: any) => user[1].state === 'abort')) {
-      border = 'border border-2 border-danger';
+      border = 'border-danger';
     } else if (Object.entries(trans.toUserList).some((user: any) => user[1].state === 'pending')) {
-      border = 'border border-2 border-warning';
+      border = 'border-warning';
     }
 
     return {
-      // currentG,
       btnDisplay,
       cost,
       colorCost,
-      // transDisplay,
       border,
       selectPending,
       selectAbort,
@@ -254,7 +238,7 @@ export class TransactionsList extends Page {
     userList.forEach ((user) => {
       if (user[0] === ownUID) {
         ownComment = user[1].comment;
-        ownCost = user[1].cost;
+        ownCost = (+user[1].cost).toFixed(2);
       }
     });
 
@@ -275,7 +259,6 @@ export class TransactionsList extends Page {
 
     } else {
       ownerDisplay = '';
-
       colorText = 'text-danger';
       cost = `-${ownCost}`;
       membDisplay = 'd-none';
@@ -283,13 +266,11 @@ export class TransactionsList extends Page {
       selectDisplay = '';
     }
 
+    let btnSaveDisplay: string = '';
+    if (!owner) {
+      btnSaveDisplay = 'd-none';
+    } 
 
-    let checkDisplay: string;
-    if (trans.photo && owner) {
-      checkDisplay = 'd-flex';
-    } else {
-      checkDisplay = 'd-none';
-    }
     wrapper.innerHTML = '';
     const date: any = getDate(trans.date);
     const baseHTML = `
@@ -298,12 +279,14 @@ export class TransactionsList extends Page {
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="details__info modal-body">
-        <div class="details__group"></div>
-        <div class="details__date">
+
+        <div class="details__date d-flex">
           <div class="details__day">${date.localeDay}</div>
           <div class="details__time">${date.localeTime}</div>
         </div>
 
+        <div class="details__group"></div>
+    
         <div class="${ownerDisplay} details__owner d-flex align-items-center">
           <div>Плательщик: </div>
           <div class="details__owner-info d-flex flex-column align-items-center">
@@ -312,29 +295,26 @@ export class TransactionsList extends Page {
 
         <div class="details__cost">
           <span>Сумма:</span>&nbsp;
-          <span class="fs-4 ${colorText}">${cost}</span>&nbsp;
-          <span class="fs-4 ${colorText}">${trans.currency}</span>
+          <span class="fs-5 ${colorText}">${cost}</span>&nbsp;
+          <span class="fs-5 ${colorText}">${trans.currency}</span>
         </div>
 
         <div class="${commentDisplay} details__comment-box d-flex">
           <div>Комментарий: </div>
           <div class="details__comment">${ownComment}</div>
         </div>
+      
+        <div class="details__check align-items-center d-flex">
+          <div>Чек: </div>
+          <div class="details__icon-wrapper"><img class="details__icon" src=${trans.photo[0]} alt="check"></div>
+        </div>
 
-        <div class="${selectDisplay} details__state-wrapper">
-          
-          <select class="${selectDisplay} details__state form-select" aria-label="Default select example">
+        <div class="${selectDisplay} details__state-wrapper">       
+          <select class="details__state form-select" aria-label="Default select example">
             <option value="pending">ожидание</option>
             <option value="approve">подтвердить</option>
             <option value="abort">отклонить</option>
           </select>
-        </div>
-        
-      
-
-        <div class="details__check ${checkDisplay} align-items-center">
-          <div>Чек: </div>
-          <div class="details__icon-wrapper"><img class="details__icon" src=${trans.photo[0]} alt="check"></div>
         </div>
 
         <div class="modal fade details__check-modal" id="check" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
@@ -353,24 +333,49 @@ export class TransactionsList extends Page {
       <button class=" ${membDisplay} details__add-memb btn btn-secondary btn-sm" type="button" data-bs-toggle="collapse" data-bs-target="#notMembers">Добавить участников</button>
       <div class=" ${membDisplay} details__not-members modal-body collapse" id="notMembers">
       </div>
-      <div class="modal-footer">
+      <div class="modal-footer ${btnSaveDisplay}">
         <button type="button" class="details__save btn btn-primary">Save changes</button>
       </div>
     `;
     wrapper.insertAdjacentHTML('beforeend', baseHTML);
+
+ 
     this.onGetTransInfo(trans, transID, trans.groupID);
     const detailsSelectWrapper: HTMLElement = wrapper.querySelector('.details__state-wrapper');
-    const detailsSelect: HTMLElement = wrapper.querySelector('.details__state');
+    const detailsSelect: HTMLSelectElement = wrapper.querySelector('.details__state');
     const options: NodeListOf<HTMLElement> = detailsSelect.querySelectorAll('option');
     options.forEach((opt: HTMLOptionElement) => {
-      console.log ('selectvalue', selectValue);
+      // console.log ('selectvalue', selectValue);
       if (opt.value === selectValue) {
         opt.setAttribute('selected', '');
       }
       if (selectValue === 'approve') {
         detailsSelectWrapper.innerHTML = 'Подтверждено';
       }
-    
+    });
+
+    detailsSelect.addEventListener('change', () => {
+      this.onChangeState(detailsSelect.value, transID);
+      const optInCardSelect = document.getElementById(transID).querySelector('.trans-item__state').querySelectorAll('option');
+      const trans = document.getElementById(transID);
+      optInCardSelect.forEach((opt: HTMLOptionElement) => {
+        if (opt.value === detailsSelect.value) {
+          opt.setAttribute('selected', '');
+        } else {
+          opt.removeAttribute('selected');
+        }
+
+        if (detailsSelect.value === 'approve') {
+          trans.classList.remove('border-success', 'border-danger');
+        } else if (detailsSelect.value === 'abort') {
+          trans.classList.remove('border-success');
+          trans.classList.add('border-danger');
+        } else if (detailsSelect.value === 'pending') {
+          trans.classList.remove('border-danger');
+          trans.classList.add('border-success');
+        }
+        
+      });
     });
 
     const checkBox = wrapper.querySelector('.details__check-box');
@@ -396,22 +401,23 @@ export class TransactionsList extends Page {
     closeCheckBtn.addEventListener('click', () => {
       checkModal.hide();
     });
-
-
-
   }
 
   addGroupTitle = (transID: string, title: string) =>  {
-    const modalWrapper: HTMLElement = document.getElementById(transID);
+    // const modalWrapper: HTMLElement = document.getElementById(transID);
+    const modalWrapper: HTMLElement = document.querySelector('.details__wrapper');
     const titleElement: HTMLElement = modalWrapper.querySelector('.details__group');
     titleElement.innerText = `Группа: ${title}`;
   }
 
   addOwnerInfo = (transID: string, owner: any) => {
-    const modalWrapper: HTMLElement = document.getElementById(transID);
+    // const modalWrapper: HTMLElement = document.getElementById(transID);
+    
+    const modalWrapper: HTMLElement = document.querySelector('.details__wrapper');
+    console.log ('details-wrapper', modalWrapper);
     const ownerWrapper: HTMLElement = modalWrapper.querySelector('.details__owner-info');
     ownerWrapper.innerHTML = `
-      <div class="details__owner-avatar"><img src="${owner.avatar}" alt=${owner.name}></div>
+
       <div class="details__owner-name">${owner.name}</div>
     `;
   }
@@ -419,7 +425,9 @@ export class TransactionsList extends Page {
 
   addMemberOfTransaction = (transID: string, trans: any, user: any) => {
     // console.log ('trans', trans);
-    const modalWrapper: HTMLElement = document.getElementById(transID);
+    // const modalWrapper: HTMLElement = document.getElementById(transID);
+    
+    const modalWrapper: HTMLElement = document.querySelector('.details__wrapper');
     const membersWrapper: HTMLElement = modalWrapper.querySelector('.details__members');
     const notMembersWrapper: HTMLElement = modalWrapper.querySelector('.details__not-members');
     const member: HTMLElement = document.createElement('div');
