@@ -1,8 +1,6 @@
 import { Page } from '../../Classes/Page';
 import { IGroupData, IGroupDataAll } from '../../Interfaces/IGroupData';
 import { getFormData } from '../../Util/getFormData';
-//import { App } from '../../Classes/App';
-//import { Database } from '../../Classes/Database';
 
 import { Modal } from 'bootstrap';
 import { eventForContactsList } from '../Contacts/eventForContactsList';
@@ -206,15 +204,17 @@ export class MyGroups extends Page {
                 </div>
               </div>
 
+               <div class="row col-12 group-members-avatar"></div>
+
               <div class="col-12">
                 <textarea class="form-control" id="formDesc" rows="3" name="description" placeholder="Description"></textarea>
               </div>
 
-               <div class="row col-12 group-members-avatar"></div>
-               <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                  <button type="submit" class="btn btn-primary" id="createGroupBtn">Create New Group</button>
-                </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-primary" id="createGroupBtn">Create New Group</button>
+              </div>
+
             </form>
           </div>
         </div>
@@ -342,20 +342,6 @@ export class MyGroups extends Page {
     const dateClose: Date = new Date(data.dataGroup.dateClose);
     const dataCloseGroup: string = dateClose.toLocaleString();
 
-/*     setTimeout(() => {
-      const listUsersObj = data.dataUsers
-      console.log('listUser', listUsersObj)
-      console.log('listUser__key', Object.keys(listUsersObj))
-    }, 1500) */
-/*     const listUsersObj = data.dataUsers
-    console.log('listUser', listUsersObj)
-    console.log('listUser__key', Object.keys(listUsersObj)) */
-    
-    const participantsInfo: string[] = [];
-/*     listUsers.forEach((user: any) => {
-      console.log(data.dataUsers[user])
-    }); */
-
     divModalContent.innerHTML = `
       <div class="card mb-3 card-detail">
         <div class="row g-0 col">
@@ -431,7 +417,7 @@ export class MyGroups extends Page {
     if (data) {
       const members = document.querySelector('.group-members-avatar');
       members.insertAdjacentHTML('beforeend', `
-    <div class="col-3 member" data-id="${data.key}">
+    <div class="col-3 col-sm-2 member" data-id="${data.key}">
       <div class="member__avatar text-center">
         <img class="member__img" src="${data.avatar}" alt="${data.name}">
       </div>
