@@ -73,6 +73,7 @@ export class App {
       this.layout.onContactsPage = this.onContactsPage.bind(this);
 
       this.accountPage = AccountPage.create('.main');
+      this.accountPage.updateInfo = this.updateOnAccountPage.bind(this);
       this.mainPage = Main.create('.main');
       this.mainPage.onMainGetBalance = this.onMainGetBalance.bind(this);
 
@@ -164,11 +165,22 @@ export class App {
     this.database.getBalanceForUserTotal(uid, rank, this.mainPage.getBalance);
   }
 
-  onAccountPage() {
+  updateOnAccountPage(data: any) {
+    const uid: string = this.database.uid;
+    this.database.updateUserInfo(uid, data);
+  }
+
+  async onAccountPage() {
     this.setCurrentPage('Account');
     this.deleteHandlers();
     const uid: string = this.database.uid;
-    this.database.getUserInfo(uid, [this.accountPage.render]);
+    this.accountPage.render();
+    this.database.getUserInfo(uid, [this.accountPage.addUserInfo]);
+    await this.database.getCurrenciesOrLangsOrThemes(uid, this.accountPage.renderCurrencyOrLangOrTheme, 'Currency');
+    await this.database.getCurrenciesOrLangsOrThemes(uid, this.accountPage.renderCurrencyOrLangOrTheme, 'Language');
+    await this.database.getCurrenciesOrLangsOrThemes(uid, this.accountPage.renderCurrencyOrLangOrTheme, 'Theme');
+
+    this.accountPage.events();
   }
 
   onContactsPage() {
@@ -183,7 +195,7 @@ export class App {
     this.setCurrentPage('Groups');
     this.deleteHandlers();
     this.groups.render();
-    this.groupHandler = this.database.groupHandler(this.groups.createGroupList);
+    this.groupHandler = this.database.groupHandler(this.groups.createGroupList, this.groups.addUserInGroupCard);
     this.database.getGroupList(this.groupHandler);
   }
 

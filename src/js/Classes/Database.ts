@@ -126,21 +126,40 @@ export class Database {
     .set(data);
   }
 
-  async getUserInfo(uid: string, callbacks: any[]) {
-    await this.firebase
+  getUserInfo(uid: string, callbacks: any[]) {
+    this.firebase
       .database()
       .ref(`User/${uid}`)
-      .once(
-        'value',
-        (snapshot) => {
-          const dataUser = snapshot.val();
-          dataUser.key = uid;
-          callbacks.forEach((fn) => fn(dataUser));
-        },
-        (error: { code: string }) => {
-          console.log('Error: ' + error.code);
-        },
-      );
+      .once('value', (snapshot) => {
+        const dataUser = snapshot.val();
+        dataUser.key = uid;
+        callbacks.forEach((fn) => fn(dataUser));
+      },
+      (error: { code: string }) => {
+        console.log('Error: ' + error.code);
+      });
+  }
+
+  updateUserInfo(uid: string, data: any) {
+    const storageRef = this.firebase.storage().ref(`avatars/${uid}`);
+    const userRef = this.firebase.database().ref(`User/${uid}`);
+    const file = data['avatar'];
+
+    const metadata = {
+      'contentType': file.type,
+    };
+
+    storageRef.put(file, metadata).then((snapshot) => {
+      snapshot.ref.getDownloadURL()
+        .then((url) => {
+          data['avatar'] = url;
+          userRef.update(data);
+        })
+        .catch(error => {
+          console.log(error.code);
+          console.log(error.message);
+        });
+    });
   }
 
   async getUserTransactions(uid: string, callback: any) {
@@ -160,7 +179,7 @@ export class Database {
     });
 
     await Promise.all(keyList).then(async (data) => {
-      const value: any = await data.filter((item: any) => item[0] !== null || item[1].state === 'approve')
+      const value: any = await data.filter((item: any) => item[0] !== null && item[1].state === 'approve')
       .map((item: any) => item[0])
       .map(async (item: any) => {
         item.uid = uid;
@@ -317,71 +336,87 @@ export class Database {
   createNewGroup(data: IDataForCreateGroup) {
     const file: File = data.groupData.icon;
     const currentGroup: boolean = data.currentGroup;
-    const userId: string = data.userId;
+    const userIdAuthor: string = data.userId;
 
-    const metadata = {
-      'contentType': file.type,
-    };
-    this.firebase.storage()
-      .ref()
-      .child('groups/' + file.name)
-      .put(file, metadata)
-      .then((snapshot) => {
-        snapshot.ref.getDownloadURL()
-          .then((url) => {
-            data.groupData['icon'] = url;
-            return data;
+    const sendDataInDB = (data: any) => {
+      const userObj: any = {};
+
+      data.userList.forEach((userId: string) => {
+
+        if (userId === userIdAuthor) {
+          data.groupData.author = userIdAuthor;
+          userObj[userId] = { state: 'approve' };
+        } else {
+          userObj[userId] = { state: 'pending' };
+        }
+      });
+
+      data.groupData['userList'] = userObj;
+
+      this.firebase
+        .database()
+        .ref('Groups')
+        .push(data.groupData)
+        .then(group => {
+          const groupKey = group.key;
+          this.firebase
+            .database()
+            .ref(`Groups/${groupKey}`)
+            .on('value', (group) => {
+              const users: any = group.val().userList;
+
+              Object.keys(users).forEach((userId: any) => {
+                if (userId === userIdAuthor) {
+                  this.firebase.database()
+                  .ref(`User/${userId}/groupList/${groupKey}`)
+                  .set({state: 'approve'});
+                } else {
+                  this.firebase.database()
+                  .ref(`User/${userId}/groupList/${groupKey}`)
+                  .set({state: 'pending'});
+                }
+
+              });
+            });
+            return group;
           })
           .then(data => {
-            this.firebase
-              .database()
-              .ref('Groups')
-              .push(data.groupData)
-              .then(group => {
-
-                data.userList.forEach((userId: string) => {
-                  this.firebase
-                    .database()
-                    .ref(`Groups/${group.key}/userList/${userId}`)
-                    .set({ state: 'pending' });
-                });
-
-                return group;
-              })
-              .then(group => {
-                const groupKey = group.key;
-                this.firebase
-                  .database()
-                  .ref(`Groups/${groupKey}`)
-                  .on('value', (group) => {
-                    const users: any = group.val().userList;
-
-                    Object.keys(users).forEach((userId: any) => {
-
-                      this.firebase.database()
-                        .ref(`User/${userId}/groupList/${groupKey}`)
-                        .set({ state: 'pending' });
-
-                    });
-                  });
-                return group;
-              })
-              .then(data => {
-                const dataForAddCurrentGroup = {
-                  groupKey: data.key,
-                  userId: userId,
-                };
-                if (currentGroup) {
-                  this.addCurrentGroup(dataForAddCurrentGroup);
-                }
-              });
-
+            const dataForAddCurrentGroup = {
+              groupKey: data.key,
+              userId: userIdAuthor
+            };
+            if (currentGroup) {
+              this.addCurrentGroup(dataForAddCurrentGroup);
+            }
           })
           .catch(error => {
             console.log(error.code);
             console.log(error.message);
           });
-      });
+    };
+
+    if (file) {
+      const metadata = {
+        'contentType': file.type,
+      };
+
+      this.firebase.storage()
+        .ref()
+        .child('groups/' + file.name)
+        .put(file, metadata)
+        .then((snapshot) => {
+          snapshot.ref.getDownloadURL()
+            .then((url) => {
+              data.groupData['icon'] = url;
+              return data;
+            })
+            .then((data) => {
+              sendDataInDB(data);
+            });
+        });
+    } else {
+      sendDataInDB(data);
+    }
   }
 
   getGroupList(handlerFunc: any): void {
@@ -395,49 +430,47 @@ export class Database {
         });
   }
 
-  groupHandler = (createGroupList: any) => {
+  groupHandler = (createGroupList: any, addUserInGroupCard: any) => {
     const base = this.firebase.database();
 
     return ((snapshot: any) => {
+      const dataUserListGroup: any[] = Object.keys(snapshot.val().userList);
+      const groupKey = snapshot.key;
+      const data: any = {
+        dataGroup: snapshot.val(),
+        groupKey: groupKey
+      };
 
-      const users: string[] = Object.keys(snapshot.val().userList); // по каждой группе список  юзеров
-      // при создании новой группы не доходит userList // разобраться
-      if (users.includes(this.uid)) {
-        const dataGroup = snapshot.val();
-        const dataUserListGroup: any[] = Object.keys(snapshot.val().userList);
+      createGroupList(data);
 
-        base
-          .ref('User')
-          .once('value', (snapshot) => {
-            const snapshotUser = snapshot.val();
-            const userList = Object.keys(snapshotUser); // all users in DB
+      base
+      .ref('User')
+      .once('value', (snapshot) => {
 
-            // const arrayUserImg: string[] = userList.filter(user => dataUserListGroup.includes(user));
-            const arrayUsers: any[] = [];
-            userList.forEach(user => {
-              if (dataUserListGroup.includes(user)) {
-                arrayUsers.push(snapshotUser[user]);
-              }
-            });
+        const snapshotUser = snapshot.val();
+        const userList = Object.keys(snapshotUser);
 
-            const dataForGroup = {
-              'dataGroup': dataGroup,
-              'arrayUsers': arrayUsers,
-            };
-            createGroupList(dataForGroup);
-          });
-      }
+        const arrayUsers: any[] = [];
+        userList.forEach(user => {
+          if (dataUserListGroup.includes(user)) {
+            arrayUsers.push(snapshotUser[user]);
+          }
+        });
+        data.arrayUsers = arrayUsers;
+
+        addUserInGroupCard(data);
+      });
     });
   }
 
   addCurrentGroup(data: any) {
-    const userId: string = data.userId;
+    const userIdAuthor: string = data.userId;
     const groupKey = data.groupKey;
 
     this.firebase
-      .database()
-      .ref(`User/${userId}/currentGroup`)
-      .set(groupKey);
+    .database()
+    .ref(`User/${userIdAuthor}/currentGroup`)
+    .set(groupKey);
   }
 
   countGroupsInvite(setNotificationMark: { (type: TypeOfNotifications, num: number): void; (arg0: TypeOfNotifications, arg1: number): void; }): void {
@@ -678,6 +711,31 @@ export class Database {
         console.log('Error:\n ' + error.code);
         console.log(error.message);
       });
+  }
+
+  async getCurrenciesOrLangsOrThemes(uid: string, callback: any, elem: string) {
+    const neededField = elem.toLowerCase();
+    const curr: any = await this.firebase
+      .database()
+      .ref(elem)
+      .once('value', (snapshot) => {
+        return snapshot;
+      }, (error: { code: string; message: any }) => {
+        console.log('Error:\n ' + error.code);
+        console.log(error.message);
+      });
+    const values = Object.entries(curr.val()).map((item: any) => item[0]);
+    const current: any = await this.firebase
+      .database()
+      .ref(`User/${uid}`)
+      .once('value', (snapshot) => {
+        return snapshot;
+      }, (error: { code: string; message: any }) => {
+        console.log('Error:\n ' + error.code);
+        console.log(error.message);
+      });
+    const currentCurrency = current.val()[neededField];
+    callback(values, currentCurrency);
   }
 
   // запросы по транзакциям
@@ -1279,9 +1337,3 @@ export class Database {
     });
   }
 }
-
-
-
-
-
-
