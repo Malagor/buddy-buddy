@@ -14,7 +14,7 @@ export const getFormData = (
       field.type !== 'button' &&
       field.type !== 'reset'
     ) {
-      formData[field.name] = field.value;
+      formData[field.name] = field.value.trim();
       if (field.type === 'file') {
         const file = field.files[0];
         if (!file) {

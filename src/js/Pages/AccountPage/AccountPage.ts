@@ -134,6 +134,7 @@ export class AccountPage extends Page {
     const formInfo: HTMLFormElement = document.querySelector('.account__form-change-info');
     const idValue: HTMLInputElement = document.querySelector('.account__user-id');
     const accountImg: HTMLImageElement = document.querySelector('.account__image');
+    const nameInput: HTMLInputElement = document.querySelector('.account__input-name');
     const pageInputs: any = document.querySelectorAll('.account__input');
 
     let values: string[] = [];
@@ -142,7 +143,7 @@ export class AccountPage extends Page {
       if (item.type === 'file') {
         return accountImg.src;
       } else {
-        return item.value;
+        return item.value.trim();
       }
     };
 
@@ -154,6 +155,7 @@ export class AccountPage extends Page {
         });
       this.updateInfo(newData);
       idValue.textContent = `@${newData.account}`;
+      nameInput.value = newData.name;
       submitInfo.setAttribute('disabled', 'true');
     });
 
@@ -169,7 +171,7 @@ export class AccountPage extends Page {
             })(accountImg);
             reader.readAsDataURL(item.files[0]);
           }
-          if (values[index] !== item.value) {
+          if (values[index] !== item.value.trim()) {
             submitInfo.removeAttribute('disabled');
           } else {
             submitInfo.setAttribute('disabled', 'true');
