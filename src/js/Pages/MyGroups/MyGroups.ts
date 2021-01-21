@@ -386,13 +386,13 @@ export class MyGroups extends Page {
     console.log('addModalUserData')
     console.log('data',  data)
     const divForUserList = document.getElementById('modalUserList')
-    
+
     const html = `
-      <div class="card modal-detail">
-        <img class="modal-detail__img" src="${data.avatar}" alt="avatar">
+      <div id="${data.user.account}" class="card modal-detail">
+        <img class="modal-detail__img" src="${data.user.avatar}" alt="avatar">
         <div>
-          <p  class="modal-detail__name">Name: ${data.name}</p>
-          <p  class="modal-detail__account">Account: ${data.account}</p>
+          <p  class="modal-detail__name">Name: ${data.user.name}</p>
+          <p  class="modal-detail__account">Account: ${data.user.account}</p>
         </div>
         <div class="modal-detail__button">
           <button type="button" class="btn-close"  aria-label="Close"></button>
@@ -402,6 +402,14 @@ export class MyGroups extends Page {
     `
 
     divForUserList.insertAdjacentHTML('beforeend', html);
+
+    const userId = data.userId 
+    const author = data.dataGroup.author
+    if(userId === author) {
+      const cardAuthor = document.getElementById(`${data.user.account}`)
+      cardAuthor.classList.add('modal-detail--author')
+      console.log('Author', cardAuthor)
+    }
   }
 
   protected eventsAddEventListenerForGroup(data: string) {

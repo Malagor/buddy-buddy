@@ -158,6 +158,10 @@
   align-items: center;
   //margin: 0 rem(12px) 0 rem(12px);
 
+  &--author{
+    background-color: rgba(128, 128, 128, 0.616);
+  }
+
     &__img {
       margin: rem(8px);
       width: rem(50px);

@@ -352,20 +352,18 @@ export class Database {
       .ref(`Groups/${groupId}`)
       .once('value', (snapshot) => {
         data.dataGroup = snapshot.val()
-        console.log(0)
         addModalGroupData(data)
       }).then(() => {
         const userList = Object.keys(data.dataGroup.userList) 
-        //const dataUsers: any = {}
-        //console.log('data.groupInfo.userList', userList)
 
         userList.forEach((user: string) => {
           this.firebase
           .database()
           .ref(`User/${user}`)
           .once('value', (snapshot) => {
-            //data.user = snapshot.val()
-            addModalUserData(snapshot.val())
+            data.user = snapshot.val()
+            data.userId = snapshot.key
+            addModalUserData(data)
           })
         });
       })
