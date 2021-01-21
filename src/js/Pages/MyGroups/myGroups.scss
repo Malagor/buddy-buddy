@@ -133,6 +133,8 @@
 .card-detail{
 
   &__img-avatar{
+    display: block;
+    margin: auto;
     width: rem(85px);
     height: rem(85px);
     border-radius: 50%;
@@ -143,6 +145,37 @@
       border-radius: 50%;
     }
   }
+
+  &__user-list{
+    margin: 1rem;
+  }
+}
+
+.modal-detail {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  //margin: 0 rem(12px) 0 rem(12px);
+
+    &__img {
+      margin: rem(8px);
+      width: rem(50px);
+      height: rem(50px);
+      border-radius: 50%;
+    }
+    &__name{
+      margin: rem(5px);
+    }
+    &__account{
+      margin: rem(5px);
+    }
+    &__button{
+      position: absolute;
+      right: 10px;
+      /* bottom: 26px; */
+      top: 35%;
+    }
 }
 
 @media(max-width: 450px) {

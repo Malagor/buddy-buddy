@@ -360,13 +360,13 @@ export class MyGroups extends Page {
     divModalContent.innerHTML = `
       <div class="card mb-3 card-detail">
         <div class="row g-0 col">
-          <div class="col-4 card-detail__box-logo-group">
+          <div class="col-3 card-detail__box-logo-group">
             <img class="card-detail__img-avatar" src="${data.dataGroup.icon ? data.dataGroup.icon : defaultGroupLogo}" alt="icon-group">
           </div>
-          <div class="col-8 card-detail__box-logo-group">
+          <div class="col-9 card-detail__box-logo-group">
             <h5>${data.dataGroup.title}</h5>
-            <p>Create date ${ dataCreateGroup }</p>
-            <p>Close date  ${ dataCloseGroup ? dataCloseGroup : "group is active" }</p>
+            <p>Create date: ${ dataCreateGroup }</p>
+            <p>Close date:  ${ data.dataGroup.dateClose ? dataCloseGroup : "group is active" }</p>
           </div>
         </div>
       
@@ -374,8 +374,8 @@ export class MyGroups extends Page {
           <h5>Description</h5>
           <p class="card-text">${data.dataGroup.description ? data.dataGroup.description : "No description..."}</p>
         </div>
-        <div class="card-detail__user-list">
-        
+        <div id="modalUserList" class="card-detail__user-list">
+          <h5>Participants</h5>
         </div>
 
 
@@ -383,8 +383,26 @@ export class MyGroups extends Page {
     `
   }
 
-  addModalUserData() {
+  addModalUserData(data: any) {
     console.log('addModalUserData')
+    console.log('data',  data)
+    const divForUserList = document.getElementById('modalUserList')
+    
+    const html = `
+      <div class="card modal-detail">
+        <img class="modal-detail__img" src="${data.avatar}" alt="avatar">
+        <div>
+          <p  class="modal-detail__name">Name: ${data.name}</p>
+          <p  class="modal-detail__account">Account: ${data.account}</p>
+        </div>
+        <div class="modal-detail__button">
+          <button type="button" class="btn-close"  aria-label="Close"></button>
+        </div>
+      </div>
+      
+    `
+
+    divForUserList.insertAdjacentHTML('beforeend', html);
   }
 
   protected eventsAddEventListenerForGroup(data: string) {

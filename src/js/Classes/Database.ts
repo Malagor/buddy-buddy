@@ -358,12 +358,9 @@ export class Database {
           .database()
           .ref(`User/${user}`)
           .once('value', (snapshot) => {
-            //console.log('snapshot.val()___ USER', snapshot.val())
-            //console.log('USER', user)
-            addModalUserData()
-            //dataUsers[user] = snapshot.val()
+            //data.user = snapshot.val()
+            addModalUserData(snapshot.val())
           })
-          //data.dataUsers = dataUsers
         });
       })
   }
