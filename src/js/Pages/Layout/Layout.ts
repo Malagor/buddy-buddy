@@ -318,11 +318,18 @@ export class Layout extends Page {
       '.sidebar__account',
     );
 
-    menuAvatar.setAttribute('src', data.avatar);
-    menuAvatar.setAttribute('alt', data.name);
+    if (data.name) {
+      menuAvatar.setAttribute('alt', data.name);
+    }
 
-    menuUserName.textContent = data.name;
-    menuUserAccount.textContent = '@' + data.account;
+    if (data.avatar) {
+      menuAvatar.setAttribute('src', data.avatar);
+    }
+
+    if (data.account) {
+      menuUserName.textContent = data.name;
+      menuUserAccount.textContent = '@' + data.account;
+    }
   }
 
   static closeMobileMenu() {
@@ -342,7 +349,7 @@ export class Layout extends Page {
     });
 
     let itemClasses: string = menuItem.classList.value;
-    itemClasses = itemClasses.split(' ').map(el =>  '.' + el).join('');
+    itemClasses = itemClasses.split(' ').map(el => '.' + el).join('');
 
     const allMenuSameClasses: NodeListOf<HTMLElement> = document.querySelectorAll(`${itemClasses}`);
     allMenuSameClasses.forEach(item => {
