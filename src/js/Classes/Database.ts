@@ -338,6 +338,36 @@ export class Database {
     }
   }
 
+  getGroup(groupId: string, addModalGroupData: any, addModalUserData: any) {
+    const data: any = {}
+
+    this.firebase
+      .database()
+      .ref(`Groups/${groupId}`)
+      .once('value', (snapshot) => {
+        data.dataGroup = snapshot.val()
+        console.log(0)
+        addModalGroupData(data)
+      }).then(() => {
+        const userList = Object.keys(data.dataGroup.userList) 
+        //const dataUsers: any = {}
+        //console.log('data.groupInfo.userList', userList)
+
+        userList.forEach((user: string) => {
+          this.firebase
+          .database()
+          .ref(`User/${user}`)
+          .once('value', (snapshot) => {
+            //console.log('snapshot.val()___ USER', snapshot.val())
+            //console.log('USER', user)
+            addModalUserData()
+            //dataUsers[user] = snapshot.val()
+          })
+          //data.dataUsers = dataUsers
+        });
+      })
+  }
+
   getGroupList(handlerFunc: any): void {
     this.firebase
       .database()

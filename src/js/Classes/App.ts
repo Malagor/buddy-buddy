@@ -85,6 +85,7 @@ export class App {
       this.groups.onCreateNewGroup = this.onCreateNewGroup.bind(this);
       this.groups.onAddMember = this.onAddGroupMember.bind(this);
       this.groups.fillContactsList = this.fillContactsList.bind(this);
+      this.groups.onAddInfoForModalDetailGroup = this.onAddInfoForModalDetailGroup.bind(this);
 
 
       this.transactionsList = TransactionsList.create('.main');
@@ -177,6 +178,11 @@ export class App {
     this.groupHandler = this.database.groupHandler(this.groups.createGroupList, this.groups.addUserInGroupCard);
     this.database.getGroupList(this.groupHandler);
   }
+
+  onAddInfoForModalDetailGroup(idGroup: string) {
+    this.database.getGroup(idGroup, this.groups.addInfoForModalDetailGroup, this.groups.addModalUserData);
+  }
+
 
   onTransactionsPage() {
     this.transactionsList.render();

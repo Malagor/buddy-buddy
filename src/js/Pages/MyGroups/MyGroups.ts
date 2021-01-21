@@ -1,23 +1,30 @@
 import { Page } from '../../Classes/Page';
 import { IGroupData, IGroupDataAll } from '../../Interfaces/IGroupData';
 import { getFormData } from '../../Util/getFormData';
+//import { App } from '../../Classes/App';
+//import { Database } from '../../Classes/Database';
 
 import { Modal } from 'bootstrap';
 import { eventForContactsList } from '../Contacts/eventForContactsList';
 import { onClickContactInContactsList } from '../Contacts/onClickContactInContactsList';
+import { stringify } from 'querystring';
 
 const defaultGroupLogo = require('../../../assets/images/default-group-logo.png');
 const defaultUserAvatar =  require('../../../assets/images/default-user-avatar.jpg');
 
 export class MyGroups extends Page {
+  //private database: Database;
+
   onCreateNewGroup: any;
   onAddMember: any;
   fillContactsList: any;
+  onAddInfoForModalDetailGroup: any;
 
   static create(el: string): MyGroups {
     const page = new MyGroups(el);
     page.addMembersGroup = page.addMembersGroup.bind(page);
     page.createGroupList = page.createGroupList.bind(page);
+    //page.addInfoForModalDetailGroup = page.addInfoForModalDetailGroup.bind(page);
     return page;
   }
 
@@ -327,39 +334,29 @@ export class MyGroups extends Page {
     });
   }
 
-  protected eventsAddEventListenerForGroup(data: string) {
-    console.log('eventsAddEventListenerForGroup__data',data)
-    const divGroupDetail = document.getElementById('modalGroupDetail') 
-    const modalGroupDetail = new Modal(divGroupDetail)
-
-
-
-////////////////////////
+  addInfoForModalDetailGroup(data: any) {
+    console.log('addInfoForGroup___idGroup', data)
     const divModalContent =  document.getElementById('modalContent')
 
     const dateCreate: Date = new Date(data.dataGroup.dateCreate);
     const dataCreateGroup: string = dateCreate.toLocaleString();
     const dateClose: Date = new Date(data.dataGroup.dateClose);
     const dataCloseGroup: string = dateClose.toLocaleString();
-    
-    const listUsers = data.arrayUsers;
-    const participantsCards: string[] = [];
-    listUsers.forEach((user: any) => {
-      console.log('user', user )
-      const htmlUser = `
-      <div class="row">
-        <div class="col-3">
-          <img class="card-detail__img-avatar--user" src="${user.avatar ? user.avatar : defaultUserAvatar}" alt="icon-group">
-        </div>
-        <div class="col-9 ">
-          <p>${user.name}</p>
-        </div>
-      </div>
-      `
-      participantsCards.push(htmlUser)
-    });
 
-    //const listUsers = data.arrayUsers;
+/*     setTimeout(() => {
+      const listUsersObj = data.dataUsers
+      console.log('listUser', listUsersObj)
+      console.log('listUser__key', Object.keys(listUsersObj))
+    }, 1500) */
+/*     const listUsersObj = data.dataUsers
+    console.log('listUser', listUsersObj)
+    console.log('listUser__key', Object.keys(listUsersObj)) */
+    
+    const participantsInfo: string[] = [];
+/*     listUsers.forEach((user: any) => {
+      console.log(data.dataUsers[user])
+    }); */
+
     divModalContent.innerHTML = `
       <div class="card mb-3 card-detail">
         <div class="row g-0 col">
@@ -378,17 +375,29 @@ export class MyGroups extends Page {
           <p class="card-text">${data.dataGroup.description ? data.dataGroup.description : "No description..."}</p>
         </div>
         <div class="card-detail__user-list">
-          ${participantsCards.join('')}
+        
         </div>
 
 
       </div>
-
     `
+  }
 
-    const divGroup = document.getElementById(`${data.idGroup}`);
-    divGroup.addEventListener('click', () => {  
-    modalGroupDetail.show();
+  addModalUserData() {
+    console.log('addModalUserData')
+  }
+
+  protected eventsAddEventListenerForGroup(data: string) {
+    const divGroupDetail = document.getElementById('modalGroupDetail') 
+    const modalGroupDetail = new Modal(divGroupDetail)
+
+    const keyGroup = data.groupKey;
+    const divGroup = document.getElementById(`${data.groupKey}`);
+
+    divGroup.addEventListener('click', () => { 
+      this.onAddInfoForModalDetailGroup(keyGroup)
+      //this.addModalUserData()
+      modalGroupDetail.show();
     })
   }
 
