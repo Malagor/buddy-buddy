@@ -35,6 +35,7 @@ export class App {
   private messageHandler: (snapshot: any) => void;
   private transactionHandler: (snapshot: any) => void;
   private groupHandler: (snapshot: any) => void;
+  private userHandler: (snapshot: any) => void;
 
   constructor() {
     this.database = Database.create();
@@ -67,10 +68,12 @@ export class App {
       this.layout.onTransactionsPage = this.onTransactionsPage.bind(this);
       this.layout.onSettingsPage = this.onSettingsPage.bind(this);
       this.layout.onHelpPage = this.onHelpPage.bind(this);
-      this.layout.onSignOut = this.onSignOut.bind(this);
       this.layout.onAccountPage = this.onAccountPage.bind(this);
       this.layout.onMessagesPage = this.onMessagesPage.bind(this);
       this.layout.onContactsPage = this.onContactsPage.bind(this);
+
+      this.userHandler = this.database.userHandler(this.layout.setSidebarData);
+      this.database.userInfoListener(this.userHandler);
 
       this.accountPage = AccountPage.create('.main');
       this.accountPage.updateInfo = this.updateOnAccountPage.bind(this);
@@ -119,6 +122,7 @@ export class App {
 
   onSignOut(): any {
     this.database.signOut();
+    this.database.deleteUserInfoListener(this.userHandler);
     this.database.init();
   }
 
