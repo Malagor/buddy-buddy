@@ -128,9 +128,10 @@ export class Database {
   }
 
   updateUserInfo(uid: string, data: any) {
-    const storageRef = this.firebase.storage().ref(`avatars/${uid}`);
-    const userRef = this.firebase.database().ref(`User/${uid}`);
     const file = data['avatar'];
+    const fileExtension = file.name.slice(file.name.indexOf('.'));
+    const storageRef = this.firebase.storage().ref(`avatars/${uid}${fileExtension}`);
+    const userRef = this.firebase.database().ref(`User/${uid}`);
 
     const metadata = {
       'contentType': file.type,

@@ -132,7 +132,7 @@ export class AccountPage extends Page {
   events(): void {
     const submitInfo: HTMLElement = document.querySelector('.account__input-submit');
     const formInfo: HTMLFormElement = document.querySelector('.account__form-change-info');
-    const idValue: HTMLInputElement = document.querySelector('.block__title');
+    const idValue: HTMLInputElement = document.querySelector('.account__user-id');
     const accountImg: HTMLImageElement = document.querySelector('.account__image');
     const pageInputs: any = document.querySelectorAll('.account__input');
 
