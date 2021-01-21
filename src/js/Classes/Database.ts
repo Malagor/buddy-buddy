@@ -130,14 +130,14 @@ export class Database {
   updateUserInfo(uid: string, data: any) {
     const userRef = this.firebase.database().ref(`User/${uid}`);
     const file = data['avatar'];
-    
+
     if (typeof file === 'string') {
       userRef.update(data);
       return;
     }
     const fileExtension = file.name.slice(file.name.indexOf('.'));
     const storageRef = this.firebase.storage().ref(`avatars/${uid}${fileExtension}`);
-    
+
 
     const metadata = {
       'contentType': file.type,
@@ -1055,7 +1055,7 @@ export class Database {
       });
   }
 
-  getBalanceInGroup(groupId: string, currencyRate: number = 1, funcForRender: (balance: number) => void, errorHandler?: (message: string) => void) {
+  getBalanceInGroup(groupId: string, currencyRate: number = 1, funcForRender: (balance: number, usersBalanceData: any) => void, errorHandler?: (message: string) => void) {
     const base = this.firebase.database();
 
     base.ref(`Groups/${groupId}`)
@@ -1103,7 +1103,7 @@ export class Database {
         }, 0) : 0;
 
         balance *= currencyRate;
-        funcForRender(balance);
+        funcForRender(balance, usersList);
       })
       .catch(error => {
         console.log(error.code);
