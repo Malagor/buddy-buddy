@@ -8,7 +8,6 @@ import { AccountPage } from '../Pages/AccountPage/AccountPage';
 
 import { IGroupDataAll, IDataForCreateGroup } from '../Interfaces/IGroupData';
 import { TransactionsList } from '../Pages/TransactionsList/transactionsList';
-import { dataTransList } from '../Data/dataTransList';
 import { INotification, Notifications, TypeOfNotifications } from './Notifications';
 import { INewMessage, Messenger } from '../Pages/Messenger/Messenger';
 import { Contacts, ISearchUserData } from '../Pages/Contacts/Contacts';
@@ -74,6 +73,7 @@ export class App {
       this.layout.onContactsPage = this.onContactsPage.bind(this);
 
       this.accountPage = AccountPage.create('.main');
+      this.accountPage.updateInfo = this.updateOnAccountPage.bind(this);
       this.mainPage = Main.create('.main');
 
       this.database.getUserInfo(uid, [
@@ -88,7 +88,9 @@ export class App {
 
 
       this.transactionsList = TransactionsList.create('.main');
-      this.transactionsList.onTransactionSubmit = this.onTransactionSubmit.bind(this);
+      this.transactionsList.onChangeState = this.onChangeState.bind(this);
+      this.transactionsList.onGetTransInfo = this.onGetTransInfo.bind(this);
+      // this.transactionsList.onGetMembers = this.onGetMembers.bind(this);
 
       this.messenger = Messenger.create('.main');
       this.messenger.onAddRecipient = this.onAddRecipientToMessage.bind(this);
@@ -145,11 +147,21 @@ export class App {
 
   }
 
-  onAccountPage() {
+  updateOnAccountPage(data: any) {
+    const uid: string = this.database.uid;
+    this.database.updateUserInfo(uid, data);
+  }
+
+  async onAccountPage() {
     this.deleteHandlers();
     const uid: string = this.database.uid;
-    this.database.getUserInfo(uid, [this.accountPage.render]);
+    this.accountPage.render();
+    this.database.getUserInfo(uid, [this.accountPage.addUserInfo]);
+    await this.database.getCurrenciesOrLangsOrThemes(uid, this.accountPage.renderCurrencyOrLangOrTheme, 'Currency');
+    await this.database.getCurrenciesOrLangsOrThemes(uid, this.accountPage.renderCurrencyOrLangOrTheme, 'Language');
+    await this.database.getCurrenciesOrLangsOrThemes(uid, this.accountPage.renderCurrencyOrLangOrTheme, 'Theme');
 
+    this.accountPage.events();
   }
 
   onContactsPage() {
@@ -161,25 +173,23 @@ export class App {
 
   onGroupsPage() {
     this.deleteHandlers();
-    this.notifications.groupCount = 0;
-    this.notifications.setNotificationMark(TypeOfNotifications.Group, 0);
-
     this.groups.render();
-    this.groupHandler = this.database.groupHandler(this.groups.createCardIdUser, this.groups.createGroupList);
+    this.groupHandler = this.database.groupHandler(this.groups.createGroupList, this.groups.addUserInGroupCard);
     this.database.getGroupList(this.groupHandler);
   }
 
   onTransactionsPage() {
+    this.transactionsList.render();
     this.deleteHandlers();
-    this.notifications.transactionCount = 0;
-    this.notifications.setNotificationMark(TypeOfNotifications.Transaction, 0);
 
-    this.transactionsList.render(dataTransList);
     this.transactionsList.newTrans.onCreateTransaction = this.onCreateTransaction.bind(this);
     this.transactionsList.newTrans.onShowMembersOfGroup = this.onShowMembersOfGroup.bind(this);
     this.database.getCurrencyList(this.transactionsList.newTrans.addCurrencyList);
     this.database.getGroupsListForTransaction(this.transactionsList.newTrans.addGroupList);
     this.database.getMembersOfGroupFirst(this.transactionsList.newTrans.addMembersOfGroup);
+    this.database.getGroupsListForTransaction(this.transactionsList.addGroupToTransList);
+    this.transactionHandler = this.database.transactionHandler (this.transactionsList.addTransactionWrapper, this.transactionsList.addMyTransactions, this.transactionsList.addUserToList);
+    this.database.getMyTransactionsList(this.transactionHandler);
   }
 
   onMessagesPage() {
@@ -238,11 +248,6 @@ export class App {
     this.database.createNewGroup(dataForCreateGroup);
   }
 
-  onTransactionSubmit(i: number) {
-    dataTransList.transactions[i].submit = true;
-    console.log('submit transaction');
-  }
-
   onAddGroupMember(userId: string) {
     this.database.findUserById(userId, this.groups.addMembersGroup);
   }
@@ -253,6 +258,16 @@ export class App {
 
   onShowMembersOfGroup(groupID: string) {
     this.database.getMembersOfGroup(groupID, this.transactionsList.newTrans.addMembersOfGroup);
+  }
+
+  onChangeState(state: string, transID: string) {
+    this.database.setNewStateTransaction(state, transID);
+  }
+
+  onGetTransInfo(trans: any, transID: string, groupID: string) {
+    console.log ('ongettransinfo');
+    this.database.getTransInfoModal(trans, transID, groupID, this.transactionsList.addGroupTitle,
+      this.transactionsList.addMemberOfTransaction, this.transactionsList.addOwnerInfo);
   }
 
   onAddRecipientToMessage(accountName: string) {

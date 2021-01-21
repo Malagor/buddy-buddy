@@ -67,9 +67,8 @@ export class MyGroups extends Page {
 
   createGroupList = (data: any) => {
     document.querySelector('.data-is-not').classList.add('closed-group-hidden');
-    
-    //const HTMLListOpenGroups = document.getElementById('divForListOpenGroups');
-    const HTMLListOpenGroups = document.getElementById(`${data.idGroup}`);
+
+    const HTMLListOpenGroups = document.getElementById('divForListOpenGroups');
     const HTMLListClosedGroups = document.getElementById('divForListClosedGroups');
 
     if (!data.dataGroup.dateClose) {
@@ -81,24 +80,13 @@ export class MyGroups extends Page {
 
   }
 
-  createCardIdUser(data: any){
-    const createBlockIdGroup = (data: any) => {
-      return `
-        <div id=${data}>
-        </div>
-      `
-    }
 
-    const HTMLListOpenGroups = document.getElementById('divForListOpenGroups');
-
-    HTMLListOpenGroups.insertAdjacentHTML('afterbegin', createBlockIdGroup(data));
-  }
-
-  createCard(data: any, balanceGroup: number | null = null) {
+  addUserInGroupCard(data: any) {
     const NUM_OF_IMG_IN_GROUP_CARD: number = 5;
-    const date: Date = new Date(data.dataGroup.dateCreate);
-    const dataCreateGroup: string = date.toLocaleString();
     const listUsers = data.arrayUsers;
+
+    const cardGroup: HTMLElement = document.getElementById(`${data.groupKey}`);
+    const divForUserList: HTMLElement = cardGroup.querySelector('#userList');
 
     const participantsImg: string[] = [];
     listUsers.forEach((user: any) => {
@@ -111,8 +99,16 @@ export class MyGroups extends Page {
       participantsImg.push(String(listUsers.length - NUM_OF_IMG_IN_GROUP_CARD));
     }
 
+    divForUserList.insertAdjacentHTML('afterbegin', participantsImg.join(''));
+  }
+
+  createCard(data: any) {
+    const date: Date = new Date(data.dataGroup.dateCreate);
+    const dataCreateGroup: string = date.toLocaleString();
+    const listUsers = data.arrayUsers;
+
     return `
-      <div class="card mb-3 card-group">
+      <div id=${data.groupKey} class="card mb-3 card-group">
         <div class="row g-0 col">
           <div class="col-3 card-group__box-logo-group">
             <img class="card-group__img-avatar" src="${data.dataGroup.icon ? data.dataGroup.icon : defaultGroupLogo}" alt="icon-group">
@@ -130,11 +126,11 @@ export class MyGroups extends Page {
             </div>
 
             <div class="row col">
-              <div class="col-7">
-                ${participantsImg.join('')}
+              <div id="userList" class="col-7">
+
               </div>
-              <div class="col-5">
-                ${balanceGroup}
+              <div id="balanceGroup" class="col-5">
+
               </div>
             </div>
 
@@ -201,7 +197,7 @@ export class MyGroups extends Page {
 
                 <div class="col-2 modal-wrapper-btn">
                   <button type="button" class="btn btn-primary modal-btn-primary" id="addNewGroupMember"><span>add</span></button>
-                </div> 
+                </div>
               </div>
 
               <div class="col-12">
@@ -303,8 +299,6 @@ export class MyGroups extends Page {
         users.push(member.getAttribute('data-id'));
       });
 
-
-      console.log('logoGroupImgData', logoGroupImgData)
       const groupData: IGroupData = {
         title,
         description,
@@ -326,9 +320,9 @@ export class MyGroups extends Page {
     const addGroupMember = document.querySelector('#addNewGroupMember');
     addGroupMember.addEventListener('click', (ev) => {
       ev.preventDefault();
-      console.log('Add new Member');
+      //console.log('Add new Member');
       const member: HTMLFormElement = document.querySelector('.contact-user-id');
-      console.log('member.value', member.value);
+      //console.log('member.value', member.value);
       this.onAddMember(member.value);
     });
   }
@@ -399,7 +393,7 @@ export class MyGroups extends Page {
   }
 
   addMembersGroup(data: any): void {
-    console.log('addMembersGroup - data:', data);
+    //console.log('addMembersGroup - data:', data);
     if (data) {
       const members = document.querySelector('.group-members-avatar');
       members.insertAdjacentHTML('beforeend', `
