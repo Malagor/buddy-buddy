@@ -67,9 +67,6 @@ export class MyGroups extends Page {
     html += this.modalNewGroup();
     this.element.innerHTML = html;
     this.events();
-    
-
-    this.deleteGroup('-MRe40nReQOPN5H72LaX')
   }
 
   createGroupList = (data: any) => {

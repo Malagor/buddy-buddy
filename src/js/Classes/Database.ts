@@ -430,8 +430,6 @@ export class Database {
   }
 
   removeGroup(groupId: string) {
-
-
     this.firebase
       .database()
       .ref(`Groups/${groupId}`)
@@ -470,7 +468,6 @@ export class Database {
         } else {
           console.log('Group not found');
         }
-
       })
   }
 
