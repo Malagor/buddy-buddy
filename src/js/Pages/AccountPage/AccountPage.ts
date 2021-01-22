@@ -149,6 +149,7 @@ export class AccountPage extends Page {
 
     submitInfo.addEventListener('click', (e): void => {
       e.preventDefault();
+      values = [];
       const newData: any = getFormData(formInfo, accountImg);
       pageInputs.forEach((item: HTMLInputElement): void => {
           values.push(checkImg(item));
