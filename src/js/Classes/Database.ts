@@ -130,14 +130,14 @@ export class Database {
   updateUserInfo(uid: string, data: any) {
     const userRef = this.firebase.database().ref(`User/${uid}`);
     const file = data['avatar'];
-    
+
     if (typeof file === 'string') {
       userRef.update(data);
       return;
     }
     const fileExtension = file.name.slice(file.name.indexOf('.'));
     const storageRef = this.firebase.storage().ref(`avatars/${uid}${fileExtension}`);
-    
+
 
     const metadata = {
       'contentType': file.type,
@@ -345,30 +345,30 @@ export class Database {
   }
 
   getGroup(groupId: string, addModalGroupData: any, addModalUserData: any) {
-    const data: any = {}
-    data.thisUid = this.uid
+    const data: any = {};
+    data.thisUid = this.uid;
 
     this.firebase
       .database()
       .ref(`Groups/${groupId}`)
       .once('value', (snapshot) => {
-        data.dataGroup = snapshot.val()
-        data.groupId = snapshot.key
-        addModalGroupData(data)
+        data.dataGroup = snapshot.val();
+        data.groupId = snapshot.key;
+        addModalGroupData(data);
       }).then(() => {
-        const userList = Object.keys(data.dataGroup.userList) 
+        const userList = Object.keys(data.dataGroup.userList);
 
         userList.forEach((user: string) => {
           this.firebase
           .database()
           .ref(`User/${user}`)
           .once('value', (snapshot) => {
-            data.user = snapshot.val()
-            data.userId = snapshot.key
-            addModalUserData(data)
-          })
+            data.user = snapshot.val();
+            data.userId = snapshot.key;
+            addModalUserData(data);
+          });
         });
-      })
+      });
   }
 
   getGroupList(handlerFunc: any): void {
@@ -376,10 +376,10 @@ export class Database {
       .database()
       .ref('Groups')
       .on('child_added', (snapshot) => {
-        const userLIstInGroup =  Object.keys(snapshot.val().userList)
+        const userLIstInGroup =  Object.keys(snapshot.val().userList);
 
         if (userLIstInGroup.includes(this.uid)) {
-          handlerFunc(snapshot)
+          handlerFunc(snapshot);
         }
       },
         (error: { code: string; message: any; }) => {
@@ -436,9 +436,9 @@ export class Database {
       .database()
       .ref(`Groups/${groupId}`)
       .once('value', (snapshot) => {
-        console.log('snapshot', snapshot.val())
-        if(snapshot.val()) {
-          const userList = Object.keys(snapshot.val().userList) 
+        console.log('snapshot', snapshot.val());
+        if (snapshot.val()) {
+          const userList = Object.keys(snapshot.val().userList);
           userList.forEach((user) => {
             this.firebase
             .database()
@@ -449,12 +449,12 @@ export class Database {
               } else {
                 console.log('Delete group in user successful');
               }
-            })
-          })
+            });
+          });
         } else {
           console.log('Group not found, delete users unsuccessful');
         }
-        return snapshot.val()
+        return snapshot.val();
       }).then((snapshot) => {
         if (snapshot.val()) {
           this.firebase
@@ -466,11 +466,11 @@ export class Database {
             } else {
               console.log('Delete group successful');
             }
-          })
+          });
         } else {
           console.log('Group not found');
         }
-      })
+      });
   }
 
   countGroupsInvite(setNotificationMark: { (type: TypeOfNotifications, num: number): void; (arg0: TypeOfNotifications, arg1: number): void; }): void {
@@ -1181,7 +1181,7 @@ export class Database {
         const data = {
           balance: balance,
           groupId: groupId
-        }
+        };
         funcForRender(data);
       })
       .catch(error => {

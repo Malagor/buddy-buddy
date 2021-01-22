@@ -12,7 +12,7 @@ const defaultUserAvatar =  require('../../../assets/images/default-user-avatar.j
 
 export class MyGroups extends Page {
   onCreateNewGroup: any;
-  deleteGroup: any
+  deleteGroup: any;
   onAddMember: any;
   fillContactsList: any;
   onAddInfoForModalDetailGroup: any;
@@ -64,7 +64,7 @@ export class MyGroups extends Page {
       </div>
     `;
 
-    html += this.modalGroupDetail()
+    html += this.modalGroupDetail();
     html += this.modalNewGroup();
     this.element.innerHTML = html;
     this.events();
@@ -78,13 +78,13 @@ export class MyGroups extends Page {
 
     if (!data.dataGroup.dateClose) {
       HTMLListOpenGroups.insertAdjacentHTML('afterbegin', this.createCard(data));
-      this.eventsAddEventListenerForGroup(data)
+      this.eventsAddEventListenerForGroup(data);
     } else {
       document.querySelector('#accordionForClosedGroup').classList.remove('group-hidden');
       HTMLListClosedGroups.insertAdjacentHTML('afterbegin', this.createCard(data));
     }
 
-    this.addBalanceInGroupPage(data.groupKey)
+    this.addBalanceInGroupPage(data.groupKey);
   }
 
   addUserInGroupCard(data: any) {
@@ -107,12 +107,12 @@ export class MyGroups extends Page {
     divForUserList.insertAdjacentHTML('afterbegin', participantsImg.join(''));
   }
 
-  addBalanceInGroupCard(data: any){
-    console.log('addBalanceInGroupCard__data', data)
-    const divCardGroup = document.querySelector(`#${data.groupId}`)
-    const divForBalanceInCardGroup = divCardGroup.querySelector(`#balanceGroup`)
+  addBalanceInGroupCard(data: any) {
+    console.log('addBalanceInGroupCard__data', data);
+    const divCardGroup = document.querySelector(`#${data.groupId}`);
+    const divForBalanceInCardGroup = divCardGroup.querySelector(`#balanceGroup`);
 
-    const html = `<p>Balance ${data.balance} </p>`
+    const html = `<p>Balance ${data.balance} </p>`;
     divForBalanceInCardGroup.insertAdjacentHTML('afterbegin', html);
   }
 
@@ -343,16 +343,16 @@ export class MyGroups extends Page {
   }
 
   addInfoForModalDetailGroup(data: any) {
-    //console.log('addInfoForGroup___idGroup', data)
-    const divModalContent =  document.getElementById('modalContent')
-    const btnSaveModal = document.querySelector('#buttonSaveModal')
+    // console.log('addInfoForGroup___idGroup', data)
+    const divModalContent =  document.getElementById('modalContent');
+    const btnSaveModal = document.querySelector('#buttonSaveModal');
 
     const dateCreate: Date = new Date(data.dataGroup.dateCreate);
     const dataCreateGroup: string = dateCreate.toLocaleString();
     const dateClose: Date = new Date(data.dataGroup.dateClose);
     const dataCloseGroup: string = dateClose.toLocaleString();
 
-    btnSaveModal.classList.add('group-hidden')
+    btnSaveModal.classList.add('group-hidden');
 
     divModalContent.innerHTML = `
       <div class="card mb-3 card-detail">
@@ -363,16 +363,16 @@ export class MyGroups extends Page {
           <div class="col-6 card-detail__box-logo-group">
             <h5>${data.dataGroup.title}</h5>
             <p>Create date: ${ dataCreateGroup.slice(0, 10) }</p>
-            <p>Close date:  ${ data.dataGroup.dateClose ? dataCloseGroup : "group is active" }</p>
+            <p>Close date:  ${ data.dataGroup.dateClose ? dataCloseGroup : 'group is active' }</p>
           </div>
           <div id="balanceModalGroup" class="col-3 card-detail__box-logo-group">
           <h5>Balance</h5>
         </div>
         </div>
-      
+
         <div class="row g-0 col">
           <h5>Description</h5>
-          <p class="card-text">${data.dataGroup.description ? data.dataGroup.description : "No description..."}</p>
+          <p class="card-text">${data.dataGroup.description ? data.dataGroup.description : 'No description...'}</p>
         </div>
         <div id="modalUserList" class="card-detail__user-list">
           <h5>Participants</h5>
@@ -380,25 +380,25 @@ export class MyGroups extends Page {
 
 
       </div>
-    `
+    `;
   }
 
   addBalanceForModalGroupDetail(data: any) {
-    const divForBalanceModalCard = document.querySelector('#balanceModalGroup')
-    const html = `<h5>${data.balance}</h5>`
+    const divForBalanceModalCard = document.querySelector('#balanceModalGroup');
+    const html = `<h5>${data.balance}</h5>`;
     divForBalanceModalCard.insertAdjacentHTML('beforeend', html);
   }
 
    addModalUserData = async (data: any) => {
-    const userId = data.userId 
-    const author = data.dataGroup.author
-    const divForUserList = document.getElementById('modalUserList')
-    const btnSaveModal = document.querySelector('#buttonSaveModal')
-    let htmlButtonDeleteUser = null
-  
-    if(author === data.thisUid && userId !== author) {
-      btnSaveModal.classList.remove('group-hidden')
-      htmlButtonDeleteUser = `<button type="button" class="btn-close"  aria-label="Close"></button>` 
+    const userId = data.userId;
+    const author = data.dataGroup.author;
+    const divForUserList = document.getElementById('modalUserList');
+    const btnSaveModal = document.querySelector('#buttonSaveModal');
+    let htmlButtonDeleteUser = null;
+
+    if (author === data.thisUid && userId !== author) {
+      btnSaveModal.classList.remove('group-hidden');
+      htmlButtonDeleteUser = `<button type="button" class="btn-close"  aria-label="Close"></button>`;
     }
 
     const html = `
@@ -409,41 +409,41 @@ export class MyGroups extends Page {
           <p  class="modal-detail__account">${data.user.account}</p>
         </div>
         <div class="modal-detail__button">
-          ${ htmlButtonDeleteUser?  htmlButtonDeleteUser: ''}
+          ${ htmlButtonDeleteUser ?  htmlButtonDeleteUser : ''}
         </div>
       </div>
-    `
+    `;
     divForUserList.insertAdjacentHTML('beforeend', html);
 
     // выделение автора группы при прорисовке
-    if(userId === author) {
-      const cardAuthor = document.getElementById(`${data.user.account}`)
-      cardAuthor.classList.add('modal-detail--author')
+    if (userId === author) {
+      const cardAuthor = document.getElementById(`${data.user.account}`);
+      cardAuthor.classList.add('modal-detail--author');
     }
 
     const dataForBalanceInModalCard = {
       userId: data.userId,
       groupId: data.groupId
-    }
-    this.addUserBalanceInModalCardUser(dataForBalanceInModalCard)
+    };
+    this.addUserBalanceInModalCardUser(dataForBalanceInModalCard);
   }
 
   addUserBalanceInModalCardUser___TEST(balance: number) {
-    console.log(balance)
-    //return balance
+    console.log(balance);
+    // return balance
   }
 
   protected eventsAddEventListenerForGroup(data: any) {
-    const divGroupDetail = document.getElementById('modalGroupDetail') 
-    const modalGroupDetail = new Modal(divGroupDetail)
+    const divGroupDetail = document.getElementById('modalGroupDetail');
+    const modalGroupDetail = new Modal(divGroupDetail);
 
     const keyGroup = data.groupKey;
     const divGroup = document.getElementById(`${data.groupKey}`);
 
-    divGroup.addEventListener('click', () => { 
-      this.onAddInfoForModalDetailGroup(keyGroup)
+    divGroup.addEventListener('click', () => {
+      this.onAddInfoForModalDetailGroup(keyGroup);
       modalGroupDetail.show();
-    })
+    });
   }
 
   addMembersGroup(data: any): void {
@@ -480,7 +480,7 @@ if (element.balance < 0) {
       ${element.balance ? element.currency : ''}<span class="card-group__balance--positive">${element.balance ? element.balance : formatDate(element.dateCreate)}</span>
     </h5>
   `;
-} 
+}
 
 
 

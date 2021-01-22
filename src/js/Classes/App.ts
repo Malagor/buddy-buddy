@@ -90,8 +90,8 @@ export class App {
       this.groups.onAddMember = this.onAddGroupMember.bind(this);
       this.groups.fillContactsList = this.fillContactsList.bind(this);
       this.groups.onAddInfoForModalDetailGroup = this.onAddInfoForModalDetailGroup.bind(this);
-      this.groups.addBalanceInGroupPage = this.addBalanceInGroupPage.bind(this)
-      this.groups.addUserBalanceInModalCardUser = this.addUserBalanceInModalCardUser.bind(this)
+      this.groups.addBalanceInGroupPage = this.addBalanceInGroupPage.bind(this);
+      this.groups.addUserBalanceInModalCardUser = this.addUserBalanceInModalCardUser.bind(this);
 
 
       this.transactionsList = TransactionsList.create('.main');
@@ -188,18 +188,18 @@ export class App {
 
   onAddInfoForModalDetailGroup(idGroup: string) {
     this.database.getGroup(idGroup, this.groups.addInfoForModalDetailGroup, this.groups.addModalUserData);
-    this.database.getBalanceInGroup(idGroup, 1, this.groups.addBalanceForModalGroupDetail)
+    this.database.getBalanceInGroup(idGroup, 1, this.groups.addBalanceForModalGroupDetail);
   }
 
   addBalanceInGroupPage(idGroup: string) {
-    this.database.getBalanceInGroup(idGroup, 1, this.groups.addBalanceInGroupCard)
+    this.database.getBalanceInGroup(idGroup, 1, this.groups.addBalanceInGroupCard);
   }
 
   addUserBalanceInModalCardUser(data: any) {
-    console.log('APP______addUserBalanceInModalCardUser')
+    console.log('APP______addUserBalanceInModalCardUser');
 
     const { userId, groupId } = data;
-    this.database.getBalanceForUserInGroup(userId, groupId, 1, this.groups.addUserBalanceInModalCardUser___TEST)
+    this.database.getBalanceForUserInGroup(userId, groupId, 1, this.groups.addUserBalanceInModalCardUser___TEST);
   }
 
   onTransactionsPage() {
