@@ -1017,6 +1017,25 @@ export class Database {
     const userRef = base.ref('User');
     const transRef = base.ref('Transactions');
     const groupRef = base.ref('Groups');
+    
+
+
+    transRef.child(`${transID}/toUserList`)
+    .once('value', (snapshot) => {
+      const users = Object.keys(snapshot.val());
+      users.forEach((userID) => {
+        userRef.child(`${userID}/transactionList/${transID}`)
+        .remove()
+        .catch(error => {
+          if (error) {
+            console.log(error.message);
+          } else {
+            console.log('Удаление из списка трназакций у юзера');
+          }
+        })
+      })
+    });
+
 
     transRef.child(`${transID}`)
     .remove()
@@ -1028,13 +1047,13 @@ export class Database {
       }
     })
 
-    userRef.child(`transactionList/${transID}`)
+    userRef.child(`${this.uid}/transactionList/${transID}`)
     .remove()
     .catch(error => {
       if (error) {
         console.log(error.message);
       } else {
-        console.log('Удаление из списка трназакций у юзера');
+        console.log('Удаление из списка трназакций у хозяина');
       }
     })
 

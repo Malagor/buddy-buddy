@@ -91,7 +91,7 @@ export class App {
       this.transactionsList.onChangeState = this.onChangeState.bind(this);
       this.transactionsList.onGetTransInfo = this.onGetTransInfo.bind(this);
       this.transactionsList.onEditTransaction = this.onEditTransaction.bind(this);
-      this.transactionsList.onEditTransaction = this.onDeleteTransaction.bind(this);
+      this.transactionsList.onDeleteTransaction = this.onDeleteTransaction.bind(this);
       
 
       this.messenger = Messenger.create('.main');
@@ -182,9 +182,8 @@ export class App {
   }
 
   onTransactionsPage() {
-    this.transactionsList.render();
     this.deleteHandlers();
-
+    this.transactionsList.render();
     this.transactionsList.newTrans.onCreateTransaction = this.onCreateTransaction.bind(this);
     this.transactionsList.newTrans.onShowMembersOfGroup = this.onShowMembersOfGroup.bind(this);
     this.database.getCurrencyList(this.transactionsList.newTrans.addCurrencyList);

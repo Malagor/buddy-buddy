@@ -266,6 +266,14 @@ export class TransactionsList extends Page {
       btnSaveDisplay = 'd-none';
     } 
 
+
+    let checkDisplay: string;
+    if (trans.photo) {
+      checkDisplay = 'd-flex';
+    } else {
+      checkDisplay = 'd-none';
+    }
+
     wrapper.innerHTML = '';
     const date: any = getDate(trans.date);
     const baseHTML = `
@@ -299,7 +307,7 @@ export class TransactionsList extends Page {
           <div class="details__comment">${ownComment}</div>
         </div>
       
-        <div class="details__check align-items-center d-flex">
+        <div class="${checkDisplay} details__check align-items-center d-flex">
           <div>Чек: </div>
           <div class="details__icon-wrapper"><img class="details__icon" src=${trans.photo[0]} alt="check"></div>
         </div>
@@ -409,7 +417,7 @@ export class TransactionsList extends Page {
       const groupID = wrapper.querySelector('.details__group').getAttribute('groupID');
       this.detailsModal.hide();
       const transCard = document.getElementById(transID);
-      transCard.hidden = true;
+      transCard.remove();
       this.onDeleteTransaction(groupID, transID);
     });
  
@@ -429,7 +437,6 @@ export class TransactionsList extends Page {
       <div class="details__owner-name">${owner.name}</div>
     `;
   }
-
 
   addMemberOfTransaction = (trans: any, user: any) => {    
     const modalWrapper: HTMLElement = document.querySelector('.details__wrapper');
