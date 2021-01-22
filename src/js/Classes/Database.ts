@@ -353,6 +353,7 @@ export class Database {
       .ref(`Groups/${groupId}`)
       .once('value', (snapshot) => {
         data.dataGroup = snapshot.val()
+        data.groupId = snapshot.key
         addModalGroupData(data)
       }).then(() => {
         const userList = Object.keys(data.dataGroup.userList) 

@@ -17,12 +17,12 @@ export class MyGroups extends Page {
   fillContactsList: any;
   onAddInfoForModalDetailGroup: any;
   addBalanceInGroupPage: any;
+  addUserBalanceInModalCardUser: any;
 
   static create(el: string): MyGroups {
     const page = new MyGroups(el);
     page.addMembersGroup = page.addMembersGroup.bind(page);
     page.createGroupList = page.createGroupList.bind(page);
-    //page.addInfoForModalDetailGroup = page.addInfoForModalDetailGroup.bind(page);
     return page;
   }
 
@@ -87,7 +87,6 @@ export class MyGroups extends Page {
     this.addBalanceInGroupPage(data.groupKey)
   }
 
-
   addUserInGroupCard(data: any) {
     const NUM_OF_IMG_IN_GROUP_CARD: number = 5;
     const listUsers = data.arrayUsers;
@@ -116,10 +115,6 @@ export class MyGroups extends Page {
     const html = `<p>Balance ${data.balance} </p>`
     divForBalanceInCardGroup.insertAdjacentHTML('afterbegin', html);
   }
-
-
-
-
 
   createCard(data: any) {
     const date: Date = new Date(data.dataGroup.dateCreate);
@@ -394,9 +389,7 @@ export class MyGroups extends Page {
     divForBalanceModalCard.insertAdjacentHTML('beforeend', html);
   }
 
-  addModalUserData(data: any) {
-    //console.log('addModalUserData')
-    //console.log('data',  data)
+   addModalUserData = async (data: any) => {
     const userId = data.userId 
     const author = data.dataGroup.author
     const divForUserList = document.getElementById('modalUserList')
@@ -427,6 +420,17 @@ export class MyGroups extends Page {
       const cardAuthor = document.getElementById(`${data.user.account}`)
       cardAuthor.classList.add('modal-detail--author')
     }
+
+    const dataForBalanceInModalCard = {
+      userId: data.userId,
+      groupId: data.groupId
+    }
+    this.addUserBalanceInModalCardUser(dataForBalanceInModalCard)
+  }
+
+  addUserBalanceInModalCardUser___TEST(balance: number) {
+    console.log(balance)
+    //return balance
   }
 
   protected eventsAddEventListenerForGroup(data: any) {
