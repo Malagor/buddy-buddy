@@ -9,15 +9,8 @@ export class AccountPage extends Page {
     return new AccountPage(element);
   }
 
-  renderCurrencyOrLangOrTheme(data: any, currentOption: string): void {
-    let el: HTMLElement;
-    if (data.some((item: any) => item === 'RU')) {
-      el = document.querySelector('.form-select--lang');
-    } else if (data.some((item: any) => item === 'BYN')) {
-      el = document.querySelector('.form-select--curr');
-    } else {
-      el = document.querySelector('.form-select--theme');
-    }
+  renderLangOrTheme(data: any, currentOption: string): void {
+    const el: HTMLElement = (data.some((item: any) => item === 'RU')) ? document.querySelector('.form-select--lang') : document.querySelector('.form-select--theme');
 
     data.forEach((item: any) => {
       el.innerHTML += `
@@ -30,6 +23,29 @@ export class AccountPage extends Page {
       }
     });
   }
+
+  renderCurrenciesInput(data: any, currentOption: string): void {
+    const el: HTMLInputElement = document.querySelector('#activeCurrency');
+    el.setAttribute('value', currentOption);
+    const list = document.querySelector('.curr-list');
+    let html: string = ``;
+    data.forEach((item: string) => {
+      html += `
+      <li class="curr-list__item">
+        <span class="curr-list__currency">${item}</span>
+      </li>
+    `;
+    });
+    list.insertAdjacentHTML('beforeend', html);
+
+    document.querySelectorAll('.curr-list__item').forEach((option) => {
+      if (option.firstElementChild.textContent === currentOption) {
+        option.classList.add('active-curr');
+      }
+    });
+  }        
+
+
 
   addUserInfo(data: any): void {
     document.querySelector('.account__image').setAttribute('src', data.avatar);
@@ -91,9 +107,11 @@ export class AccountPage extends Page {
                 <span class="col-sm-2 col-form-label">
                   Currency
                 </span>
-                <div class="col-sm-10 account--input-size">
-                  <select name="currency" class="form-select form-select--curr account--input-size mx-0 account__input" aria-label="Currencies select">
-                  </select>
+                <div class="col-sm-10 dropdown curr-wrapper account--input-size">
+                  <i class="material-icons">search</i>
+                  <input class="form-control dropdown-toggle account__input-curr account__input" type="text" id="activeCurrency" data-bs-toggle="dropdown" aria-expanded="false" placeholder="Currency" autocomplete="off" name="currency">
+                  <ul id="curr__list" class="dropdown-menu curr-list members-dropdown-menu" aria-labelledby="Currencies">
+                  </ul>
                 </div>
               </div>
               <div class="form-group row block--margin-adaptive w-100">
@@ -138,9 +156,56 @@ export class AccountPage extends Page {
     const nameInput: HTMLInputElement = document.querySelector('.account__input-name');
     const pageInputs: any = document.querySelectorAll('.account__input');
     const themeSelect: any = document.querySelector('.form-select--theme');
-    let currentTheme: string = [...themeSelect.querySelectorAll('option')].find((item: any) => item.selected).textContent;
+    const contactList: HTMLElement = document.querySelector('.curr-list');
+    const curInput: HTMLInputElement = document.querySelector('.account__input-curr');
 
+    let currentTheme: string = [...themeSelect.querySelectorAll('option')].find((item: any) => item.selected).textContent;
     let values: string[] = [];
+
+    contactList.addEventListener('click', event => {
+      const { target }: any = event;
+      if (target.closest('.curr-list__item')) {
+        const item: HTMLElement = target.closest('.curr-list__item');
+        const formRecipient: HTMLInputElement = document.querySelector('#activeCurrency');  
+        const curr = item.querySelector('.curr-list__currency');
+
+        contactList.querySelectorAll('.curr-list__item').forEach((item: any) => {
+          item.classList.remove('active-curr');
+          item.removeAttribute('hidden');
+        });
+        curr.parentElement.classList.add('active-curr');
+
+        formRecipient.value = `${curr.textContent}`;
+        pageInputs.forEach((item: HTMLInputElement, index: number): void => {
+          if (item.classList.contains('account__input-curr')) {
+            if (values[index] !== item.value.trim()) {
+              submitInfo.removeAttribute('disabled');
+            } else {
+              submitInfo.setAttribute('disabled', 'true');
+            }
+          }
+        });
+      }
+    });
+
+    curInput.onkeyup = () => {
+      const li: NodeListOf<Element> = document.querySelectorAll('.curr-list__item');
+      const val: string = curInput.value.toLowerCase();
+
+      if (val.length > 1) {
+        li.forEach(item => {
+          const isValInName = item.querySelector('.curr-list__currency').textContent.toLowerCase().includes(val);  
+          item.setAttribute('hidden', '');
+          if (isValInName) {
+            item.removeAttribute('hidden');
+          }
+        });
+      } else {
+        li.forEach(item => {
+          item.removeAttribute('hidden');
+        });
+      }
+    };
 
     const checkImg = (item: any): string => {
       if (item.type === 'file') {

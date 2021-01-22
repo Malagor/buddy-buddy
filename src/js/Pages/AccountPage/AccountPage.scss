@@ -1,6 +1,10 @@
 @import "./src/scss/_misc/mixins";
 @import "../../../scss/_misc/variables.scss";
 
+.account__input {
+  cursor: pointer;
+}
+
 .account__double-form {
   display: flex;
   .account__double-form--first {
@@ -51,5 +55,44 @@
     @include desktop {
       font-size: 1.6rem;
     }
+  }
+}
+
+.curr-wrapper {
+  position: relative;
+
+  input {
+    width: 50%;
+  }
+
+  .material-icons {
+    position: absolute;
+    top: 0;
+    left: calc(50% - 30px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: rem(30px);
+    height: 100%;
+    opacity: 0.7;
+  }
+}
+
+ul.curr-list {
+  width: 47.5%;
+  max-height: rem(150px);
+  overflow-y: auto;
+
+  li {
+    padding-left: 0.5rem;
+    cursor: pointer;
+
+    &:hover {
+      background-color: rgba(0, 0, 0, 0.05);
+    }
+  }
+
+  li.active-curr {
+    background-color: rgba(0, 140, 255, 0.05);
   }
 }
