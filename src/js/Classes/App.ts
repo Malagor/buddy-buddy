@@ -90,7 +90,9 @@ export class App {
       this.transactionsList = TransactionsList.create('.main');
       this.transactionsList.onChangeState = this.onChangeState.bind(this);
       this.transactionsList.onGetTransInfo = this.onGetTransInfo.bind(this);
-      // this.transactionsList.onGetMembers = this.onGetMembers.bind(this);
+      this.transactionsList.onEditTransaction = this.onEditTransaction.bind(this);
+      this.transactionsList.onEditTransaction = this.onDeleteTransaction.bind(this);
+      
 
       this.messenger = Messenger.create('.main');
       this.messenger.onAddRecipient = this.onAddRecipientToMessage.bind(this);
@@ -265,10 +267,17 @@ export class App {
     this.database.setNewStateTransaction(state, transID);
   }
 
-  onGetTransInfo(trans: any, transID: string, groupID: string) {
-    console.log ('ongettransinfo');
-    this.database.getTransInfoModal(trans, transID, groupID, this.transactionsList.addGroupTitle,
-      this.transactionsList.addMemberOfTransaction, this.transactionsList.addOwnerInfo);
+  onGetTransInfo(trans: any, groupID: string) {
+    this.database.getTransInfoModal(trans, groupID, this.transactionsList.addGroupTitle,
+    this.transactionsList.addMemberOfTransaction, this.transactionsList.addOwnerInfo);
+  }
+
+  onEditTransaction(editData: any, transID: string, trans: any) {
+    this.database.setNewDataTransaction(editData, transID, trans);
+  }
+
+  onDeleteTransaction(groupID:string, transID: string) {
+    this.database.deleteTransaction(groupID, transID);
   }
 
   onAddRecipientToMessage(accountName: string) {

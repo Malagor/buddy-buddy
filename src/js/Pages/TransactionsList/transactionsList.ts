@@ -2,11 +2,12 @@ import { Page } from '../../Classes/Page';
 import { NewTransaction } from '../newTransaction/newTransaction';
 import { Modal } from 'bootstrap';
 import { getDate } from './getDate';
-import { throws } from 'assert';
 
 export class TransactionsList extends Page {
   onChangeState: any;
   onGetTransInfo: any;
+  onEditTransaction: any;
+  onDeleteTransaction: any;
   detailsModal:any;
 
   public newTrans: NewTransaction;
@@ -64,9 +65,6 @@ export class TransactionsList extends Page {
   addGroupToTransList = (groupID: string, groupTitle: string) => {
     const groups: HTMLFormElement = document.querySelector('.trans-list__groups');
     const groupElement = document.createElement('option');
-    // if (groupID === currentGroup) {
-    //   groupElement.setAttribute('selected', '');
-    // }
     groupElement.classList.add('trans-list__group');
     groupElement.value = groupID;
     groupElement.innerText = groupTitle;
@@ -81,7 +79,6 @@ export class TransactionsList extends Page {
   }
 
   addMyTransactions = (transID: string, trans: any, owner: boolean, ownUID: string): void => {
-
     const styles = this.setStyles(trans, owner, ownUID);
     const date: any = getDate(trans.date);
     const transaction: HTMLElement = document.getElementById(transID);
@@ -118,11 +115,11 @@ export class TransactionsList extends Page {
     this.changeSelectState(selectState, transaction, transID);
     const detailsModalWrapper: HTMLElement = document.querySelector('.details__wrapper');
     transaction.addEventListener('click', (e) => {
-      const { target } = e;
+      const { target }: any = e;
       if(!target.closest('.trans-item__state')) {
         this.detailsModal.show();
         this.renderOutTrans(detailsModalWrapper, transID, trans, owner, ownUID, selectState.value);
-      // this.modalEvents(detailsModalWrapper);
+       
       }
     });
   }
@@ -173,12 +170,10 @@ export class TransactionsList extends Page {
   }
 
   setStyles = (trans: any, owner: boolean, ownUID: string) => {
-    // const transList: HTMLFormElement = document.querySelector('.trans-list__groups');
 
     let btnDisplay: string;
     let cost: string;
     let colorCost: string;
-    // let transDisplay: string;
 
     if (owner) {
       btnDisplay = 'd-none';
@@ -334,18 +329,18 @@ export class TransactionsList extends Page {
       <div class=" ${membDisplay} details__not-members modal-body collapse" id="notMembers">
       </div>
       <div class="modal-footer ${btnSaveDisplay}">
-        <button type="button" class="details__save btn btn-primary">Save changes</button>
+        <button type="button" class="details__delete btn btn-danger">Удалить</button>
+        <button type="button" class="details__save btn btn-primary">Сохранить</button>
       </div>
     `;
     wrapper.insertAdjacentHTML('beforeend', baseHTML);
 
- 
-    this.onGetTransInfo(trans, transID, trans.groupID);
+    this.onGetTransInfo(trans, trans.groupID);
+
     const detailsSelectWrapper: HTMLElement = wrapper.querySelector('.details__state-wrapper');
     const detailsSelect: HTMLSelectElement = wrapper.querySelector('.details__state');
     const options: NodeListOf<HTMLElement> = detailsSelect.querySelectorAll('option');
     options.forEach((opt: HTMLOptionElement) => {
-      // console.log ('selectvalue', selectValue);
       if (opt.value === selectValue) {
         opt.setAttribute('selected', '');
       }
@@ -379,10 +374,8 @@ export class TransactionsList extends Page {
     });
 
     const checkBox = wrapper.querySelector('.details__check-box');
-    console.log ('checkbox', checkBox);
     if (trans.photo) {
       trans.photo.forEach((photo: string) => {
-         console.log ('photo', photo);
          const photoElement: string = `
             <div class="details__check-wrapper">
               <img class="details__check-image" src=${photo} alt="check">
@@ -401,32 +394,44 @@ export class TransactionsList extends Page {
     closeCheckBtn.addEventListener('click', () => {
       checkModal.hide();
     });
+
+    const btnSaveEdit = wrapper.querySelector('.details__save');
+    btnSaveEdit.addEventListener('click', (e) => {
+      e.preventDefault();
+      const editData = this.getDataforEditTransaction(wrapper);
+      this.onEditTransaction(editData, transID, trans);
+      this.detailsModal.hide();
+    });
+
+    const btnDelete = wrapper.querySelector('.details__delete');
+    btnDelete.addEventListener('click', (e) => {
+      e.preventDefault();
+      const groupID = wrapper.querySelector('.details__group').getAttribute('groupID');
+      this.detailsModal.hide();
+      const transCard = document.getElementById(transID);
+      transCard.hidden = true;
+      this.onDeleteTransaction(groupID, transID);
+    });
+ 
   }
 
-  addGroupTitle = (transID: string, title: string) =>  {
-    // const modalWrapper: HTMLElement = document.getElementById(transID);
+  addGroupTitle = (groupID: string, title: string) =>  {
     const modalWrapper: HTMLElement = document.querySelector('.details__wrapper');
     const titleElement: HTMLElement = modalWrapper.querySelector('.details__group');
+    titleElement.setAttribute('groupID', groupID);
     titleElement.innerText = `Группа: ${title}`;
   }
 
-  addOwnerInfo = (transID: string, owner: any) => {
-    // const modalWrapper: HTMLElement = document.getElementById(transID);
-    
+  addOwnerInfo = (owner: any) => {    
     const modalWrapper: HTMLElement = document.querySelector('.details__wrapper');
-    console.log ('details-wrapper', modalWrapper);
     const ownerWrapper: HTMLElement = modalWrapper.querySelector('.details__owner-info');
     ownerWrapper.innerHTML = `
-
       <div class="details__owner-name">${owner.name}</div>
     `;
   }
 
 
-  addMemberOfTransaction = (transID: string, trans: any, user: any) => {
-    // console.log ('trans', trans);
-    // const modalWrapper: HTMLElement = document.getElementById(transID);
-    
+  addMemberOfTransaction = (trans: any, user: any) => {    
     const modalWrapper: HTMLElement = document.querySelector('.details__wrapper');
     const membersWrapper: HTMLElement = modalWrapper.querySelector('.details__members');
     const notMembersWrapper: HTMLElement = modalWrapper.querySelector('.details__not-members');
@@ -434,15 +439,15 @@ export class TransactionsList extends Page {
     const currUser: any[] = Object.entries(trans.toUserList).find((userTrans: any) => userTrans[0] === user.key);
 
     if (currUser) {
-
       member.className = 'details__memb-wrapper details__memb--checked d-flex justify-content-between';
-      member.setAttribute('id', user.key);
+      member.setAttribute('user-id', user.key);
+      member.setAttribute('user-state', currUser[1].state);
       member.innerHTML = `
         <div class="details__member d-flex flex-column align-items-center">
           <div class="details__avatar"><img src="${user.avatar}" alt=${user.name}></div>
           <div class="details__name">${user.name}</div>
         </div>
-        <input class="details__member-cost form-control form-control-sm" type="text" value=${currUser[1].cost.toFixed(2)}>
+        <input class="details__member-cost form-control form-control-sm ${currUser[1].costFix}" type="text" value=${(+currUser[1].cost).toFixed(2)}>
         <textarea class="details__member-comment form-control" placeholder="Комментарий">${currUser[1].comment}</textarea>
         <div class="details__member-state d-flex justify-content-center"></div>
         <button class="details__member-delete btn btn-outline-secondary btn-sm"><i class="material-icons">clear</i></button>
@@ -450,9 +455,10 @@ export class TransactionsList extends Page {
 
       const state: HTMLElement = member.querySelector('.details__member-state');
       if (currUser[1].state === 'pending') {
-        state.innerHTML = 'pending';
+        state.innerHTML = 'ожидание';
       } else if (currUser[1].state === 'approve') {
         state.innerHTML = `<i class="material-icons text-success">done</i>`;
+        member.querySelector('.details__member-delete').classList.add('invisible');
       } else if (currUser[1].state === 'abort') {
         state.innerHTML = `<i class="material-icons text-danger">minimize</i>`;
       }
@@ -460,29 +466,112 @@ export class TransactionsList extends Page {
 
     } else {
       member.className = 'details__memb-wrapper details__memb--not-checked d-flex justify-content-between';
-      member.setAttribute('id', user.key);
+      member.setAttribute('user-id', user.key);
       member.innerHTML = `
         <div class="details__member d-flex flex-column align-items-center">
           <div class="details__avatar"><img src="${user.avatar}" alt=${user.name}></div>
           <div class="details__name">${user.name}</div>
         </div>
-        <input class="details__member-cost form-control form-control-sm" type="text" value="0.00">
+        <input class="details__member-cost form-control form-control-sm non-fixed" type="text" value="0.00">
         <textarea class="details__member-comment form-control" placeholder="Комментарий"></textarea>
         <div class="details__member-state d-flex justify-content-center"></div>
         <button class="details__member-delete btn btn-outline-secondary btn-sm"><i class="material-icons">add</i></button>
       `;
-
       notMembersWrapper.append(member);
     }
     const btnAddMembers: HTMLButtonElement = modalWrapper.querySelector('.details__add-memb');
     const notMembers: NodeListOf<HTMLElement> = notMembersWrapper.querySelectorAll('.details__memb-wrapper');
-    // console.log ('not memb', notMembers);
     if (notMembers.length === 0) {
       btnAddMembers.style.display = 'none';
     } else {
       btnAddMembers.style.display = '';
     }
 
+    const membInput: HTMLInputElement = member.querySelector('.details__member-cost');
+    membInput.addEventListener('input', () => {
+      if(+membInput.value >= 0 ) {
+        membInput.classList.add('fixed');
+        membInput.classList.remove('non-fixed');
+        this.editSum(trans, modalWrapper, membInput);
+      } 
+    });
+    
+    member.querySelector('.details__member-delete').addEventListener('click', () => {
+      if (member.querySelector('.details__member-delete').innerText === 'clear') {
+        notMembersWrapper.append(member);
+        member.classList.add('details__memb--not-checked');
+        member.classList.remove('details__memb--checked');
+        member.querySelector('.details__member-cost').value = '0.00';
+        member.querySelector('.details__member-cost').classList.add('non-fixed');
+        member.querySelector('.details__member-comment').value = '';
+        member.querySelector('.details__member-state').innerHTML = '';
+        member.querySelector('.details__member-delete').innerHTML = '<i class="material-icons">add</i>';
+      } else {
+        membersWrapper.append(member);
+        member.classList.remove('details__memb--not-checked');
+        member.classList.add('details__memb--checked');
+        member.setAttribute('user-state', 'pending');
+        member.querySelector('.details__member-state').innerHTML = 'ожидание';
+        member.querySelector('.details__member-delete').innerHTML = '<i class="material-icons">clear</i>';       
+      }
+      this.editSum(trans, modalWrapper);
+      const notMembers = notMembersWrapper.querySelectorAll('.details__memb-wrapper');
+      if (notMembers.length === 0) {
+        btnAddMembers.style.display = 'none';
+      } else {
+        btnAddMembers.style.display = 'block';
+      }
+    });
+  }
+
+  editSum = (trans: any, wrapper: HTMLElement, membInput?:HTMLInputElement) => {
+    
+    const membersWrapper: HTMLElement = wrapper.querySelector('.details__members');
+    const fixedSums = membersWrapper.querySelectorAll('.fixed');
+    const nonFixedSums = membersWrapper.querySelectorAll('.non-fixed');  
+    const btnSaveEdit = wrapper.querySelector('.details__save');
+    if (nonFixedSums) {
+      const numb: number = nonFixedSums.length;
+      let sumOfFixed: number = 0;
+      fixedSums.forEach((sum: HTMLFormElement) => {
+        sumOfFixed += +sum.value;
+      });   
+      const restSum: number = +((+trans.totalCost - sumOfFixed) / numb).toFixed(2);
+      if (restSum > 0) {
+        nonFixedSums.forEach((sum: HTMLFormElement) => {
+          sum.value = +restSum.toFixed(2);
+          if (membInput) {
+            membInput.classList.remove('text-danger');
+            btnSaveEdit.classList.remove('disabled'); 
+          }
+        }) 
+      } else {
+        membInput.classList.add('text-danger');
+        btnSaveEdit.classList.add('disabled');
+      }      
+    }
+  
+  }
+
+  getDataforEditTransaction = (transWrapper:HTMLElement) => {
+    const newUsers: any[] = [];
+    const newMembers = transWrapper.querySelectorAll('.details__memb--checked');
+    newMembers.forEach((member: HTMLElement) => {
+      const newUser: any = {};
+      newUser.userID = member.getAttribute('user-id');
+      newUser.cost = member.querySelector('.details__member-cost').value;
+      newUser.comment = member.querySelector('.details__member-comment').value;
+      newUser.state = member.getAttribute('user-state');
+      if (member.querySelector('.details__member-cost').classList.contains('fixed')) {
+        newUser.costFix = 'fixed';
+      } else {
+        newUser.costFix = 'non-fixed';
+      }
+      if (+newUser.cost > 0 ) {
+        newUsers.push(newUser);
+      }
+    });
+    return newUsers;
   }
 
   protected events(): void {
@@ -490,8 +579,6 @@ export class TransactionsList extends Page {
     groups.addEventListener('change', () => {
       const transList: NodeListOf<HTMLElement> = document.querySelectorAll('.trans-item');
       const groupID = groups.value;
-
-
 
       transList.forEach((transItem: HTMLElement) => {
         const itemGroupID = transItem.getAttribute('group-id');
@@ -519,12 +606,6 @@ export class TransactionsList extends Page {
           opt.removeAttribute('selected');
         }
       });
-
-      // const members: HTMLElement = document.querySelector('.new-trans__members-list');
-      // const checkedMembersList: HTMLElement = document.querySelector('.checked-members');
-      // members.innerHTML = '';
-      // checkedMembersList.innerHTML = '';
-      // this.newTrans.onShowMembersOfGroup(groupID);
     });
   }
 }

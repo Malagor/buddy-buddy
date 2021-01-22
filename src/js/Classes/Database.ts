@@ -6,6 +6,8 @@ import { ISearchUserData } from '../Pages/Contacts/Contacts';
 import { IMessage, INewMessage } from '../Pages/Messenger/Messenger';
 import { IHandlers } from './App';
 import { TypeOfNotifications } from './Notifications';
+import { once } from 'process';
+import { group } from 'console';
 
 const defaultAvatar: string = require('../../assets/images/default-user-avatar.jpg');
 
@@ -868,12 +870,6 @@ export class Database {
         const trans = snapshot.val();
         const userList: string[] = Object.keys(snapshot.val().toUserList);
         if (snapshot.val().userID === this.uid) {
-          // userRef.child(`${this.uid}`)
-          // .once('value', (snapshot) => {
-          //     let currGroup = snapshot.val().currentGroup;
-          //     if (!currGroup) {
-          //       currGroup = Object.keys(snapshot.val().groupList)[0];
-          //     }
               renderTransaction(transID, trans, true, this.uid);
               const numbOfUsers = userList.length;
               userList.forEach((userID: any) => {
@@ -887,14 +883,7 @@ export class Database {
                     renderUser(transID, user, numbOfUsers, true);
                   });
               });
-          // });
         } else if (Object.keys(snapshot.val().toUserList).some((user: any) => user === this.uid)) {
-            // userRef.child(`${this.uid}`)
-            // .once('value', (snapshot) => {
-            //   let currGroup = snapshot.val().currentGroup;
-            //   if (!currGroup) {
-            //     currGroup = Object.keys(snapshot.val().groupList)[0];
-            //   }
               renderTransaction(transID, trans, false, this.uid);
                 const userID = trans.userID;
                      userRef.child(`${userID}`)
@@ -906,7 +895,6 @@ export class Database {
                       };
                       renderUser(transID, user, 0, false);
                     });
-            // });
         } else return;
       })
       .catch(error => {
@@ -937,13 +925,13 @@ export class Database {
       });
   }
 
-  getTransInfoModal(trans: any, transID: string, groupID: string, renderGroupTitle: any, renderUser: any, renderOwner: any) {
+  getTransInfoModal(trans: any, groupID: string, renderGroupTitle: any, renderUser: any, renderOwner: any) {
     this.firebase
       .database()
       .ref(`Groups/${groupID}`)
       .once('value', (snapshot) => {
         const title = snapshot.val().title;
-        renderGroupTitle(transID, title);
+        renderGroupTitle(groupID, title);
         const userList: any[] = Object.keys(snapshot.val().userList);
         userList.forEach ((userID: string) => {
           this.firebase
@@ -952,7 +940,7 @@ export class Database {
             .once('value', (snapshot) => {
               const dataUser = snapshot.val();
               dataUser.key = userID;
-              renderUser(transID, trans, dataUser);
+              renderUser(trans, dataUser);
             });
 
         });
@@ -965,11 +953,110 @@ export class Database {
       .database()
       .ref(`User/${trans.userID}`)
       .once('value', (snapshot) => {
-         renderOwner(transID, snapshot.val());
+         renderOwner(snapshot.val());
       }, (error: { code: string; }) => {
         console.log('Error: ' + error.code);
       });
 
+  }
+
+  setNewDataTransaction = (editData: any, transID: string, trans: any) => {
+    const base = this.firebase.database();
+    const userRef = base.ref('User');
+    const transRef = base.ref('Transactions');
+    const oldUsersID = Object.keys(trans.toUserList); 
+    const newUsers = editData.map((user:any) => user.userID);
+    editData.forEach((newUser: any) => {
+      const newData = {
+        cost: newUser.cost,
+        comment: newUser.comment,
+        state: newUser.state,
+        costFix: newUser.costFix,
+      }
+      if (newUser.userID === this.uid) {
+        newData.state = 'approve';
+      }
+      transRef.child(`${transID}/toUserList/${newUser.userID}`)
+      .set(newData)
+      .catch(error => {
+        console.log('Error: ' + error.code);
+      });
+
+      userRef.child(`${newUser.userID}/transactionList/${transID}/state`)
+      .set(newUser.state)
+      .catch(error => {
+        console.log('Error: ' + error.code);
+      });
+    })
+
+    oldUsersID.forEach((oldUser: string) => {
+      if (!newUsers.includes(oldUser)) {
+        transRef.child(`${transID}/toUserList/${oldUser}`)
+        .remove(error => {
+              if (error) {
+                console.log(error.message);
+              } else {
+                console.log('Delete user');
+              }
+        })
+        
+        userRef.child(`${oldUser}/transactionList/${transID}`)
+        .remove(error => {
+          if (error) {
+            console.log(error.message);
+          } else {
+            console.log('Delete transID');
+          }
+        })
+      }
+    })
+  }
+
+  deleteTransaction(groupID:string, transID: string) {
+    const base = this.firebase.database();
+    const userRef = base.ref('User');
+    const transRef = base.ref('Transactions');
+    const groupRef = base.ref('Groups');
+
+    transRef.child(`${transID}`)
+    .remove()
+    .catch(error => {
+      if (error) {
+        console.log(error.message);
+      } else {
+        console.log('Удаление из списка трназакций');
+      }
+    })
+
+    userRef.child(`transactionList/${transID}`)
+    .remove()
+    .catch(error => {
+      if (error) {
+        console.log(error.message);
+      } else {
+        console.log('Удаление из списка трназакций у юзера');
+      }
+    })
+
+    groupRef.child(`${groupID}/transactions`)
+    .transaction(list => {
+      const i = list.indexOf(transID);
+      console.log ('transdelete', transID);
+      console.log ('listbefore', list);
+      list.splice(i, 1);
+      console.log('listafter', list)
+      return list;
+    })
+    .catch(error => {
+      if (error) {
+        console.log(error.message);
+      } else {
+        console.log('Удаление из списка трназакций в группе');
+      }
+    })
+
+
+    
   }
 
   addUserToContacts(userData: ISearchUserData, errorHandler: (message: string) => void) {
