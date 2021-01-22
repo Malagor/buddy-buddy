@@ -35,6 +35,7 @@ export class App {
   private messageHandler: (snapshot: any) => void;
   private transactionHandler: (snapshot: any) => void;
   private groupHandler: (snapshot: any) => void;
+  private userHandler: (snapshot: any) => void;
 
   constructor() {
     this.database = Database.create();
@@ -67,10 +68,12 @@ export class App {
       this.layout.onTransactionsPage = this.onTransactionsPage.bind(this);
       this.layout.onSettingsPage = this.onSettingsPage.bind(this);
       this.layout.onHelpPage = this.onHelpPage.bind(this);
-      this.layout.onSignOut = this.onSignOut.bind(this);
       this.layout.onAccountPage = this.onAccountPage.bind(this);
       this.layout.onMessagesPage = this.onMessagesPage.bind(this);
       this.layout.onContactsPage = this.onContactsPage.bind(this);
+
+      this.userHandler = this.database.userHandler(this.layout.setSidebarData);
+      this.database.userInfoListener(this.userHandler);
 
       this.accountPage = AccountPage.create('.main');
       this.accountPage.updateInfo = this.updateOnAccountPage.bind(this);
@@ -103,6 +106,7 @@ export class App {
       this.contacts = Contacts.create('.main');
       this.contacts.addUserToContacts = this.onAddUserToContacts.bind(this);
       this.contacts.onChangeContactState = this.onChangeContactState.bind(this);
+      this.contacts.onDeleteContact = this.onDeleteContact.bind(this);
 
     } else {
       console.log(`isUserLogon = ${state}`);
@@ -123,6 +127,7 @@ export class App {
   onSignOut(): any {
     this.deleteHandlers();
     this.database.signOut();
+    this.database.deleteUserInfoListener(this.userHandler);
     this.database.init();
   }
 
@@ -190,7 +195,7 @@ export class App {
     this.database.getGroupsListForTransaction(this.transactionsList.newTrans.addGroupList);
     this.database.getMembersOfGroupFirst(this.transactionsList.newTrans.addMembersOfGroup);
     this.database.getGroupsListForTransaction(this.transactionsList.addGroupToTransList);
-    this.transactionHandler = this.database.transactionHandler (this.transactionsList.addTransactionWrapper, this.transactionsList.addMyTransactions, this.transactionsList.addUserToList);
+    this.transactionHandler = this.database.transactionHandler(this.transactionsList.addTransactionWrapper, this.transactionsList.addMyTransactions, this.transactionsList.addUserToList);
     this.database.getMyTransactionsList(this.transactionHandler);
   }
 
@@ -330,18 +335,18 @@ export class App {
     if (state === 'approve') {
       this.notifications.decreaseNotificationMark(TypeOfNotifications.Contact);
     }
-    if (state === 'decline') {
-      this.database.deleteContact(this.database.uid, contactId);
-    } else {
-      this.database.changeContactState(contactId, state);
-    }
+    this.database.changeContactState(contactId, state);
   }
 
   fillContactsList() {
-
     const renderContact = this.database.contactsHandler(this.contacts.addContactsToList);
-
     this.database.getContactsList(renderContact);
+  }
+
+  onDeleteContact(contactId: string): void {
+    this.database.deleteUserFromContactsList(contactId);
+    this.database.deleteUserFromContactsList(this.database.uid, contactId);
+    this.notifications.decreaseNotificationMark(TypeOfNotifications.Contact);
   }
 
   // createUser(uid: string) {
