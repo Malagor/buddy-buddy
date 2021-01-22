@@ -429,6 +429,38 @@ export class Database {
       .set(groupKey);
   }
 
+  removeGroup(groupId: string) {
+    this.firebase
+      .database()
+      .ref(`Groups/${groupId}`)
+      .once('value', (snapshot) => {
+        const userList = Object.keys(snapshot.val().userList) 
+        userList.forEach((user) => {
+          this.firebase
+          .database()
+          .ref(`User/${user}/groupList/${groupId}`)
+          .remove(error => {
+            if (error) {
+              console.log(error.message);
+            } else {
+              console.log('Delete group in user successful');
+            }
+          })
+        })
+      }).then(() => {
+        this.firebase
+        .database()
+        .ref(`Groups/${groupId}`)
+        .remove(error => {
+          if (error) {
+            console.log(error.message);
+          } else {
+            console.log('Delete group successful');
+          }
+        })
+      })
+  }
+
   countGroupsInvite(setNotificationMark: { (type: TypeOfNotifications, num: number): void; (arg0: TypeOfNotifications, arg1: number): void; }): void {
     this.firebase
       .database()

@@ -86,6 +86,7 @@ export class App {
 
       this.groups = MyGroups.create('.main');
       this.groups.onCreateNewGroup = this.onCreateNewGroup.bind(this);
+      this.groups.deleteGroup = this.deleteGroup.bind(this);
       this.groups.onAddMember = this.onAddGroupMember.bind(this);
       this.groups.fillContactsList = this.fillContactsList.bind(this);
       this.groups.onAddInfoForModalDetailGroup = this.onAddInfoForModalDetailGroup.bind(this);
@@ -321,6 +322,10 @@ export class App {
     };
 
     this.database.deleteHandlers(handlers);
+  }
+
+  deleteGroup(idGroup: string) {
+    this.database.removeGroup(idGroup);
   }
 
   onAddUserToContacts(userData: ISearchUserData, errorHandler: (message: string) => void): void {
