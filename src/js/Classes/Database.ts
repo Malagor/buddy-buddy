@@ -430,34 +430,47 @@ export class Database {
   }
 
   removeGroup(groupId: string) {
+
+
     this.firebase
       .database()
       .ref(`Groups/${groupId}`)
       .once('value', (snapshot) => {
-        const userList = Object.keys(snapshot.val().userList) 
-        userList.forEach((user) => {
+        console.log('snapshot', snapshot.val())
+        if(snapshot.val()) {
+          const userList = Object.keys(snapshot.val().userList) 
+          userList.forEach((user) => {
+            this.firebase
+            .database()
+            .ref(`User/${user}/groupList/${groupId}`)
+            .remove(error => {
+              if (error) {
+                console.log(error.message);
+              } else {
+                console.log('Delete group in user successful');
+              }
+            })
+          })
+        } else {
+          console.log('Group not found, delete users unsuccessful');
+        }
+        return snapshot.val()
+      }).then((snapshot) => {
+        if (snapshot.val()) {
           this.firebase
           .database()
-          .ref(`User/${user}/groupList/${groupId}`)
+          .ref(`Groups/${groupId}`)
           .remove(error => {
             if (error) {
               console.log(error.message);
             } else {
-              console.log('Delete group in user successful');
+              console.log('Delete group successful');
             }
           })
-        })
-      }).then(() => {
-        this.firebase
-        .database()
-        .ref(`Groups/${groupId}`)
-        .remove(error => {
-          if (error) {
-            console.log(error.message);
-          } else {
-            console.log('Delete group successful');
-          }
-        })
+        } else {
+          console.log('Group not found');
+        }
+
       })
   }
 
