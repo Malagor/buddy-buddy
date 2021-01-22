@@ -570,9 +570,9 @@ export class Database {
             const userData = snapshot.val();
             userData.key = key;
             userData.state = state;
-            // if (state !== 'decline') {
-            renderContact(userData);
-            // }
+            if (state !== 'decline') {
+              renderContact(userData);
+            }
           });
       } else {
         console.log('No Contacts');
@@ -644,20 +644,25 @@ export class Database {
       });
   }
 
-  deleteContact(userId: string, contactId: string) {
-    this.changeContactState(contactId, 'decline');
-    this.changeContactState(userId, 'decline', contactId);
+  deleteUserFromContactsList(contactId: string, userId?: string) {
+    let user: string;
 
-    // this.firebase
-    //   .database()
-    //   .ref(`User/${userId}/contacts/${contactId}`)
-    //   .remove(error => {
-    //     if (error) {
-    //       console.log(error.message);
-    //     } else {
-    //       console.log('Delete contact successful');
-    //     }
-    //   });
+    if (userId) {
+      user = userId;
+    } else {
+      user = this.uid;
+    }
+
+    this.firebase.database()
+      .ref(`User/${user}/contacts/${contactId}`)
+      .remove(error => {
+        if (error) {
+          console.log(error.message);
+        } else {
+          console.log('User deleted');
+        }
+      });
+
   }
 
   createNewMessage(data: INewMessage): void {
