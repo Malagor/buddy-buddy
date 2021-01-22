@@ -90,13 +90,14 @@ export class Main extends Page {
         return response.json();
       })
       .then((data: any) => {
-        callback(data, current , this.onMainGetBalance);
+        callback(data, current, this.onMainGetBalance);
       });
   }
 
   createCurrTable(data: any, current: string, call: any): void {
     const currencies: string[] = ['USD', 'EUR', 'RUB'];
     const dt: any = [];
+    const rates: number[] = [];
     const usdRate = data.find((item: any) => item.Cur_Abbreviation === 'USD').Cur_OfficialRate;
 
     document.querySelector('tbody').innerHTML = `
@@ -106,7 +107,8 @@ export class Main extends Page {
       <td>1</td>
       <td class="for-counter">${current}</td>
     </tr>`;
-    call(usdRate);    
+
+    rates.push(usdRate);
 
     data.forEach((item: any) => {
       currencies.forEach((it: any) => {
@@ -128,8 +130,10 @@ export class Main extends Page {
       </tr>
       `;
       const elemRate = dt[i].Cur_Abbreviation === 'RUB' ? usdRate / dt[i].Cur_OfficialRate * 100 : usdRate / dt[i].Cur_OfficialRate;
-      call(elemRate);
+      rates.push(elemRate);
     }
+
+    rates.forEach(async (item: number) => await call(item));
   }
 
   renderSlider(data: any): void {
