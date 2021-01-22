@@ -265,7 +265,7 @@ export class Main extends Page {
         <div class="block__card justify-content-between block--width-85 block__card--no-border">
           <div class="block__card block__element-gap main__block-name-photo flex-column block__card--no-border">
               <div class="block__image-wrapper">
-                <img class="block__image">
+                <img src="#" alt="" class="block__image">
             </div>
             <p class="main__name mb-0 w-100">
               <span class="main__name__text"></span>
