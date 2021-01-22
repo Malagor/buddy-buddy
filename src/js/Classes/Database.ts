@@ -346,6 +346,7 @@ export class Database {
 
   getGroup(groupId: string, addModalGroupData: any, addModalUserData: any) {
     const data: any = {}
+    data.thisUid = this.uid
 
     this.firebase
       .database()
@@ -1128,7 +1129,7 @@ export class Database {
       });
   }
 
-  getBalanceInGroup(groupId: string, currencyRate: number = 1, funcForRender: (balance: number) => void, errorHandler?: (message: string) => void) {
+  getBalanceInGroup(groupId: string, currencyRate: number = 1, funcForRender: (data: any) => void, errorHandler?: (message: string) => void) {
     const base = this.firebase.database();
 
     base.ref(`Groups/${groupId}`)
@@ -1176,7 +1177,11 @@ export class Database {
         }, 0) : 0;
 
         balance *= currencyRate;
-        funcForRender(balance);
+        const data = {
+          balance: balance,
+          groupId: groupId
+        }
+        funcForRender(data);
       })
       .catch(error => {
         console.log(error.code);

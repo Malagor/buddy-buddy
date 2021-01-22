@@ -90,6 +90,7 @@ export class App {
       this.groups.onAddMember = this.onAddGroupMember.bind(this);
       this.groups.fillContactsList = this.fillContactsList.bind(this);
       this.groups.onAddInfoForModalDetailGroup = this.onAddInfoForModalDetailGroup.bind(this);
+      this.groups.addBalanceInGroupPage = this.addBalanceInGroupPage.bind(this)
 
 
       this.transactionsList = TransactionsList.create('.main');
@@ -186,8 +187,12 @@ export class App {
 
   onAddInfoForModalDetailGroup(idGroup: string) {
     this.database.getGroup(idGroup, this.groups.addInfoForModalDetailGroup, this.groups.addModalUserData);
+    this.database.getBalanceInGroup(idGroup, 1, this.groups.addBalanceForModalGroupDetail)
   }
 
+  addBalanceInGroupPage(idGroup: string) {
+    this.database.getBalanceInGroup(idGroup, 1, this.groups.addBalanceInGroupCard)
+  }
 
   onTransactionsPage() {
     this.transactionsList.render();
