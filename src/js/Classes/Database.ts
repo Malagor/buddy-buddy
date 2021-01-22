@@ -373,7 +373,13 @@ export class Database {
     this.firebase
       .database()
       .ref('Groups')
-      .on('child_added', handlerFunc,
+      .on('child_added', (snapshot) => {
+        const userLIstInGroup =  Object.keys(snapshot.val().userList)
+
+        if (userLIstInGroup.includes(this.uid)) {
+          handlerFunc(snapshot)
+        }
+      },
         (error: { code: string; message: any; }) => {
           console.log('Error:\n ' + error.code);
           console.log(error.message);
