@@ -1060,10 +1060,10 @@ export class Database {
       });
   }
 
-  getBalanceInGroup(groupId: string, currencyRate: number = 1, funcForRender: (balance: number, usersBalanceData: any) => void, errorHandler?: (message: string) => void) {
+  getBalanceInGroup(funcForRender: (groupBalance: number, usersBalance: any) => void, errorHandler?: (message: string) => void) {
     const base = this.firebase.database();
 
-    base.ref(`Groups/${groupId}`)
+    return (groupId: string) => base.ref(`Groups/${groupId}`)
       .once('value', snapshot => {
         const usersList = snapshot.val().userList || [];
         const transactionsId: string[] = snapshot.val().transactions || [];
@@ -1107,7 +1107,6 @@ export class Database {
           return sum;
         }, 0) : 0;
 
-        balance *= currencyRate;
         funcForRender(balance, usersList);
       })
       .catch(error => {
@@ -1116,6 +1115,22 @@ export class Database {
         if (errorHandler) {
           errorHandler(error.message);
         }
+      });
+  }
+
+  getGroupById(groupID: string): any {
+    return this.firebase.database()
+      .ref(`Groups/${groupID}`)
+      .once('value', snapshot => {
+        return snapshot;
+      });
+  }
+
+  getTransactionById(transactionID: string): any {
+    return this.firebase.database()
+      .ref(`Transactions/${transactionID}`)
+      .once('value', snapshot => {
+        return snapshot;
       });
   }
 
@@ -1214,6 +1229,18 @@ export class Database {
     });
 
     return balance;
+  }
+
+  checkAccountName() {
+    return (accountName: string) => {
+      return this.firebase.database()
+        .ref('User')
+        .orderByChild('account')
+        .equalTo(accountName)
+        .once('value', snapshot => {
+          return snapshot;
+        });
+    };
   }
 
 
