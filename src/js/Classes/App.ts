@@ -77,6 +77,8 @@ export class App {
 
       this.accountPage = AccountPage.create('.main');
       this.accountPage.updateInfo = this.updateOnAccountPage.bind(this);
+      this.accountPage.changeTheme = this.changeTheme.bind(this);
+
       this.mainPage = Main.create('.main');
 
       this.database.getUserInfo(uid, [
@@ -106,6 +108,7 @@ export class App {
       this.contacts.onChangeContactState = this.onChangeContactState.bind(this);
       this.contacts.onDeleteContact = this.onDeleteContact.bind(this);
 
+      this.changeTheme();
     } else {
       console.log(`isUserLogon = ${state}`);
       this.authPage = AuthPage.create('#app');
@@ -143,6 +146,17 @@ export class App {
       password,
       this.authPage.showErrorMessage,
     );
+  }
+
+  changeTheme(theme: string = 'light'): void {
+    const bodyClassList: any = document.querySelector('body').classList;
+    if (!bodyClassList.length) {
+      bodyClassList.add(`theme--${theme}`);
+    } else {
+      const themeClass: any = [...bodyClassList].find((item: any) => item.slice(0, 7) === 'theme--');
+      bodyClassList.remove(themeClass);
+      bodyClassList.add(`theme--${theme}`);
+    }
   }
 
   onMainPage() {

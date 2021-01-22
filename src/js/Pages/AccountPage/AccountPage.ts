@@ -3,12 +3,13 @@ import { getFormData } from '../../Util/getFormData';
 
 export class AccountPage extends Page {
   updateInfo: any;
+  changeTheme: any;
 
   static create(element: string): AccountPage {
     return new AccountPage(element);
   }
 
-  renderCurrencyOrLangOrTheme(data: any, currentCurrency: string): void {
+  renderCurrencyOrLangOrTheme(data: any, currentOption: string): void {
     let el: HTMLElement;
     if (data.some((item: any) => item === 'RU')) {
       el = document.querySelector('.form-select--lang');
@@ -24,7 +25,7 @@ export class AccountPage extends Page {
     });
 
     el.querySelectorAll('option').forEach((option) => {
-      if (option.textContent === currentCurrency) {
+      if (option.textContent === currentOption) {
         option.setAttribute('selected', 'true');
       }
     });
@@ -136,6 +137,8 @@ export class AccountPage extends Page {
     const accountImg: HTMLImageElement = document.querySelector('.account__image');
     const nameInput: HTMLInputElement = document.querySelector('.account__input-name');
     const pageInputs: any = document.querySelectorAll('.account__input');
+    const themeSelect: any = document.querySelector('.form-select--theme');
+    let currentTheme: string = [...themeSelect.querySelectorAll('option')].find((item: any) => item.selected).textContent;
 
     let values: string[] = [];
 
@@ -149,15 +152,18 @@ export class AccountPage extends Page {
 
     submitInfo.addEventListener('click', (e): void => {
       e.preventDefault();
+      const newCurrentTheme = [...themeSelect.querySelectorAll('option')].find((item: any) => item.selected).textContent;
       values = [];
       const newData: any = getFormData(formInfo, accountImg);
       pageInputs.forEach((item: HTMLInputElement): void => {
           values.push(checkImg(item));
         });
-      this.updateInfo(newData);
+      this.updateInfo(newData);      
+      if (currentTheme !== newCurrentTheme) this.changeTheme(newCurrentTheme.toLowerCase());
       idValue.textContent = `@${newData.account}`;
       nameInput.value = newData.name;
       submitInfo.setAttribute('disabled', 'true');
+      currentTheme = newCurrentTheme;
     });
 
     pageInputs.forEach((item: HTMLInputElement, index: number): void => {
