@@ -143,14 +143,14 @@ export class Database {
   updateUserInfo(uid: string, data: any) {
     const userRef = this.firebase.database().ref(`User/${uid}`);
     const file = data['avatar'];
-    
+
     if (typeof file === 'string') {
       userRef.update(data);
       return;
     }
     const fileExtension = file.name.slice(file.name.indexOf('.'));
     const storageRef = this.firebase.storage().ref(`avatars/${uid}${fileExtension}`);
-    
+
 
     const metadata = {
       'contentType': file.type,
@@ -652,9 +652,9 @@ export class Database {
             const userData = snapshot.val();
             userData.key = key;
             userData.state = state;
-            // if (state !== 'decline') {
-            renderContact(userData);
-            // }
+            if (state !== 'decline') {
+              renderContact(userData);
+            }
           });
       } else {
         console.log('No Contacts');
@@ -726,20 +726,25 @@ export class Database {
       });
   }
 
-  deleteContact(userId: string, contactId: string) {
-    this.changeContactState(contactId, 'decline');
-    this.changeContactState(userId, 'decline', contactId);
+  deleteUserFromContactsList(contactId: string, userId?: string) {
+    let user: string;
 
-    // this.firebase
-    //   .database()
-    //   .ref(`User/${userId}/contacts/${contactId}`)
-    //   .remove(error => {
-    //     if (error) {
-    //       console.log(error.message);
-    //     } else {
-    //       console.log('Delete contact successful');
-    //     }
-    //   });
+    if (userId) {
+      user = userId;
+    } else {
+      user = this.uid;
+    }
+
+    this.firebase.database()
+      .ref(`User/${user}/contacts/${contactId}`)
+      .remove(error => {
+        if (error) {
+          console.log(error.message);
+        } else {
+          console.log('User deleted');
+        }
+      });
+
   }
 
   createNewMessage(data: INewMessage): void {
@@ -1137,7 +1142,7 @@ export class Database {
       });
   }
 
-  getBalanceInGroup(groupId: string, currencyRate: number = 1, funcForRender: (balance: number) => void, errorHandler?: (message: string) => void) {
+  getBalanceInGroup(groupId: string, currencyRate: number = 1, funcForRender: (balance: number, usersBalanceData: any) => void, errorHandler?: (message: string) => void) {
     const base = this.firebase.database();
 
     base.ref(`Groups/${groupId}`)
@@ -1185,7 +1190,7 @@ export class Database {
         }, 0) : 0;
 
         balance *= currencyRate;
-        funcForRender(balance);
+        funcForRender(balance, usersList);
       })
       .catch(error => {
         console.log(error.code);

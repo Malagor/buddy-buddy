@@ -102,6 +102,7 @@ export class App {
       this.contacts = Contacts.create('.main');
       this.contacts.addUserToContacts = this.onAddUserToContacts.bind(this);
       this.contacts.onChangeContactState = this.onChangeContactState.bind(this);
+      this.contacts.onDeleteContact = this.onDeleteContact.bind(this);
 
       this.loadCurrentPage();
     } else {
@@ -214,7 +215,7 @@ export class App {
     this.database.getGroupsListForTransaction(this.transactionsList.newTrans.addGroupList);
     this.database.getMembersOfGroupFirst(this.transactionsList.newTrans.addMembersOfGroup);
     this.database.getGroupsListForTransaction(this.transactionsList.addGroupToTransList);
-    this.transactionHandler = this.database.transactionHandler (this.transactionsList.addTransactionWrapper, this.transactionsList.addMyTransactions, this.transactionsList.addUserToList);
+    this.transactionHandler = this.database.transactionHandler(this.transactionsList.addTransactionWrapper, this.transactionsList.addMyTransactions, this.transactionsList.addUserToList);
     this.database.getMyTransactionsList(this.transactionHandler);
   }
 
@@ -298,7 +299,7 @@ export class App {
   }
 
   onGetTransInfo(trans: any, transID: string, groupID: string) {
-    console.log ('ongettransinfo');
+    console.log('ongettransinfo');
     this.database.getTransInfoModal(trans, transID, groupID, this.transactionsList.addGroupTitle,
       this.transactionsList.addMemberOfTransaction, this.transactionsList.addOwnerInfo);
   }
@@ -358,18 +359,18 @@ export class App {
     if (state === 'approve') {
       this.notifications.decreaseNotificationMark(TypeOfNotifications.Contact);
     }
-    if (state === 'decline') {
-      this.database.deleteContact(this.database.uid, contactId);
-    } else {
-      this.database.changeContactState(contactId, state);
-    }
+    this.database.changeContactState(contactId, state);
   }
 
   fillContactsList() {
-
     const renderContact = this.database.contactsHandler(this.contacts.addContactsToList);
-
     this.database.getContactsList(renderContact);
+  }
+
+  onDeleteContact(contactId: string): void {
+    this.database.deleteUserFromContactsList(contactId);
+    this.database.deleteUserFromContactsList(this.database.uid, contactId);
+    this.notifications.decreaseNotificationMark(TypeOfNotifications.Contact);
   }
 
   // createUser(uid: string) {
