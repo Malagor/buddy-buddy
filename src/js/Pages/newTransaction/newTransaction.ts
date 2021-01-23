@@ -162,17 +162,6 @@ export class NewTransaction extends Page {
     } else {
       checks = [];
     }
-    // checks.forEach((inputfile: any) => {
-    //   const newHash = sha256(inputfile);
-    //   console.log ('hash', newHash);
-    // });
-
-    // checks.forEach((check) => {
-    //   const newHash = sha256(check.name);
-    //   console.log ('hash', newHash );
-    //   console.log('check', check);
-    //   check.name = newHash;
-    // })
 
     const currentDate  = +(new Date());
     const userList: Array<any> = [];

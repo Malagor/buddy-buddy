@@ -881,10 +881,11 @@ export class Database {
         'contentType': file.type,
       };
       console.log ('file= ', file);
-      const hashName = sha256File(file.name); 
+      // const hashName = sha256File(file.name); 
+      const hashName = Date.now().toString();
       console.log ('hash', hashName);
-      const type = file.name.slice(file.name.lastIndexOf('.'));
-      storageRef.child(`transactions/${hashName}.${type}`)
+      const extension = file.name.slice(file.name.lastIndexOf('.'));
+      storageRef.child(`transactions/${hashName}${extension}`)
         .put(file, metadata)
         .then((snapshot) => {
           snapshot.ref.getDownloadURL()
