@@ -5,7 +5,7 @@ import { getFormData } from '../../Util/getFormData';
 import { Modal } from 'bootstrap';
 import { eventForContactsList } from '../Contacts/eventForContactsList';
 import { onClickContactInContactsList } from '../Contacts/onClickContactInContactsList';
-import { stringify } from 'querystring';
+
 
 const defaultGroupLogo = require('../../../assets/images/default-group-logo.png');
 const defaultUserAvatar =  require('../../../assets/images/default-user-avatar.jpg');
@@ -109,7 +109,6 @@ export class MyGroups extends Page {
   }
 
   addBalanceInGroupCard(data: any) {
-    console.log('addBalanceInGroupCard__data', data);
     const divCardGroup = document.querySelector(`#${data.groupId}`);
     const divForBalanceInCardGroup = divCardGroup.querySelector(`#balanceGroup`);
 
@@ -430,10 +429,7 @@ export class MyGroups extends Page {
   }
 
   addUserBalanceInModalDetailGroup(data: any) {
-    console.log('addUserBalanceInModalCardUser___TEST', data.userId);
-
     const divCardUser = document.querySelector(`[user-id-${data.userId}]`);
-
 
     const html = `
       <div class="modal-detail__balance">
