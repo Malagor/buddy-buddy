@@ -460,18 +460,6 @@ export class Database {
       .on('child_added', (handlerFunc));
   }
 
-/*   => {
-    const userLIstInGroup =  Object.keys(snapshot.val().userList);
-
-    if (userLIstInGroup.includes(this.uid)) {
-      handlerFunc(snapshot);
-    }
-  },
-    (error: { code: string; message: any; }) => {
-      console.log('Error:\n ' + error.code);
-      console.log(error.message);
-    } */
-
   groupHandler = (createGroupList: any, addUserInGroupCard: any) => {
     const base = this.firebase.database();
 
