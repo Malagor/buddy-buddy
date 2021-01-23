@@ -1,5 +1,6 @@
 import { Page } from '../../Classes/Page';
 import { getFormData } from '../../Util/getFormData';
+// import { bootstap } from 'bootstrap';
 
 export class AccountPage extends Page {
   updateInfo: any;
@@ -38,14 +39,12 @@ export class AccountPage extends Page {
     });
     list.insertAdjacentHTML('beforeend', html);
 
-    document.querySelectorAll('.curr-list__item').forEach((option) => {
+    document.querySelectorAll('.curr-list__item').forEach((option: HTMLElement) => {
       if (option.firstElementChild.textContent === currentOption) {
         option.classList.add('active-curr');
       }
     });
-  }        
-
-
+  }
 
   addUserInfo(data: any): void {
     document.querySelector('.account__image').setAttribute('src', data.avatar);
@@ -92,7 +91,7 @@ export class AccountPage extends Page {
                       @
                     </span>
                   </div>
-                  <input type="text" name="account" class="account__double-form--second form-control account__input account__input-id" placeholder="Username" aria-label="User ID" aria-describedby="addon-wrapping" required>
+                  <input type="text" name="account" class="account__double-form--second form-control account__input account__input-id" placeholder="Username" aria-label="User ID" aria-describedby="addon-wrapping">
                 </div>
               </div>
               <div class="form-group row block--margin-adaptive w-100">
@@ -100,7 +99,7 @@ export class AccountPage extends Page {
                   Name
                 </label>
                 <div class="col-sm-10 account--input-size">
-                  <input type="text" name="name" aria-label="Username" class="form-control account__input account__input-name" placeholder="Name" required>
+                  <input type="text" name="name" aria-label="Username" class="form-control account__input account__input-name" placeholder="Name">
                 </div>
               </div>
               <div class="form-group row block--margin-adaptive w-100">
@@ -156,20 +155,29 @@ export class AccountPage extends Page {
     const nameInput: HTMLInputElement = document.querySelector('.account__input-name');
     const pageInputs: any = document.querySelectorAll('.account__input');
     const themeSelect: any = document.querySelector('.form-select--theme');
-    const contactList: HTMLElement = document.querySelector('.curr-list');
-    const curInput: HTMLInputElement = document.querySelector('.account__input-curr');
+    const currList: HTMLElement = document.querySelector('.curr-list');
+    const currInput: HTMLInputElement = document.querySelector('.account__input-curr');
 
     let currentTheme: string = [...themeSelect.querySelectorAll('option')].find((item: any) => item.selected).textContent;
     let values: string[] = [];
 
-    contactList.addEventListener('click', event => {
+    currInput.addEventListener('mousedown', () => {
+      setTimeout( () => {
+        const allLi: any = document.querySelectorAll('.curr-list__item');
+        const activeLi: HTMLElement = [...allLi].find((li: HTMLElement) => li.classList.contains('active-curr'));
+        const index: number = [...allLi].indexOf(activeLi);
+        currList.scrollTop = activeLi.clientHeight * index;
+      }, 100);
+    });
+
+    currList.addEventListener('click', event => {
       const { target }: any = event;
       if (target.closest('.curr-list__item')) {
         const item: HTMLElement = target.closest('.curr-list__item');
         const formRecipient: HTMLInputElement = document.querySelector('#activeCurrency');  
         const curr = item.querySelector('.curr-list__currency');
 
-        contactList.querySelectorAll('.curr-list__item').forEach((item: any) => {
+        currList.querySelectorAll('.curr-list__item').forEach((item: any) => {
           item.classList.remove('active-curr');
           item.removeAttribute('hidden');
         });
@@ -188,9 +196,9 @@ export class AccountPage extends Page {
       }
     });
 
-    curInput.onkeyup = () => {
+    currInput.onkeyup = () => {
       const li: NodeListOf<Element> = document.querySelectorAll('.curr-list__item');
-      const val: string = curInput.value.toLowerCase();
+      const val: string = currInput.value.toLowerCase();
 
       if (val.length > 1) {
         li.forEach(item => {
@@ -215,9 +223,18 @@ export class AccountPage extends Page {
       }
     };
 
+    const checkInputs = (values: string[]): void => {
+      pageInputs.forEach((item: HTMLInputElement, index: number): void => {
+        if (!item.value && index > 0) {
+          item.value = values[index];
+        }
+      });
+    };
+
     submitInfo.addEventListener('click', (e): void => {
       e.preventDefault();
       const newCurrentTheme = [...themeSelect.querySelectorAll('option')].find((item: any) => item.selected).textContent;
+      checkInputs(values);
       values = [];
       const newData: any = getFormData(formInfo, accountImg);
       pageInputs.forEach((item: HTMLInputElement): void => {
