@@ -200,7 +200,7 @@ export class App {
     console.log('APP______addUserBalanceInModalCardUser');
 
     const { userId, groupId } = data;
-    this.database.getBalanceForUserInGroup(userId, groupId, 1, this.groups.addUserBalanceInModalCardUser___TEST);
+    this.database.getBalanceForUserInGroup(userId, groupId, 1, this.groups.addUserBalanceInModalDetailGroup);
   }
 
   onTransactionsPage() {

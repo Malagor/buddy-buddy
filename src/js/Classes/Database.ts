@@ -1091,7 +1091,6 @@ export class Database {
       }, (error: { code: string; }) => {
         console.log('Error: ' + error.code);
       });
-
   }
 
   addUserToContacts(userData: ISearchUserData, errorHandler: (message: string) => void) {
@@ -1200,7 +1199,7 @@ export class Database {
       });
   }
 
-  getBalanceForUserInGroup(userId: string, groupId: string, currencyRate: number = 1, funcForRender: (balance: number) => void, errorHandler?: (message: string) => void) {
+  getBalanceForUserInGroup(userId: string, groupId: string, currencyRate: number = 1, funcForRender: (data: any) => void, errorHandler?: (message: string) => void) {
     const base = this.firebase.database();
 
     base.ref(`Groups/${groupId}/`)
@@ -1226,7 +1225,13 @@ export class Database {
         }
 
         balance *= currencyRate;
-        funcForRender(balance);
+        const data = {
+          balance: balance,
+          groupId: groupId,
+          userId: userId
+
+        };
+        funcForRender(data);
       })
       .catch(error => {
         console.log(error.code);

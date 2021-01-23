@@ -180,6 +180,17 @@
       /* bottom: 26px; */
       top: 35%;
     }
+    &__balance{
+      margin: 0 4rem 0 auto;
+
+      &--negative {
+        color: red;
+      }
+  
+      &--positive {
+        color: green;
+      }
+    }   
 }
 
 @media(max-width: 450px) {

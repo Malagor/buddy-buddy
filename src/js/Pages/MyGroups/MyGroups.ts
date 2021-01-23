@@ -389,7 +389,7 @@ export class MyGroups extends Page {
     divForBalanceModalCard.insertAdjacentHTML('beforeend', html);
   }
 
-   addModalUserData = async (data: any) => {
+   addModalUserData = (data: any) => {
     const userId = data.userId;
     const author = data.dataGroup.author;
     const divForUserList = document.getElementById('modalUserList');
@@ -402,7 +402,7 @@ export class MyGroups extends Page {
     }
 
     const html = `
-      <div id="${data.user.account}" class="card modal-detail">
+      <div id="${data.user.account}" user-id-${data.userId} class="card modal-detail">
         <img class="modal-detail__img" src="${data.user.avatar}" alt="avatar">
         <div>
           <p  class="modal-detail__name">${data.user.name}</p>
@@ -428,9 +428,25 @@ export class MyGroups extends Page {
     this.addUserBalanceInModalCardUser(dataForBalanceInModalCard);
   }
 
-  addUserBalanceInModalCardUser___TEST(balance: number) {
-    console.log(balance);
-    // return balance
+  addUserBalanceInModalDetailGroup(data: any) {
+    console.log('addUserBalanceInModalCardUser___TEST', data.userId);
+
+    const divCardUser = document.querySelector(`[user-id-${data.userId}]`);
+
+
+    const html = `
+      <div class="modal-detail__balance">
+        <span>${Math.round(data.balance * 100) / 100}</span>
+      </div>
+    `
+    divCardUser.insertAdjacentHTML('beforeend', html);
+
+    const divForBalance = divCardUser.querySelector('.modal-detail__balance')
+    if(data.balance > 0) {
+      divForBalance.classList.add('modal-detail__balance--positive')
+    } else if(data.balance < 0) {
+      divForBalance.classList.add('modal-detail__balance--negative')
+    }
   }
 
   protected eventsAddEventListenerForGroup(data: any) {
