@@ -11,9 +11,10 @@ export class AccountPage extends Page {
   }
 
   renderLangOrTheme(data: any, currentOption: string): void {
-    const el: HTMLElement = (data.some((item: any) => item === 'RU')) ? document.querySelector('.form-select--lang') : document.querySelector('.form-select--theme');
+    const funcData: any = data.map((item: any[]) => item[0]);
+    const el: HTMLElement = (funcData.some((item: any) => item === 'RU')) ? document.querySelector('.form-select--lang') : document.querySelector('.form-select--theme');
 
-    data.forEach((item: any) => {
+    funcData.forEach((item: any) => {
       el.innerHTML += `
       <option value="${item}">${item}</option>`;
     });
@@ -27,21 +28,23 @@ export class AccountPage extends Page {
 
   renderCurrenciesInput(data: any, currentOption: string): void {
     const el: HTMLInputElement = document.querySelector('#activeCurrency');
-    el.setAttribute('value', currentOption);
     const list = document.querySelector('.curr-list');
     let html: string = ``;
-    data.forEach((item: string) => {
+    data.forEach((item: any[]) => {
       html += `
       <li class="curr-list__item">
-        <span class="curr-list__currency">${item}</span>
+        <span class="curr-list__currency">${item[0]}, </span>
+        <span class="curr-list__currency-name">${item[1].name}</span>
       </li>
     `;
     });
     list.insertAdjacentHTML('beforeend', html);
 
     document.querySelectorAll('.curr-list__item').forEach((option: HTMLElement) => {
-      if (option.firstElementChild.textContent === currentOption) {
+      const optionContent: string = option.firstElementChild.textContent.slice(0, 3);
+      if (optionContent === currentOption) {
         option.classList.add('active-curr');
+        el.setAttribute('value', option.firstElementChild.textContent + option.lastElementChild.textContent);
       }
     });
   }
@@ -163,11 +166,18 @@ export class AccountPage extends Page {
 
     currInput.addEventListener('mousedown', () => {
       setTimeout( () => {
-        const allLi: any = document.querySelectorAll('.curr-list__item');
-        const activeLi: HTMLElement = [...allLi].find((li: HTMLElement) => li.classList.contains('active-curr'));
-        const index: number = [...allLi].indexOf(activeLi);
-        currList.scrollTop = activeLi.clientHeight * index;
-      }, 100);
+        document.querySelector('.active-curr').scrollIntoView();        
+      }, 200);
+    });
+
+    currInput.addEventListener('focus', () => {
+      currInput.value = '';
+      currInput.placeholder = `${document.querySelector('.active-curr').firstElementChild.textContent}${document.querySelector('.active-curr').lastElementChild.textContent}`;
+    });
+
+    currInput.addEventListener('blur', () => {
+      currInput.value = `${document.querySelector('.active-curr').firstElementChild.textContent}${document.querySelector('.active-curr').lastElementChild.textContent}`;
+      currInput.placeholder = 'Currency';
     });
 
     currList.addEventListener('click', event => {
@@ -175,15 +185,16 @@ export class AccountPage extends Page {
       if (target.closest('.curr-list__item')) {
         const item: HTMLElement = target.closest('.curr-list__item');
         const formRecipient: HTMLInputElement = document.querySelector('#activeCurrency');  
-        const curr = item.querySelector('.curr-list__currency');
+        const currency = item.querySelector('.curr-list__currency').textContent;
+        const currencyName = item.querySelector('.curr-list__currency-name').textContent;
 
         currList.querySelectorAll('.curr-list__item').forEach((item: any) => {
           item.classList.remove('active-curr');
           item.removeAttribute('hidden');
         });
-        curr.parentElement.classList.add('active-curr');
+        item.classList.add('active-curr');        
 
-        formRecipient.value = `${curr.textContent}`;
+        formRecipient.value = `${currency}${currencyName}`;
         pageInputs.forEach((item: HTMLInputElement, index: number): void => {
           if (item.classList.contains('account__input-curr')) {
             if (values[index] !== item.value.trim()) {
@@ -202,9 +213,11 @@ export class AccountPage extends Page {
 
       if (val.length > 1) {
         li.forEach(item => {
-          const isValInName = item.querySelector('.curr-list__currency').textContent.toLowerCase().includes(val);  
+          const isValInCurrency = item.querySelector('.curr-list__currency').textContent.toLowerCase().includes(val);
+          const isValInCurrencyName = item.querySelector('.curr-list__currency-name').textContent.toLowerCase().includes(val);
+
           item.setAttribute('hidden', '');
-          if (isValInName) {
+          if (isValInCurrency || isValInCurrencyName) {
             item.removeAttribute('hidden');
           }
         });
