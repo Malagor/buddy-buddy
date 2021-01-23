@@ -227,8 +227,6 @@ export class App {
   }
 
   addUserBalanceInModalCardUser(data: any) {
-    console.log('APP______addUserBalanceInModalCardUser');
-
     const { userId, groupId } = data;
     this.database.getBalanceForUserInGroup(userId, groupId, 1, this.groups.addUserBalanceInModalDetailGroup);
   }

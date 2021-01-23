@@ -109,7 +109,6 @@ export class MyGroups extends Page {
   }
 
   addBalanceInGroupCard(data: any) {
-    console.log('addBalanceInGroupCard__data', data);
     const divCardGroup = document.querySelector(`#${data.groupId}`);
     const divForBalanceInCardGroup = divCardGroup.querySelector(`#balanceGroup`);
 
@@ -344,7 +343,6 @@ export class MyGroups extends Page {
   }
 
   addInfoForModalDetailGroup(data: any) {
-    // console.log('addInfoForGroup___idGroup', data)
     const divModalContent =  document.getElementById('modalContent');
     const btnSaveModal = document.querySelector('#buttonSaveModal');
 
@@ -430,8 +428,6 @@ export class MyGroups extends Page {
   }
 
   addUserBalanceInModalDetailGroup(data: any) {
-    console.log('addUserBalanceInModalCardUser___TEST', data.userId);
-
     const divCardUser = document.querySelector(`[user-id-${data.userId}]`);
 
 
@@ -470,7 +466,6 @@ export class MyGroups extends Page {
   }
 
   addMembersGroup(data: any): void {
-    // console.log('addMembersGroup - data:', data);
     if (data) {
       const members = document.querySelector('.group-members-avatar');
       members.insertAdjacentHTML('beforeend', `
