@@ -371,7 +371,7 @@ export class MyGroups extends Page {
         </div>
         </div>
 
-        <div class="row g-0 col">
+        <div class="row g-0 col card-detail__box-description">
           <h5>Description</h5>
           <p class="card-text">${data.dataGroup.description ? data.dataGroup.description : 'No description...'}</p>
         </div>
@@ -464,7 +464,7 @@ export class MyGroups extends Page {
   }
 
   deleteMemberGroup(data: any): void {
-    
+
 
     //this.deleteMemberFromGroup()
   }

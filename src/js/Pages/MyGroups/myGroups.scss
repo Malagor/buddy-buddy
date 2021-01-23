@@ -131,6 +131,7 @@
 }
 
 .card-detail{
+  padding-top: rem(12px);
 
   &__img-avatar{
     display: block;
@@ -144,6 +145,10 @@
       height: rem(60px);
       border-radius: 50%;
     }
+  }
+
+  &__box-description{
+    margin: 0 1rem 0 1rem ;
   }
 
   &__user-list{
