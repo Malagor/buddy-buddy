@@ -431,6 +431,30 @@ export class Database {
       .set(groupKey);
   }
 
+  removeMemberGroup(groupId: string, userId: string) {
+    this.firebase
+      .database()
+      .ref(`Groups/${groupId}/userList/${userId}`)
+      .remove(error => {
+        if (error) {
+          console.log(error.message);
+        } else {
+          console.log('Deleted user from group successful');
+        }
+      });
+
+    this.firebase
+    .database()
+    .ref(`User/${userId}/groupList/${groupId}`)
+    .remove(error => {
+      if (error) {
+        console.log(error.message);
+      } else {
+        console.log('Deleted  group from userList successful');
+      }
+    });  
+  }
+
   removeGroup(groupId: string) {
     this.firebase
       .database()
@@ -447,7 +471,7 @@ export class Database {
               if (error) {
                 console.log(error.message);
               } else {
-                console.log('Delete group in user successful');
+                console.log('Deleted group in user successful');
               }
             });
           });
@@ -464,7 +488,7 @@ export class Database {
             if (error) {
               console.log(error.message);
             } else {
-              console.log('Delete group successful');
+              console.log('Deleted group successful');
             }
           });
         } else {

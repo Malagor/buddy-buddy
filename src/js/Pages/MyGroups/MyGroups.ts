@@ -13,6 +13,7 @@ const defaultUserAvatar =  require('../../../assets/images/default-user-avatar.j
 export class MyGroups extends Page {
   onCreateNewGroup: any;
   deleteGroup: any;
+  deleteMemberFromGroup: any;
   onAddMember: any;
   fillContactsList: any;
   onAddInfoForModalDetailGroup: any;
@@ -460,6 +461,12 @@ export class MyGroups extends Page {
       this.onAddInfoForModalDetailGroup(keyGroup);
       modalGroupDetail.show();
     });
+  }
+
+  deleteMemberGroup(data: any): void {
+    
+
+    //this.deleteMemberFromGroup()
   }
 
   addMembersGroup(data: any): void {
