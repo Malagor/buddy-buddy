@@ -95,4 +95,22 @@ export class Currencies {
         }
       });
   }
+
+  static transferToCurrencies(currencyCodesArray: string[]) {
+    const curQieries = currencyCodesArray.map(code => Currencies.getCurrencyRateByCode(code));
+
+    return (sum: number) => {
+      return Promise
+        .all(curQieries)
+        .then(data => {
+          return currencyCodesArray.map((currency, index) => {
+            return {
+              currency,
+              rate: data[index],
+              result: sum * data[index],
+            };
+          });
+        });
+    };
+  }
 }
