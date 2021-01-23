@@ -98,7 +98,7 @@ export class Main extends Page {
         data.map((item: any, index: number) => {
           document.querySelector('tbody').innerHTML += `
           <tr>
-            <th scope="row">${index}</th>
+            <th scope="row">${index + 1}</th>
             <td>${item.currency}</td>
             <td>${(data[0].rate / item.rate).toFixed(3)}</td>
             <td>${item.result.toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ')} ${item.currency}</td>
