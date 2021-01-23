@@ -344,11 +344,44 @@ export class Database {
     }
   }
 
+  getGroup(groupId: string, addModalGroupData: any, addModalUserData: any) {
+    const data: any = {};
+    data.thisUid = this.uid;
+
+    this.firebase
+      .database()
+      .ref(`Groups/${groupId}`)
+      .once('value', (snapshot) => {
+        data.dataGroup = snapshot.val();
+        data.groupId = snapshot.key;
+        addModalGroupData(data);
+      }).then(() => {
+        const userList = Object.keys(data.dataGroup.userList);
+
+        userList.forEach((user: string) => {
+          this.firebase
+          .database()
+          .ref(`User/${user}`)
+          .once('value', (snapshot) => {
+            data.user = snapshot.val();
+            data.userId = snapshot.key;
+            addModalUserData(data);
+          });
+        });
+      });
+  }
+
   getGroupList(handlerFunc: any): void {
     this.firebase
       .database()
       .ref('Groups')
-      .on('child_added', handlerFunc,
+      .on('child_added', (snapshot) => {
+        const userLIstInGroup =  Object.keys(snapshot.val().userList);
+
+        if (userLIstInGroup.includes(this.uid)) {
+          handlerFunc(snapshot);
+        }
+      },
         (error: { code: string; message: any; }) => {
           console.log('Error:\n ' + error.code);
           console.log(error.message);
@@ -396,6 +429,72 @@ export class Database {
       .database()
       .ref(`User/${userIdAuthor}/currentGroup`)
       .set(groupKey);
+  }
+
+  removeMemberGroup(groupId: string, userId: string) {
+    this.firebase
+      .database()
+      .ref(`Groups/${groupId}/userList/${userId}`)
+      .remove(error => {
+        if (error) {
+          console.log(error.message);
+        } else {
+          console.log('Deleted user from group successful');
+        }
+      });
+
+    this.firebase
+    .database()
+    .ref(`User/${userId}/groupList/${groupId}`)
+    .remove(error => {
+      if (error) {
+        console.log(error.message);
+      } else {
+        console.log('Deleted  group from userList successful');
+      }
+    });  
+  }
+
+  removeGroup(groupId: string) {
+    this.firebase
+      .database()
+      .ref(`Groups/${groupId}`)
+      .once('value', (snapshot) => {
+        console.log('snapshot', snapshot.val());
+        if (snapshot.val()) {
+          const userList = Object.keys(snapshot.val().userList);
+          userList.forEach((user) => {
+            this.firebase
+            .database()
+            .ref(`User/${user}/groupList/${groupId}`)
+            .remove(error => {
+              if (error) {
+                console.log(error.message);
+              } else {
+                console.log('Deleted group in user successful');
+              }
+            });
+          });
+        } else {
+          console.log('Group not found, delete users unsuccessful');
+        }
+        return snapshot.val();
+      }).then((snapshot) => {
+        if (snapshot.val()) {
+          this.firebase
+          .database()
+          .ref(`Groups/${groupId}`)
+          .remove(error => {
+            if (error) {
+              console.log(error.message);
+            } else {
+              console.log('Deleted group successful');
+            }
+          });
+        } else {
+          console.log('Group not found');
+        }
+      });
   }
 
   countGroupsInvite(setNotificationMark: { (type: TypeOfNotifications, num: number): void; (arg0: TypeOfNotifications, arg1: number): void; }): void {
@@ -1016,7 +1115,6 @@ export class Database {
       }, (error: { code: string; }) => {
         console.log('Error: ' + error.code);
       });
-
   }
 
   addUserToContacts(userData: ISearchUserData, errorHandler: (message: string) => void) {
@@ -1060,7 +1158,8 @@ export class Database {
       });
   }
 
-  getBalanceInGroup(groupId: string, currencyRate: number = 1, funcForRender: (balance: number, usersBalanceData: any) => void, errorHandler?: (message: string) => void) {
+  getBalanceInGroup(groupId: string, currencyRate: number = 1, funcForRender: (data: any) => void, errorHandler?: (message: string) => void) {
+
     const base = this.firebase.database();
 
     base.ref(`Groups/${groupId}`)
@@ -1108,7 +1207,12 @@ export class Database {
         }, 0) : 0;
 
         balance *= currencyRate;
-        funcForRender(balance, usersList);
+        const data = {
+          balance: balance,
+          groupId: groupId
+        };
+        funcForRender(data);
+
       })
       .catch(error => {
         console.log(error.code);
@@ -1119,7 +1223,7 @@ export class Database {
       });
   }
 
-  getBalanceForUserInGroup(userId: string, groupId: string, currencyRate: number = 1, funcForRender: (balance: number) => void, errorHandler?: (message: string) => void) {
+  getBalanceForUserInGroup(userId: string, groupId: string, currencyRate: number = 1, funcForRender: (data: any) => void, errorHandler?: (message: string) => void) {
     const base = this.firebase.database();
 
     base.ref(`Groups/${groupId}/`)
@@ -1145,7 +1249,13 @@ export class Database {
         }
 
         balance *= currencyRate;
-        funcForRender(balance);
+        const data = {
+          balance: balance,
+          groupId: groupId,
+          userId: userId
+
+        };
+        funcForRender(data);
       })
       .catch(error => {
         console.log(error.code);
