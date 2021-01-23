@@ -460,6 +460,18 @@ export class Database {
       .on('child_added', (handlerFunc));
   }
 
+/*   => {
+    const userLIstInGroup =  Object.keys(snapshot.val().userList);
+
+    if (userLIstInGroup.includes(this.uid)) {
+      handlerFunc(snapshot);
+    }
+  },
+    (error: { code: string; message: any; }) => {
+      console.log('Error:\n ' + error.code);
+      console.log(error.message);
+    } */
+
   groupHandler = (createGroupList: any, addUserInGroupCard: any) => {
     const base = this.firebase.database();
 
@@ -473,16 +485,16 @@ export class Database {
           dataGroup: snapshot.val(),
           groupKey: groupKey,
         };
-  
+
         createGroupList(data);
-  
+
         base
           .ref('User')
           .once('value', (snapshot) => {
-  
+
             const snapshotUser = snapshot.val();
             const userList = Object.keys(snapshotUser);
-  
+
             const arrayUsers: any[] = [];
             userList.forEach(user => {
               if (dataUserListGroup.includes(user)) {
@@ -490,8 +502,11 @@ export class Database {
               }
             });
             data.arrayUsers = arrayUsers;
-  
+
             addUserInGroupCard(data);
+          }, (error: { code: string; message: any; }) => {
+            console.log('Error:\n ' + error.code);
+            console.log(error.message);
           });
       }
     });
@@ -528,7 +543,7 @@ export class Database {
       } else {
         console.log('Deleted  group from userList successful');
       }
-    });  
+    });
   }
 
   removeGroup(groupId: string) {
