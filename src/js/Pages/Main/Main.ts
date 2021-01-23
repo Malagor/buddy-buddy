@@ -6,19 +6,7 @@ export class Main extends Page {
   static create(element: string): Main {
     const page: Main = new Main(element);
     page.render = page.render.bind(page);
-    page.getBalance = page.getBalance.bind(page);
     return page;
-  }
-
-  getBalance(balance: number): void {
-    const tds = document.querySelectorAll('.for-counter');
-    const index: number = tds.length - 1 - this.counter;
-    const stringBalance: string = balance.toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
-
-    tds[index].textContent = `${stringBalance} ${tds[index].textContent}`;
-
-    this.counter++;
-    if (this.counter === tds.length) this.counter = 0;
   }
 
   renderCommonBalance(balance: number): void {    
