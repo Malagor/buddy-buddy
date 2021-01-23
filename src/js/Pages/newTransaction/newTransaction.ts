@@ -4,7 +4,7 @@ import { Modal } from 'bootstrap';
 import { addMemberHTML } from './addMemberHTML';
 import { clearAllInputs } from './clearAllInputs';
 import { checkData } from './checkData';
-
+// import { sha256 } from 'js-sha256';
 export class NewTransaction extends Page {
   onCreateTransaction: any;
   onShowMembersOfGroup: any;
@@ -77,6 +77,7 @@ export class NewTransaction extends Page {
           </div>
 
           <div class="checked-members"></div>
+
         </div>
 
         <div class="modal-footer">
@@ -155,12 +156,23 @@ export class NewTransaction extends Page {
     const totalSum: HTMLFormElement = document.querySelector('.new-trans__total-sum');
     const currency: HTMLFormElement = document.querySelector('.new-trans__currency-list');
     const inputCheck: HTMLFormElement = document.querySelector('.add-check__file');
-    let checks;
+    let checks: any[];
     if (inputCheck.files) {
       checks = Object.entries(inputCheck.files).map((check) => check[1]);
     } else {
-      checks = false;
+      checks = [];
     }
+    // checks.forEach((inputfile: any) => {
+    //   const newHash = sha256(inputfile);
+    //   console.log ('hash', newHash);
+    // });
+
+    // checks.forEach((check) => {
+    //   const newHash = sha256(check.name);
+    //   console.log ('hash', newHash );
+    //   console.log('check', check);
+    //   check.name = newHash;
+    // })
 
     const currentDate  = +(new Date());
     const userList: Array<any> = [];
@@ -249,6 +261,9 @@ export class NewTransaction extends Page {
         reader.onload = (function (aImg1: HTMLImageElement) {
           return (e: any): void => {
             aImg1.src = e.target.result;
+            // console.log ('targetresult', e.target.result);
+            // const hash = sha256(e.target.result);
+            // console.log('hash', hash);
           };
         })(checkIcon);
         reader.readAsDataURL(inputCheck.files[0]);

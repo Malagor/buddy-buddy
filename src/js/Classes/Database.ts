@@ -8,6 +8,8 @@ import { IHandlers } from './App';
 import { TypeOfNotifications } from './Notifications';
 import { once } from 'process';
 import { group } from 'console';
+// import { sha256 } from 'js-sha256';
+// var sha256File = require('sha256-file');
 
 const defaultAvatar: string = require('../../assets/images/default-user-avatar.jpg');
 
@@ -878,7 +880,11 @@ export class Database {
       const metadata = {
         'contentType': file.type,
       };
-      storageRef.child('transactions/' + file.name)
+      console.log ('file= ', file);
+      const hashName = sha256File(file.name); 
+      console.log ('hash', hashName);
+      const type = file.name.slice(file.name.lastIndexOf('.'));
+      storageRef.child(`transactions/${hashName}.${type}`)
         .put(file, metadata)
         .then((snapshot) => {
           snapshot.ref.getDownloadURL()
