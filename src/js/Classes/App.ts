@@ -77,6 +77,8 @@ export class App {
 
       this.accountPage = AccountPage.create('.main');
       this.accountPage.updateInfo = this.updateOnAccountPage.bind(this);
+      this.accountPage.changeTheme = this.changeTheme.bind(this);
+
       this.mainPage = Main.create('.main');
 
       this.database.getUserInfo(uid, [
@@ -108,6 +110,7 @@ export class App {
       this.contacts.onChangeContactState = this.onChangeContactState.bind(this);
       this.contacts.onDeleteContact = this.onDeleteContact.bind(this);
 
+      this.changeTheme();
     } else {
       console.log(`isUserLogon = ${state}`);
       this.authPage = AuthPage.create('#app');
@@ -148,6 +151,17 @@ export class App {
     );
   }
 
+  changeTheme(theme: string = 'light'): void {
+    const bodyClassList: any = document.querySelector('body').classList;
+    if (!bodyClassList.length) {
+      bodyClassList.add(`theme--${theme}`);
+    } else {
+      const themeClass: any = [...bodyClassList].find((item: any) => item.slice(0, 7) === 'theme--');
+      bodyClassList.remove(themeClass);
+      bodyClassList.add(`theme--${theme}`);
+    }
+  }
+
   onMainPage() {
     this.deleteHandlers();
     const uid: string = this.database.uid;
@@ -165,9 +179,9 @@ export class App {
     const uid: string = this.database.uid;
     this.accountPage.render();
     this.database.getUserInfo(uid, [this.accountPage.addUserInfo]);
-    await this.database.getCurrenciesOrLangsOrThemes(uid, this.accountPage.renderCurrencyOrLangOrTheme, 'Currency');
-    await this.database.getCurrenciesOrLangsOrThemes(uid, this.accountPage.renderCurrencyOrLangOrTheme, 'Language');
-    await this.database.getCurrenciesOrLangsOrThemes(uid, this.accountPage.renderCurrencyOrLangOrTheme, 'Theme');
+    await this.database.getCurrenciesOrLangsOrThemes(uid, this.accountPage.renderCurrenciesInput, 'Currency');
+    await this.database.getCurrenciesOrLangsOrThemes(uid, this.accountPage.renderLangOrTheme, 'Language');
+    await this.database.getCurrenciesOrLangsOrThemes(uid, this.accountPage.renderLangOrTheme, 'Theme');
 
     this.accountPage.events();
   }

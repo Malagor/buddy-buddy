@@ -693,7 +693,7 @@ export class Database {
         console.log('Error:\n ' + error.code);
         console.log(error.message);
       });
-    const values = Object.entries(curr.val()).map((item: any) => item[0]);
+    const values = Object.entries(curr.val());
     const current: any = await this.firebase
       .database()
       .ref(`User/${uid}`)
