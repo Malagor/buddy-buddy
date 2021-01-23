@@ -78,7 +78,6 @@ export class App {
       this.accountPage = AccountPage.create('.main');
       this.accountPage.updateInfo = this.updateOnAccountPage.bind(this);
       this.mainPage = Main.create('.main');
-      this.mainPage.onMainGetBalance = this.onMainGetBalance.bind(this);
 
       this.database.getUserInfo(uid, [this.layout.setSidebarData]);
 
@@ -153,21 +152,16 @@ export class App {
     localStorage.setItem('currentPage', name);
   }
 
-  async onMainPage() {
+  onMainPage() {
     this.setCurrentPage('Main');
     this.deleteHandlers();
     const uid: string = this.database.uid;
     this.mainPage.render();
     this.database.getUserInfo(uid, [this.mainPage.addUserInfo, this.mainPage.renderSlider, this.mainPage.renderSliderItems]);
-    this.database.getUserCurrentCurrency(uid, this.mainPage.getDataForCurrency, this.mainPage.createCurrTable);
     this.database.getUserGroups(uid, this.mainPage.renderAvatarsBlockForSlider, this.mainPage.renderOneGroup);
-    await this.database.getUserTransactions(uid, this.mainPage.renderTransactions);
-    this.mainPage.checkUserCost();
-  }
-
-  onMainGetBalance(rank: number) {
-    const uid: string = this.database.uid;
-    this.database.getBalanceForUserTotal(uid, rank, this.mainPage.getBalance);
+    this.database.getUserTransactions(uid, this.mainPage.renderTransactions);
+    this.database.getBalanceForUserTotal(uid, 1, this.mainPage.renderCommonBalance);
+    this.database.getBalanceForUserTotal(uid, 1, this.mainPage.renderCurrenciesTable);
   }
 
   updateOnAccountPage(data: any) {

@@ -50,6 +50,7 @@
 
 .main__name {
   font-size: 1.2rem;
+  text-align: center;
 
 @include tablets {
     font-size: 1.4rem;
@@ -162,6 +163,7 @@
   position: relative;
   width: rem(23px);
   height: rem(23px);
+
   img {
     position: absolute;
     top: 50%;
@@ -284,7 +286,7 @@
   border-radius: 0.625rem;
 }
 
-.main__card-trans {
+.main-card-trans {
   display: flex;
   flex-direction: column;
   width: 100%;
@@ -293,7 +295,7 @@
   border-radius: 0;
 }
 
-.main__card-trans__wrapper {
+.main-card-trans__wrapper {
   display: flex;
   flex-direction: column;
   width: 100%;
@@ -301,12 +303,12 @@
   padding: 0.3rem 0.5rem 0;
 }
 
-.main__card-trans:nth-last-child(1) {
+.main-card-trans:nth-last-child(1) {
   border-bottom: none;
 }
 
-.main__card-trans__header,
-.main__card-trans__main {
+.main-card-trans__header,
+.main-card-trans__main {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -314,7 +316,7 @@
   margin-bottom: 0;
 }
 
-.main__card-trans__header {
+.main-card-trans__header {
   margin-bottom: 0.3rem;
 }
 
@@ -349,7 +351,7 @@
   opacity: 0.9;
 }
 
-.main__card-trans__footer {
+.main-card-trans__footer {
   margin-bottom: 0;
   font-size: rem(10px);
   text-align: center;
