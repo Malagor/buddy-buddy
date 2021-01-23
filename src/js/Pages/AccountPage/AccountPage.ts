@@ -1,6 +1,5 @@
 import { Page } from '../../Classes/Page';
 import { getFormData } from '../../Util/getFormData';
-// import { bootstap } from 'bootstrap';
 
 export class AccountPage extends Page {
   updateInfo: any;
