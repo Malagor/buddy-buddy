@@ -33,18 +33,18 @@ export class AccountPage extends Page {
     data.forEach((item: any[]) => {
       html += `
       <li class="curr-list__item">
-        <span class="curr-list__currency">${item[0]}, </span>
-        <span class="curr-list__currency-name">${item[1].name}</span>
+        <span class="curr-list__currency">${item[0]}</span>
+        <span class="curr-list__currency-name">, ${item[1].name}</span>
       </li>
     `;
     });
     list.insertAdjacentHTML('beforeend', html);
 
     document.querySelectorAll('.curr-list__item').forEach((option: HTMLElement) => {
-      const optionContent: string = option.firstElementChild.textContent.slice(0, 3);
+      const optionContent: string = option.firstElementChild.textContent;      
       if (optionContent === currentOption) {
         option.classList.add('active-curr');
-        el.setAttribute('value', option.firstElementChild.textContent + option.lastElementChild.textContent);
+        el.setAttribute('value', currentOption);
       }
     });
   }
@@ -176,7 +176,7 @@ export class AccountPage extends Page {
     });
 
     currInput.addEventListener('blur', () => {
-      currInput.value = `${document.querySelector('.active-curr').firstElementChild.textContent}${document.querySelector('.active-curr').lastElementChild.textContent}`;
+      currInput.value = `${document.querySelector('.active-curr').firstElementChild.textContent}`;
       currInput.placeholder = 'Currency';
     });
 
@@ -186,7 +186,6 @@ export class AccountPage extends Page {
         const item: HTMLElement = target.closest('.curr-list__item');
         const formRecipient: HTMLInputElement = document.querySelector('#activeCurrency');  
         const currency = item.querySelector('.curr-list__currency').textContent;
-        const currencyName = item.querySelector('.curr-list__currency-name').textContent;
 
         currList.querySelectorAll('.curr-list__item').forEach((item: any) => {
           item.classList.remove('active-curr');
@@ -194,7 +193,7 @@ export class AccountPage extends Page {
         });
         item.classList.add('active-curr');        
 
-        formRecipient.value = `${currency}${currencyName}`;
+        formRecipient.value = `${currency}`;
         pageInputs.forEach((item: HTMLInputElement, index: number): void => {
           if (item.classList.contains('account__input-curr')) {
             if (values[index] !== item.value.trim()) {
