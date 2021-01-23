@@ -320,7 +320,7 @@ export class Layout extends Page {
     );
 
     if (data.name) {
-      menuAvatar.setAttribute('alt', data.name);
+      menuUserName.textContent = data.name;
     }
 
     if (data.avatar) {
@@ -328,7 +328,6 @@ export class Layout extends Page {
     }
 
     if (data.account) {
-      menuUserName.textContent = data.name;
       menuUserAccount.textContent = '@' + data.account;
     }
   }
