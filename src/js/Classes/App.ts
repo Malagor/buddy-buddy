@@ -85,8 +85,13 @@ export class App {
 
       this.groups = MyGroups.create('.main');
       this.groups.onCreateNewGroup = this.onCreateNewGroup.bind(this);
+      this.groups.deleteGroup = this.deleteGroup.bind(this);
+      this.groups.deleteMemberFromGroup = this.deleteMemberFromGroup.bind(this);
       this.groups.onAddMember = this.onAddGroupMember.bind(this);
       this.groups.fillContactsList = this.fillContactsList.bind(this);
+      this.groups.onAddInfoForModalDetailGroup = this.onAddInfoForModalDetailGroup.bind(this);
+      this.groups.addBalanceInGroupPage = this.addBalanceInGroupPage.bind(this);
+      this.groups.addUserBalanceInModalCardUser = this.addUserBalanceInModalCardUser.bind(this);
 
 
       this.transactionsList = TransactionsList.create('.main');
@@ -210,6 +215,22 @@ export class App {
     this.groups.render();
     this.groupHandler = this.database.groupHandler(this.groups.createGroupList, this.groups.addUserInGroupCard);
     this.database.getGroupList(this.groupHandler);
+  }
+
+  onAddInfoForModalDetailGroup(idGroup: string) {
+    this.database.getGroup(idGroup, this.groups.addInfoForModalDetailGroup, this.groups.addModalUserData);
+    this.database.getBalanceInGroup(idGroup, 1, this.groups.addBalanceForModalGroupDetail);
+  }
+
+  addBalanceInGroupPage(idGroup: string) {
+    this.database.getBalanceInGroup(idGroup, 1, this.groups.addBalanceInGroupCard);
+  }
+
+  addUserBalanceInModalCardUser(data: any) {
+    console.log('APP______addUserBalanceInModalCardUser');
+
+    const { userId, groupId } = data;
+    this.database.getBalanceForUserInGroup(userId, groupId, 1, this.groups.addUserBalanceInModalDetailGroup);
   }
 
   onTransactionsPage() {
@@ -357,6 +378,14 @@ export class App {
     };
 
     this.database.deleteHandlers(handlers);
+  }
+
+  deleteGroup(idGroup: string) {
+    this.database.removeGroup(idGroup);
+  }
+
+  deleteMemberFromGroup(idGroup: string, userId: string) {
+    this.database.removeMemberGroup(idGroup, userId);
   }
 
   onAddUserToContacts(userData: ISearchUserData, errorHandler: (message: string) => void): void {

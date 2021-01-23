@@ -58,7 +58,7 @@
   }
 }
 
-.closed-group-hidden {
+.group-hidden {
   display: none;
 }
 
@@ -128,6 +128,74 @@
 } */
 .form-switch{
   margin-top: 0.5rem;
+}
+
+.card-detail{
+  padding-top: rem(12px);
+
+  &__img-avatar{
+    display: block;
+    margin: auto;
+    width: rem(85px);
+    height: rem(85px);
+    border-radius: 50%;
+
+    &--user{
+      width: rem(60px);
+      height: rem(60px);
+      border-radius: 50%;
+    }
+  }
+
+  &__box-description{
+    margin: 0 1rem 0 1rem ;
+  }
+
+  &__user-list{
+    margin: 1rem;
+  }
+}
+
+.modal-detail {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin: rem(8px) 0 rem(16px) 0;
+
+  &--author{
+    background-color: rgba(128, 128, 128, 0.616);
+  }
+
+    &__img {
+      margin: rem(8px);
+      width: rem(50px);
+      height: rem(50px);
+      border-radius: 50%;
+    }
+    &__name{
+      margin: rem(5px);
+    }
+    &__account{
+      margin: rem(5px);
+    }
+    &__button{
+      position: absolute;
+      right: 10px;
+      /* bottom: 26px; */
+      top: 35%;
+    }
+    &__balance{
+      margin: 0 4rem 0 auto;
+
+      &--negative {
+        color: red;
+      }
+  
+      &--positive {
+        color: green;
+      }
+    }   
 }
 
 @media(max-width: 450px) {
