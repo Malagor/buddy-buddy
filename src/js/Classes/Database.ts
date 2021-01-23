@@ -1231,16 +1231,12 @@ export class Database {
     return balance;
   }
 
-  checkAccountName() {
-    return (accountName: string) => {
+  isAccountName(accountName: string) {
       return this.firebase.database()
         .ref('User')
         .orderByChild('account')
         .equalTo(accountName)
-        .once('value', snapshot => {
-          return snapshot;
-        });
-    };
+        .once('value', snapshot => snapshot);
   }
 
 
