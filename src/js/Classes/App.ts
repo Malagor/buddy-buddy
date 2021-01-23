@@ -81,10 +81,7 @@ export class App {
 
       this.mainPage = Main.create('.main');
 
-      this.database.getUserInfo(uid, [
-        this.mainPage.render,
-        this.layout.setSidebarData,
-      ]);
+      this.database.getUserInfo(uid, [this.layout.setSidebarData]);
 
       this.groups = MyGroups.create('.main');
       this.groups.onCreateNewGroup = this.onCreateNewGroup.bind(this);
@@ -113,6 +110,7 @@ export class App {
       this.contacts.onChangeContactState = this.onChangeContactState.bind(this);
       this.contacts.onDeleteContact = this.onDeleteContact.bind(this);
 
+      this.loadCurrentPage();
       this.changeTheme();
     } else {
       console.log(`isUserLogon = ${state}`);
@@ -153,6 +151,15 @@ export class App {
     );
   }
 
+  loadCurrentPage() {
+    const currentPage: any = localStorage.getItem('currentPage') || 'Main';
+    this[`on${currentPage}Page`]();
+  }
+
+  setCurrentPage(name: string): void {
+    localStorage.setItem('currentPage', name);
+  }
+
   changeTheme(theme: string = 'light'): void {
     const bodyClassList: any = document.querySelector('body').classList;
     if (!bodyClassList.length) {
@@ -165,10 +172,15 @@ export class App {
   }
 
   onMainPage() {
+    this.setCurrentPage('Main');
     this.deleteHandlers();
     const uid: string = this.database.uid;
-    this.database.getUserInfo(uid, [this.mainPage.render]);
-
+    this.mainPage.render();
+    this.database.getUserInfo(uid, [this.mainPage.addUserInfo, this.mainPage.renderSlider, this.mainPage.renderSliderItems]);
+    this.database.getUserGroups(uid, this.mainPage.renderAvatarsBlockForSlider, this.mainPage.renderOneGroup);
+    this.database.getUserTransactions(uid, this.mainPage.renderTransactions);
+    this.database.getBalanceForUserTotal(uid, 1, this.mainPage.renderCommonBalance);
+    this.database.getBalanceForUserTotal(uid, 1, this.mainPage.renderCurrenciesTable);
   }
 
   updateOnAccountPage(data: any) {
@@ -177,6 +189,7 @@ export class App {
   }
 
   async onAccountPage() {
+    this.setCurrentPage('Account');
     this.deleteHandlers();
     const uid: string = this.database.uid;
     this.accountPage.render();
@@ -189,6 +202,7 @@ export class App {
   }
 
   onContactsPage() {
+    this.setCurrentPage('Contacts');
     this.deleteHandlers();
     this.contacts.render();
     this.contactsHandler = this.database.contactsHandler(this.contacts.addContactToList);
@@ -196,6 +210,7 @@ export class App {
   }
 
   onGroupsPage() {
+    this.setCurrentPage('Groups');
     this.deleteHandlers();
     this.groups.render();
     this.groupHandler = this.database.groupHandler(this.groups.createGroupList, this.groups.addUserInGroupCard);
@@ -219,6 +234,7 @@ export class App {
   }
 
   onTransactionsPage() {
+    this.setCurrentPage('Transactions');
     this.transactionsList.render();
     this.deleteHandlers();
 
@@ -233,12 +249,16 @@ export class App {
   }
 
   onMessagesPage() {
+    this.setCurrentPage('Messages');
     this.deleteHandlers();
     this.notifications.messageCount = 0;
     this.notifications.setNotificationMark(TypeOfNotifications.Message, 0);
 
     this.messenger.render();
-    this.messageHandler = this.database.messageHandler(this.messenger.addMessageToList, this.messenger.setUserDataInMessage);
+    this.messageHandler = this.database.messageHandler(
+      this.messenger.addMessageToList,
+      this.messenger.setUserDataInMessage,
+    );
     this.database.getMessageList(this.messageHandler);
   }
 
@@ -297,7 +317,10 @@ export class App {
   }
 
   onShowMembersOfGroup(groupID: string) {
-    this.database.getMembersOfGroup(groupID, this.transactionsList.newTrans.addMembersOfGroup);
+    this.database.getMembersOfGroup(
+      groupID,
+      this.transactionsList.newTrans.addMembersOfGroup,
+    );
   }
 
   onChangeState(state: string, transID: string) {
@@ -311,7 +334,11 @@ export class App {
   }
 
   onAddRecipientToMessage(accountName: string) {
-    this.database.findUserByName(accountName, this.messenger.addUserForSendMessage, this.messenger.errorAddUserForSendMessage);
+    this.database.findUserByName(
+      accountName,
+      this.messenger.addUserForSendMessage,
+      this.messenger.errorAddUserForSendMessage,
+    );
   }
 
   onSendNewMessage(data: INewMessage): void {
