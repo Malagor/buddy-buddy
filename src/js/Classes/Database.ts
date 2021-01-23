@@ -182,7 +182,7 @@ export class Database {
       .ref(`Transactions/${item[0]}`)
       .once('value', (snapshot) => snapshot);
         item[0] = trans.val();
-        return item;    
+        return item;
     });
 
     await Promise.all(keyList).then(async (data) => {
@@ -219,7 +219,7 @@ export class Database {
         .ref(`Groups/${item[0]}`)
         .once('value', (snapshot) => snapshot);
           item[2] = groups.val();
-          return item;    
+          return item;
       });
     const currentGroups: any = await this.firebase
       .database()
@@ -234,10 +234,10 @@ export class Database {
         .filter((item: any) => item[1].state === 'approve')
         .map((item: any) => {
           item[2].userList = Object.entries(item[2].userList);
-          item[2].groupID = item[0];       
+          item[2].groupID = item[0];
           return item[2];
         })
-        .map(async (item: any, index: number) => {      
+        .map(async (item: any, index: number) => {
           const elem: any = await item.userList.map(async (it: any) => {
             const res: any = await this.firebase
               .database()
@@ -637,7 +637,7 @@ export class Database {
         }
       }
     };
-  };
+  }
 
   contactsHandler = (renderContact: any): any => {
     return (snapshot: any): void => {
@@ -1304,7 +1304,7 @@ export class Database {
     .once('value', async snapshot => {
       const data = snapshot.val();
       callback(innerCallback, data);
-    })
+    });
   }
 
   createBasicTables() {

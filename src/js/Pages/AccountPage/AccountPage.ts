@@ -40,7 +40,7 @@ export class AccountPage extends Page {
     list.insertAdjacentHTML('beforeend', html);
 
     document.querySelectorAll('.curr-list__item').forEach((option: HTMLElement) => {
-      const optionContent: string = option.firstElementChild.textContent;      
+      const optionContent: string = option.firstElementChild.textContent;
       if (optionContent === currentOption) {
         option.classList.add('active-curr');
         el.setAttribute('value', currentOption);
@@ -165,7 +165,7 @@ export class AccountPage extends Page {
 
     currInput.addEventListener('mousedown', () => {
       setTimeout( () => {
-        document.querySelector('.active-curr').scrollIntoView();        
+        document.querySelector('.active-curr').scrollIntoView();
       }, 200);
     });
 
@@ -183,14 +183,14 @@ export class AccountPage extends Page {
       const { target }: any = event;
       if (target.closest('.curr-list__item')) {
         const item: HTMLElement = target.closest('.curr-list__item');
-        const formRecipient: HTMLInputElement = document.querySelector('#activeCurrency');  
+        const formRecipient: HTMLInputElement = document.querySelector('#activeCurrency');
         const currency = item.querySelector('.curr-list__currency').textContent;
 
         currList.querySelectorAll('.curr-list__item').forEach((item: any) => {
           item.classList.remove('active-curr');
           item.removeAttribute('hidden');
         });
-        item.classList.add('active-curr');        
+        item.classList.add('active-curr');
 
         formRecipient.value = `${currency}`;
         pageInputs.forEach((item: HTMLInputElement, index: number): void => {
@@ -251,7 +251,7 @@ export class AccountPage extends Page {
       pageInputs.forEach((item: HTMLInputElement): void => {
           values.push(checkImg(item));
         });
-      this.updateInfo(newData);      
+      this.updateInfo(newData);
       if (currentTheme !== newCurrentTheme) this.changeTheme(newCurrentTheme.toLowerCase());
       idValue.textContent = `@${newData.account}`;
       nameInput.value = newData.name;

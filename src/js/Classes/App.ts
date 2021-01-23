@@ -163,7 +163,7 @@ export class App {
       const themeClass: any = [...bodyClassList].find((item: any) => item.slice(0, 7) === 'theme--');
       bodyClassList.remove(themeClass);
       bodyClassList.add(`theme--${theme}`);
-    }  
+    }
   }
 
   onMainPage() {

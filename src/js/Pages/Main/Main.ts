@@ -9,12 +9,12 @@ export class Main extends Page {
     return page;
   }
 
-  renderCommonBalance(balance: number): void {    
+  renderCommonBalance(balance: number): void {
     const bal: HTMLElement = document.querySelector('.balance__text');
 
     setTimeout(() => {
       Currencies.getCurrencyRateByCode(bal.textContent).then(data => bal.textContent = `${(balance * data).toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ')} ${bal.textContent}`);
-    }, 0);        
+    }, 0);
   }
 
   renderAvatarsBlockForSlider(list: any): string {
@@ -92,7 +92,7 @@ export class Main extends Page {
             <td>${item.result.toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ')} ${item.currency}</td>
           </tr>
           `;
-        })
+        });
       });
   }
 
@@ -108,7 +108,7 @@ export class Main extends Page {
       </div>
       `;
     } else {
-      elem.innerHTML = `      
+      elem.innerHTML = `
       <div id="carouselExampleControls" class="carousel slide main__carousel carousel-dark" data-bs-ride="carousel" data-bs-interval="false">
         <div class="carousel-inner h-100">
         </div>
@@ -130,7 +130,7 @@ export class Main extends Page {
 
   renderSliderItems(data: any): void {
     const elem: HTMLElement = document.querySelector('.main__group-slider');
-    const dataLength: number = data.groupList ? Object.values(data.groupList).filter((item: any) => item.state === 'approve').length: 0;
+    const dataLength: number = data.groupList ? Object.values(data.groupList).filter((item: any) => item.state === 'approve').length : 0;
     const carouselItemCount: number = dataLength % 2 === 0 ? dataLength / 2 : (dataLength + 1) / 2;
 
     if (dataLength) {
@@ -146,7 +146,7 @@ export class Main extends Page {
         .querySelector('.carousel-inner')
         .querySelectorAll('.carousel-item')[0]
         .classList.add('active');
-    }    
+    }
   }
 
   renderTransactions(data: any): void {
@@ -174,7 +174,7 @@ export class Main extends Page {
                     <span class="card-trans__header__title">${
                       item.description
                     }</span>
-                  </p>               
+                  </p>
                 </div>
                 <div class="main-card-trans__main main--font-size">
                   <p class="card-trans__main__cost">
@@ -187,12 +187,12 @@ export class Main extends Page {
                     </span>
                   </p>
                 </div>
-                <p class="main-card-trans__footer">                  
+                <p class="main-card-trans__footer">
                   <span>${
                     item.groupTitle
                   } group</span>
                 </p>
-              </div>   
+              </div>
             </div>`;
 
           Currencies.getCurrencyRateByCode(item.currency)
@@ -238,7 +238,7 @@ export class Main extends Page {
               </p>
             </div>
             <p class="main__balance align-self-start block__element-gap">
-              <span>Balance</span> 
+              <span>Balance</span>
               <span class="balance__text d-block"></span>
             </p>
           </div>
