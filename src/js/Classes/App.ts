@@ -99,6 +99,7 @@ export class App {
       this.transactionsList.onGetTransInfo = this.onGetTransInfo.bind(this);
       this.transactionsList.onEditTransaction = this.onEditTransaction.bind(this);
       this.transactionsList.onDeleteTransaction = this.onDeleteTransaction.bind(this);
+      this.transactionsList.onRenderGroupBalance = this.onRenderGroupBalance.bind(this);
       
 
       this.messenger = Messenger.create('.main');
@@ -339,6 +340,10 @@ export class App {
 
   onDeleteTransaction(groupID:string, transID: string) {
     this.database.deleteTransaction(groupID, transID);
+  }
+
+  onRenderGroupBalance(groupID: string) {
+    this.database.getBalanceForUserInGroup(this.database.uid, groupID, 1, this.transactionsList.addGroupBalance);
   }
 
   onAddRecipientToMessage(accountName: string) {

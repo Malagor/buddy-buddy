@@ -10,6 +10,7 @@ import { renderTransListHTML } from './renderTransListHTML';
 import { renderTransCardHTML } from './renderTransCardHTML';
 import { renderCheckedMember } from './renderCheckedMember';
 import { renderNonCheckedMember } from './renderNonCheckedMember';
+import { changeBalanceStyle } from './changeBalanceStyle';
 
 export class TransactionsList extends Page {
   onChangeState: any;
@@ -17,6 +18,7 @@ export class TransactionsList extends Page {
   onEditTransaction: any;
   onDeleteTransaction: any;
   detailsModal:any;
+  onRenderGroupBalance: any;
 
   public newTrans: NewTransaction;
   static create(element: string): TransactionsList {
@@ -34,16 +36,33 @@ export class TransactionsList extends Page {
   }
 
   addTotalBalance = (balance: number, currency: string): void => {
-     const balanceElement: HTMLElement = document.querySelector('.user-balance');
-     balanceElement.innerHTML = `
-       <div>${balance}&nbsp;${currency}</div>
-     ` ;
-     if (balance >= 0) {
-       balanceElement.classList.add('text-success');
-     } else {
-      balanceElement.classList.add('text-danger');
-     }
+    const balanceElement: HTMLElement = document.querySelector('.user-balance');
+    if (balance > 0) {
+      balanceElement.innerHTML = `
+        <div>+${balance}&nbsp;${currency}</div>
+      `;
+    } else {
+      balanceElement.innerHTML = `
+        <div>${balance}&nbsp;${currency}</div>
+      `;
+    }
+    changeBalanceStyle(balance, balanceElement);
   }
+
+
+  addGroupBalance = (data:any): void => {
+    const balanceElement: HTMLElement = document.querySelector('.user-balance');
+    if (data.balance > 0) {
+      balanceElement.innerHTML = `
+        <div>+${data.balance}&nbsp;${data.currency}</div>
+      `;
+    } else {
+      balanceElement.innerHTML = `
+        <div>${data.balance}&nbsp;${data.currency}</div>
+      `;
+    }
+    changeBalanceStyle(data.balance, balanceElement);
+ }
 
   addGroupToTransList = (groupID: string, groupTitle: string) => {
     const groups: HTMLFormElement = document.querySelector('.trans-list__groups');
@@ -328,7 +347,7 @@ export class TransactionsList extends Page {
     groups.addEventListener('change', () => {
       const transList: NodeListOf<HTMLElement> = document.querySelectorAll('.trans-item');
       const groupID = groups.value;
-
+      this.onRenderGroupBalance(groupID); 
       transList.forEach((transItem: HTMLElement) => {
         const itemGroupID = transItem.getAttribute('group-id');
         

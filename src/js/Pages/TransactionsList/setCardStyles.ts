@@ -6,13 +6,13 @@ export const setCardStyles = (trans: any, owner: boolean, ownUID: string) => {
 
   if (owner) {
     btnDisplay = 'd-none';
-    cost = `+${(+trans.totalCost).toFixed(2)}`;
-    colorCost = 'text-success';
+    cost = `-${(+trans.totalCost).toFixed(2)}`;
+    colorCost = 'text-danger';
   } else {
     btnDisplay = 'd-flex';
     const user: any[] = Object.entries(trans.toUserList).find((user: any) => user[0] === ownUID);
-    cost = `-${(+user[1].cost).toFixed(2)}`;
-    colorCost = 'text-danger';
+    cost = `+${(+user[1].cost).toFixed(2)}`;
+    colorCost = 'text-success';
   }
 
   let selectPending: string = '';

@@ -139,7 +139,6 @@ export class NewTransaction extends Page {
   } 
 
   currListEvents = (currInput: HTMLInputElement, currList: HTMLElement) => {
-
     currInput.addEventListener('mousedown', () => {
       setTimeout( () => {
         document.querySelector('.curr--active-curr').scrollIntoView();

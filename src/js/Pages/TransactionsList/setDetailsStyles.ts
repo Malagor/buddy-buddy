@@ -18,16 +18,16 @@ export const setDetailsStyles = (trans: any, owner: boolean, ownUID:string) => {
   if (owner) {
     ownerDisplay = 'd-none';
 
-    colorText = 'text-success';
-    cost = `+${trans.totalCost}`;
+    colorText = 'text-danger';
+    cost = `-${trans.totalCost}`;
     membDisplay = '';
     commentDisplay = 'd-none';
     selectDisplay = 'd-none';
 
   } else {
     ownerDisplay = '';
-    colorText = 'text-danger';
-    cost = `-${ownCost}`;
+    colorText = 'text-success';
+    cost = `+${ownCost}`;
     membDisplay = 'd-none';
     commentDisplay = '';
     selectDisplay = '';
