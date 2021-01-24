@@ -1487,7 +1487,9 @@ export class Database {
                   } 
                   if (transData.toUserList[userID]) {
                     balance -= transData.toUserList[userID].cost;
-                  }      
+                  }  
+                  // console.log ('transid', transData);
+                  // console.log ('balance', balance);    
                 }
               });
           });

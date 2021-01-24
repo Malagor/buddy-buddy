@@ -86,6 +86,7 @@ export class NewTransaction extends Page {
     `;
 
     this.events();
+    
   }
 
   addGroupList = (groupID: string, groupTitle: string, currentGroup: string) => {
@@ -128,7 +129,6 @@ export class NewTransaction extends Page {
     document.querySelectorAll('.new-trans__curr-item').forEach((option: HTMLElement) => {
       const optionContent: string = option.innerText;
       if (optionContent === currentOption) {
-        console.log ('true');
         option.classList.add('curr--active-curr');
         el.setAttribute('value', currentOption);
       }

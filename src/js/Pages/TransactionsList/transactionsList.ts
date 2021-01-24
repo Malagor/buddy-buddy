@@ -19,6 +19,7 @@ export class TransactionsList extends Page {
   onDeleteTransaction: any;
   detailsModal:any;
   onRenderGroupBalance: any;
+  onRenderTotalBalance: any;
 
   public newTrans: NewTransaction;
   static create(element: string): TransactionsList {
@@ -28,6 +29,7 @@ export class TransactionsList extends Page {
   public render = (): void => {
 
     this.element.innerHTML = renderTransListHTML();
+    // this.onRenderTotalBalance();
     this.newTrans = NewTransaction.create('.modal-wrapper');
     this.newTrans.render();
     this.events();
@@ -36,29 +38,29 @@ export class TransactionsList extends Page {
   }
 
   addTotalBalance = (balance: number, currency: string): void => {
-    const balanceElement: HTMLElement = document.querySelector('.user-balance');
+    console.log('totalbalance', balance);
+    const balanceElement: HTMLElement = document.querySelector('.trans-list__user-balance');
     if (balance > 0) {
       balanceElement.innerHTML = `
-        <div>+${balance}&nbsp;${currency}</div>
+        <div>+${balance.toFixed(2)} ${currency}</div>
       `;
     } else {
       balanceElement.innerHTML = `
-        <div>${balance}&nbsp;${currency}</div>
+        <div>${balance.toFixed(2)} ${currency}</div>
       `;
     }
     changeBalanceStyle(balance, balanceElement);
   }
 
-
   addGroupBalance = (data:any): void => {
-    const balanceElement: HTMLElement = document.querySelector('.user-balance');
+    const balanceElement: HTMLElement = document.querySelector('.trans-list__user-balance');
     if (data.balance > 0) {
       balanceElement.innerHTML = `
-        <div>+${data.balance}&nbsp;${data.currency}</div>
+        <div>+${(data.balance).toFixed(2)} ${data.currency}</div>
       `;
     } else {
       balanceElement.innerHTML = `
-        <div>${data.balance}&nbsp;${data.currency}</div>
+        <div>${(data.balance).toFixed(2)} ${data.currency}</div>
       `;
     }
     changeBalanceStyle(data.balance, balanceElement);
@@ -84,7 +86,7 @@ export class TransactionsList extends Page {
     const styles = setCardStyles(trans, owner, ownUID);
     const date: any = getDate(trans.date);
     const transaction: HTMLElement = document.getElementById(transID);
-    transaction.className = `trans-item ${styles.border} flex-column justify-content-between block--width-85`;
+    transaction.className = `trans-item ${styles.border} flex-column justify-content-start block--width-85`;
     transaction.setAttribute('group-id', trans.groupID);
     transaction.setAttribute('data-time', trans.date);
     transaction.innerHTML = renderTransCardHTML(trans, date, styles);
@@ -347,7 +349,11 @@ export class TransactionsList extends Page {
     groups.addEventListener('change', () => {
       const transList: NodeListOf<HTMLElement> = document.querySelectorAll('.trans-item');
       const groupID = groups.value;
-      this.onRenderGroupBalance(groupID); 
+      if (groups.value === 'all-trans') {
+        this.onRenderTotalBalance();
+      } else {
+        this.onRenderGroupBalance(groupID);
+      }   
       transList.forEach((transItem: HTMLElement) => {
         const itemGroupID = transItem.getAttribute('group-id');
         

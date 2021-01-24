@@ -100,6 +100,7 @@ export class App {
       this.transactionsList.onEditTransaction = this.onEditTransaction.bind(this);
       this.transactionsList.onDeleteTransaction = this.onDeleteTransaction.bind(this);
       this.transactionsList.onRenderGroupBalance = this.onRenderGroupBalance.bind(this);
+      this.transactionsList.onRenderTotalBalance = this.onRenderTotalBalance.bind(this);
       
 
       this.messenger = Messenger.create('.main');
@@ -239,6 +240,7 @@ export class App {
     this.setCurrentPage('Transactions');
     this.deleteHandlers();
     this.transactionsList.render();
+    this.database.getBalanceForUserTotal(this.database.uid, 1, this.transactionsList.addTotalBalance);
     this.transactionsList.newTrans.onCreateTransaction = this.onCreateTransaction.bind(this);
     this.transactionsList.newTrans.onShowMembersOfGroup = this.onShowMembersOfGroup.bind(this);
     this.database.getCurrencyList(this.transactionsList.newTrans.addCurrencyList);
@@ -247,7 +249,6 @@ export class App {
     this.database.getGroupsListForTransaction(this.transactionsList.addGroupToTransList);
     this.transactionHandler = this.database.transactionHandler(this.transactionsList.addTransactionWrapper, this.transactionsList.addMyTransactions, this.transactionsList.addUserToList);
     this.database.getMyTransactionsList(this.transactionHandler);
-    this.database.getBalanceForUserTotal(this.database.uid, 1, this.transactionsList.addTotalBalance);
   }
 
   onMessagesPage() {
@@ -344,6 +345,10 @@ export class App {
 
   onRenderGroupBalance(groupID: string) {
     this.database.getBalanceForUserInGroup(this.database.uid, groupID, 1, this.transactionsList.addGroupBalance);
+  }
+
+  onRenderTotalBalance() {
+    this.database.getBalanceForUserTotal(this.database.uid, 1, this.transactionsList.addTotalBalance);
   }
 
   onAddRecipientToMessage(accountName: string) {

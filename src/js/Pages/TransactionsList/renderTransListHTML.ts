@@ -7,10 +7,10 @@ export const renderTransListHTML = () => {
        </div>
 
        <div class="block__groups block--width-85">
-         <select class="trans-list__groups form-select w-75" aria-label="Default select example">
+         <select class="trans-list__groups form-select" aria-label="Default select example">
            <option value="all-trans">Все </option>
          </select>
-         <div class="user-balance text-center w-25"></div>
+         <div class="trans-list__user-balance text-center"></div>
        </div>
 
        <div class="trans-list__list">

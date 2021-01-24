@@ -6,15 +6,7 @@
   justify-content:space-between;
   padding: 1rem 0;
   border-bottom: 1px solid rgba(0,0,0,.05);
-
-  //   @include desktop {
-  //   width: 85%;
-  //   height: 100%;
-  //   display: flex;
-  //   flex-wrap: wrap;
-  //   justify-content: space-between;
-
-  // }
+  align-items: center;
 }
 
 .translist__header {
@@ -24,8 +16,6 @@
   align-items: center;
   width: 100%;
 }
-
-
 
 .translist__header--main {
   position: sticky;
@@ -41,11 +31,15 @@
   }
 }
 
+.trans-list__groups {
+  width: 60%;
+}
 
-
-
-.user-balance {
+.trans-list__user-balance {
   font-size: rem(20px);
+  width: 40%;
+  line-height: 1rem;
+  
 }
 
 
@@ -88,7 +82,7 @@
 
 .trans-item {
   width: 85%;
-  // min-height: rem(120px);
+  min-height: rem(120px);
 
   box-shadow: 0 3px 5px rgba(0,0,0,0.25);
   padding: 0.5rem;
