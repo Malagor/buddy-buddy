@@ -401,7 +401,7 @@ export class MyGroups extends Page {
     }
 
     const html = `
-      <div id="${data.user.account}" data-user-id=${data.userId} class="card modal-detail">
+      <div data-user-id=${data.userId} class="card modal-detail">
         <img class="modal-detail__img" src="${data.user.avatar}" alt="avatar">
         <div>
           <p  class="modal-detail__name">${data.user.name}</p>
@@ -416,7 +416,7 @@ export class MyGroups extends Page {
 
     // выделение автора группы при прорисовке
     if (userId === author) {
-      const cardAuthor = document.getElementById(`${data.user.account}`);
+      const cardAuthor = document.querySelector(`[data-user-id="${userId}"]`);
       cardAuthor.classList.add('modal-detail--author');
     }
 
@@ -428,14 +428,7 @@ export class MyGroups extends Page {
   }
 
   addUserBalanceInModalDetailGroup(data: any) {
-    let divCardUser:Element;
-    const AllDivCardUsers = document.querySelectorAll(`[data-user-id]`);
-    AllDivCardUsers.forEach(cardUser => {
-      const valueAttribute = cardUser.getAttribute(`data-user-id`)
-      if(valueAttribute === data.userId) { 
-        divCardUser = cardUser;
-      }
-    })
+    const divCardUser = document.querySelector(`[data-user-id="${data.userId}"]`)
 
     const html = `
       <div class="modal-detail__balance">
