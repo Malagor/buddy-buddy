@@ -435,14 +435,14 @@ export class MyGroups extends Page {
       <div class="modal-detail__balance">
         <span>${Math.round(data.balance * 100) / 100}</span>
       </div>
-    `
+    `;
     divCardUser.insertAdjacentHTML('beforeend', html);
 
-    const divForBalance = divCardUser.querySelector('.modal-detail__balance')
-    if(data.balance > 0) {
-      divForBalance.classList.add('modal-detail__balance--positive')
-    } else if(data.balance < 0) {
-      divForBalance.classList.add('modal-detail__balance--negative')
+    const divForBalance = divCardUser.querySelector('.modal-detail__balance');
+    if (data.balance > 0) {
+      divForBalance.classList.add('modal-detail__balance--positive');
+    } else if (data.balance < 0) {
+      divForBalance.classList.add('modal-detail__balance--negative');
     }
   }
 

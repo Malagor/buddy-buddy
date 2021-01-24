@@ -349,11 +349,11 @@ export class Database {
         .database()
         .ref(`User/${data.userId}/groupList`)
         .once('value', (snapshot) => {
-          console.log("User/${data.userId}/groupList", snapshot.val())
-          if(!snapshot.val()) {
+          console.log('User/${data.userId}/groupList', snapshot.val());
+          if (!snapshot.val()) {
             currentGroup = true;
           }
-        })
+        });
 
     const sendDataInDB = (data: any) => {
       const userObj: any = {};
@@ -544,7 +544,7 @@ export class Database {
       } else {
         console.log('Deleted  group from userList successful');
       }
-    });  
+    });
   }
 
   removeGroup(groupId: string) {
