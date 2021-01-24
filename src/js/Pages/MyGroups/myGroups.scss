@@ -73,22 +73,12 @@
 }
 
 .input-logo-group {
+  z-index: 1;
   position: absolute;
-  bottom: 0;
+  width: rem(20px);
+  right: 0;
+  bottom: -4px;
   opacity: 0;
-}
-
-.add-new-group {
-  //position: fixed;
-  //right: 14%;
-  //bottom: rem(90px);
-  //width: rem(51px);
-  //height: rem(51px);
-  //border-radius: 50%;
-
-  //&__icon {
-  //  margin: 5px 0 0 -1px;
-  //}
 }
 
 .modal-dropdown{
