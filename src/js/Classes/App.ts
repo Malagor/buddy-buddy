@@ -232,6 +232,8 @@ export class App {
     this.database.getGroupsListForTransaction(this.transactionsList.addGroupToTransList);
     this.transactionHandler = this.database.transactionHandler(this.transactionsList.addTransactionWrapper, this.transactionsList.addMyTransactions, this.transactionsList.addUserToList);
     this.database.getMyTransactionsList(this.transactionHandler);
+
+    this.database.getBalanceForUserTotal(1, this.transactionsList.addTotalBalance);
   }
 
   onMessagesPage() {

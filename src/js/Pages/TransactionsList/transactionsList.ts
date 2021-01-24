@@ -33,6 +33,18 @@ export class TransactionsList extends Page {
 
   }
 
+  addTotalBalance = (balance: number, currency: string): void => {
+     const balanceElement: HTMLElement = document.querySelector('.user-balance');
+     balanceElement.innerHTML = `
+       <div>${balance}&nbsp;${currency}</div>
+     ` ;
+     if (balance >= 0) {
+       balanceElement.classList.add('text-success');
+     } else {
+      balanceElement.classList.add('text-danger');
+     }
+  }
+
   addGroupToTransList = (groupID: string, groupTitle: string) => {
     const groups: HTMLFormElement = document.querySelector('.trans-list__groups');
     const groupElement = document.createElement('option');

@@ -531,14 +531,6 @@ export class Database {
             setNotificationMark(TypeOfNotifications.Transaction, 1);
           }
         });
-        // const hasUserId = userList.find((user: { userID: string; state: string; }) => {
-        //   return (user.userID === this.uid && user.state !== 'approve');
-        // });
-        // if (hasUserId) {
-        //   setNotificationMark(TypeOfNotifications.Transaction, 1);
-        // } else {
-        //   setNotificationMark(TypeOfNotifications.Transaction, 0);
-        // }
       }, (error: { code: string; message: any; }) => {
         console.log('Error:\n ' + error.code);
         console.log(error.message);
@@ -915,6 +907,19 @@ export class Database {
         user.state = 'approve';
       }
     });
+
+    const toUserList: {[k: string]: any} = {};
+
+    data.toUserList.forEach((user: { cost: any; comment: any; state: any; costFix: any; userID: string; }) => {
+      const userId: string = user.userID;
+      toUserList[userId] = {
+        cost: user.cost,
+        comment: user.comment,
+        state: user.state,
+        costFix: user.costFix,
+      };
+    });
+
     const setData = {
       userID: this.uid,
       date: data.date,
@@ -922,30 +927,12 @@ export class Database {
       description: data.description,
       currency: data.currency,
       groupID: data.groupID,
+      toUserList
     };
 
-    const transKey = transRef.push().key;
-    transRef.child(transKey)
-      .set(setData)
-      .catch(error => {
-        console.log('Error: ' + error.code);
-      });
+    const transKey = transRef.push(setData).key;
 
     data.toUserList.forEach((user: any) => {
-      const obj = {
-        cost: user.cost,
-        comment: user.comment,
-        state: user.state,
-        costFix: user.costFix,
-      };
-
-      transRef.child(`${transKey}/toUserList/${user.userID}`)
-        .set(obj)
-        .catch(error => {
-          console.log('Error: ' + error.code);
-        });
-
-
       userRef.child(`${user.userID}/transactionList/${transKey}/state`)
         .set(user.state)
         .catch(error => {
@@ -1222,10 +1209,7 @@ export class Database {
       } else {
         console.log('Удаление из списка трназакций в группе');
       }
-    })
-
-
-    
+    })    
   }
 
   addUserToContacts(userData: ISearchUserData, errorHandler: (message: string) => void) {
@@ -1377,35 +1361,32 @@ export class Database {
       });
   }
 
-  getBalanceForUserTotal(userId: string, currencyRate: number = 1, funcForRender: (balance: number) => void, errorHandler?: (message: string) => void) {
+  getBalanceForUserTotal(currencyRate: number = 1, funcForRender: (balance: number, currency: string) => void, errorHandler?: (message: string) => void) {
     console.log('getBalanceForUserTotal ...');
     const base = this.firebase.database();
-
-    base.ref(`User/${userId}`)
+    let balance: number = 0;
+    base.ref(`User/${this.uid}`)
       .child('transactionList')
       .once('value', snapshot => {
         const transactionList = snapshot.val() || [];
         const transId = Object.keys(transactionList);
-        let balance: number = 0;
-
         if (transId.length) {
           transId.forEach(key => {
             base.ref(`Transactions/${key}`)
               .once('value', snapshot => {
                 const transData = snapshot.val();
                 if (transData) {
-                  if (transData.userID === userId) {
+                  if (transData.userID === this.uid) {
                     balance += transData.totalCost;
-                  } else {
-                    balance -= transData.toUserList[userId].cost;
-                  }
+                  } 
+                  if (transData.toUserList[this.uid]) {
+                    balance -= transData.toUserList[this.uid].cost;
+                  }      
                 }
               });
           });
         }
-
         balance *= currencyRate;
-        funcForRender(balance);
       })
       .catch(error => {
         console.log(error.code);
@@ -1414,6 +1395,21 @@ export class Database {
           errorHandler(error.message);
         }
       });
+
+      base.ref(`User/${this.uid}/currency`)
+      .once('value', (snapshot) => {
+        const curr = snapshot.val();
+        funcForRender(balance, curr);
+      })
+      .catch(error => {
+        console.log(error.code);
+        console.log(error.message);
+        if (errorHandler) {
+          errorHandler(error.message);
+        }
+      });
+
+
   }
 
   _calcBalance = (transId: string[], userId: string) => {
