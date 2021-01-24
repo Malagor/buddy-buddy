@@ -1443,11 +1443,11 @@ export class Database {
       });
   }
 
-  getBalanceForUserTotal(currencyRate: number = 1, funcForRender: (balance: number, currency: string) => void, errorHandler?: (message: string) => void) {
+  getBalanceForUserTotal(userID: string, currencyRate: number = 1, funcForRender: (balance: number, currency: string) => void, errorHandler?: (message: string) => void) {
     console.log('getBalanceForUserTotal ...');
     const base = this.firebase.database();
     let balance: number = 0;
-    base.ref(`User/${this.uid}`)
+    base.ref(`User/${userID}`)
       .child('transactionList')
       .once('value', snapshot => {
         const transactionList = snapshot.val() || [];
@@ -1458,11 +1458,11 @@ export class Database {
               .once('value', snapshot => {
                 const transData = snapshot.val();
                 if (transData) {
-                  if (transData.userID === this.uid) {
+                  if (transData.userID === userID) {
                     balance += transData.totalCost;
                   } 
-                  if (transData.toUserList[this.uid]) {
-                    balance -= transData.toUserList[this.uid].cost;
+                  if (transData.toUserList[userID]) {
+                    balance -= transData.toUserList[userID].cost;
                   }      
                 }
               });
