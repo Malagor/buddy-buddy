@@ -401,7 +401,7 @@ export class MyGroups extends Page {
     }
 
     const html = `
-      <div id="${data.user.account}" user-id-${data.userId} class="card modal-detail">
+      <div data-user-id=${data.userId} class="card modal-detail">
         <img class="modal-detail__img" src="${data.user.avatar}" alt="avatar">
         <div>
           <p  class="modal-detail__name">${data.user.name}</p>
@@ -416,7 +416,7 @@ export class MyGroups extends Page {
 
     // выделение автора группы при прорисовке
     if (userId === author) {
-      const cardAuthor = document.getElementById(`${data.user.account}`);
+      const cardAuthor = document.querySelector(`[data-user-id="${userId}"]`);
       cardAuthor.classList.add('modal-detail--author');
     }
 
@@ -428,8 +428,7 @@ export class MyGroups extends Page {
   }
 
   addUserBalanceInModalDetailGroup(data: any) {
-    const divCardUser = document.querySelector(`[user-id-${data.userId}]`);
-
+    const divCardUser = document.querySelector(`[data-user-id="${data.userId}"]`)
 
     const html = `
       <div class="modal-detail__balance">
@@ -460,8 +459,6 @@ export class MyGroups extends Page {
   }
 
   deleteMemberGroup(data: any): void {
-
-
     // this.deleteMemberFromGroup()
   }
 
@@ -481,27 +478,3 @@ export class MyGroups extends Page {
     }
   }
 }
-
-
-/// FOR BALANSE
-
-/* let balanceGroup: string = '';
-if (element.balance < 0) {
-  balanceGroup = `
-    <h5 class="card-group__balance">
-      ${element.balance ? element.currency : ''}<span class="card-group__balance--negative">${element.balance ? element.balance : formatDate(element.dateCreate)}</span>
-    </h5>
-  `;
-} else if (element.balance >= 0) {
-  balanceGroup = `
-    <h5 class="card-group__balance">
-      ${element.balance ? element.currency : ''}<span class="card-group__balance--positive">${element.balance ? element.balance : formatDate(element.dateCreate)}</span>
-    </h5>
-  `;
-}
-
-
-
-
-
-*/
