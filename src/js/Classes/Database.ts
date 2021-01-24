@@ -342,8 +342,18 @@ export class Database {
 
   createNewGroup(data: IDataForCreateGroup) {
     const file: File = data.groupData.icon;
-    const currentGroup: boolean = data.currentGroup;
+    let currentGroup: boolean = data.currentGroup;
     const userIdAuthor: string = data.userId;
+
+    this.firebase
+        .database()
+        .ref(`User/${data.userId}/groupList`)
+        .once('value', (snapshot) => {
+          console.log("User/${data.userId}/groupList", snapshot.val())
+          if(!snapshot.val()) {
+            currentGroup = true;
+          }
+        })
 
     const sendDataInDB = (data: any) => {
       const userObj: any = {};

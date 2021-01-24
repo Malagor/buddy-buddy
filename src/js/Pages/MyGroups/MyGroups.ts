@@ -461,8 +461,6 @@ export class MyGroups extends Page {
 
   deleteMemberGroup(data: any): void {
 
-
-    //this.deleteMemberFromGroup()
   }
 
   addMembersGroup(data: any): void {
@@ -481,27 +479,3 @@ export class MyGroups extends Page {
     }
   }
 }
-
-
-/// FOR BALANSE
-
-/* let balanceGroup: string = '';
-if (element.balance < 0) {
-  balanceGroup = `
-    <h5 class="card-group__balance">
-      ${element.balance ? element.currency : ''}<span class="card-group__balance--negative">${element.balance ? element.balance : formatDate(element.dateCreate)}</span>
-    </h5>
-  `;
-} else if (element.balance >= 0) {
-  balanceGroup = `
-    <h5 class="card-group__balance">
-      ${element.balance ? element.currency : ''}<span class="card-group__balance--positive">${element.balance ? element.balance : formatDate(element.dateCreate)}</span>
-    </h5>
-  `;
-}
-
-
-
-
-
-*/
