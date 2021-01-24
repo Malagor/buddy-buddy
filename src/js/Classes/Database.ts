@@ -888,9 +888,10 @@ export class Database {
           .ref('Currency')
           .on('value', (snapshot) => {
             const currList: string[] = Object.keys(snapshot.val());
-            currList.forEach((curr: string) => {
-              renderCurrencyList(curr, currCurrency);
-            });
+            renderCurrencyList(currList, currCurrency);
+            // currList.forEach((curr: string) => {
+              
+            // });
           });
       }, (error: { code: string; message: any; }) => {
         console.log('Error:\n ' + error.code);
