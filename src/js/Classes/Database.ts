@@ -513,24 +513,12 @@ export class Database {
     this.firebase
       .database()
       .ref(`Groups/${groupId}/userList/${userId}`)
-      .remove(error => {
-        if (error) {
-          console.log(error.message);
-        } else {
-          console.log('Deleted user from group successful');
-        }
-      });
+      .set({state: 'closed'});
 
     this.firebase
     .database()
     .ref(`User/${userId}/groupList/${groupId}`)
-    .remove(error => {
-      if (error) {
-        console.log(error.message);
-      } else {
-        console.log('Deleted  group from userList successful');
-      }
-    });
+    .set({state: 'closed'});
   }
 
   removeGroup(groupId: string) {
