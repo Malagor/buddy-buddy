@@ -1,4 +1,4 @@
-export const renderDetailsHTML = (trans: any, date: any, styles: any,) => {
+export const renderDetailsHTML = (trans: any, date: any, styles: any, ) => {
    return `
    <div class="details__header modal-header">
      <h5 class="details__descr modal-title fw-bolder">${trans.description}</h5>
@@ -12,7 +12,7 @@ export const renderDetailsHTML = (trans: any, date: any, styles: any,) => {
      </div>
 
      <div class="details__group"></div>
- 
+
      <div class="${styles.ownerDisplay} details__owner d-flex align-items-center">
        <div>Плательщик: </div>
        <div class="details__owner-info d-flex flex-column align-items-center">
@@ -29,13 +29,13 @@ export const renderDetailsHTML = (trans: any, date: any, styles: any,) => {
        <div>Комментарий: </div>
        <div class="details__comment">${styles.ownComment}</div>
      </div>
-   
+
      <div class="${styles.checkDisplay} details__check align-items-center d-flex">
        <div>Чек: </div>
        <div class="details__icon-wrapper"><img class="details__icon" src=${trans.photo[0]} alt="check"></div>
      </div>
 
-     <div class="${styles.selectDisplay} details__state-wrapper">       
+     <div class="${styles.selectDisplay} details__state-wrapper">
        <select class="details__state form-select" aria-label="Default select example">
          <option value="pending">ожидание</option>
          <option value="approve">подтвердить</option>
@@ -64,4 +64,4 @@ export const renderDetailsHTML = (trans: any, date: any, styles: any,) => {
      <button type="button" class="details__save btn btn-primary">Сохранить</button>
    </div>
  `;
-}
+};

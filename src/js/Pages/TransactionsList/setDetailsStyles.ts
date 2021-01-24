@@ -1,4 +1,4 @@
-export const setDetailsStyles = (trans: any, owner: boolean, ownUID:string) => {
+export const setDetailsStyles = (trans: any, owner: boolean, ownUID: string) => {
   const userList: any[] = Object.entries(trans.toUserList);
   let ownComment: string = '';
   let ownCost: string = '';
@@ -36,7 +36,7 @@ export const setDetailsStyles = (trans: any, owner: boolean, ownUID:string) => {
   let btnSaveDisplay: string = '';
   if (!owner) {
     btnSaveDisplay = 'd-none';
-  } 
+  }
 
 
   let checkDisplay: string;
@@ -56,5 +56,5 @@ export const setDetailsStyles = (trans: any, owner: boolean, ownUID:string) => {
     selectDisplay,
     btnSaveDisplay,
     checkDisplay
-  }
-}
+  };
+};

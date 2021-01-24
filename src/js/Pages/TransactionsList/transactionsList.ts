@@ -3,7 +3,7 @@ import { NewTransaction } from '../newTransaction/newTransaction';
 import { Modal } from 'bootstrap';
 import { getDate } from './getDate';
 import { editSum } from './editSum';
-import { setCardStyles } from './setCardStyles'; 
+import { setCardStyles } from './setCardStyles';
 import { setDetailsStyles } from './setDetailsStyles';
 import { renderDetailsHTML } from './renderDetailsHTML';
 import { renderTransListHTML } from './renderTransListHTML';
@@ -17,7 +17,7 @@ export class TransactionsList extends Page {
   onGetTransInfo: any;
   onEditTransaction: any;
   onDeleteTransaction: any;
-  detailsModal:any;
+  detailsModal: any;
   onRenderGroupBalance: any;
   onRenderTotalBalance: any;
 
@@ -52,7 +52,7 @@ export class TransactionsList extends Page {
     changeBalanceStyle(balance, balanceElement);
   }
 
-  addGroupBalance = (data:any): void => {
+  addGroupBalance = (data: any): void => {
     const balanceElement: HTMLElement = document.querySelector('.trans-list__user-balance');
     if (data.balance > 0) {
       balanceElement.innerHTML = `
@@ -96,9 +96,9 @@ export class TransactionsList extends Page {
     const detailsModalWrapper: HTMLElement = document.querySelector('.details__wrapper');
     transaction.addEventListener('click', (e) => {
       const { target }: any = e;
-      if(!target.closest('.trans-item__state')) {
+      if (!target.closest('.trans-item__state')) {
         this.detailsModal.show();
-        this.renderOutTrans(detailsModalWrapper, transID, trans, owner, ownUID, selectState.value);   
+        this.renderOutTrans(detailsModalWrapper, transID, trans, owner, ownUID, selectState.value);
       }
     });
   }
@@ -153,7 +153,7 @@ export class TransactionsList extends Page {
   }
 
   renderOutTrans = (wrapper: HTMLElement, transID: string, trans: any, owner: boolean, ownUID: string, selectValue: string): void => {
-    
+
     const styles = setDetailsStyles(trans, owner, ownUID);
     if (!trans.photo) {
       trans.photo = '';
@@ -187,8 +187,8 @@ export class TransactionsList extends Page {
         } else {
           opt.removeAttribute('selected');
         }
-     
-        this.changeCardStyle(transaction, detailsSelect.value,);       
+
+        this.changeCardStyle(transaction, detailsSelect.value, );
       });
     });
 
@@ -240,7 +240,7 @@ export class TransactionsList extends Page {
     titleElement.innerText = `Группа: ${title}`;
   }
 
-  addOwnerInfo = (owner: any) => {    
+  addOwnerInfo = (owner: any) => {
     const modalWrapper: HTMLElement = document.querySelector('.details__wrapper');
     const ownerWrapper: HTMLElement = modalWrapper.querySelector('.details__owner-info');
     ownerWrapper.innerHTML = `
@@ -248,7 +248,7 @@ export class TransactionsList extends Page {
     `;
   }
 
-  addMemberOfTransaction = (trans: any, user: any) => {    
+  addMemberOfTransaction = (trans: any, user: any) => {
     const modalWrapper: HTMLElement = document.querySelector('.details__wrapper');
     const membersWrapper: HTMLElement = modalWrapper.querySelector('.details__members');
     const notMembersWrapper: HTMLElement = modalWrapper.querySelector('.details__not-members');
@@ -259,7 +259,7 @@ export class TransactionsList extends Page {
       member.className = 'details__memb-wrapper details__memb--checked d-flex justify-content-between';
       member.setAttribute('user-id', user.key);
       member.setAttribute('user-state', currUser[1].state);
-      member.innerHTML = renderCheckedMember(user, currUser); 
+      member.innerHTML = renderCheckedMember(user, currUser);
 
       const state: HTMLElement = member.querySelector('.details__member-state');
       if (currUser[1].state === 'pending') {
@@ -288,13 +288,13 @@ export class TransactionsList extends Page {
 
     const membInput: HTMLInputElement = member.querySelector('.details__member-cost');
     membInput.addEventListener('input', () => {
-      if(+membInput.value >= 0 ) {
+      if (+membInput.value >= 0 ) {
         membInput.classList.add('fixed');
         membInput.classList.remove('non-fixed');
         editSum(trans, modalWrapper, membInput);
-      } 
+      }
     });
-    
+
     member.querySelector('.details__member-delete').addEventListener('click', () => {
       if (member.querySelector('.details__member-delete').innerText === 'clear') {
         notMembersWrapper.append(member);
@@ -311,7 +311,7 @@ export class TransactionsList extends Page {
         member.classList.add('details__memb--checked');
         member.setAttribute('user-state', 'pending');
         member.querySelector('.details__member-state').innerHTML = 'ожидание';
-        member.querySelector('.details__member-delete').innerHTML = '<i class="material-icons">clear</i>';       
+        member.querySelector('.details__member-delete').innerHTML = '<i class="material-icons">clear</i>';
       }
       editSum(trans, modalWrapper);
       const notMembers = notMembersWrapper.querySelectorAll('.details__memb-wrapper');
@@ -323,7 +323,7 @@ export class TransactionsList extends Page {
     });
   }
 
-  getDataforEditTransaction = (transWrapper:HTMLElement) => {
+  getDataforEditTransaction = (transWrapper: HTMLElement) => {
     const newUsers: any[] = [];
     const newMembers = transWrapper.querySelectorAll('.details__memb--checked');
     newMembers.forEach((member: HTMLElement) => {
@@ -353,17 +353,17 @@ export class TransactionsList extends Page {
         this.onRenderTotalBalance();
       } else {
         this.onRenderGroupBalance(groupID);
-      }   
+      }
       transList.forEach((transItem: HTMLElement) => {
         const itemGroupID = transItem.getAttribute('group-id');
-        
-        if (itemGroupID === groupID || groups.value === "all-trans") {
+
+        if (itemGroupID === groupID || groups.value === 'all-trans') {
           transItem.classList.add('d-flex');
           transItem.classList.remove('d-none');
         } else {
           transItem.classList.add('d-none');
           transItem.classList.remove('d-flex');
-        } 
+        }
       });
 
       const groupsInModal: HTMLElement = document.querySelector('.new-trans__groups-list');

@@ -25,7 +25,7 @@ export class NewTransaction extends Page {
         <div class="modal-body">
 
         <form class="all-forms">
-          
+
             <div class="form-group row block--margin-adaptive">
               <label for="group" class="new-trans__label col-sm-2 col-form-label">Группа</label>
               <div class="col-sm-10">
@@ -48,7 +48,7 @@ export class NewTransaction extends Page {
                   <i class="material-icons search-icon">search</i>
                   <input type="text" class="new-trans__currency-list form-control dropdown-toggle" data-bs-toggle="dropdown" id="new-trans-curr" aria-expanded="false" autocomplete="off">
                   <ul class="new-trans__curr-list dropdown-menu" aria-labelledby="new-trans-curr"></ul>
-                </div>             
+                </div>
               </div>
             </div>
 
@@ -59,8 +59,8 @@ export class NewTransaction extends Page {
                   <input id="input-file" type="file" accept="image/*" class="add-check__file" name="check" multiple>
                 </label>
               </div>
-              <div class="add-check__icon-wrapper hidden"><img class="add-check__icon" src="#" alt="check"></div> 
-            </div> 
+              <div class="add-check__icon-wrapper hidden"><img class="add-check__icon" src="#" alt="check"></div>
+            </div>
 
             <div class="modal fade add-check__modal" id="check" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
               <div class="modal-dialog modal-dialog-centered">
@@ -78,7 +78,7 @@ export class NewTransaction extends Page {
 
             <div class="checked-members"></div>
           </form>
-        </div>   
+        </div>
         <div class="modal-footer">
           <button type="button" class="new-trans__create-btn btn btn-primary w-100" data-bs-dismiss="modal" disabled>Создать транзакцию</button>
         </div>
@@ -86,7 +86,7 @@ export class NewTransaction extends Page {
     `;
 
     this.events();
-    
+
   }
 
   addGroupList = (groupID: string, groupTitle: string, currentGroup: string) => {
@@ -135,8 +135,8 @@ export class NewTransaction extends Page {
     });
 
     this.currListEvents(el, list);
-   
-  } 
+
+  }
 
   currListEvents = (currInput: HTMLInputElement, currList: HTMLElement) => {
     currInput.addEventListener('mousedown', () => {
@@ -165,7 +165,7 @@ export class NewTransaction extends Page {
           item.removeAttribute('hidden');
         });
         item.classList.add('curr--active-curr');
-        currInput.value = `${currency}`;        
+        currInput.value = `${currency}`;
       }
     });
 
@@ -189,7 +189,7 @@ export class NewTransaction extends Page {
     };
 
 
-    
+
   }
 
   _clickOnMember = (user: HTMLElement): void => {
@@ -373,7 +373,7 @@ export class NewTransaction extends Page {
 
 
 
- 
+
 
 
 

@@ -9,4 +9,4 @@ export const renderNonCheckedMember = (user: any) => {
     <div class="details__member-state d-flex justify-content-center"></div>
     <button class="details__member-delete btn btn-outline-secondary btn-sm"><i class="material-icons">add</i></button>
   `;
-}
+};

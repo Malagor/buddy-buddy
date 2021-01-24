@@ -101,7 +101,7 @@ export class App {
       this.transactionsList.onDeleteTransaction = this.onDeleteTransaction.bind(this);
       this.transactionsList.onRenderGroupBalance = this.onRenderGroupBalance.bind(this);
       this.transactionsList.onRenderTotalBalance = this.onRenderTotalBalance.bind(this);
-      
+
 
       this.messenger = Messenger.create('.main');
       this.messenger.onAddRecipient = this.onAddRecipientToMessage.bind(this);
@@ -339,7 +339,7 @@ export class App {
     this.database.setNewDataTransaction(editData, transID, trans);
   }
 
-  onDeleteTransaction(groupID:string, transID: string) {
+  onDeleteTransaction(groupID: string, transID: string) {
     this.database.deleteTransaction(groupID, transID);
   }
 

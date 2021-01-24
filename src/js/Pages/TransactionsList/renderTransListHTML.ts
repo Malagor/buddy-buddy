@@ -34,4 +34,4 @@ export const renderTransListHTML = () => {
      </div>
    </div>
    `;
-}
+};

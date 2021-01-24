@@ -1,4 +1,4 @@
-export const renderTransCardHTML = (trans: any, date: any, styles:any ) => {
+export const renderTransCardHTML = (trans: any, date: any, styles: any ) => {
   return `
   <p class="trans-item__header align-self-start text-truncate">
     <span class="trans-item__descr fw-bolder text-truncate">${trans.description}</span>
@@ -24,4 +24,4 @@ export const renderTransCardHTML = (trans: any, date: any, styles:any ) => {
 
 `;
 
-}
+};

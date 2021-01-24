@@ -889,9 +889,6 @@ export class Database {
           .on('value', (snapshot) => {
             const currList: string[] = Object.keys(snapshot.val());
             renderCurrencyList(currList, currCurrency);
-            // currList.forEach((curr: string) => {
-              
-            // });
           });
       }, (error: { code: string; message: any; }) => {
         console.log('Error:\n ' + error.code);
@@ -1046,7 +1043,7 @@ export class Database {
         'contentType': file.type,
       };
       console.log ('file= ', file);
-      // const hashName = sha256File(file.name); 
+      // const hashName = sha256File(file.name);
       const hashName = Date.now().toString();
       console.log ('hash', hashName);
       const extension = file.name.slice(file.name.lastIndexOf('.'));
@@ -1180,15 +1177,15 @@ export class Database {
     const base = this.firebase.database();
     const userRef = base.ref('User');
     const transRef = base.ref('Transactions');
-    const oldUsersID = Object.keys(trans.toUserList); 
-    const newUsers = editData.map((user:any) => user.userID);
+    const oldUsersID = Object.keys(trans.toUserList);
+    const newUsers = editData.map((user: any) => user.userID);
     editData.forEach((newUser: any) => {
       const newData = {
         cost: newUser.cost,
         comment: newUser.comment,
         state: newUser.state,
         costFix: newUser.costFix,
-      }
+      };
       if (newUser.userID === this.uid) {
         newData.state = 'approve';
       }
@@ -1203,7 +1200,7 @@ export class Database {
       .catch(error => {
         console.log('Error: ' + error.code);
       });
-    })
+    });
 
     oldUsersID.forEach((oldUser: string) => {
       if (!newUsers.includes(oldUser)) {
@@ -1214,8 +1211,8 @@ export class Database {
               } else {
                 console.log('Delete user');
               }
-        })
-        
+        });
+
         userRef.child(`${oldUser}/transactionList/${transID}`)
         .remove(error => {
           if (error) {
@@ -1223,17 +1220,17 @@ export class Database {
           } else {
             console.log('Delete transID');
           }
-        })
+        });
       }
-    })
+    });
   }
 
-  deleteTransaction(groupID:string, transID: string) {
+  deleteTransaction(groupID: string, transID: string) {
     const base = this.firebase.database();
     const userRef = base.ref('User');
     const transRef = base.ref('Transactions');
     const groupRef = base.ref('Groups');
-    
+
 
 
     transRef.child(`${transID}/toUserList`)
@@ -1248,8 +1245,8 @@ export class Database {
           } else {
             console.log('Удаление из списка трназакций у юзера');
           }
-        })
-      })
+        });
+      });
     });
 
 
@@ -1261,7 +1258,7 @@ export class Database {
       } else {
         console.log('Удаление из списка трназакций');
       }
-    })
+    });
 
     userRef.child(`${this.uid}/transactionList/${transID}`)
     .remove()
@@ -1271,7 +1268,7 @@ export class Database {
       } else {
         console.log('Удаление из списка трназакций у хозяина');
       }
-    })
+    });
 
     groupRef.child(`${groupID}/transactions`)
     .transaction(list => {
@@ -1279,7 +1276,7 @@ export class Database {
       console.log ('transdelete', transID);
       console.log ('listbefore', list);
       list.splice(i, 1);
-      console.log('listafter', list)
+      console.log('listafter', list);
       return list;
     })
     .catch(error => {
@@ -1288,7 +1285,7 @@ export class Database {
       } else {
         console.log('Удаление из списка трназакций в группе');
       }
-    })    
+    });
   }
 
   addUserToContacts(userData: ISearchUserData, errorHandler: (message: string) => void) {
@@ -1428,10 +1425,10 @@ export class Database {
                 if (transData) {
                   if (transData.userID === userId) {
                     balance += transData.totalCost;
-                  } 
+                  }
                   if (transData.toUserList[userId]) {
                     balance -= transData.toUserList[userId].cost;
-                  }      
+                  }
                 }
               });
           });
@@ -1484,12 +1481,12 @@ export class Database {
                 if (transData) {
                   if (transData.userID === userID) {
                     balance += transData.totalCost;
-                  } 
+                  }
                   if (transData.toUserList[userID]) {
                     balance -= transData.toUserList[userID].cost;
-                  }  
+                  }
                   // console.log ('transid', transData);
-                  // console.log ('balance', balance);    
+                  // console.log ('balance', balance);
                 }
               });
           });

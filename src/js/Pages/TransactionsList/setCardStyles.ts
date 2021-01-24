@@ -49,4 +49,4 @@ export const setCardStyles = (trans: any, owner: boolean, ownUID: string) => {
     selectAbort,
     selectApprove
   };
-}
+};

@@ -7,4 +7,4 @@ export const changeBalanceStyle = (bal: number, balanceElement: HTMLElement) => 
     balanceElement.classList.add('text-danger');
     balanceElement.classList.remove('text-success');
    }
-}
+};
