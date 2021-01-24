@@ -464,10 +464,9 @@ export class Database {
     const base = this.firebase.database();
 
     return ((snapshot: any) => {
-
       const userLIstInGroup =  Object.keys(snapshot.val().userList);
+
       if (userLIstInGroup.includes(this.uid)) {
-        const dataUserListGroup: any[] = Object.keys(snapshot.val().userList);
         const groupKey = snapshot.key;
         const data: any = {
           dataGroup: snapshot.val(),
@@ -485,7 +484,7 @@ export class Database {
 
             const arrayUsers: any[] = [];
             userList.forEach(user => {
-              if (dataUserListGroup.includes(user)) {
+              if (userLIstInGroup.includes(user)) {
                 arrayUsers.push(snapshotUser[user]);
               }
             });
