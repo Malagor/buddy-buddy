@@ -534,7 +534,7 @@ export class Database {
       } else {
         console.log('Deleted  group from userList successful');
       }
-    });  
+    });
   }
 
   removeGroup(groupId: string) {
@@ -1305,6 +1305,22 @@ export class Database {
       });
   }
 
+  getGroupById(groupID: string): any {
+    return this.firebase.database()
+      .ref(`Groups/${groupID}`)
+      .once('value', snapshot => {
+        return snapshot;
+      });
+  }
+
+  getTransactionById(transactionID: string): any {
+    return this.firebase.database()
+      .ref(`Transactions/${transactionID}`)
+      .once('value', snapshot => {
+        return snapshot;
+      });
+  }
+
   getBalanceForUserInGroup(userId: string, groupId: string, currencyRate: number = 1, funcForRender: (data: any) => void, errorHandler?: (message: string) => void) {
     const base = this.firebase.database();
 
@@ -1406,6 +1422,14 @@ export class Database {
     });
 
     return balance;
+  }
+
+  isAccountName(accountName: string) {
+      return this.firebase.database()
+        .ref('User')
+        .orderByChild('account')
+        .equalTo(accountName)
+        .once('value', snapshot => snapshot);
   }
 
   getUserCurrentCurrency(uid: string, callback: any, innerCallback: any) {
