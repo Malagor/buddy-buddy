@@ -28,15 +28,15 @@ export class Contacts extends Page {
           </div>
           <div class="block__main">
             <form id="contactForm" class="search-form block--width-85">
-              <div class="input-group">
-                <span class="input-group-text" id="basic-addon1">@</span>
-                <input type="text" class="form-control" placeholder="Account" aria-label="Account contact" aria-describedby="basic-addon1" name="account">
+              <div class="input-group search-form__account">
+                <span class="input-group-text" id="account-addon">@</span>
+                <input type="text" class="form-control" placeholder="Account" aria-label="Account contact" aria-describedby="account-addon" name="account">
               </div>
-              <div class="input-group">
-                <span class="input-group-text" id="basic-addon2">Name</span>
-                <input type="text" class="form-control" placeholder="Contact\`s name" aria-label="Contact\`s name" aria-describedby="basic-addon2" name="name">
+              <div class="input-group search-form__name">
+                <span class="input-group-text" id="name-addon">Name</span>
+                <input type="text" class="form-control" placeholder="Contact\`s name" aria-label="Contact\`s name" aria-describedby="name-addon" name="name">
               </div>
-              <button type="submit" class="btn btn-primary" form="contactForm">Add</button>
+              <button type="submit" class="btn btn-primary search-form__button" form="contactForm">Add</button>
               <div class="contact__message error-message"></div>
             </form>
             <div class="contacts-list block--width-85"></div>
