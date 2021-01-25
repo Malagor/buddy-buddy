@@ -467,49 +467,45 @@ export class Database {
     this.firebase
       .database()
       .ref('Groups')
-      .on('child_added', (snapshot) => {
-        const userLIstInGroup =  Object.keys(snapshot.val().userList);
-
-        if (userLIstInGroup.includes(this.uid)) {
-          handlerFunc(snapshot);
-        }
-      },
-        (error: { code: string; message: any; }) => {
-          console.log('Error:\n ' + error.code);
-          console.log(error.message);
-        });
+      .on('child_added', (handlerFunc));
   }
 
   groupHandler = (createGroupList: any, addUserInGroupCard: any) => {
     const base = this.firebase.database();
 
     return ((snapshot: any) => {
-      const dataUserListGroup: any[] = Object.keys(snapshot.val().userList);
-      const groupKey = snapshot.key;
-      const data: any = {
-        dataGroup: snapshot.val(),
-        groupKey: groupKey,
-      };
+      const userLIstInGroup =  Object.keys(snapshot.val().userList);
 
-      createGroupList(data);
+      if (userLIstInGroup.includes(this.uid)) {
+        const groupKey = snapshot.key;
+        const data: any = {
+          dataGroup: snapshot.val(),
+          groupKey: groupKey,
+        };
 
-      base
-        .ref('User')
-        .once('value', (snapshot) => {
+        createGroupList(data);
 
-          const snapshotUser = snapshot.val();
-          const userList = Object.keys(snapshotUser);
+        base
+          .ref('User')
+          .once('value', (snapshot) => {
 
-          const arrayUsers: any[] = [];
-          userList.forEach(user => {
-            if (dataUserListGroup.includes(user)) {
-              arrayUsers.push(snapshotUser[user]);
-            }
+            const snapshotUser = snapshot.val();
+            const userList = Object.keys(snapshotUser);
+
+            const arrayUsers: any[] = [];
+            userList.forEach(user => {
+              if (userLIstInGroup.includes(user)) {
+                arrayUsers.push(snapshotUser[user]);
+              }
+            });
+            data.arrayUsers = arrayUsers;
+
+            addUserInGroupCard(data);
+          }, (error: { code: string; message: any; }) => {
+            console.log('Error:\n ' + error.code);
+            console.log(error.message);
           });
-          data.arrayUsers = arrayUsers;
-
-          addUserInGroupCard(data);
-        });
+      }
     });
   }
 
@@ -1315,6 +1311,22 @@ export class Database {
       });
   }
 
+  getGroupById(groupID: string): any {
+    return this.firebase.database()
+      .ref(`Groups/${groupID}`)
+      .once('value', snapshot => {
+        return snapshot;
+      });
+  }
+
+  getTransactionById(transactionID: string): any {
+    return this.firebase.database()
+      .ref(`Transactions/${transactionID}`)
+      .once('value', snapshot => {
+        return snapshot;
+      });
+  }
+
   getBalanceForUserInGroup(userId: string, groupId: string, currencyRate: number = 1, funcForRender: (data: any) => void, errorHandler?: (message: string) => void) {
     const base = this.firebase.database();
 
@@ -1416,6 +1428,14 @@ export class Database {
     });
 
     return balance;
+  }
+
+  isAccountName(accountName: string) {
+      return this.firebase.database()
+        .ref('User')
+        .orderByChild('account')
+        .equalTo(accountName)
+        .once('value', snapshot => snapshot);
   }
 
   getUserCurrentCurrency(uid: string, callback: any, innerCallback: any) {

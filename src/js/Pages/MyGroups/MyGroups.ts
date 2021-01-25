@@ -459,7 +459,7 @@ export class MyGroups extends Page {
   }
 
   deleteMemberGroup(data: any): void {
-
+    // this.deleteMemberFromGroup()
   }
 
   addMembersGroup(data: any): void {
