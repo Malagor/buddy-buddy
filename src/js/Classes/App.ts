@@ -152,7 +152,7 @@ export class App {
   }
 
   loadCurrentPage() {
-    const currentPage: any = localStorage.getItem('currentPage') || 'Main';
+    const currentPage: string = localStorage.getItem('currentPage') || 'Main';
     this[`on${currentPage}Page`]();
   }
 
@@ -258,6 +258,12 @@ export class App {
       this.messenger.setUserDataInMessage,
     );
     this.database.getMessageList(this.messageHandler);
+
+    const groupId = '-MRdmm3T3mGOpUO9zkr4';
+
+    this.database.getDataForGraphGroupBalance(groupId, (data) => {
+      console.log(data);
+    });
   }
 
   onStatisticsPage() {
