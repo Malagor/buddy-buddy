@@ -477,7 +477,7 @@ export class MyGroups extends Page {
 
     const html = `
       <div class="modal-detail__balance">
-        <span>${Math.round(data.balance * 100) / 100}</span>
+        <span>${data.balance.toFixed(2)}</span>
       </div>
     `;
     divCardUser.insertAdjacentHTML('beforeend', html);
