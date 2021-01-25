@@ -4,7 +4,7 @@ import { Modal } from 'bootstrap';
 import { addMemberHTML } from './addMemberHTML';
 import { clearAllInputs } from './clearAllInputs';
 import { checkData } from './checkData';
-
+// import { sha256 } from 'js-sha256';
 export class NewTransaction extends Page {
   onCreateTransaction: any;
   onShowMembersOfGroup: any;
@@ -23,62 +23,54 @@ export class NewTransaction extends Page {
           <button type="button" class="btn-close new-trans__close-modal" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-
         <form class="all-forms">
-
-          <div class="form-group row block--margin-adaptive">
-            <label for="group" class="new-trans__label col-sm-2 col-form-label">Группа</label>
-            <div class="col-sm-10">
-              <select id="group" class="new-trans__groups-list form-select"></select>
+            <div class="form-group row block--margin-adaptive">
+              <label for="group" class="new-trans__label col-sm-2 col-form-label">Группа</label>
+              <div class="col-sm-10">
+                <select id="group" class="new-trans__groups-list form-select"></select>
+              </div>
             </div>
-          </div>
-
-          <div class="form-group row block--margin-adaptive align-items-center">
-            <label for="descr" class="new-trans__label col-sm-2 col-form-label">Описание</label>
-            <div class="col-sm-10">
-              <textarea id="descr" class="new-trans__descr input-required form-control" required></textarea>
+            <div class="form-group row block--margin-adaptive align-items-center">
+              <label for="descr" class="new-trans__label col-sm-2 col-form-label">Описание</label>
+              <div class="col-sm-10">
+                <textarea id="descr" class="new-trans__descr input-required form-control" required></textarea>
+              </div>
             </div>
-          </div>
-
-          <div class="form-group row block--margin-adaptive mb-3">
-            <label class="new-trans__label col-sm-2 col-form-label">Сумма</label>
-            <div class="new-trans__currency-group col-sm-10">
-              <input type="text" class="new-trans__total-sum input-required form-control w-75" required pattern="\d[0-9]\.?\d[0-9]">
-              <select class="new-trans__currency-list form-select w-25"></select>
+            <div class="form-group row block--margin-adaptive mb-3">
+              <label class="new-trans__label col-sm-2 col-form-label">Сумма</label>
+              <div class="new-trans__currency-group col-sm-10">
+                <input type="text" class="new-trans__total-sum input-required form-control w-75" required>
+                <div class="dropdown w-25">
+                  <i class="material-icons search-icon">search</i>
+                  <input type="text" class="new-trans__currency-list form-control dropdown-toggle" data-bs-toggle="dropdown" id="new-trans-curr" aria-expanded="false" autocomplete="off">
+                  <ul class="new-trans__curr-list dropdown-menu" aria-labelledby="new-trans-curr"></ul>
+                </div>
+              </div>
             </div>
-          </div>
-
-          <div class="add-check d-flex align-items-center mb-3">
-            <div class="add-check__wrapper input-group">
-              <label class="add-check__label" for="input-file">
-                <div class="add-check__text">Добавить чек</div>
-                <input id="input-file" type="file" accept="image/*" class="add-check__file" name="check" multiple>
-              </label>
+            <div class="add-check d-flex align-items-center mb-3">
+              <div class="add-check__wrapper input-group">
+                <label class="add-check__label" for="input-file">
+                  <div class="add-check__text">Добавить чек</div>
+                  <input id="input-file" type="file" accept="image/*" class="add-check__file" name="check" multiple>
+                </label>
+              </div>
+              <div class="add-check__icon-wrapper hidden"><img class="add-check__icon" src="#" alt="check"></div>
             </div>
-            <div class="add-check__icon-wrapper hidden" ><img class="add-check__icon" src="#" alt="check"></div>
-
             <div class="modal fade add-check__modal" id="check" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
               <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content p-2 d-flex flex-column">
                     <button type="button" class="btn-close align-self-end add-check__close-modal" aria-label="Close"></button>
-                    <div class="p-2 add-check__check-box">
-
-                    </div>
-
+                    <div class="p-2 add-check__check-box"></div>
                 </div>
               </div>
             </div>
-            </form>
-          </div>
-
-          <div class="new-trans__members">
-            <div class="new-trans__members-list d-flex flex-wrap justify-content-start"></div>
-            <button type="button" class="all-btn btn btn-secondary btn-sm">Выбрать всех</button>
-          </div>
-
-          <div class="checked-members"></div>
+            <div class="new-trans__members">
+              <div class="new-trans__members-list d-flex flex-wrap justify-content-start"></div>
+              <button type="button" class="all-btn btn btn-secondary btn-sm">Выбрать всех</button>
+            </div>
+            <div class="checked-members"></div>
+          </form>
         </div>
-
         <div class="modal-footer">
           <button type="button" class="new-trans__create-btn btn btn-primary w-100" data-bs-dismiss="modal" disabled>Создать транзакцию</button>
         </div>
@@ -113,17 +105,76 @@ export class NewTransaction extends Page {
       `;
     members.append(userElement);
     this._clickOnMember(userElement);
-
   }
 
-  addCurrencyList = (currID: string, currCurrency: string): void => {
-    const currencySelect: HTMLFormElement = document.querySelector('.new-trans__currency-list');
-    let selectedOption = '';
-    if (currID === currCurrency) {
-      selectedOption = 'selected';
-    }
-    const optionHTML = `<option ${selectedOption} value=${currID}>${currID}</option>`;
-    currencySelect.insertAdjacentHTML('beforeend', optionHTML);
+  addCurrencyList = (data: any, currentOption: string) => {
+    const el: HTMLInputElement = document.querySelector('.new-trans__currency-list');
+    const list: HTMLElement = document.querySelector('.new-trans__curr-list');
+    let html: string = ``;
+    data.forEach((item: string) => {
+      html += `<li class="new-trans__curr-item">${item}</li>`;
+    });
+    list.insertAdjacentHTML('beforeend', html);
+
+    document.querySelectorAll('.new-trans__curr-item').forEach((option: HTMLElement) => {
+      const optionContent: string = option.innerText;
+      if (optionContent === currentOption) {
+        option.classList.add('curr--active-curr');
+        el.setAttribute('value', currentOption);
+      }
+    });
+
+    this.currListEvents(el, list);
+  }
+
+  currListEvents = (currInput: HTMLInputElement, currList: HTMLElement) => {
+    currInput.addEventListener('mousedown', () => {
+      setTimeout( () => {
+        document.querySelector('.curr--active-curr').scrollIntoView();
+      }, 200);
+    });
+
+    currInput.addEventListener('focus', () => {
+      currInput.value = '';
+      currInput.placeholder = document.querySelector('.curr--active-curr').textContent;
+    });
+
+    currInput.addEventListener('blur', () => {
+      currInput.value = document.querySelector('.curr--active-curr').textContent;
+      currInput.placeholder = 'Currency';
+    });
+
+    currList.addEventListener('click', event => {
+      const { target }: any = event;
+      if (target.closest('.new-trans__curr-item')) {
+        const item: HTMLElement = target.closest('.new-trans__curr-item');
+        const currency = item.textContent;
+        currList.querySelectorAll('.new-trans__curr-item').forEach((item: any) => {
+          item.classList.remove('curr--active-curr');
+          item.removeAttribute('hidden');
+        });
+        item.classList.add('curr--active-curr');
+        currInput.value = `${currency}`;
+      }
+    });
+
+    currInput.onkeyup = () => {
+      const li: NodeListOf<Element> = document.querySelectorAll('.new-trans__curr-item');
+      const val: string = currInput.value.toLowerCase();
+      if (val.length > 1) {
+        li.forEach(item => {
+          const isValInCurrency = item.textContent.toLowerCase().includes(val);
+          item.setAttribute('hidden', '');
+          if (isValInCurrency) {
+            item.removeAttribute('hidden');
+          }
+        });
+      } else {
+        li.forEach(item => {
+          item.removeAttribute('hidden');
+        });
+      }
+    };
   }
 
   _clickOnMember = (user: HTMLElement): void => {
@@ -155,11 +206,11 @@ export class NewTransaction extends Page {
     const totalSum: HTMLFormElement = document.querySelector('.new-trans__total-sum');
     const currency: HTMLFormElement = document.querySelector('.new-trans__currency-list');
     const inputCheck: HTMLFormElement = document.querySelector('.add-check__file');
-    let checks;
+    let checks: any[];
     if (inputCheck.files) {
       checks = Object.entries(inputCheck.files).map((check) => check[1]);
     } else {
-      checks = false;
+      checks = [];
     }
 
     const currentDate  = +(new Date());
@@ -174,7 +225,6 @@ export class NewTransaction extends Page {
       } else {
         fix = 'non-fixed';
       }
-
 
       const user = {
         userID: memb.getAttribute('user-id'),
@@ -240,7 +290,6 @@ export class NewTransaction extends Page {
 
     inputCheck.addEventListener('change', () => {
       if (inputCheck.files) {
-        console.log ('files', inputCheck.files );
         const files = Object.entries(inputCheck.files);
         document.querySelector('.add-check__icon-wrapper').classList.remove('hidden');
 
@@ -264,7 +313,6 @@ export class NewTransaction extends Page {
             readerCheck.onload = (function (imgCheck: HTMLImageElement) {
               return (e: any): void => {
                 imgCheck.src = e.target.result;
-
               };
             })(imgCheck);
             readerCheck.readAsDataURL(file[1]);

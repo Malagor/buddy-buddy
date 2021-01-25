@@ -201,3 +201,38 @@ $color-text: #000000;
 .hidden {
   display: none;
 }
+
+
+
+ul.new-trans__curr-list {
+  // width: 25%;
+  min-width: 100%;
+  max-height: rem(150px);
+  overflow-y: auto;
+
+  li {
+    padding-left: 0.5rem;
+    cursor: pointer;
+
+    &:hover {
+      background-color: rgba(0, 0, 0, 0.05);
+    }
+  }
+
+  li.curr--active-curr {
+    background-color: rgba(0, 140, 255, 0.05);
+  }
+}
+
+.search-icon {
+  position: absolute;
+  top: 1px;
+  right: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: rem(30px);
+  height: 90%;
+  background-color: rgba(255, 255, 255, 1);
+  opacity: 0.85;
+}
