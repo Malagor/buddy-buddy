@@ -1185,7 +1185,7 @@ export class Database {
         const userList: any[] = Object.keys(snapshot.val().userList);
         const userState: any[] = Object.values(snapshot.val().userList);
         userList.forEach((userID: string, index: number) => {
-          if(userState[index].state === 'approve') {
+          if (userState[index].state === 'approve') {
             this.firebase
             .database()
             .ref(`User/${userID}`)
