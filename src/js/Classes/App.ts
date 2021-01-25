@@ -78,6 +78,7 @@ export class App {
       this.accountPage = AccountPage.create('.main');
       this.accountPage.updateInfo = this.updateOnAccountPage.bind(this);
       this.accountPage.changeTheme = this.changeTheme.bind(this);
+      this.accountPage.checkUserID = this.checkUserID.bind(this);
 
       this.mainPage = Main.create('.main');
 
@@ -199,6 +200,10 @@ export class App {
     await this.database.getCurrenciesOrLangsOrThemes(uid, this.accountPage.renderLangOrTheme, 'Theme');
 
     this.accountPage.events();
+  }
+
+  checkUserID(userID: string) {
+    this.database.isAccountName(userID).then(data => this.accountPage.checkError(data.val()));
   }
 
   onContactsPage() {
