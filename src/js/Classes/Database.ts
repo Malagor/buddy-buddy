@@ -1311,50 +1311,64 @@ export class Database {
       });
   }
 
-  getDataForGraphGroupBalance(groupId: string, funcHandler: any) {
-    const groupRef = this.firebase.database().ref('Groups');
-
-    groupRef.child(groupId)
+  getDataForGraphGroupBalance(groupId: string, funcHandler: (graphData: any) => void, errorHendler?: (message: string) => void) {
+    this.firebase
+      .database()
+      .ref(`Groups/${groupId}`)
       .once('value', snapshot => {
+        const userList: any = snapshot.val().userList;
 
-        const userList: { state: string } = snapshot.val().userList;
+        const usersQuery = Object.keys(userList)
+          .map(userId => (userList[userId].state === 'approve') ? userId : null)
+          .filter(userId => userId)
+          .map(userId => this.getUserById(userId));
 
-        let userIds: string[] = Object.keys(userList).map(userId => {
-          if (userList[userId].state === 'approve') {
-            return userId;
-          }
-          return null;
-        });
-
-        userIds = userIds.filter(userId => userId);
-
-        const usersQuery = userIds.map(userId => this.getUserById(userId));
-
-        const userInfoQuery = Promise.all(usersQuery);
-
-        userInfoQuery
+        Promise.all(usersQuery)
           .then(userInfoArray => {
-              const graphData: { key: string; name: any; avatar: any; }[] = [];
+            const graphData: { [key: string]: any; } = {};
 
-              userInfoArray.forEach((userInfo) => {
-                const data = {
-                  key: userInfo.key,
-                  name: userInfo.val().name,
-                  avatar: userInfo.val().avatar,
-                };
-                graphData.push(data);
-              });
+            userInfoArray.forEach((userInfo) => {
+              graphData[userInfo.key] = {
+                key: userInfo.key,
+                name: userInfo.val().name,
+                avatar: userInfo.val().avatar,
+                userBalance: 0,
+              };
+            });
 
-              return graphData;
-            })
+            return graphData;
+          })
           .then(graphData => {
-            console.log('graphData', graphData);
-            const transactionList = snapshot.val().transactions;
+            const transactionList: string[] = snapshot.val().transactions;
+            const transQuery = transactionList.map(transId => this.getTransactionById(transId));
 
+            Promise.all(transQuery)
+              .then(transInfoArray => {
+                return transInfoArray.map(transData => transData.val());
+              })
+              .then(transArray => {
+                transArray.forEach(trans => {
+                  graphData[trans.userID].userBalance += trans.totalCost;
+
+                  const toUserList = trans.toUserList;
+                  Object.keys(toUserList).forEach((userId) => {
+                    graphData[userId].userBalance -= toUserList[userId].cost;
+                  });
+                });
+                return  Object.keys(graphData).map(userId => graphData[userId]);
+              })
+              .then(data => {
+                funcHandler(data);
+              })
+              .catch(error => {
+                if (errorHendler) {
+                  errorHendler(error.message);
+                } else {
+                  console.log(error);
+                }
+              });
           });
       });
-    // console.log('graphData', graphData);
-
   }
 
   getUserById(userId: string) {
