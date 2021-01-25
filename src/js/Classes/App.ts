@@ -11,6 +11,7 @@ import { TransactionsList } from '../Pages/TransactionsList/transactionsList';
 import { INotification, Notifications, TypeOfNotifications } from './Notifications';
 import { INewMessage, Messenger } from '../Pages/Messenger/Messenger';
 import { Contacts, ISearchUserData } from '../Pages/Contacts/Contacts';
+import { Currencies } from './Currencies';
 
 export interface IHandlers {
   messages: any;
@@ -315,8 +316,25 @@ export class App {
     this.database.findUserById(userId, this.groups.addMembersGroup);
   }
 
-  onCreateTransaction(data: any) {
-    this.database.setDataTransaction(data);
+  onCreateTransaction(transactionData: any) {
+    console.log('Trans data', transactionData);
+    const toUsd = Currencies.toUSD(transactionData.currency);
+    const userList = transactionData.toUserList;
+    toUsd(transactionData.totalCost)
+      .then(totalCost => {
+        transactionData.totalCost = totalCost;
+        const queryes = userList.map((user: { cost: any; }) => {
+          return toUsd(user.cost);
+        });
+        const prom = Promise.all(queryes);
+        prom
+          .then(curCost => {
+            curCost.forEach((cost, index) => {
+              userList[index].cost = cost;
+            });
+            this.database.setDataTransaction(transactionData);
+          });
+      });
   }
 
   onShowMembersOfGroup(groupID: string) {
@@ -336,7 +354,24 @@ export class App {
   }
 
   onEditTransaction(editData: any, transID: string, trans: any) {
-    this.database.setNewDataTransaction(editData, transID, trans);
+     
+    // console.log ('editdata', editData);
+    const toUsd = Currencies.toUSD(trans.currency);
+    toUsd(trans.totalCost)
+      .then(totalCost => {
+        trans.totalCost = totalCost;
+        const queryes = editData.map((user: { cost: any; }) => {
+          return toUsd(user.cost);
+        });
+        const prom = Promise.all(queryes);
+        prom
+          .then(curCost => {
+            curCost.forEach((cost, index) => {
+              editData[index].cost = cost;
+            });
+            this.database.setNewDataTransaction(editData, transID, trans);
+          });
+      });   
   }
 
   onDeleteTransaction(groupID: string, transID: string) {

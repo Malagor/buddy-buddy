@@ -187,9 +187,6 @@ export class NewTransaction extends Page {
         });
       }
     };
-
-
-
   }
 
   _clickOnMember = (user: HTMLElement): void => {
