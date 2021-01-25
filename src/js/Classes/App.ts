@@ -355,7 +355,7 @@ export class App {
 
   onEditTransaction(editData: any, transID: string, trans: any) {
     const toUsd = Currencies.toUSD(trans.currency);
-    toUsd(trans.totalCost)
+    toUsd(trans.totalCost);
     const queryes = editData.map((user: { cost: any; }) => {
       return toUsd(user.cost);
     });
@@ -366,7 +366,7 @@ export class App {
           editData[index].cost = cost;
         });
         this.database.setNewDataTransaction(editData, transID, trans);
-      }); 
+      });
   }
 
   onDeleteTransaction(groupID: string, transID: string) {

@@ -914,17 +914,17 @@ export class Database {
         if (!currGroup) {
           currGroup = groupsIDList[0];
         }
-        groupsIDList.forEach((groupID: any, index:number) => {
+        groupsIDList.forEach((groupID: any, index: number) => {
           if (groupsState[index].state === 'approve') {
             this.firebase
             .database()
             .ref(`Groups/${groupID}`)
             .once('value', (snapshot) => {
-              if(!snapshot.val().dateClose) {
+              if (!snapshot.val().dateClose) {
                 renderGroupList(groupID, snapshot.val().title, currGroup);
-              }              
+              }
             });
-          }         
+          }
         });
       }, (error: { code: string; message: any }) => {
         console.log('Error:\n ' + error.code);
@@ -955,7 +955,7 @@ export class Database {
                 .once('value', (snapshot) => {
                   renderMembers(snapshot.key, snapshot.val().name, snapshot.val().avatar);
                 });
-              }             
+              }
             });
           });
       }, (error: { code: string; message: any }) => {
@@ -979,7 +979,7 @@ export class Database {
             .once('value', (snapshot) => {
               renderMembers(snapshot.key, snapshot.val().name, snapshot.val().avatar);
             });
-          }          
+          }
         });
       }, (error: { code: string; message: any }) => {
         console.log('Error:\n ' + error.code);
@@ -1001,7 +1001,7 @@ export class Database {
     });
 
     const toUserList: {[k: string]: any} = {};
-    data.toUserList.forEach((user: { cost: any; comment: any; state: any; costFix: any; userID: string; }) => {     
+    data.toUserList.forEach((user: { cost: any; comment: any; state: any; costFix: any; userID: string; }) => {
       const userId: string = user.userID;
       toUserList[userId] = {
         cost: user.cost,
@@ -1018,9 +1018,9 @@ export class Database {
       description: data.description,
       currency: data.currency,
       groupID: data.groupID,
-      state:'pending',
+      state: 'pending',
       toUserList
-    };    
+    };
     const transKey = transRef.push(setData).key;
 
     data.toUserList.forEach((user: any) => {
@@ -1094,11 +1094,11 @@ export class Database {
       transRef.child(`${transID}`)
       .once('value', (snapshot) => {
         const trans = snapshot.val();
-        if(trans.state === 'pending') {
+        if (trans.state === 'pending') {
           const userIDList: string[] = Object.keys(snapshot.val().toUserList);
           const userList: any[] = Object.values(snapshot.val().toUserList);
           const fromUsd = Currencies.fromUSD(trans.currency);
-          if (snapshot.val().userID === this.uid) {          
+          if (snapshot.val().userID === this.uid) {
             fromUsd(trans.totalCost)
               .then(totalCost => {
                 trans.totalCost = totalCost;
@@ -1123,9 +1123,9 @@ export class Database {
                         };
                         renderUser(transID, user, numbOfUsers, true);
                       });
-                    });                  
+                    });
                   });
-              });      
+              });
           } else if (Object.keys(snapshot.val().toUserList).some((user: any) => user === this.uid)) {
             fromUsd(trans.totalCost)
               .then(totalCost => {
@@ -1153,7 +1153,7 @@ export class Database {
                   });
               });
           } else return;
-        } else return;        
+        } else return;
       })
       .catch(error => {
         console.log('Error: ' + error.code);
@@ -1310,7 +1310,7 @@ export class Database {
     groupRef.child(`${groupID}/transactions`)
     .transaction(list => {
       const i = list.indexOf(transID);
-      list.splice(i, 1);   
+      list.splice(i, 1);
       return list;
     })
     .catch(error => {
@@ -1487,10 +1487,10 @@ export class Database {
               balance: resBalance,
               groupId: groupId,
               userId: userId,
-              currency: curr, 
-            }             
+              currency: curr,
+            };
             funcForRender(data);
-          });         
+          });
       })
       .catch(error => {
         console.log(error.code);
@@ -1531,10 +1531,10 @@ export class Database {
             const curr = snapshot.val();
             const fromUsd = Currencies.fromUSD(curr);
             fromUsd(balance)
-              .then((resBalance: number) => {                             
+              .then((resBalance: number) => {
                 funcForRender(resBalance, curr);
-              });             
-          })
+              });
+          });
       })
       .catch(error => {
         console.log(error.code);
