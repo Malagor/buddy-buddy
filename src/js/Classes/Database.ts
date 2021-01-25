@@ -1424,7 +1424,7 @@ export class Database {
       });
   }
 
-  getDataForGraphGroupBalance(groupId: string, funcHandler: (graphData: any) => void, errorHendler?: (message: string) => void) {
+  getDataForGraphGroupBalance(groupId: string, funcHandler: (graphData: any) => void, errorHandler?: (message: string) => void) {
     this.firebase
       .database()
       .ref(`Groups/${groupId}`)
@@ -1474,8 +1474,8 @@ export class Database {
                 funcHandler(data);
               })
               .catch(error => {
-                if (errorHendler) {
-                  errorHendler(error.message);
+                if (errorHandler) {
+                  errorHandler(error.message);
                 } else {
                   console.log(error);
                 }
