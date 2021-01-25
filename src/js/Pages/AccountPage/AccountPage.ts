@@ -157,14 +157,13 @@ export class AccountPage extends Page {
     const submitInfo: HTMLElement = document.querySelector('.account__input-submit');
     const inputID: HTMLInputElement = document.querySelector('.account__double-form--second');
     const errorOfInput: HTMLElement = document.querySelector('.account__error');
-
-    console.log(data);
     
     if (!data) {
       submitInfo.removeAttribute('disabled');
       inputID.classList.remove('error');
       errorOfInput.classList.remove('error--on');
     } else {
+      submitInfo.setAttribute('disabled', 'true');
       inputID.classList.add('error');
       errorOfInput.classList.add('error--on');
     }
