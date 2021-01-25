@@ -1,6 +1,15 @@
 import { Page } from '../../Classes/Page';
 import { getFormData } from '../../Util/getFormData';
 import { Modal } from 'bootstrap';
+import { i18n } from '@lingui/core';
+import { messagesRU } from '../../languages/RU/messages';
+import { messagesENG } from '../../languages/ENG/messages';
+import { loadLanguage } from '../../Util/saveLoadLanguage';
+i18n.load('RU', messagesRU);
+i18n.load('ENG', messagesENG);
+
+const locale = loadLanguage();
+i18n.activate(locale);
 
 const modalHtml = require('./modal.html');
 
@@ -24,19 +33,19 @@ export class Contacts extends Page {
       <div class="block__wrapper">
         <div class="block__content">
           <div class="block__header block__header--main">
-            <p class="block__title">Contacts</p>
+            <p class="block__title">${i18n._('Contacts')}</p>
           </div>
           <div class="block__main">
             <form id="contactForm" class="search-form block--width-85">
               <div class="input-group search-form__account">
                 <span class="input-group-text" id="account-addon">@</span>
-                <input type="text" class="form-control" placeholder="Account" aria-label="Account contact" aria-describedby="account-addon" name="account">
+                <input type="text" class="form-control" placeholder="${i18n._('Account')}" aria-label="Account contact" aria-describedby="account-addon" name="account">
               </div>
               <div class="input-group search-form__name">
-                <span class="input-group-text" id="name-addon">Name</span>
-                <input type="text" class="form-control" placeholder="Contact\`s name" aria-label="Contact\`s name" aria-describedby="name-addon" name="name">
+                <span class="input-group-text" id="name-addon">${i18n._('Name')}</span>
+                <input type="text" class="form-control" placeholder="${i18n._('Contact\`s name')}" aria-label="Contact\`s name" aria-describedby="name-addon" name="name">
               </div>
-              <button type="submit" class="btn btn-primary search-form__button" form="contactForm">Add</button>
+              <button type="submit" class="btn btn-primary search-form__button" form="contactForm">${i18n._('Add')}</button>
               <div class="contact__message error-message"></div>
             </form>
             <div class="contacts-list block--width-85"></div>
@@ -75,9 +84,8 @@ export class Contacts extends Page {
         htmlContact += `
           <div class="contact__buttons">
             <select class="form-select form-select-sm" aria-label="Contact state">
-              <option value="approve">Approve</option>
-              <option value="pending" ${data.state === 'pending' ? 'selected' : ''}>Pending</option>
-<!--              <option value="decline" ${data.state === 'decline' ? 'selected' : ''}>Decline</option>-->
+              <option value="approve">${i18n._('Approve')}</option>
+              <option value="pending" ${data.state === 'pending' ? 'selected' : ''}>${i18n._('Pending')}</option>
             </select>
           </div>
         `;

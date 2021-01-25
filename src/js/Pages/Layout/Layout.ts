@@ -1,6 +1,13 @@
 import { Page } from '../../Classes/Page';
 import { Modal } from 'bootstrap';
 import { currentYear } from '../../Util/currentYear';
+import { i18n } from '@lingui/core';
+import { messagesRU } from '../../languages/RU/messages';
+import { messagesENG } from '../../languages/ENG/messages';
+i18n.load('RU', messagesRU);
+i18n.load('ENG', messagesENG);
+i18n.activate('ENG');
+
 
 const defAvatar = require('../../../assets/images/default-user-avatar.jpg');
 const logo = require('../../../assets/icons/team.svg');
@@ -46,35 +53,35 @@ export class Layout extends Page {
           <ul class="nav flex-column">
               <li class="nav-item">
                 <a class="nav-link sidebarMainLink active" href="#">
-                  <i class="material-icons">house</i><span class="nav-link__text">Главная</span>
+                  <i class="material-icons">house</i><span class="nav-link__text">${i18n._('mainPage')}</span>
                 </a>
               </li>
               <li class="nav-item">
                 <a class="nav-link sidebarAccountLink" href="#" id="sidebarAccountLink">
-                  <i class="material-icons">person</i><span class="nav-link__text">Аккаунт</span>
+                  <i class="material-icons">person</i><span class="nav-link__text">${i18n._('accountPage')}</span>
                 </a>
               </li>
               <li class="nav-item">
                 <a class="nav-link sidebarContactsLink" href="#">
-                  <i class="material-icons">contacts</i><span class="nav-link__text">Контакты</span>
+                  <i class="material-icons">contacts</i><span class="nav-link__text">${i18n._('contactsPage')}</span>
                   <span class="badge bg-danger"></span>
                 </a>
               </li>
               <li class="nav-item">
                 <a class="nav-link sidebarGroupsLink" href="#">
-                  <i class="material-icons">groups</i><span class="nav-link__text">Группы</span>
+                  <i class="material-icons">groups</i><span class="nav-link__text">${i18n._('groupsPage')}</span>
                   <span class="badge bg-danger"></span>
                 </a>
               </li>
               <li class="nav-item">
                 <a class="nav-link sidebarTransactionsLink" href="#">
-                  <i class="material-icons">receipt_long</i><span class="nav-link__text">Транзакции</span>
+                  <i class="material-icons">receipt_long</i><span class="nav-link__text">${i18n._('transactionsPage')}</span>
                   <span class="badge bg-danger"></span>
                 </a>
               </li>
               <li class="nav-item">
                 <a class="nav-link sidebarMessagesLink" href="#">
-                 <i class="material-icons">speaker_notes</i><span class="nav-link__text">Сообщения</span>
+                 <i class="material-icons">speaker_notes</i><span class="nav-link__text">${i18n._('messagesPage')}</span>
                  <span class="badge bg-danger"></span>
                 </a>
               </li>
@@ -101,7 +108,7 @@ export class Layout extends Page {
               <li class="nav-item">
                 <a class="nav-link" href="#" id="signOut" data-bs-toggle="modal" data-bs-target="#singOutModal">
                   <i class="material-icons">power_settings_new</i>
-            <span class="nav-link__text">Выход</span>
+            <span class="nav-link__text">${i18n._('signOut')}</span>
                 </a>
               </li>
             </ul>
@@ -157,14 +164,14 @@ export class Layout extends Page {
         <div class="footer__title col-3">
           <div class="nav-item">
             <a class="nav-link sidebarMainLink active" aria-current="page" href="#">
-              <i class="material-icons">house</i><span class="d-none d-sm-block nav-link__text">Главная</span>
+              <i class="material-icons">house</i><span class="d-none d-sm-block nav-link__text">${i18n._('mainPage')}</span>
             </a>
           </div>
         </div>
         <div class="footer__title col-3">
           <div class="nav-item">
             <a class="nav-link sidebarGroupsLink" href="#">
-              <i class="material-icons">groups</i><span class="d-none d-sm-block nav-link__text">Группы</span>
+              <i class="material-icons">groups</i><span class="d-none d-sm-block nav-link__text">${i18n._('groupsPage')}</span>
               <span class="badge bg-danger"></span>
             </a>
           </div>
@@ -172,7 +179,7 @@ export class Layout extends Page {
         <div class="footer__title col-3">
           <div class="nav-item">
             <a class="nav-link sidebarTransactionsLink" href="#">
-              <i class="material-icons">receipt_long</i><span class="d-none d-sm-block nav-link__text">Транзакции</span>
+              <i class="material-icons">receipt_long</i><span class="d-none d-sm-block nav-link__text">${i18n._('transactionsPage')}</span>
               <span class="badge bg-danger"></span>
             </a>
           </div>
@@ -180,7 +187,7 @@ export class Layout extends Page {
         <div class="footer__school col-3">
           <div class="nav-item">
             <a class="nav-link sidebarMessagesLink" href="#">
-             <i class="material-icons">speaker_notes</i><span class="d-none d-sm-block nav-link__text">Сообщения</span>
+             <i class="material-icons">speaker_notes</i><span class="d-none d-sm-block nav-link__text">${i18n._('messagesPage')}</span>
              <span class="badge bg-danger"></span>
             </a>
           </div>
@@ -192,15 +199,15 @@ export class Layout extends Page {
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title">Action Confirmation</h5>
+            <h5 class="modal-title">${i18n._('Action Confirmation')}</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
-            <p>Are you sure you want to SignOut?</p>
+            <p>${i18n._('Are you sure you want to SignOut?')}</p>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-            <button type="button" class="btn btn-primary" id="modalButtonOk">SignOut</button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">${i18n._('Cancel')}</button>
+            <button type="button" class="btn btn-primary" id="modalButtonOk">${i18n._('signOut')}</button>
           </div>
         </div>
       </div>

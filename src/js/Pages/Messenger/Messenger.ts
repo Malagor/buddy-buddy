@@ -4,6 +4,16 @@ import { getFormData } from '../../Util/getFormData';
 import { eventForContactsList } from '../Contacts/eventForContactsList';
 import { onClickContactInContactsList } from '../Contacts/onClickContactInContactsList';
 
+import { i18n } from '@lingui/core';
+import { messagesRU } from '../../languages/RU/messages';
+import { messagesENG } from '../../languages/ENG/messages';
+import { loadLanguage } from '../../Util/saveLoadLanguage';
+i18n.load('RU', messagesRU);
+i18n.load('ENG', messagesENG);
+
+const locale = loadLanguage();
+i18n.activate(locale);
+
 export interface IMessage {
   messageId: string | undefined;
   key?: string;
@@ -40,13 +50,13 @@ export class Messenger extends Page {
     <div class="block__wrapper">
       <div class="block__content">
         <div class="block__header block__header--main">
-          <p class="block__title">Messenger</p>
+          <p class="block__title">${i18n._('Messenger')}</p>
         </div>
         <div class="block__main">
           <div class="message-list block--width-85 d-flex flex-column"></div>
         </div>
         <div class="block__footer">
-          <button type="button" class="btn btn-primary message__addBtn">New message</button>
+          <button type="button" class="btn btn-primary message__addBtn">${i18n._('New message')}</button>
         </div>
       </div>
     </div>
@@ -64,22 +74,22 @@ export class Messenger extends Page {
       <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">New message</h5>
+            <h5 class="modal-title" id="exampleModalLabel">${i18n._('New message')}</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
             <form id="messageForm">
               <div class="dropdown">
-                <input class="form-control dropdown-toggle" type="text" id="activeContact" data-bs-toggle="dropdown" aria-expanded="false" placeholder="Recipient" autocomplete="off" name="name">
+                <input class="form-control dropdown-toggle" type="text" id="activeContact" data-bs-toggle="dropdown" aria-expanded="false" placeholder="${i18n._('Recipient')}" autocomplete="off" name="name">
                 <input type="text" name="key" class="contact-user-id" hidden>
                 <ul class="dropdown-menu contacts-user-list" aria-labelledby="activeContact">
                 </ul>
               </div>
               <div class="mb-3">
-                <textarea class="form-control" id="formMessage" rows="3" placeholder="Message" minlength="3" name="message"></textarea>
+                <textarea class="form-control" id="formMessage" rows="3" placeholder="${i18n._('Message')}" minlength="3" name="message"></textarea>
               </div>
-              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-              <button type="submit" class="btn btn-primary" form="messageForm">Send</input>
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">${i18n._('Close')}</button>
+              <button type="submit" class="btn btn-primary" form="messageForm">${i18n._('Send')}</input>
             </form>
           </div>
         </div>
@@ -153,7 +163,7 @@ export class Messenger extends Page {
       minute: '2-digit',
     };
     const date: Date = new Date(data.date);
-    const localeDate: string = date.toLocaleString('ru-RU', dateOptions);
+    const localeDate: string = date.toLocaleString('RU-RU', dateOptions);
 
     let stateClass: string = '';
     if (data.isRead === false && data.isReceive) {
@@ -182,7 +192,7 @@ export class Messenger extends Page {
     if (data.isReceive) {
       html += `
         <div class="message__button">
-          <button type="button" class="btn btn-outline-primary btn-sm answer-button" data-user-uid="${data.key}">Answer</button>
+          <button type="button" class="btn btn-outline-primary btn-sm answer-button" data-user-uid="${data.key}">${i18n._('Answer')}</button>
         </div>
         `;
     }
