@@ -29,7 +29,6 @@ export class TransactionsList extends Page {
   public render = (): void => {
 
     this.element.innerHTML = renderTransListHTML();
-    // this.onRenderTotalBalance();
     this.newTrans = NewTransaction.create('.modal-wrapper');
     this.newTrans.render();
     this.events();
@@ -38,7 +37,6 @@ export class TransactionsList extends Page {
   }
 
   addTotalBalance = (balance: number, currency: string): void => {
-    // console.log('totalbalance', balance);
     const balanceElement: HTMLElement = document.querySelector('.trans-list__user-balance');
     if (balance > 0) {
       balanceElement.innerHTML = `
@@ -83,7 +81,6 @@ export class TransactionsList extends Page {
   }
 
   addMyTransactions = (transID: string, trans: any, owner: boolean, ownUID: string): void => {
-    console.log ('rendertransaction', trans);
     const styles = setCardStyles(trans, owner, ownUID);
     const date: any = getDate(trans.date);
     const transaction: HTMLElement = document.getElementById(transID);
@@ -124,7 +121,6 @@ export class TransactionsList extends Page {
   }
 
   addUserToList = (transID: string, user: any, i: number, owner: boolean) => {
-
     let nameDisplay: string;
     if (owner) {
       nameDisplay = 'd-none';

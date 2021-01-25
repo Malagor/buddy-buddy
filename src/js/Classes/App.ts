@@ -354,8 +354,6 @@ export class App {
   }
 
   onEditTransaction(editData: any, transID: string, trans: any) {
-     
-    // console.log ('editdata', editData);
     const toUsd = Currencies.toUSD(trans.currency);
     toUsd(trans.totalCost)
       .then(totalCost => {

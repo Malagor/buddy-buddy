@@ -23,23 +23,19 @@ export class NewTransaction extends Page {
           <button type="button" class="btn-close new-trans__close-modal" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-
         <form class="all-forms">
-
             <div class="form-group row block--margin-adaptive">
               <label for="group" class="new-trans__label col-sm-2 col-form-label">Группа</label>
               <div class="col-sm-10">
                 <select id="group" class="new-trans__groups-list form-select"></select>
               </div>
             </div>
-
             <div class="form-group row block--margin-adaptive align-items-center">
               <label for="descr" class="new-trans__label col-sm-2 col-form-label">Описание</label>
               <div class="col-sm-10">
                 <textarea id="descr" class="new-trans__descr input-required form-control" required></textarea>
               </div>
             </div>
-
             <div class="form-group row block--margin-adaptive mb-3">
               <label class="new-trans__label col-sm-2 col-form-label">Сумма</label>
               <div class="new-trans__currency-group col-sm-10">
@@ -51,7 +47,6 @@ export class NewTransaction extends Page {
                 </div>
               </div>
             </div>
-
             <div class="add-check d-flex align-items-center mb-3">
               <div class="add-check__wrapper input-group">
                 <label class="add-check__label" for="input-file">
@@ -61,7 +56,6 @@ export class NewTransaction extends Page {
               </div>
               <div class="add-check__icon-wrapper hidden"><img class="add-check__icon" src="#" alt="check"></div>
             </div>
-
             <div class="modal fade add-check__modal" id="check" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
               <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content p-2 d-flex flex-column">
@@ -70,12 +64,10 @@ export class NewTransaction extends Page {
                 </div>
               </div>
             </div>
-
             <div class="new-trans__members">
               <div class="new-trans__members-list d-flex flex-wrap justify-content-start"></div>
               <button type="button" class="all-btn btn btn-secondary btn-sm">Выбрать всех</button>
             </div>
-
             <div class="checked-members"></div>
           </form>
         </div>
@@ -86,7 +78,6 @@ export class NewTransaction extends Page {
     `;
 
     this.events();
-
   }
 
   addGroupList = (groupID: string, groupTitle: string, currentGroup: string) => {
@@ -114,7 +105,6 @@ export class NewTransaction extends Page {
       `;
     members.append(userElement);
     this._clickOnMember(userElement);
-
   }
 
   addCurrencyList = (data: any, currentOption: string) => {
@@ -135,7 +125,6 @@ export class NewTransaction extends Page {
     });
 
     this.currListEvents(el, list);
-
   }
 
   currListEvents = (currInput: HTMLInputElement, currList: HTMLElement) => {
@@ -172,7 +161,6 @@ export class NewTransaction extends Page {
     currInput.onkeyup = () => {
       const li: NodeListOf<Element> = document.querySelectorAll('.new-trans__curr-item');
       const val: string = currInput.value.toLowerCase();
-
       if (val.length > 1) {
         li.forEach(item => {
           const isValInCurrency = item.textContent.toLowerCase().includes(val);
@@ -238,7 +226,6 @@ export class NewTransaction extends Page {
         fix = 'non-fixed';
       }
 
-
       const user = {
         userID: memb.getAttribute('user-id'),
         cost: +sumInput.value || +sumInput.getAttribute('placeholder'),
@@ -303,7 +290,6 @@ export class NewTransaction extends Page {
 
     inputCheck.addEventListener('change', () => {
       if (inputCheck.files) {
-        console.log ('files', inputCheck.files );
         const files = Object.entries(inputCheck.files);
         document.querySelector('.add-check__icon-wrapper').classList.remove('hidden');
 
@@ -312,9 +298,6 @@ export class NewTransaction extends Page {
         reader.onload = (function (aImg1: HTMLImageElement) {
           return (e: any): void => {
             aImg1.src = e.target.result;
-            // console.log ('targetresult', e.target.result);
-            // const hash = sha256(e.target.result);
-            // console.log('hash', hash);
           };
         })(checkIcon);
         reader.readAsDataURL(inputCheck.files[0]);
@@ -330,7 +313,6 @@ export class NewTransaction extends Page {
             readerCheck.onload = (function (imgCheck: HTMLImageElement) {
               return (e: any): void => {
                 imgCheck.src = e.target.result;
-
               };
             })(imgCheck);
             readerCheck.readAsDataURL(file[1]);
@@ -365,15 +347,3 @@ export class NewTransaction extends Page {
     });
   }
 }
-
-
-
-
-
-
-
-
-
-
-
-// </div>

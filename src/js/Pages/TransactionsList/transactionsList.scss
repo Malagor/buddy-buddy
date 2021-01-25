@@ -38,10 +38,8 @@
 .trans-list__user-balance {
   font-size: rem(20px);
   width: 40%;
-  line-height: 1rem;
-  
+  line-height: 1rem; 
 }
-
 
 .trans-list__list {
   display: flex;
@@ -51,8 +49,6 @@
   height: 100%;
   padding: 1.5rem 0;
   overflow-y: auto;
-  
-
   gap: 1rem;
   scrollbar-color: rgba(0, 0, 0, 0.05) rgb(170, 170, 170);
   scrollbar-width: thin;
@@ -191,11 +187,6 @@
     }
   }
 
-  // @include desktop {
-  //   width: 40%;
-  // }
-
-
   &__cost-state {
     width: 45%;
 
@@ -228,17 +219,8 @@
      font-size: rem(12px);
      padding: 0 0 0 5px;
 
-  }
-
-
- 
-
-  
+  }  
 }
-
-
-
-
 
 .details {
 
@@ -346,43 +328,8 @@
     margin-bottom: 0.5rem;
   }
 
-
-
-  // &__owner-info {
-  //   width: rem(70px);
-  //   // margin-left: rem(10px);
-  // }
-
-  // &__owner-avatar {
-  //   width: rem(35px);
-  //   height: rem(35px);
-  //   // margin-bottom: rem(5px);
-  //   overflow: hidden;
-  //   background-color: blue;
-  //   border-radius: 50%;
-  //   transition: transform 0.3s ease-out;
-
-  //   @include phones {
-  //     width: rem(40px);
-  //     height: rem(40px);
-  //   }
-
-
-  //   & > img {
-  //     width: 100%;
-  //     height: 100%;
-
-  //     object-fit: contain;
-  //   }
-  // }
-
-
   &__owner-name {
     margin-left: rem(5px);
-    // max-width: rem(50px);
-    // font-size: rem(12px);
-    // line-height: 1rem;
-    // text-align: center;
   }
 
   &__comment {
@@ -404,7 +351,4 @@
 
     object-fit: contain;
   }
-
 }
-
-
