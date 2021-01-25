@@ -1506,7 +1506,7 @@ export class Database {
       });
   }
 
-  getBalanceForUserInGroup(userId: string, groupId: string, currencyRate: number = 1, funcForRender: (data: any) => void, errorHandler?: (message: string) => void) {
+  getBalanceForUserInGroup(userId: string, groupId: string, funcForRender: (data: any) => void, errorHandler?: (message: string) => void) {
     const base = this.firebase.database();
     let balance: number = 0;
     base.ref(`Groups/${groupId}/`)
@@ -1563,7 +1563,7 @@ export class Database {
       });
   }
 
-  getBalanceForUserTotal(userID: string, currencyRate: number = 1, funcForRender: (balance: number, currency: string) => void, errorHandler?: (message: string) => void) {
+  getBalanceForUserTotal(userID: string, funcForRender: (balance: number, currency: string) => void, errorHandler?: (message: string) => void) {
     console.log('getBalanceForUserTotal ...');
     const base = this.firebase.database();
     let balance: number = 0;
