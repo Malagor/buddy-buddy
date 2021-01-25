@@ -148,7 +148,7 @@ export class Database {
       userRef.update(data);
       return;
     }
-    const fileExtension = file.name.slice(file.name.indexOf('.'));
+    const fileExtension = file.name.slice(file.name.lastIndexOf('.'));
     const storageRef = this.firebase.storage().ref(`avatars/${uid}${fileExtension}`);
 
 
