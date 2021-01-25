@@ -1190,8 +1190,10 @@ export class Database {
         const title = snapshot.val().title;
         renderGroupTitle(groupID, title);
         const userList: any[] = Object.keys(snapshot.val().userList);
-        userList.forEach((userID: string) => {
-          this.firebase
+        const userState: any[] = Object.values(snapshot.val().userList);
+        userList.forEach((userID: string, index: number) => {
+          if(userState[index].state === 'approve') {
+            this.firebase
             .database()
             .ref(`User/${userID}`)
             .once('value', (snapshot) => {
@@ -1199,6 +1201,7 @@ export class Database {
               dataUser.key = userID;
               renderUser(trans, dataUser);
             });
+          }        
         });
       }, (error: { code: string; }) => {
         console.log('Error: ' + error.code);
