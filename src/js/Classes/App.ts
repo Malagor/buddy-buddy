@@ -92,6 +92,7 @@ export class App {
       this.groups.onAddInfoForModalDetailGroup = this.onAddInfoForModalDetailGroup.bind(this);
       this.groups.addBalanceInGroupPage = this.addBalanceInGroupPage.bind(this);
       this.groups.addUserBalanceInModalCardUser = this.addUserBalanceInModalCardUser.bind(this);
+      this.groups.getUserBalanceInGroup = this.getUserBalanceInGroup.bind(this);
 
 
       this.transactionsList = TransactionsList.create('.main');
@@ -229,6 +230,11 @@ export class App {
   addUserBalanceInModalCardUser(data: any) {
     const { userId, groupId } = data;
     this.database.getBalanceForUserInGroup(userId, groupId, 1, this.groups.addUserBalanceInModalDetailGroup);
+  }
+
+  getUserBalanceInGroup(data: any){
+    const { userId, groupId } = data;
+    this.database.getBalanceForUserInGroup(userId, groupId, 1, this.groups.deleteUserFromGroup);
   }
 
   onTransactionsPage() {
