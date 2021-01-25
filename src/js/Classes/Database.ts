@@ -909,13 +909,13 @@ export class Database {
       .ref(`User/${this.uid}`)
       .once('value', (snapshot) => {
         const groupsIDList: string[] = Object.keys(snapshot.val().groupList);
-        const groupsState: string[] = Object.values(snapshot.val().groupList);
+        const groupsState: any[] = Object.values(snapshot.val().groupList);
         let currGroup = snapshot.val().currentGroup;
         if (!currGroup) {
           currGroup = groupsIDList[0];
         }
         groupsIDList.forEach((groupID: any, index:number) => {
-          if (groupsState[index] === 'approve') {
+          if (groupsState[index].state === 'approve') {
             this.firebase
             .database()
             .ref(`Groups/${groupID}`)
@@ -946,13 +946,16 @@ export class Database {
           .ref(`Groups/${currGroup}`)
           .once('value', (snapshot) => {
             const memberList: string[] = Object.keys(snapshot.val().userList);
-            memberList.forEach((userID) => {
-              this.firebase
+            const memberState: any[] = Object.values(snapshot.val().userList);
+            memberList.forEach((userID, index) => {
+              if (memberState[index].state === 'approve') {
+                this.firebase
                 .database()
                 .ref(`User/${userID}`)
                 .once('value', (snapshot) => {
                   renderMembers(snapshot.key, snapshot.val().name, snapshot.val().avatar);
                 });
+              }             
             });
           });
       }, (error: { code: string; message: any }) => {
@@ -967,13 +970,16 @@ export class Database {
       .ref(`Groups/${groupID}`)
       .once('value', (snapshot) => {
         const memberList: string[] = Object.keys(snapshot.val().userList);
-        memberList.forEach((userID) => {
-          this.firebase
+        const memberState: any[] = Object.values(snapshot.val().userList);
+        memberList.forEach((userID, index) => {
+          if (memberState[index].state === 'approve') {
+            this.firebase
             .database()
             .ref(`User/${userID}`)
             .once('value', (snapshot) => {
               renderMembers(snapshot.key, snapshot.val().name, snapshot.val().avatar);
             });
+          }          
         });
       }, (error: { code: string; message: any }) => {
         console.log('Error:\n ' + error.code);
@@ -1520,24 +1526,15 @@ export class Database {
               });
           });
         }
-        balance *= currencyRate;
-      })
-      .catch(error => {
-        console.log(error.code);
-        console.log(error.message);
-        if (errorHandler) {
-          errorHandler(error.message);
-        }
-      });
-
-      base.ref(`User/${userID}/currency`)
-      .once('value', (snapshot) => {
-        const curr = snapshot.val();
-        const fromUsd = Currencies.fromUSD(curr);
-        fromUsd(balance)
-          .then((resBalance: number) => {                     
-            funcForRender(resBalance, curr);
-          });             
+        base.ref(`User/${userID}/currency`)
+          .once('value', (snapshot) => {
+            const curr = snapshot.val();
+            const fromUsd = Currencies.fromUSD(curr);
+            fromUsd(balance)
+              .then((resBalance: number) => {                             
+                funcForRender(resBalance, curr);
+              });             
+          })
       })
       .catch(error => {
         console.log(error.code);
