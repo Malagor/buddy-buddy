@@ -19,7 +19,7 @@ export const setDetailsStyles = (trans: any, owner: boolean, ownUID: string) => 
     ownerDisplay = 'd-none';
 
     colorText = 'text-danger';
-    cost = `-${trans.totalCost}`;
+    cost = `-${trans.totalCost.toFixed(2)}`;
     membDisplay = '';
     commentDisplay = 'd-none';
     selectDisplay = 'd-none';

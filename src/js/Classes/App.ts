@@ -323,11 +323,8 @@ export class App {
     toUsd(transactionData.totalCost)
       .then(totalCost => {
         transactionData.totalCost = totalCost;
-        const queryes = userList.map((user: { cost: any; }) => {
-          return toUsd(user.cost);
-        });
-        const prom = Promise.all(queryes);
-        prom
+        const queryes = userList.map((user: { cost: any; }) => toUsd(user.cost));
+        Promise.all(queryes)
           .then(curCost => {
             curCost.forEach((cost, index) => {
               userList[index].cost = cost;
@@ -356,16 +353,13 @@ export class App {
   onEditTransaction(editData: any, transID: string, trans: any) {
     const toUsd = Currencies.toUSD(trans.currency);
     toUsd(trans.totalCost);
-    const queryes = editData.map((user: { cost: any; }) => {
-      return toUsd(user.cost);
-    });
-    const prom = Promise.all(queryes);
-    prom
+    const queryes = editData.map((user: { cost: any; }) => toUsd(user.cost));
+    Promise.all(queryes)
       .then(curCost => {
         curCost.forEach((cost, index) => {
           editData[index].cost = cost;
         });
-        this.database.setNewDataTransaction(editData, transID, trans);
+        this.database.editTransaction(editData, transID, trans);
       });
   }
 

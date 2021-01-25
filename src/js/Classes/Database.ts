@@ -1018,7 +1018,7 @@ export class Database {
       description: data.description,
       currency: data.currency,
       groupID: data.groupID,
-      state: 'pending',
+      state: 'opened',
       toUserList
     };
     const transKey = transRef.push(setData).key;
@@ -1094,53 +1094,23 @@ export class Database {
       transRef.child(`${transID}`)
       .once('value', (snapshot) => {
         const trans = snapshot.val();
-        if (trans.state === 'pending') {
-          const userIDList: string[] = Object.keys(snapshot.val().toUserList);
-          const userList: any[] = Object.values(snapshot.val().toUserList);
-          const fromUsd = Currencies.fromUSD(trans.currency);
-          if (snapshot.val().userID === this.uid) {
-            fromUsd(trans.totalCost)
-              .then(totalCost => {
-                trans.totalCost = totalCost;
-                const queryes = userList.map((user: any) => {
-                  return fromUsd(user.cost);
-                });
-                const prom = Promise.all(queryes);
-                prom
-                  .then(curCost => {
-                    curCost.forEach((cost, index) => {
-                      trans.toUserList[userIDList[index]].cost = cost;
-                    });
-                    renderTransaction(transID, trans, true, this.uid);
-                    const numbOfUsers = userIDList.length;
-                    userIDList.forEach((userID: any) => {
-                      userRef.child(`${userID}`)
-                      .once('value', (snapshot) => {
-                        const user = {
-                          id: snapshot.key,
-                          userName: snapshot.val().name,
-                          avatar: snapshot.val().avatar,
-                        };
-                        renderUser(transID, user, numbOfUsers, true);
-                      });
-                    });
+        if (trans.state !== 'opened') return; 
+        const userIDList: string[] = Object.keys(snapshot.val().toUserList);
+        const userList: any[] = Object.values(snapshot.val().toUserList);
+        const fromUsd = Currencies.fromUSD(trans.currency);
+        if (snapshot.val().userID === this.uid) {
+          fromUsd(trans.totalCost)
+            .then(totalCost => {
+              trans.totalCost = totalCost;
+              const queryes = userList.map((user: any) => fromUsd(user.cost));
+              Promise.all(queryes)
+                .then(curCost => {
+                  curCost.forEach((cost, index) => {
+                    trans.toUserList[userIDList[index]].cost = cost;
                   });
-              });
-          } else if (Object.keys(snapshot.val().toUserList).some((user: any) => user === this.uid)) {
-            fromUsd(trans.totalCost)
-              .then(totalCost => {
-                trans.totalCost = totalCost;
-                const queryes = userList.map((user: any) => {
-                  return fromUsd(user.cost);
-                });
-                const prom = Promise.all(queryes);
-                prom
-                  .then(curCost => {
-                    curCost.forEach((cost, index) => {
-                      trans.toUserList[userIDList[index]].cost = cost;
-                    });
-                    renderTransaction(transID, trans, false, this.uid);
-                    const userID = trans.userID;
+                  renderTransaction(transID, trans, true, this.uid);
+                  const numbOfUsers = userIDList.length;
+                  userIDList.forEach((userID: any) => {
                     userRef.child(`${userID}`)
                     .once('value', (snapshot) => {
                       const user = {
@@ -1148,12 +1118,35 @@ export class Database {
                         userName: snapshot.val().name,
                         avatar: snapshot.val().avatar,
                       };
-                      renderUser(transID, user, 0, false);
+                      renderUser(transID, user, numbOfUsers, true);
                     });
                   });
-              });
-          } else return;
-        } else return;
+                });
+            });
+        } else if (Object.keys(snapshot.val().toUserList).some((user: any) => user === this.uid)) {
+          fromUsd(trans.totalCost)
+            .then(totalCost => {
+              trans.totalCost = totalCost;
+              const queryes = userList.map((user: any) => fromUsd(user.cost));
+              Promise.all(queryes)
+                .then(curCost => {
+                  curCost.forEach((cost, index) => {
+                    trans.toUserList[userIDList[index]].cost = cost;
+                  });
+                  renderTransaction(transID, trans, false, this.uid);
+                  const userID = trans.userID;
+                  userRef.child(`${userID}`)
+                  .once('value', (snapshot) => {
+                    const user = {
+                      id: snapshot.key,
+                      userName: snapshot.val().name,
+                      avatar: snapshot.val().avatar,
+                    };
+                    renderUser(transID, user, 0, false);
+                  });
+                });
+            });
+        } else return;       
       })
       .catch(error => {
         console.log('Error: ' + error.code);
@@ -1217,7 +1210,7 @@ export class Database {
       });
   }
 
-  setNewDataTransaction = (editData: any, transID: string, trans: any) => {
+  editTransaction = (editData: any, transID: string, trans: any) => {
     const base = this.firebase.database();
     const userRef = base.ref('User');
     const transRef = base.ref('Transactions');
