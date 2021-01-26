@@ -20,6 +20,7 @@ export class MyGroups extends Page {
   addBalanceInGroupPage: any;
   addUserBalanceInModalCardUser: any;
   getUserBalanceInGroup: any;
+  changeUserStatusInGroup: any
 
   static create(el: string): MyGroups {
     const page = new MyGroups(el);
@@ -479,14 +480,62 @@ export class MyGroups extends Page {
 
       btnProve.addEventListener('click', () => {
         console.log('btnProve');
-        
+        this.addUserToGroup(data)
       })
 
       btnDisprove.addEventListener('click', () => {
         console.log('btnDisprove');
-        
+        this.deleteUserToGroup(data)
       })
   }
+}
+
+private addUserToGroup(data: any) {
+  console.log('data_addUserToGroup',data)
+  const thisUid = data.thisUid
+  const divUserCard = document.querySelector(`[data-user-id="${thisUid}"]`)
+  const divApproveUser = document.querySelector('#modalUserListApprove')
+  
+  const userAvatar = divUserCard.querySelector('img')
+  const userName = divUserCard.querySelector('.modal-detail__name')
+  const userAccount = divUserCard.querySelector('.modal-detail__account')
+
+  const html = `
+    <div class="card modal-detail">
+      ${userAvatar.outerHTML}
+      <div>
+        ${userName.outerHTML}
+        ${userAccount.outerHTML}
+      </div>
+    </div>
+  `
+  const dataForChangeUserStatus = {
+    userId: thisUid,
+    groupId: data.groupId,
+    state: 'approve'
+
+  }
+  this.changeUserStatusInGroup(dataForChangeUserStatus)
+
+  divUserCard.classList.add('group-hidden')
+  divApproveUser.insertAdjacentHTML('beforeend', html); 
+}
+
+private deleteUserToGroup(data: any) {
+  console.log('deleteUserToGroup',data)
+  const thisUid = data.thisUid
+  const groupId = data.groupId
+  const divUserCard = document.querySelector(`[data-user-id="${thisUid}"]`)
+  const divCardGroup = document.querySelector(`#${groupId}`)
+  
+  const dataForChangeUserStatus = {
+    userId: thisUid,
+    groupId: groupId,
+    state: 'delete'
+  }
+  //this.changeUserStatusInGroup(dataForChangeUserStatus)
+  divCardGroup.classList.add('group-hidden')
+  divUserCard.classList.add('group-hidden')
 }
 
 /*   addContactsToList = (data: any): void => {

@@ -1,7 +1,7 @@
 import firebase from 'firebase';
 import 'firebase/auth';
 import { default as CyrillicToTranslit } from 'cyrillic-to-translit-js/CyrillicToTranslit';
-import { IDataForCreateGroup } from '../Interfaces/IGroupData';
+import { IDataForCreateGroup, IDataChangeStatus } from '../Interfaces/IGroupData';
 import { ISearchUserData } from '../Pages/Contacts/Contacts';
 import { IMessage, INewMessage } from '../Pages/Messenger/Messenger';
 import { IHandlers } from './App';
@@ -571,6 +571,19 @@ export class Database {
           console.log('Group not found');
         }
       });
+  }
+
+  changeStatusUser(data: IDataChangeStatus) {
+    const {userId, groupId, state} = data
+    const dataBase =  this.firebase.database()
+    
+    dataBase 
+      .ref(`Groups/${groupId}/userList/${userId}`)
+      .set({state: state});
+
+    dataBase 
+      .ref(`User/${userId}/groupList/${groupId}`)
+      .set({state: state});
   }
 
   countGroupsInvite(setNotificationMark: { (type: TypeOfNotifications, num: number): void; (arg0: TypeOfNotifications, arg1: number): void; }): void {

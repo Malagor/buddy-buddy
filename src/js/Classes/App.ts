@@ -6,7 +6,7 @@ import { Main } from '../Pages/Main/Main';
 import { MyGroups } from '../Pages/MyGroups/MyGroups';
 import { AccountPage } from '../Pages/AccountPage/AccountPage';
 
-import { IGroupDataAll, IDataForCreateGroup } from '../Interfaces/IGroupData';
+import { IGroupDataAll, IDataForCreateGroup, IDataChangeStatus } from '../Interfaces/IGroupData';
 import { TransactionsList } from '../Pages/TransactionsList/transactionsList';
 import { INotification, Notifications, TypeOfNotifications } from './Notifications';
 import { INewMessage, Messenger } from '../Pages/Messenger/Messenger';
@@ -93,6 +93,7 @@ export class App {
       this.groups.addBalanceInGroupPage = this.addBalanceInGroupPage.bind(this);
       this.groups.addUserBalanceInModalCardUser = this.addUserBalanceInModalCardUser.bind(this);
       this.groups.getUserBalanceInGroup = this.getUserBalanceInGroup.bind(this);
+      this.groups.changeUserStatusInGroup = this.changeUserStatusInGroup.bind(this);
 
 
       this.transactionsList = TransactionsList.create('.main');
@@ -235,6 +236,10 @@ export class App {
   getUserBalanceInGroup(data: any){
     const { userId, groupId } = data;
     this.database.getBalanceForUserInGroup(userId, groupId, 1, this.groups.deleteUserFromGroup);
+  }
+
+  changeUserStatusInGroup(data: IDataChangeStatus){
+    this.database.changeStatusUser(data)
   }
 
   onTransactionsPage() {

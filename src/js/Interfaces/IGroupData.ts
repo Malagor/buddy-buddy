@@ -19,3 +19,9 @@ export interface IDataForCreateGroup {
   currentGroup: boolean;
   userId: string;
 }
+
+export interface IDataChangeStatus {
+  userId: string;
+  groupId: string;
+  state: string;
+}
