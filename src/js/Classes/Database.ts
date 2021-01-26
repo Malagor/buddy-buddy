@@ -1439,17 +1439,22 @@ export class Database {
         Promise.all(usersQuery)
           .then(userInfoArray => {
             const graphData: { [key: string]: any; } = {};
+            const groupData: { [key: string]: string } = {groupTitle: snapshot.val().title};
 
             userInfoArray.forEach((userInfo) => {
               graphData[userInfo.key] = {
                 key: userInfo.key,
                 name: userInfo.val().name,
+                account: userInfo.val().account,
                 avatar: userInfo.val().avatar,
                 userBalance: 0,
               };
+              if (userInfo.key === uid) {
+                groupData.currency = userInfo.val().currency;
+              }
             });
 
-            return graphData;
+            return [graphData, groupData];
           })
           .then(graphData => {
             const transactionList: string[] = snapshot.val().transactions || [];
@@ -1461,28 +1466,17 @@ export class Database {
               })
               .then(transArray => {
                 transArray.forEach(trans => {
-                  graphData[trans.userID].userBalance += trans.totalCost;
+                  graphData[0][trans.userID].userBalance += trans.totalCost;
 
                   const toUserList = trans.toUserList;
                   Object.keys(toUserList).forEach((userId) => {
-                    graphData[userId].userBalance -= toUserList[userId].cost;
+                    graphData[0][userId].userBalance -= toUserList[userId].cost;
                   });
                 });
-                return  Object.keys(graphData).map(userId => graphData[userId]);
+                return [Object.keys(graphData[0]).map(userId => graphData[0][userId]), graphData[1]];
               })
               .then(data => {
-                const result: any[] = [data];
-                result.push({groupTitle: snapshot.val().title});
-                this.firebase.database()
-                  .ref(`User/${uid}/currency`)
-                  .once('value', snapshot => {
-                  return snapshot.val();
-                })
-                .then(data => {
-                  result[1].currency = data.val();
-                
-                  funcHandler(result);
-                });
+                funcHandler(data);
               })
               .catch(error => {
                 if (errorHandler) {
