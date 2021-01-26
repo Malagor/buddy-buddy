@@ -86,7 +86,7 @@ export class App {
       this.groups = MyGroups.create('.main');
       this.groups.onCreateNewGroup = this.onCreateNewGroup.bind(this);
       this.groups.deleteGroup = this.deleteGroup.bind(this);
-      this.groups.deleteMemberFromGroup = this.deleteMemberFromGroup.bind(this);
+      //this.groups.deleteMemberFromGroup = this.deleteMemberFromGroup.bind(this);
       this.groups.onAddMember = this.onAddGroupMember.bind(this);
       this.groups.fillContactsList = this.fillContactsList.bind(this);
       this.groups.onAddInfoForModalDetailGroup = this.onAddInfoForModalDetailGroup.bind(this);
@@ -393,9 +393,9 @@ export class App {
     this.database.removeGroup(idGroup);
   }
 
-  deleteMemberFromGroup(idGroup: string, userId: string) {
+/*   deleteMemberFromGroup(idGroup: string, userId: string) {
     this.database.removeMemberGroup(idGroup, userId);
-  }
+  } */
 
   onAddUserToContacts(userData: ISearchUserData, errorHandler: (message: string) => void): void {
     this.database.addUserToContacts(userData, errorHandler);
@@ -408,8 +408,8 @@ export class App {
     this.database.changeContactState(contactId, state);
   }
 
-  fillContactsList() {
-    const renderContact = this.database.contactsHandler(this.contacts.addContactsToList);
+  fillContactsList(selector: string | null = null) {
+    const renderContact = this.database.contactsHandler(this.contacts.addContactsToList, selector);
     this.database.getContactsList(renderContact);
   }
 
