@@ -159,7 +159,7 @@ export class App {
   }
 
   loadCurrentPage() {
-    const currentPage: any = localStorage.getItem('currentPage') || 'Main';
+    const currentPage: string = localStorage.getItem('currentPage') || 'Main';
     this[`on${currentPage}Page`]();
   }
 
@@ -186,8 +186,8 @@ export class App {
     this.database.getUserInfo(uid, [this.mainPage.addUserInfo, this.mainPage.renderSlider, this.mainPage.renderSliderItems]);
     this.database.getUserGroups(uid, this.mainPage.renderAvatarsBlockForSlider, this.mainPage.renderOneGroup);
     this.database.getUserTransactions(uid, this.mainPage.renderTransactions);
-    this.database.getBalanceForUserTotal(uid, 1, this.mainPage.renderCommonBalance);
-    this.database.getBalanceForUserTotal(uid, 1, this.mainPage.renderCurrenciesTable);
+    this.database.getBalanceForUserTotal(uid, this.mainPage.renderCommonBalance);
+    this.database.getBalanceForUserTotal(uid, this.mainPage.renderCurrenciesTable);
   }
 
   updateOnAccountPage(data: any) {
@@ -239,14 +239,14 @@ export class App {
 
   addUserBalanceInModalCardUser(data: any) {
     const { userId, groupId } = data;
-    this.database.getBalanceForUserInGroup(userId, groupId, 1, this.groups.addUserBalanceInModalDetailGroup);
+    this.database.getBalanceForUserInGroup(userId, groupId, this.groups.addUserBalanceInModalDetailGroup);
   }
 
   onTransactionsPage() {
     this.setCurrentPage('Transactions');
     this.deleteHandlers();
     this.transactionsList.render();
-    this.database.getBalanceForUserTotal(this.database.uid, 1, this.transactionsList.addTotalBalance);
+    this.database.getBalanceForUserTotal(this.database.uid, this.transactionsList.addTotalBalance);
     this.transactionsList.newTrans.onCreateTransaction = this.onCreateTransaction.bind(this);
     this.transactionsList.newTrans.onShowMembersOfGroup = this.onShowMembersOfGroup.bind(this);
     this.database.getCurrencyList(this.transactionsList.newTrans.addCurrencyList);
@@ -373,11 +373,11 @@ export class App {
   }
 
   onRenderGroupBalance(groupID: string) {
-    this.database.getBalanceForUserInGroup(this.database.uid, groupID, 1, this.transactionsList.addGroupBalance);
+    this.database.getBalanceForUserInGroup(this.database.uid, groupID, this.transactionsList.addGroupBalance);
   }
 
   onRenderTotalBalance() {
-    this.database.getBalanceForUserTotal(this.database.uid, 1, this.transactionsList.addTotalBalance);
+    this.database.getBalanceForUserTotal(this.database.uid, this.transactionsList.addTotalBalance);
   }
 
   onAddRecipientToMessage(accountName: string) {
