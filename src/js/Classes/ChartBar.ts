@@ -1,6 +1,19 @@
 import { Chart } from 'chart.js';
 import { Currencies } from './Currencies';
 
+type userListArray = [
+  userDataObject[],
+  {[key: string] : string}
+];
+
+type userDataObject = {
+  [key: string] : string | number
+};
+
+type configData = {
+  [key: string]: string | Array< number | string | string[] >
+};
+
 export class ChartBar {
   protected element: HTMLElement;
 
@@ -14,21 +27,12 @@ export class ChartBar {
     return chart;
   }
 
-  buildingChart = (userList: [string | number]): void => {
-    console.log(userList);
-    const dt: any[]= [{userName: 'Darya', userId: '@daryatema', userBalance: 100, userAvatar: "https://firebasestorage.googleapis.com/v0/b/buddy-buddy-8e497.appspot.com/o/avatars%2F6yiqUegBoWWdR5oiZgTVqUt871q2.jpg?alt=media&token=d8308ef6-00d1-4ba7-aa77-eb396c46639e"},
-    {userName: 'Alex', userId: '@malagor', userBalance: 300, userAvatar: "https://firebasestorage.googleapis.com/v0/b/buddy-buddy-8e497.appspot.com/o/avatars%2F6yiqUegBoWWdR5oiZgTVqUt871q2.jpg?alt=media&token=d8308ef6-00d1-4ba7-aa77-eb396c46639e"},
-    {userName: 'Olga', userId: '@gruzyn33', userBalance: 100, userAvatar: "https://firebasestorage.googleapis.com/v0/b/buddy-buddy-8e497.appspot.com/o/avatars%2F6yiqUegBoWWdR5oiZgTVqUt871q2.jpg?alt=media&token=d8308ef6-00d1-4ba7-aa77-eb396c46639e"},
-    {userName: 'Andrei', userId: '@andrei', userBalance: -500, userAvatar: "https://firebasestorage.googleapis.com/v0/b/buddy-buddy-8e497.appspot.com/o/avatars%2F6yiqUegBoWWdR5oiZgTVqUt871q2.jpg?alt=media&token=d8308ef6-00d1-4ba7-aa77-eb396c46639e"},
-    {userName: 'Darya', userId: '@daryatema', userBalance: 100, userAvatar: "https://firebasestorage.googleapis.com/v0/b/buddy-buddy-8e497.appspot.com/o/avatars%2F6yiqUegBoWWdR5oiZgTVqUt871q2.jpg?alt=media&token=d8308ef6-00d1-4ba7-aa77-eb396c46639e"},
-    {userName: 'Alex', userId: '@malagor', userBalance: 300, userAvatar: "https://firebasestorage.googleapis.com/v0/b/buddy-buddy-8e497.appspot.com/o/avatars%2F6yiqUegBoWWdR5oiZgTVqUt871q2.jpg?alt=media&token=d8308ef6-00d1-4ba7-aa77-eb396c46639e"},
-  ];
-    const groupData = {curr: 'BYN', groupTitle: 'Our group'};
+  buildingChart = (userList: userListArray): void => {
     this.renderChart();
-    this.getDataForChartConfig(dt, groupData).then((data: any) => {
-      const config: any = this.getConfigForChart(data);
+    this.getDataForChartConfig(userList).then((data: configData) => {
+      const config: { [key: string]: any } = this.getConfigForChart(data);
       const chart: Chart = this.getChart(config);
-      this.getAvatarsLocation(chart, dt);
+      this.getAvatarsLocation(chart, userList[0]);
       this.eventsForChart(chart);
     });
   }
@@ -44,20 +48,20 @@ export class ChartBar {
     `;
   }
 
-  async getDataForChartConfig(data: any[], groupData: any) {
-    const labelsOfUser: any[] = data.map((item: any) => [`${item.userName},`, `<${item.userId}>`]);
-    const groupCurrency: string = groupData.curr;
-    const colors: string[] = this.getArrayOfColors(data);
+  async getDataForChartConfig(data: userListArray) {
+    const labelsOfUser: string[][] = data[0].map((item: userDataObject) => [`${item.name},`, `<${item.account}>`]);
+    const groupCurrency: string = data[1].currency;
+    const colors: string[] = this.getArrayOfColors(data[0]);
     const opacityColors: string[] = colors.map((item: string) => item + '80');
-    const balancesArray: any = [];
-    const query = Currencies.fromUSD(groupCurrency);
-    const rightBalances: any = await data.map((item: any) => item.userBalance)
+    const balancesArray: any[] = [];
+    const query: any = Currencies.fromUSD(groupCurrency);
+    const rightBalances: any[] = await data[0].map((item: userDataObject) => item.userBalance)
     .map(async (sum: number) => {
       await query(sum).then((bal: number) => {
         balancesArray.push(bal.toFixed(2));
       });
     });
-    await Promise.all(rightBalances).then(data => data);
+    await Promise.all(rightBalances).then((data: number[]) => data);
 
     return {
       labelsOfUser: labelsOfUser,
@@ -65,7 +69,7 @@ export class ChartBar {
       colors: colors,
       opacityColors: opacityColors,
       rightBalances: balancesArray,
-      groupTitle: groupData.groupTitle,
+      groupTitle: data[1].groupTitle,
     }
   }
 
@@ -78,7 +82,7 @@ export class ChartBar {
     return color;
   }
 
-  getArrayOfColors(data: any[]): string[] {
+  getArrayOfColors(data: userDataObject[]): string[] {
     const colorSet: Set<string> = new Set();
     data.map((_: any) => {
       let color: string;
@@ -92,7 +96,7 @@ export class ChartBar {
     return Array.from(colorSet);
   }
 
-  getConfigForChart(configData: any): any {
+  getConfigForChart(configData: configData): { [key: string]: any } {
     const dataInfo: any = {
       labels: configData.labelsOfUser,
       datasets: [{
@@ -161,7 +165,7 @@ export class ChartBar {
     }
   }
 
-  getChart(config: any): Chart {
+  getChart(config: { [key: string]: any }): Chart {
     const canvas = document.getElementById('ChartBar') as HTMLCanvasElement;
     const ctx: CanvasRenderingContext2D = canvas.getContext('2d');
     const myChart: Chart = new Chart(ctx, config);
@@ -169,12 +173,12 @@ export class ChartBar {
     return myChart;
   }
 
-  getAvatarsLocation(chart: any, data: any[]) {
+  getAvatarsLocation(chart: any, data: userDataObject[]) {
     const xAxis: any = chart.scales['x-axis-0'];
-    xAxis.ticks.forEach((_: any, index: number) => {
+    xAxis.ticks.forEach((_: void, index: number) => {
       const x = xAxis.getPixelForTick(index);
       const html = `<div class="wr" style="left: ${x - 12}px;">
-        <img src="${data[0].userAvatar}">
+        <img src="${data[index].avatar}">
       </div>`;
       document.querySelector('.images-for-canvas').insertAdjacentHTML('beforeend', html);
     })
@@ -185,7 +189,7 @@ export class ChartBar {
       const avatars: any = document.querySelector('.images-for-canvas').querySelectorAll('.wr');
       const xAxis: any = chart.scales['x-axis-0'];
       xAxis.ticks.forEach((_: any, index: number) => {
-        const x = xAxis.getPixelForTick(index);
+        const x: number = xAxis.getPixelForTick(index);
         avatars[index].style.left = `${x - 12}px`;
       });
     });
