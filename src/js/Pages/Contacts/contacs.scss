@@ -2,31 +2,27 @@
 
 .search-form {
   display: grid;
+
+  grid-gap: 0.5rem;
   grid-template-columns: 1fr rem(100px);
   grid-template-rows: 1fr 1fr 1fr;
-  grid-gap: 0.5rem;
-
   @include phones {
     grid-template-columns: 1fr rem(100px);
     grid-template-rows: 1fr 1fr;
   }
-
   @include laptop {
     grid-template-columns: 1fr 1fr rem(100px);
     grid-template-rows: 1fr;
-
   }
 }
 
 .search-form__account {
   grid-column: 1 / 3;
   grid-row: 1 / 2;
-
   @include phones {
     grid-column: 1 / 2;
     grid-row: 1 / 2;
   }
-
   @include laptop {
     grid-column: 1 / 2;
     grid-row: 1 / 2;
@@ -36,12 +32,10 @@
 .search-form__name {
   grid-column: 1 / 3;
   grid-row: 2 / 3;
-
   @include phones {
     grid-column: 1 / 2;
     grid-row: 2 / 3;
   }
-
   @include laptop {
     grid-column: 2 / 3;
     grid-row: 1 / 2;
@@ -51,13 +45,10 @@
 .search-form__button {
   grid-column: 2 / 3;
   grid-row: 3 / 4;
-
   @include phones {
     grid-column: 2 / 3;
     grid-row: 2 / 3;
-
   }
-
   @include laptop {
     grid-column: 3 / 4;
     grid-row: 1 / 2;
@@ -65,15 +56,15 @@
 }
 
 .contact__message {
-  grid-column-start: 1;
   grid-column-end: 4;
+  grid-column-start: 1;
 }
 
 .contacts-list {
   display: grid;
-  grid-template-columns: 1fr;
-  grid-gap: 1rem;
 
+  grid-gap: 1rem;
+  grid-template-columns: 1fr;
   @include laptop {
     grid-template-columns: 1fr 1fr;
   }
@@ -81,9 +72,10 @@
 
 .contact {
   display: grid;
+
+  grid-template-areas: "avatar name delete" "avatar account button";
   grid-template-columns: 4rem 2fr 1fr;
   grid-template-rows: 1fr 1fr;
-  grid-template-areas: "avatar name delete" "avatar account button";
 
   &--pending {
     box-shadow: 0 0 3px green;
@@ -91,15 +83,17 @@
 }
 
 .contact__avatar-wrapper {
-  grid-area: avatar;
   width: 3rem;
   height: 3rem;
+
+  grid-area: avatar;
 
   img {
     width: 100%;
     height: 100%;
-    object-fit: contain;
     border-radius: 50%;
+
+    object-fit: contain;
   }
 }
 
@@ -112,42 +106,45 @@
 }
 
 .contact__buttons {
-  grid-area: button;
   display: flex;
   align-items: center;
+
+  grid-area: button;
 }
 
 .contact__delete {
-  grid-area: delete;
   display: flex;
   justify-content: flex-end;
+
+  grid-area: delete;
 }
 
 .delete-modal__user {
+  display: grid;
   width: 85%;
   margin: 0 auto;
-  display: grid;
-  grid-template-columns: 6rem 1fr;
-  grid-template-rows: 1fr 1fr;
 
   grid-column-gap: 2rem;
   grid-row-gap: 0.5rem;
+  grid-template-columns: 6rem 1fr;
+  grid-template-rows: 1fr 1fr;
 }
 
 .delete-modal__avatar {
   width: 6rem;
   height: 6rem;
-
-  grid-row-start: 1;
-  grid-row-end: 3;
-  grid-column-start: 1;
-  grid-column-end: 2;
-  border-radius: 50%;
   overflow: hidden;
+  border-radius: 50%;
+
+  grid-column-end: 2;
+  grid-column-start: 1;
+  grid-row-end: 3;
+  grid-row-start: 1;
 
   img {
     width: 100%;
     height: 100%;
+
     object-fit: contain;
   }
 }
@@ -159,18 +156,20 @@
 }
 
 .delete-modal__name {
-  grid-row-start: 1;
-  grid-row-end: 2;
-  grid-column-start: 2;
-  grid-column-end: 3;
-  font-size: 2rem;
   align-self: flex-end;
+  font-size: 2rem;
+
+  grid-column-end: 3;
+  grid-column-start: 2;
+  grid-row-end: 2;
+  grid-row-start: 1;
 }
 
 .delete-modal__account {
-  grid-row-start: 2;
-  grid-row-end: 3;
-  grid-column-start: 2;
-  grid-column-end: 3;
   align-self: flex-start;
+
+  grid-column-end: 3;
+  grid-column-start: 2;
+  grid-row-end: 3;
+  grid-row-start: 2;
 }

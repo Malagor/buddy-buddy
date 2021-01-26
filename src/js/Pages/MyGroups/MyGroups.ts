@@ -428,7 +428,7 @@ export class MyGroups extends Page {
   }
 
   addUserBalanceInModalDetailGroup(data: any) {
-    const divCardUser = document.querySelector(`[data-user-id="${data.userId}"]`)
+    const divCardUser = document.querySelector(`[data-user-id="${data.userId}"]`);
 
     const html = `
       <div class="modal-detail__balance">
