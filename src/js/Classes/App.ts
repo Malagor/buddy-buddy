@@ -209,7 +209,7 @@ export class App {
   }
 
   checkUserID(userID: string) {
-    this.database.isAccountName(userID).then(data => this.accountPage.checkError(data.val()));
+    this.database.isAccountName(userID).then(data => this.accountPage.checkUserAccountNameValidation(data.val()));
   }
 
   onContactsPage() {
