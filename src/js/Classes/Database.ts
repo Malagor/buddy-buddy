@@ -1424,7 +1424,7 @@ export class Database {
       });
   }
 
-  getDataForGraphGroupBalance(groupId: string, funcHandler: (graphData: any) => void, errorHandler?: (message: string) => void) {
+  getDataForGraphGroupBalance(groupId: string, uid: string, funcHandler: (graphData: any) => void, errorHandler?: (message: string) => void) {
     this.firebase
       .database()
       .ref(`Groups/${groupId}`)
@@ -1452,7 +1452,7 @@ export class Database {
             return graphData;
           })
           .then(graphData => {
-            const transactionList: string[] = snapshot.val().transactions;
+            const transactionList: string[] = snapshot.val().transactions || [];
             const transQuery = transactionList.map(transId => this.getTransactionById(transId));
 
             Promise.all(transQuery)
@@ -1471,7 +1471,18 @@ export class Database {
                 return  Object.keys(graphData).map(userId => graphData[userId]);
               })
               .then(data => {
-                funcHandler(data);
+                const result: any[] = [data];
+                result.push({groupTitle: snapshot.val().title});
+                this.firebase.database()
+                  .ref(`User/${uid}/currency`)
+                  .once('value', snapshot => {
+                  return snapshot.val();
+                })
+                .then(data => {
+                  result[1].currency = data.val();
+                
+                  funcHandler(result);
+                });
               })
               .catch(error => {
                 if (errorHandler) {
