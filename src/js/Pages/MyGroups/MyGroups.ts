@@ -185,7 +185,7 @@ export class MyGroups extends Page {
 
               <div class="col-9 form-title">
                 <div>
-                  <input type="text" class="form-control" id="formTitle" name="title" placeholder="Title*" required>
+                  <input type="text" class="form-control" id="formTitle" name="title" autocomplete="off" placeholder="Title*" required>
                   <div class="invalid-feedback">
                     Please input title.
                   </div>
@@ -392,7 +392,8 @@ export class MyGroups extends Page {
     divForBalanceModalCard.insertAdjacentHTML('beforeend', html);
   }
 
-   addModalUserData = (data: any) => {    
+   addModalUserData = (data: any) => { 
+    const thisUser = data.thisUid;   
     const userId = data.userId;
     const author = data.dataGroup.author;
     const stateUser = data.user.groupList[data.groupId].state;
@@ -407,7 +408,7 @@ export class MyGroups extends Page {
 
 
     const addEventListenerFromButtonDelUser = () => {
-      if (author === data.thisUid && userId !== author) {
+      if (author === thisUser && userId !== author) {
         const buttonDeleteUser = document.querySelector(`[btn-data-id-user="${data.userId}"]`)
   
         buttonDeleteUser.addEventListener('click', (e) => {
@@ -425,23 +426,31 @@ export class MyGroups extends Page {
       }
     }
 
-    if (author === data.thisUid && userId !== author) {
+    if (author === thisUser && userId !== author) {
       btnSaveModal.classList.remove('group-hidden');
       htmlButtonDeleteUser = `<button type="button" class="btn-close" btn-data-id-user="${data.userId}" btn-data-id-group="${data.groupId}" aria-label="Close"></button>`;
     }
 
     const html = `
-    <div data-user-id=${data.userId} class="card modal-detail">
-      <img class="modal-detail__img" src="${data.user.avatar}" alt="avatar">
-      <div>
-        <p  class="modal-detail__name">${data.user.name}</p>
-        <p  class="modal-detail__account">${data.user.account}</p>
+      <div data-user-id=${data.userId} class="card modal-detail">
+        <img class="modal-detail__img" src="${data.user.avatar}" alt="avatar">
+        <div>
+          <p  class="modal-detail__name">${data.user.name}</p>
+          <p  class="modal-detail__account">${data.user.account}</p>
+        </div>
+        <div class="modal-detail__button">
+          ${ htmlButtonDeleteUser ?  htmlButtonDeleteUser : ''}
+        </div>
       </div>
-      <div class="modal-detail__button">
-        ${ htmlButtonDeleteUser ?  htmlButtonDeleteUser : ''}
+    `;
+
+    const htmlBnt = `
+      <div class="btn-group modal-detail__button-container" role="group" aria-label="Basic mixed styles example">
+        <button id="btn-prove" type="button" class="btn btn btn-success modal-detail__button-confirmation">Prove</button>
+        <button id="btn-disprove" type="button" class="btn btn-danger modal-detail__button-confirmation">Disprove</button>
       </div>
-    </div>
-  `;
+    `
+  
 
     if(stateUser === 'approve') {
       divForUserListApprove.insertAdjacentHTML('beforeend', html);  
@@ -457,7 +466,39 @@ export class MyGroups extends Page {
       const cardAuthor = document.querySelector(`[data-user-id="${userId}"]`);
       cardAuthor.classList.add('modal-detail--author');
     }
+
+    // если пользователь не подтвержден
+    if(stateUser ===  'pending' &&  userId === thisUser) {
+      const cardThisUser = document.querySelector(`[data-user-id="${userId}"]`);
+      //const cardAuthor_test = document.querySelector(`[data-user-id="${userId}"]`);
+      //console.log('cardAuthor_test', cardAuthor);
+      cardThisUser.insertAdjacentHTML('beforeend', htmlBnt); 
+      
+      const btnProve = document.querySelector('#btn-prove')
+      const btnDisprove = document.querySelector('#btn-disprove')
+
+      btnProve.addEventListener('click', () => {
+        console.log('btnProve');
+        
+      })
+
+      btnDisprove.addEventListener('click', () => {
+        console.log('btnDisprove');
+        
+      })
   }
+}
+
+/*   addContactsToList = (data: any): void => {
+    const list = document.querySelector('.contacts-user-list');
+    const html = `
+      <li class="contact-list__item" data-user-id="${data.key}">
+        <img class="contact-list__avatar" src="${data.avatar}" alt="${data.name}">
+        <span class="contact-list__name">${data.name}</span><span class="contact-list__account"><@${data.account}></span>
+      </li>
+    `;
+    list.insertAdjacentHTML('afterbegin', html);
+  } */
 
   deleteUserFromGroup = (data: any) => {
     if(data.balance === 0) {

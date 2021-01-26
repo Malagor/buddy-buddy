@@ -185,7 +185,18 @@
       &--positive {
         color: green;
       }
-    }   
+    } 
+    
+    &__button-container{
+      position: absolute;
+      right: rem(20px);
+      height: rem(30px);
+    }
+
+    &__button-confirmation{
+      padding: 3px;
+    }
+
 }
 
  .modal-dialog {
@@ -220,5 +231,11 @@
     height: rem(40px);
     border-radius: 50%;
   }
-  
+}
+
+@media (max-width: 370px) {
+  .modal-detail__button-confirmation{
+    padding: 3px;
+    font-size: rem(10px);
+  }
 }
