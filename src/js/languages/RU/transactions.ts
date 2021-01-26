@@ -1,3 +1,20 @@
-export const transactionsRU {
- 
+export const transactionsRU = {
+  'Transactions List' : 'Список транзакций',
+  'All' : 'Все',
+  'New transaction': 'Новая транзакция',
+  'Add check': 'Добавить чек',
+  'Check': 'Чек',
+  'Select All': 'Выбрать всех',
+  'Group': 'Группа',
+  'Description': 'Описание',
+  'Sum': 'Сумма',
+  'Create transaction': 'Создать транзакцию',
+  'Comment': 'Комментарий',
+  'pending': 'ожидание',
+  'approve': 'подтвердить',
+  'Approved': 'Подтверждено',
+  'decline': 'отклонить',
+  'Save': 'Сохранить',
+  'Delete': 'Удалить',
+  'Add members': 'Добавить участников',
 };
