@@ -25,3 +25,8 @@ export interface IDataChangeStatus {
   groupId: string;
   state: string;
 }
+
+export interface IDataAddMember {
+  account: string;
+  groupId: string;
+}

@@ -6,7 +6,7 @@ import { Main } from '../Pages/Main/Main';
 import { MyGroups } from '../Pages/MyGroups/MyGroups';
 import { AccountPage } from '../Pages/AccountPage/AccountPage';
 
-import { IGroupDataAll, IDataForCreateGroup, IDataChangeStatus } from '../Interfaces/IGroupData';
+import { IGroupDataAll, IDataForCreateGroup, IDataChangeStatus, IDataAddMember } from '../Interfaces/IGroupData';
 import { TransactionsList } from '../Pages/TransactionsList/transactionsList';
 import { INotification, Notifications, TypeOfNotifications } from './Notifications';
 import { INewMessage, Messenger } from '../Pages/Messenger/Messenger';
@@ -94,6 +94,7 @@ export class App {
       this.groups.addUserBalanceInModalCardUser = this.addUserBalanceInModalCardUser.bind(this);
       this.groups.getUserBalanceInGroup = this.getUserBalanceInGroup.bind(this);
       this.groups.changeUserStatusInGroup = this.changeUserStatusInGroup.bind(this);
+      this.groups.addMemberInDetailGroup = this.addMemberInDetailGroup.bind(this);
 
 
       this.transactionsList = TransactionsList.create('.main');
@@ -240,6 +241,10 @@ export class App {
 
   changeUserStatusInGroup(data: IDataChangeStatus){
     this.database.changeStatusUser(data)
+  }
+
+  addMemberInDetailGroup(data: IDataAddMember) {
+    this.database.addMemberInGroup(data, this.groups.addNewUserInDetailGroup)
   }
 
   onTransactionsPage() {

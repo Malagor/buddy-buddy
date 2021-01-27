@@ -1,7 +1,7 @@
 import firebase from 'firebase';
 import 'firebase/auth';
 import { default as CyrillicToTranslit } from 'cyrillic-to-translit-js/CyrillicToTranslit';
-import { IDataForCreateGroup, IDataChangeStatus } from '../Interfaces/IGroupData';
+import { IDataForCreateGroup, IDataChangeStatus, IDataAddMember } from '../Interfaces/IGroupData';
 import { ISearchUserData } from '../Pages/Contacts/Contacts';
 import { IMessage, INewMessage } from '../Pages/Messenger/Messenger';
 import { IHandlers } from './App';
@@ -519,7 +519,7 @@ export class Database {
       .set(groupKey);
   }
 
-  removeMemberGroup(groupId: string, userId: string) {
+/*   removeMemberGroup(groupId: string, userId: string) {
     this.firebase
       .database()
       .ref(`Groups/${groupId}/userList/${userId}`)
@@ -529,7 +529,7 @@ export class Database {
       .database()
       .ref(`User/${userId}/groupList/${groupId}`)
       .set({state: 'closed'});
-  }
+  } */
 
   removeGroup(groupId: string) {
     this.firebase
@@ -584,6 +584,106 @@ export class Database {
     dataBase 
       .ref(`User/${userId}/groupList/${groupId}`)
       .set({state: state});
+  }
+
+  addMemberInGroup(data: IDataAddMember, addNewUserInDetailGroup: any) {
+    const bace = this.firebase.database()
+    const userTable = bace.ref('User');
+    let errorData: string | null = null
+    
+    const addUserInPageAndBD = (userKey: string) => {
+      const dataForChangeStatusUser: IDataChangeStatus = {
+        userId: userKey,
+        groupId: data.groupId,
+        state: 'pending'
+      } 
+      this. changeStatusUser(dataForChangeStatusUser)
+
+      bace
+      .ref(`User/${userKey}/`)
+      .once('value', (userInfo) => {
+        const userDetainInfo = {
+          userId: userInfo.key,
+          user: userInfo.val(),
+          groupId: data.groupId 
+        }
+        addNewUserInDetailGroup(userDetainInfo, errorData)
+      })
+    } 
+
+    userTable
+    .once('value', (userList) => {
+      const userObjs = userList.val();
+      const keysList = Object.keys(userObjs);
+      const ArrayUserKey: string[] = keysList.filter(key => {
+        if (userObjs[key].account === data.account) return key;
+    
+        return false;
+      });
+
+      const userKey = ArrayUserKey[0]
+
+      console.log('userKey', userKey)
+      console.log('group id in bd', data.groupId);
+        
+      if(!userKey) {
+        errorData = 'User is missing'
+        addNewUserInDetailGroup(data, errorData)
+      } else {
+        bace
+        .ref(`Groups/${data.groupId}/userList/`)
+        .once('value', (userList) => {
+            console.log(userList.val())
+            const userListObj = userList.val()
+            const arrUsers = Object.keys(userListObj)
+            const userInfo = userListObj[userKey]
+
+            console.log('userListObj', userListObj);
+            console.log('userInfo', userInfo)
+
+            if(arrUsers.includes(userKey)){
+              const stateUser = userListObj[userKey].state
+              console.log(' arrUsers.userKey.state',   userInfo.state);
+              if(stateUser === 'approve' || stateUser === 'pending') {
+                errorData = 'The user is in the group'
+                addNewUserInDetailGroup(userInfo, errorData)
+              } else {
+                addUserInPageAndBD(userKey)
+              } 
+            } else {
+              addUserInPageAndBD(userKey)
+            }
+        })
+      }
+    })
+    
+
+    //addNewUserInDetailGroup(data, errorData)
+  }
+
+  waddUserToContacts(userData: ISearchUserData, errorHandler: (message: string) => void) {
+    const userTable = this.firebase.database().ref('User');
+    userTable
+      .once('value', (userList) => {
+        const userObjs = userList.val();
+        const keysList = Object.keys(userObjs);
+        const userKey: string[] = keysList.filter(key => {
+          if (userObjs[key].account === userData.account) return key;
+          if (userObjs[key].name === userData.name) return key;
+
+          return false;
+        });
+
+        if (userKey.length) {
+          this.addNewContactToContactList(this.uid, userKey[0], 'approve', errorHandler);
+          this.addNewContactToContactList(userKey[0], this.uid, 'pending', errorHandler);
+        } else {
+          errorHandler('The user is not found.');
+        }
+      })
+      .catch(error => {
+        errorHandler(error.message);
+      });
   }
 
   countGroupsInvite(setNotificationMark: { (type: TypeOfNotifications, num: number): void; (arg0: TypeOfNotifications, arg1: number): void; }): void {
