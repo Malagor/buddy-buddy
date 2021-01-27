@@ -17,4 +17,5 @@ export const transactionsENG = {
   'Save': 'Save',
   'Delete': 'Delete',
   'Add members':'Add members',
+  'Payer': 'Payer',
 };

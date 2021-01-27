@@ -4,7 +4,7 @@ export const transactionsRU = {
   'New transaction': 'Новая транзакция',
   'Add check': 'Добавить чек',
   'Check': 'Чек',
-  'Select All': 'Выбрать всех',
+  'Select all': 'Выбрать всех',
   'Group': 'Группа',
   'Description': 'Описание',
   'Sum': 'Сумма',
@@ -17,4 +17,5 @@ export const transactionsRU = {
   'Save': 'Сохранить',
   'Delete': 'Удалить',
   'Add members': 'Добавить участников',
+  'Payer': 'Плательщик',
 };
