@@ -4,6 +4,7 @@ import { getFormData } from '../../Util/getFormData';
 export class AccountPage extends Page {
   updateInfo: any;
   changeTheme: any;
+  checkUserID: any;
 
   static create(element: string): AccountPage {
     return new AccountPage(element);
@@ -88,6 +89,9 @@ export class AccountPage extends Page {
                   Account
                 </label>
                 <div class="account__double-form col-sm-10 account--input-size">
+                  <div class="account__error">
+                    <span>Is occupied.</span>
+                  </div>
                   <div class="input-group-prepend account__double-form--first">
                     <span class="input-group-text" id="addon-wrapping">
                       @
@@ -149,6 +153,22 @@ export class AccountPage extends Page {
     </div>`;
   }
 
+  checkUserAccountNameValidation(data: any): void {
+    const submitInfo: HTMLElement = document.querySelector('.account__input-submit');
+    const inputID: HTMLInputElement = document.querySelector('.account__double-form--second');
+    const errorOfInput: HTMLElement = document.querySelector('.account__error');
+    
+    if (!data) {
+      submitInfo.removeAttribute('disabled');
+      inputID.classList.remove('error');
+      errorOfInput.classList.remove('error--on');
+    } else {
+      submitInfo.setAttribute('disabled', 'true');
+      inputID.classList.add('error');
+      errorOfInput.classList.add('error--on');
+    }
+  }
+
   events(): void {
     const submitInfo: HTMLElement = document.querySelector('.account__input-submit');
     const formInfo: HTMLFormElement = document.querySelector('.account__form-change-info');
@@ -159,6 +179,7 @@ export class AccountPage extends Page {
     const themeSelect: any = document.querySelector('.form-select--theme');
     const currList: HTMLElement = document.querySelector('.curr-list');
     const currInput: HTMLInputElement = document.querySelector('.account__input-curr');
+    const inputID: HTMLInputElement = document.querySelector('.account__double-form--second');
 
     let currentTheme: string = [...themeSelect.querySelectorAll('option')].find((item: any) => item.selected).textContent;
     let values: string[] = [];
@@ -272,7 +293,11 @@ export class AccountPage extends Page {
             reader.readAsDataURL(item.files[0]);
           }
           if (values[index] !== item.value.trim()) {
-            submitInfo.removeAttribute('disabled');
+            if (item === inputID) {
+              this.checkUserID(item.value.trim()); 
+            } else {
+              submitInfo.removeAttribute('disabled');
+            }
           } else {
             submitInfo.setAttribute('disabled', 'true');
           }

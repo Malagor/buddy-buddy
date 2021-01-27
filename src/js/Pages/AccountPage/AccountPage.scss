@@ -6,6 +6,7 @@
 }
 
 .account__double-form {
+  position: relative;
   display: flex;
   .account__double-form--first {
     display: flex;
@@ -19,6 +20,24 @@
   .account__double-form--second {
     width: 100%;
     border-radius: 0 0.25rem 0.25rem 0;
+  }
+
+  .account__double-form--second.error {
+    color: rgba(255, 0, 0, 0.5);
+  }
+
+  .account__error {
+    position: absolute;
+    top: rem(-30px);
+    right: rem(10px);
+    width: 100%;
+    height: rem(20px);
+    text-align: end;
+    color: rgba(255, 0, 0, 0.5);
+    visibility: hidden;
+  }
+  .account__error.error--on {
+    visibility: visible;
   }
 }
 

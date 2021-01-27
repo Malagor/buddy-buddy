@@ -11,6 +11,7 @@ import { TransactionsList } from '../Pages/TransactionsList/transactionsList';
 import { INotification, Notifications, TypeOfNotifications } from './Notifications';
 import { INewMessage, Messenger } from '../Pages/Messenger/Messenger';
 import { Contacts, ISearchUserData } from '../Pages/Contacts/Contacts';
+import { Currencies } from './Currencies';
 
 export interface IHandlers {
   messages: any;
@@ -78,6 +79,7 @@ export class App {
       this.accountPage = AccountPage.create('.main');
       this.accountPage.updateInfo = this.updateOnAccountPage.bind(this);
       this.accountPage.changeTheme = this.changeTheme.bind(this);
+      this.accountPage.checkUserID = this.checkUserID.bind(this);
 
       this.mainPage = Main.create('.main');
 
@@ -97,7 +99,11 @@ export class App {
       this.transactionsList = TransactionsList.create('.main');
       this.transactionsList.onChangeState = this.onChangeState.bind(this);
       this.transactionsList.onGetTransInfo = this.onGetTransInfo.bind(this);
-      // this.transactionsList.onGetMembers = this.onGetMembers.bind(this);
+      this.transactionsList.onEditTransaction = this.onEditTransaction.bind(this);
+      this.transactionsList.onDeleteTransaction = this.onDeleteTransaction.bind(this);
+      this.transactionsList.onRenderGroupBalance = this.onRenderGroupBalance.bind(this);
+      this.transactionsList.onRenderTotalBalance = this.onRenderTotalBalance.bind(this);
+
 
       this.messenger = Messenger.create('.main');
       this.messenger.onAddRecipient = this.onAddRecipientToMessage.bind(this);
@@ -129,6 +135,7 @@ export class App {
   }
 
   onSignOut(): any {
+    this.deleteHandlers();
     this.database.signOut();
     this.database.deleteUserInfoListener(this.userHandler);
     this.database.init();
@@ -152,7 +159,7 @@ export class App {
   }
 
   loadCurrentPage() {
-    const currentPage: any = localStorage.getItem('currentPage') || 'Main';
+    const currentPage: string = localStorage.getItem('currentPage') || 'Main';
     this[`on${currentPage}Page`]();
   }
 
@@ -179,8 +186,8 @@ export class App {
     this.database.getUserInfo(uid, [this.mainPage.addUserInfo, this.mainPage.renderSlider, this.mainPage.renderSliderItems]);
     this.database.getUserGroups(uid, this.mainPage.renderAvatarsBlockForSlider, this.mainPage.renderOneGroup);
     this.database.getUserTransactions(uid, this.mainPage.renderTransactions);
-    this.database.getBalanceForUserTotal(uid, 1, this.mainPage.renderCommonBalance);
-    this.database.getBalanceForUserTotal(uid, 1, this.mainPage.renderCurrenciesTable);
+    this.database.getBalanceForUserTotal(uid, this.mainPage.renderCommonBalance);
+    this.database.getBalanceForUserTotal(uid, this.mainPage.renderCurrenciesTable);
   }
 
   updateOnAccountPage(data: any) {
@@ -199,6 +206,10 @@ export class App {
     await this.database.getCurrenciesOrLangsOrThemes(uid, this.accountPage.renderLangOrTheme, 'Theme');
 
     this.accountPage.events();
+  }
+
+  checkUserID(userID: string) {
+    this.database.isAccountName(userID).then(data => this.accountPage.checkUserAccountNameValidation(data.val()));
   }
 
   onContactsPage() {
@@ -228,14 +239,14 @@ export class App {
 
   addUserBalanceInModalCardUser(data: any) {
     const { userId, groupId } = data;
-    this.database.getBalanceForUserInGroup(userId, groupId, 1, this.groups.addUserBalanceInModalDetailGroup);
+    this.database.getBalanceForUserInGroup(userId, groupId, this.groups.addUserBalanceInModalDetailGroup);
   }
 
   onTransactionsPage() {
     this.setCurrentPage('Transactions');
-    this.transactionsList.render();
     this.deleteHandlers();
-
+    this.transactionsList.render();
+    this.database.getBalanceForUserTotal(this.database.uid, this.transactionsList.addTotalBalance);
     this.transactionsList.newTrans.onCreateTransaction = this.onCreateTransaction.bind(this);
     this.transactionsList.newTrans.onShowMembersOfGroup = this.onShowMembersOfGroup.bind(this);
     this.database.getCurrencyList(this.transactionsList.newTrans.addCurrencyList);
@@ -310,8 +321,22 @@ export class App {
     this.database.findUserById(userId, this.groups.addMembersGroup);
   }
 
-  onCreateTransaction(data: any) {
-    this.database.setDataTransaction(data);
+  onCreateTransaction(transactionData: any) {
+    console.log('Trans data', transactionData);
+    const toUsd = Currencies.toUSD(transactionData.currency);
+    const userList = transactionData.toUserList;
+    toUsd(transactionData.totalCost)
+      .then(totalCost => {
+        transactionData.totalCost = totalCost;
+        const queryes = userList.map((user: { cost: any; }) => toUsd(user.cost));
+        Promise.all(queryes)
+          .then(curCost => {
+            curCost.forEach((cost, index) => {
+              userList[index].cost = cost;
+            });
+            this.database.setDataTransaction(transactionData);
+          });
+      });
   }
 
   onShowMembersOfGroup(groupID: string) {
@@ -325,10 +350,34 @@ export class App {
     this.database.setNewStateTransaction(state, transID);
   }
 
-  onGetTransInfo(trans: any, transID: string, groupID: string) {
-    console.log('ongettransinfo');
-    this.database.getTransInfoModal(trans, transID, groupID, this.transactionsList.addGroupTitle,
-      this.transactionsList.addMemberOfTransaction, this.transactionsList.addOwnerInfo);
+  onGetTransInfo(trans: any, groupID: string) {
+    this.database.getTransInfoModal(trans, groupID, this.transactionsList.addGroupTitle,
+    this.transactionsList.addMemberOfTransaction, this.transactionsList.addOwnerInfo);
+  }
+
+  onEditTransaction(editData: any, transID: string, trans: any) {
+    const toUsd = Currencies.toUSD(trans.currency);
+    toUsd(trans.totalCost);
+    const queryes = editData.map((user: { cost: any; }) => toUsd(user.cost));
+    Promise.all(queryes)
+      .then(curCost => {
+        curCost.forEach((cost, index) => {
+          editData[index].cost = cost;
+        });
+        this.database.editTransaction(editData, transID, trans);
+      });
+  }
+
+  onDeleteTransaction(groupID: string, transID: string) {
+    this.database.deleteTransaction(groupID, transID);
+  }
+
+  onRenderGroupBalance(groupID: string) {
+    this.database.getBalanceForUserInGroup(this.database.uid, groupID, this.transactionsList.addGroupBalance);
+  }
+
+  onRenderTotalBalance() {
+    this.database.getBalanceForUserTotal(this.database.uid, this.transactionsList.addTotalBalance);
   }
 
   onAddRecipientToMessage(accountName: string) {
