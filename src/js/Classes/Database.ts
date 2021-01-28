@@ -239,16 +239,18 @@ export class Database {
           return item[2];
         })
         .map(async (item: any, index: number) => {
-          const elem: any = await item.userList.map(async (it: any) => {
+          const elem: any = await item.userList
+          .filter((item: any[]) => item[1].state === 'approve')
+          .map(async (it: any) => {
             const res: any = await this.firebase
-              .database()
-              .ref(`User/${it[0]}`)
-              .once('value', (snapshot) => snapshot);
+            .database()
+            .ref(`User/${it[0]}`)
+            .once('value', (snapshot) => snapshot);
             it = res.val().avatar;
             return it;
           });
           await Promise.all(elem).then((userList: any) => {
-            if (userList.length) callback2(callback(userList), index, item.title, value.length, item.icon, item.groupID, currentUserGroup);
+            if (userList.length) callback2(callback(userList), index, item, value.length, currentUserGroup);
           });
         });
     });
