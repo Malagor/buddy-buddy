@@ -69,7 +69,7 @@ export class Database {
         // saveUID(uid);
         this._registrationUser(uid, userData);
       })
-      .catch(function (error: { code: any; message: any }) {
+      .catch(function(error: { code: any; message: any }) {
         console.log(error.code);
         console.log(error.message);
         errorHandleFunction(error.message);
@@ -102,7 +102,7 @@ export class Database {
         this.hasUser(uid, userData);
         // this._registrationUser(uid, userData);
       })
-      .catch(function (error) {
+      .catch(function(error) {
         console.log(error.code);
         console.log(error.message);
         errorHandleFunction(error.message);
@@ -113,7 +113,7 @@ export class Database {
     this.firebase
       .auth()
       .signInWithEmailAndPassword(email, password)
-      .catch(function (error) {
+      .catch(function(error) {
         console.log(error.code);
         console.log(error.message);
         errorHandleFunction(error.message);
@@ -122,9 +122,9 @@ export class Database {
 
   protected _registrationUser(uid: string, data: object) {
     this.firebase
-    .database()
-    .ref(`User/${uid}`)
-    .set(data);
+      .database()
+      .ref(`User/${uid}`)
+      .set(data);
   }
 
   getUserInfo(uid: string, callbacks: any[]) {
@@ -132,13 +132,13 @@ export class Database {
       .database()
       .ref(`User/${uid}`)
       .once('value', (snapshot) => {
-        const dataUser = snapshot.val();
-        dataUser.key = uid;
-        callbacks.forEach((fn) => fn(dataUser));
-      },
-      (error: { code: string }) => {
-        console.log('Error: ' + error.code);
-      });
+          const dataUser = snapshot.val();
+          dataUser.key = uid;
+          callbacks.forEach((fn) => fn(dataUser));
+        },
+        (error: { code: string }) => {
+          console.log('Error: ' + error.code);
+        });
   }
 
   updateUserInfo(uid: string, data: any) {
@@ -149,7 +149,7 @@ export class Database {
       userRef.update(data);
       return;
     }
-    const fileExtension = file.name.slice(file.name.indexOf('.'));
+    const fileExtension = file.name.slice(file.name.lastIndexOf('.'));
     const storageRef = this.firebase.storage().ref(`avatars/${uid}${fileExtension}`);
 
 
@@ -177,28 +177,28 @@ export class Database {
       .once('value', (snapshot) => snapshot);
     const dataUser: any = dat.val() || [];
     const keyList: any = Object.entries(dataUser)
-    .map(async (item: any) => {
-      const trans: any = await this.firebase
-      .database()
-      .ref(`Transactions/${item[0]}`)
-      .once('value', (snapshot) => snapshot);
+      .map(async (item: any) => {
+        const trans: any = await this.firebase
+          .database()
+          .ref(`Transactions/${item[0]}`)
+          .once('value', (snapshot) => snapshot);
         item[0] = trans.val();
         return item;
-    });
+      });
 
     await Promise.all(keyList).then(async (data) => {
       const value: any = await data.filter((item: any) => item[0] !== null && item[1].state === 'approve')
-      .map((item: any) => item[0])
-      .map(async (item: any) => {
-        item.uid = uid;
-        item.toUserList = Object.entries(item.toUserList);
-        const request: any = await this.firebase
-          .database()
-          .ref(`Groups/${item.groupID}`)
-          .once('value', (snapshot) => snapshot);
-        item.groupTitle = request.val().title;
-        return item;
-      });
+        .map((item: any) => item[0])
+        .map(async (item: any) => {
+          item.uid = uid;
+          item.toUserList = Object.entries(item.toUserList);
+          const request: any = await this.firebase
+            .database()
+            .ref(`Groups/${item.groupID}`)
+            .once('value', (snapshot) => snapshot);
+          item.groupTitle = request.val().title;
+          return item;
+        });
 
       await Promise.all(value).then((data) => {
         data.reverse();
@@ -216,11 +216,11 @@ export class Database {
     const keyList: any = Object.entries(dataUser)
       .map(async (item: any) => {
         const groups: any = await this.firebase
-        .database()
-        .ref(`Groups/${item[0]}`)
-        .once('value', (snapshot) => snapshot);
-          item[2] = groups.val();
-          return item;
+          .database()
+          .ref(`Groups/${item[0]}`)
+          .once('value', (snapshot) => snapshot);
+        item[2] = groups.val();
+        return item;
       });
     const currentGroups: any = await this.firebase
       .database()
@@ -272,9 +272,9 @@ export class Database {
     this.firebase
       .auth()
       .signOut()
-      .then(function () {
+      .then(function() {
         console.log('Signout Succesfull');
-      }, function (error) {
+      }, function(error) {
         console.log('Signout Failed');
         console.log(error.code);
         console.log(error.message);
@@ -347,14 +347,14 @@ export class Database {
     const userIdAuthor: string = data.userId;
 
     this.firebase
-        .database()
-        .ref(`User/${data.userId}/groupList`)
-        .once('value', (snapshot) => {
-          console.log('User/${data.userId}/groupList', snapshot.val());
-          if (!snapshot.val()) {
-            currentGroup = true;
-          }
-        });
+      .database()
+      .ref(`User/${data.userId}/groupList`)
+      .once('value', (snapshot) => {
+        console.log('User/${data.userId}/groupList', snapshot.val());
+        if (!snapshot.val()) {
+          currentGroup = true;
+        }
+      });
 
     const sendDataInDB = (data: any) => {
       const userObj: any = {};
@@ -449,10 +449,10 @@ export class Database {
         data.groupId = snapshot.key;
         addModalGroupData(data);
       }).then(() => {
-        const userList = Object.keys(data.dataGroup.userList);
+      const userList = Object.keys(data.dataGroup.userList);
 
-        userList.forEach((user: string) => {
-          this.firebase
+      userList.forEach((user: string) => {
+        this.firebase
           .database()
           .ref(`User/${user}`)
           .once('value', (snapshot) => {
@@ -460,8 +460,8 @@ export class Database {
             data.userId = snapshot.key;
             addModalUserData(data);
           });
-        });
       });
+    });
   }
 
   getGroupList(handlerFunc: any): void {
@@ -475,7 +475,7 @@ export class Database {
     const base = this.firebase.database();
 
     return ((snapshot: any) => {
-      const userLIstInGroup =  Object.keys(snapshot.val().userList);
+      const userLIstInGroup = Object.keys(snapshot.val().userList);
 
       if (userLIstInGroup.includes(this.uid)) {
         const groupKey = snapshot.key;
@@ -533,15 +533,15 @@ export class Database {
       });
 
     this.firebase
-    .database()
-    .ref(`User/${userId}/groupList/${groupId}`)
-    .remove(error => {
-      if (error) {
-        console.log(error.message);
-      } else {
-        console.log('Deleted  group from userList successful');
-      }
-    });
+      .database()
+      .ref(`User/${userId}/groupList/${groupId}`)
+      .remove(error => {
+        if (error) {
+          console.log(error.message);
+        } else {
+          console.log('Deleted  group from userList successful');
+        }
+      });
   }
 
   removeGroup(groupId: string) {
@@ -554,23 +554,23 @@ export class Database {
           const userList = Object.keys(snapshot.val().userList);
           userList.forEach((user) => {
             this.firebase
-            .database()
-            .ref(`User/${user}/groupList/${groupId}`)
-            .remove(error => {
-              if (error) {
-                console.log(error.message);
-              } else {
-                console.log('Deleted group in user successful');
-              }
-            });
+              .database()
+              .ref(`User/${user}/groupList/${groupId}`)
+              .remove(error => {
+                if (error) {
+                  console.log(error.message);
+                } else {
+                  console.log('Deleted group in user successful');
+                }
+              });
           });
         } else {
           console.log('Group not found, delete users unsuccessful');
         }
         return snapshot.val();
       }).then((snapshot) => {
-        if (snapshot.val()) {
-          this.firebase
+      if (snapshot.val()) {
+        this.firebase
           .database()
           .ref(`Groups/${groupId}`)
           .remove(error => {
@@ -580,10 +580,10 @@ export class Database {
               console.log('Deleted group successful');
             }
           });
-        } else {
-          console.log('Group not found');
-        }
-      });
+      } else {
+        console.log('Group not found');
+      }
+    });
   }
 
   countGroupsInvite(setNotificationMark: { (type: TypeOfNotifications, num: number): void; (arg0: TypeOfNotifications, arg1: number): void; }): void {
@@ -687,7 +687,7 @@ export class Database {
   }
 
   messageHandler = (renderMessage: (arg0: IMessage) => void,
-    setUserData: (arg0: { messageId: any; key: any; name: any; avatar: any; isReceive: boolean; }) => void) => {
+                    setUserData: (arg0: { messageId: any; key: any; name: any; avatar: any; isReceive: boolean; }) => void) => {
 
     const uid = this.uid;
     const base = this.firebase.database();
@@ -1094,7 +1094,7 @@ export class Database {
       transRef.child(`${transID}`)
       .once('value', (snapshot) => {
         const trans = snapshot.val();
-        if (trans.state !== 'opened') return; 
+        if (trans.state !== 'opened') return;
         const userIDList: string[] = Object.keys(snapshot.val().toUserList);
         const userList: any[] = Object.values(snapshot.val().toUserList);
         const fromUsd = Currencies.fromUSD(trans.currency);
@@ -1146,7 +1146,7 @@ export class Database {
                   });
                 });
             });
-        } else return;       
+        } else return;
       })
       .catch(error => {
         console.log('Error: ' + error.code);
@@ -1185,7 +1185,7 @@ export class Database {
         const userList: any[] = Object.keys(snapshot.val().userList);
         const userState: any[] = Object.values(snapshot.val().userList);
         userList.forEach((userID: string, index: number) => {
-          if(userState[index].state === 'approve') {
+          if (userState[index].state === 'approve') {
             this.firebase
             .database()
             .ref(`User/${userID}`)
@@ -1194,7 +1194,7 @@ export class Database {
               dataUser.key = userID;
               renderUser(trans, dataUser);
             });
-          }        
+          }
         });
       }, (error: { code: string; }) => {
         console.log('Error: ' + error.code);
@@ -1410,7 +1410,7 @@ export class Database {
         balance *= currencyRate;
         const data = {
           balance: balance,
-          groupId: groupId
+          groupId: groupId,
         };
         funcForRender(data);
 
@@ -1422,6 +1422,77 @@ export class Database {
           errorHandler(error.message);
         }
       });
+  }
+
+  getDataForGraphGroupBalance(groupId: string, uid: string, funcHandler: (graphData: any) => void, errorHandler?: (message: string) => void) {
+    this.firebase
+      .database()
+      .ref(`Groups/${groupId}`)
+      .once('value', snapshot => {
+        const userList: any = snapshot.val().userList;
+
+        const usersQuery = Object.keys(userList)
+          .map(userId => (userList[userId].state === 'approve') ? userId : null)
+          .filter(userId => userId)
+          .map(userId => this.getUserById(userId));
+
+        Promise.all(usersQuery)
+          .then(userInfoArray => {
+            const graphData: { [key: string]: any; } = {};
+            const groupData: { [key: string]: string } = {groupTitle: snapshot.val().title};
+
+            userInfoArray.forEach((userInfo) => {
+              graphData[userInfo.key] = {
+                key: userInfo.key,
+                name: userInfo.val().name,
+                account: userInfo.val().account,
+                avatar: userInfo.val().avatar,
+                userBalance: 0,
+              };
+              if (userInfo.key === uid) {
+                groupData.currency = userInfo.val().currency;
+              }
+            });
+
+            return [graphData, groupData];
+          })
+          .then(graphData => {
+            const transactionList: string[] = snapshot.val().transactions || [];
+            const transQuery = transactionList.map(transId => this.getTransactionById(transId));
+
+            Promise.all(transQuery)
+              .then(transInfoArray => {
+                return transInfoArray.map(transData => transData.val());
+              })
+              .then(transArray => {
+                transArray.forEach(trans => {
+                  graphData[0][trans.userID].userBalance += trans.totalCost;
+
+                  const toUserList = trans.toUserList;
+                  Object.keys(toUserList).forEach((userId) => {
+                    graphData[0][userId].userBalance -= toUserList[userId].cost;
+                  });
+                });
+                return [Object.keys(graphData[0]).map(userId => graphData[0][userId]), graphData[1]];
+              })
+              .then(data => {
+                funcHandler(data);
+              })
+              .catch(error => {
+                if (errorHandler) {
+                  errorHandler(error.message);
+                } else {
+                  console.log(error);
+                }
+              });
+          });
+      });
+  }
+
+  getUserById(userId: string) {
+    return this.firebase.database()
+      .ref(`User/${userId}`)
+      .once('value', snapshot => snapshot);
   }
 
   getGroupById(groupID: string): any {
@@ -1440,7 +1511,7 @@ export class Database {
       });
   }
 
-  getBalanceForUserInGroup(userId: string, groupId: string, currencyRate: number = 1, funcForRender: (data: any) => void, errorHandler?: (message: string) => void) {
+  getBalanceForUserInGroup(userId: string, groupId: string, funcForRender: (data: any) => void, errorHandler?: (message: string) => void) {
     const base = this.firebase.database();
     let balance: number = 0;
     base.ref(`Groups/${groupId}/`)
@@ -1475,18 +1546,13 @@ export class Database {
       base.ref(`User/${userId}/currency`)
       .once('value', (snapshot) => {
         const curr = snapshot.val();
-        const fromUsd = Currencies.fromUSD(curr);
-
-        fromUsd(balance)
-          .then((resBalance) => {
-            const data = {
-              balance: resBalance,
-              groupId: groupId,
-              userId: userId,
-              currency: curr,
-            };
-            funcForRender(data);
-          });
+        const data = {
+          balance: balance,
+          groupId: groupId,
+          userId: userId,
+          currency: curr,
+        };
+        funcForRender(data);
       })
       .catch(error => {
         console.log(error.code);
@@ -1497,7 +1563,7 @@ export class Database {
       });
   }
 
-  getBalanceForUserTotal(userID: string, currencyRate: number = 1, funcForRender: (balance: number, currency: string) => void, errorHandler?: (message: string) => void) {
+  getBalanceForUserTotal(userID: string, funcForRender: (balance: number, currency: string) => void, errorHandler?: (message: string) => void) {
     console.log('getBalanceForUserTotal ...');
     const base = this.firebase.database();
     let balance: number = 0;
@@ -1525,11 +1591,7 @@ export class Database {
         base.ref(`User/${userID}/currency`)
           .once('value', (snapshot) => {
             const curr = snapshot.val();
-            const fromUsd = Currencies.fromUSD(curr);
-            fromUsd(balance)
-              .then((resBalance: number) => {
-                funcForRender(resBalance, curr);
-              });
+            funcForRender(balance, curr);
           });
       })
       .catch(error => {
@@ -1563,20 +1625,20 @@ export class Database {
   }
 
   isAccountName(accountName: string) {
-      return this.firebase.database()
-        .ref('User')
-        .orderByChild('account')
-        .equalTo(accountName)
-        .once('value', snapshot => snapshot);
+    return this.firebase.database()
+      .ref('User')
+      .orderByChild('account')
+      .equalTo(accountName)
+      .once('value', snapshot => snapshot);
   }
 
   getUserCurrentCurrency(uid: string, callback: any, innerCallback: any) {
     this.firebase.database()
-    .ref(`User/${uid}/currency`)
-    .once('value', async snapshot => {
-      const data = snapshot.val();
-      callback(innerCallback, data);
-    });
+      .ref(`User/${uid}/currency`)
+      .once('value', async snapshot => {
+        const data = snapshot.val();
+        callback(innerCallback, data);
+      });
   }
 
   createBasicTables() {

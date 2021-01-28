@@ -1,0 +1,25 @@
+@import "./src/scss/_misc/mixins";
+@import "../_misc/variables.scss";
+
+.images-for-canvas {
+  position: relative;
+  width: 100%;
+  height: rem(30px);
+
+  .wr {
+    position: absolute;
+    top: calc(50% - 15px);
+    width: rem(30px);
+    height: rem(30px);
+    overflow: hidden;
+    border-radius: 50%;
+
+    img {
+      width: rem(30px);
+    }
+  }
+}
+
+.chart-wrapper {
+  width: 100%;
+}

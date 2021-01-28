@@ -5,10 +5,8 @@ import { getFormData } from '../../Util/getFormData';
 import { Modal } from 'bootstrap';
 import { eventForContactsList } from '../Contacts/eventForContactsList';
 import { onClickContactInContactsList } from '../Contacts/onClickContactInContactsList';
-import { stringify } from 'querystring';
 
 const defaultGroupLogo = require('../../../assets/images/default-group-logo.png');
-const defaultUserAvatar =  require('../../../assets/images/default-user-avatar.jpg');
 
 export class MyGroups extends Page {
   onCreateNewGroup: any;
