@@ -11,6 +11,7 @@ import { renderTransCardHTML } from './renderTransCardHTML';
 import { renderCheckedMember } from './renderCheckedMember';
 import { renderNonCheckedMember } from './renderNonCheckedMember';
 import { changeBalanceStyle } from './changeBalanceStyle';
+import { Currencies } from '../../Classes/Currencies';
 
 export class TransactionsList extends Page {
   onChangeState: any;
@@ -37,32 +38,40 @@ export class TransactionsList extends Page {
   }
 
   addTotalBalance = (balance: number, currency: string): void => {
-    const balanceElement: HTMLElement = document.querySelector('.trans-list__user-balance');
-    if (balance > 0) {
-      balanceElement.innerHTML = `
-        <div>+${balance.toFixed(2)} ${currency}</div>
-      `;
-    } else {
-      balanceElement.innerHTML = `
-        <div>${balance.toFixed(2)} ${currency}</div>
-      `;
-    }
-    changeBalanceStyle(balance, balanceElement);
+    const balanceElement: HTMLElement = document.querySelector('.trans-list__user-balance'); 
+    const fromUsd = Currencies.fromUSD(currency);
+    fromUsd(balance)
+      .then((resBalance: number) => {
+        if (resBalance > 0) {
+          balanceElement.innerHTML = `
+            <div>+${resBalance.toFixed(2)} ${currency}</div>
+          `;
+        } else {
+          balanceElement.innerHTML = `
+            <div>${resBalance.toFixed(2)} ${currency}</div>
+          `;
+        }
+        changeBalanceStyle(resBalance, balanceElement);
+      });    
   }
 
   addGroupBalance = (data: any): void => {
     const balanceElement: HTMLElement = document.querySelector('.trans-list__user-balance');
-    if (data.balance > 0) {
-      balanceElement.innerHTML = `
-        <div>+${(data.balance).toFixed(2)} ${data.currency}</div>
-      `;
-    } else {
-      balanceElement.innerHTML = `
-        <div>${(data.balance).toFixed(2)} ${data.currency}</div>
-      `;
-    }
-    changeBalanceStyle(data.balance, balanceElement);
- }
+    const fromUsd = Currencies.fromUSD(data.currency);
+    fromUsd(data.balance)
+      .then((resBalance: number) => {
+        if (resBalance > 0) {
+          balanceElement.innerHTML = `
+            <div>+${resBalance.toFixed(2)} ${data.currency}</div>
+          `;
+        } else {
+          balanceElement.innerHTML = `
+            <div>${resBalance.toFixed(2)} ${data.currency}</div>
+          `;
+        }
+        changeBalanceStyle(resBalance, balanceElement);
+      });  
+  }
 
   addGroupToTransList = (groupID: string, groupTitle: string) => {
     const groups: HTMLFormElement = document.querySelector('.trans-list__groups');
