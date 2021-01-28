@@ -14,8 +14,7 @@ i18n.load('RU', messagesRU);
 i18n.load('ENG', messagesENG);
 
 const locale = loadLanguage();
-console.log('locale', locale)
-i18n.activate('RU');
+i18n.activate(locale);
 
 const defaultGroupLogo = require('../../../assets/images/default-group-logo.png');
 
