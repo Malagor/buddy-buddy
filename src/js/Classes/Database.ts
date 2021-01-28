@@ -349,7 +349,6 @@ export class Database {
         .database()
         .ref(`User/${data.userId}/groupList`)
         .once('value', (snapshot) => {
-          console.log('User/${data.userId}/groupList', snapshot.val());
           if (!snapshot.val()) {
             currentGroup = true;
           }
@@ -524,7 +523,6 @@ export class Database {
       .database()
       .ref(`Groups/${groupId}`)
       .once('value', (snapshot) => {
-        console.log('snapshot', snapshot.val());
         if (snapshot.val()) {
           const userList = Object.keys(snapshot.val().userList);
           userList.forEach((user) => {
@@ -618,14 +616,12 @@ export class Database {
         bace
         .ref(`Groups/${data.groupId}/userList/`)
         .once('value', (userList) => {
-            console.log(userList.val());
             const userListObj = userList.val();
             const arrUsers = Object.keys(userListObj);
             const userInfo = userListObj[userKey];
 
             if (arrUsers.includes(userKey)) {
               const stateUser = userListObj[userKey].state;
-              console.log(' arrUsers.userKey.state',   userInfo.state);
               if (stateUser === 'approve' || stateUser === 'pending') {
                 errorData = 'The user is in the group';
                 addNewUserInDetailGroup(userInfo, errorData);
