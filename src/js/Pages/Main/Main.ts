@@ -45,20 +45,36 @@ export class Main extends Page {
     return result;
   }
 
-  renderOneGroup(avatars: string, index: number, title: string, length: number, groupIcon: string, groupID: string, currGroup: string): void {
+  renderOneGroup(avatars: string, index: number, groupItem: any, length: number, currGroup: string): void {
     const elems: any = document.querySelectorAll('.carousel-item__inner');
     const newIndex: number = length - index - 1;
     const elemIndex: number = newIndex % 2 === 0 ? newIndex / 2 : (newIndex - 1) / 2;
-    console.log(groupID, currGroup);
+    const defaultGroupIcon = 'https://firebasestorage.googleapis.com/v0/b/buddy-buddy-8e497.appspot.com/o/groups%2F%D0%91%D0%B5%D0%B7%20%D0%BD%D0%B0%D0%B7%D0%B2%D0%B0%D0%BD%D0%B8%D1%8F%20(1).png?alt=media&token=c8a9f87d-36be-4a16-8a27-e6850d5accc8';
+
+    const currentGroupHTML: string = groupItem.groupID === currGroup 
+    ? `<p class="slider__current-group">
+        <span>Current</span>
+      </p>`
+    : '';
+
+    const descriptionHTML: string = groupItem.description 
+    ? `<p class="slider__item__title--description">
+        <span>${groupItem.description}</span>
+      </p>`
+    : ''; 
 
     const group: string = `
     <div class="main__slider__item">
       <div class="slider__item__img">
-        <img src="${groupIcon}" alt="group icon" width="100%">
+        <img src="${groupItem.icon ? groupItem.icon : defaultGroupIcon}" alt="group icon" width="95%">
+        <div class="item__img-title-wrapper">
+          <p class="slider__item__title">
+            <span>${groupItem.title}</span>
+          </p>
+          ${currentGroupHTML} 
+        </div>
       </div>
-      <p class="slider__item__title">
-        <span>${title}</span>
-      </p>
+      ${descriptionHTML} 
       <div class="slider__item__avatars">
       ${avatars}
       </div>

@@ -84,7 +84,7 @@
 
 .main__carousel {
   width: 100%;
-  height: 11rem;
+  height: 13rem;
   padding: 0;
 
 @include laptop {
@@ -118,16 +118,26 @@
 }
 
 .slider__item__img {
+  position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
   width: 100%;
-  height: 57.5%;
+  height: 50%;
   overflow: hidden;
   background-color: rgba(255, 255, 255, 1);
 
-  .material-icons {
-    font-size: 4.3rem;
+  .item__img-title-wrapper {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 85%;
+    height: 85%;
+    padding: 0.2rem;
+    background-color: rgba(0, 0, 0, 0.7);
+    border-radius: 10px;
   }
 }
 
@@ -196,7 +206,8 @@
   border-radius: 50%;
 }
 
-.slider__item__title {
+.slider__item__title,
+.slider__item__title--description {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -208,6 +219,27 @@
     width: auto;
     font-size: 0.9rem;
     text-align: center;
+    color: #ffffff;
+  }
+
+  &--description > span {
+    color: #000000;
+  }
+}
+
+.slider__current-group {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: rem(13px);
+  margin-bottom: 0;
+  line-height: 0.6rem;
+
+  span {
+    width: auto;
+    font-size: 0.6rem;
+    text-align: center;
+    color: #ffffff;
   }
 }
 

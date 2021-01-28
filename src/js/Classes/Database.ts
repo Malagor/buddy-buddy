@@ -248,7 +248,7 @@ export class Database {
             return it;
           });
           await Promise.all(elem).then((userList: any) => {
-            if (userList.length) callback2(callback(userList), index, item.title, value.length, item.icon, item.groupID, currentUserGroup);
+            if (userList.length) callback2(callback(userList), index, item, value.length, currentUserGroup);
           });
         });
     });
