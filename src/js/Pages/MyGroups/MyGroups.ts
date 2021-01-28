@@ -247,7 +247,7 @@ export class MyGroups extends Page {
   modalGroupDetail() {
     return `
       <div class="modal" id="modalGroupDetail" tabindex="-1" role="dialog">
-        <div class="modal-dialog" role="document">
+        <div class="modal-dialog container-group-detail" role="document">
           <div class="modal-content">
             <div class="modal-header">
               <h5 class="modal-title">Group details</h5>

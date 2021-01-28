@@ -113,9 +113,7 @@
 #members-dropdown-menu{
   width: 96.5%;
 }
-/* ul.contacts-user-list {
-  width: 96.5%!important;
-} */
+
 .form-switch{
   margin-top: 0.5rem;
 }
@@ -172,7 +170,6 @@
     &__button{
       position: absolute;
       right: 10px;
-      /* bottom: 26px; */
       top: 35%;
     }
     &__balance{
@@ -199,9 +196,9 @@
 
 }
 
- .modal-dialog {
-  max-width: 90%;
-}
+  .container-group-detail{
+    max-width: 90%;
+  }
 
 @media(max-width: 450px) {
   .form-title{
