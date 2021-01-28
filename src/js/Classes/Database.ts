@@ -1546,18 +1546,13 @@ export class Database {
       base.ref(`User/${userId}/currency`)
       .once('value', (snapshot) => {
         const curr = snapshot.val();
-        const fromUsd = Currencies.fromUSD(curr);
-
-        fromUsd(balance)
-          .then((resBalance) => {
-            const data = {
-              balance: resBalance,
-              groupId: groupId,
-              userId: userId,
-              currency: curr,
-            };
-            funcForRender(data);
-          });
+        const data = {
+          balance: balance,
+          groupId: groupId,
+          userId: userId,
+          currency: curr,
+        };
+        funcForRender(data);
       })
       .catch(error => {
         console.log(error.code);
@@ -1596,11 +1591,7 @@ export class Database {
         base.ref(`User/${userID}/currency`)
           .once('value', (snapshot) => {
             const curr = snapshot.val();
-            const fromUsd = Currencies.fromUSD(curr);
-            fromUsd(balance)
-              .then((resBalance: number) => {
-                funcForRender(resBalance, curr);
-              });
+            funcForRender(balance, curr);
           });
       })
       .catch(error => {
