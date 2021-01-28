@@ -67,29 +67,29 @@
 }
 
 .form-title {
-  padding: 0;
   margin: 0;
   margin-top: rem(8px);
+  padding: 0;
 }
 
 .input-logo-group {
-  z-index: 1;
   position: absolute;
-  width: rem(20px);
   right: 0;
   bottom: -4px;
+  z-index: 1;
+  width: rem(20px);
   opacity: 0;
 }
 
-.modal-dropdown{
+.modal-dropdown {
   padding: rem(9px) rem(7px) rem(7px) rem(7px);
 }
 
-.modal-btn-primary{
+.modal-btn-primary {
   margin: rem(8px);
 }
 
-.modal-wrapper-btn{
+.modal-wrapper-btn {
   margin: 0;
   padding: 0;
 }
@@ -110,7 +110,7 @@
   }
 }
 
-#members-dropdown-menu{
+#members-dropdown-menu {
   width: 96.5%;
 }
 
@@ -118,28 +118,28 @@
   margin-top: 0.5rem;
 }
 
-.card-detail{
+.card-detail {
   padding-top: rem(12px);
 
-  &__img-avatar{
+  &__img-avatar {
     display: block;
-    margin: auto;
     width: rem(85px);
     height: rem(85px);
+    margin: auto;
     border-radius: 50%;
 
-    &--user{
+    &--user {
       width: rem(60px);
       height: rem(60px);
       border-radius: 50%;
     }
   }
 
-  &__box-description{
+  &__box-description {
     margin: 0 1rem 0 1rem ;
   }
 
-  &__user-list{
+  &__user-list {
     margin: 1rem;
   }
 }
@@ -151,7 +151,7 @@
   align-items: center;
   margin: rem(8px) 0 rem(16px) 0;
 
-  &--author{
+  &--author {
     background-color: rgba(128, 128, 128, 0.616);
   }
 
@@ -172,9 +172,6 @@
       right: 10px;
       top: 35%;
     }
-    &__balance{
-      margin: 0 4rem 0 auto;
-
       &--negative {
         color: red;
       }
@@ -182,7 +179,7 @@
       &--positive {
         color: green;
       }
-    } 
+     
     
     &__button-container{
       position: absolute;
@@ -193,7 +190,6 @@
     &__button-confirmation{
       padding: 3px;
     }
-
 }
 
   .container-group-detail{
@@ -201,10 +197,10 @@
   }
 
 @media(max-width: 450px) {
-  .form-title{
+  .form-title {
     width: 60%;
   }
-  .form-check-label{
+  .form-check-label {
     font-size: 0.7rem;
   }
 }
