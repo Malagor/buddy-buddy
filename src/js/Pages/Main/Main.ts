@@ -122,8 +122,8 @@ export class Main extends Page {
         </a>
       </div>`;
 
-      elem.querySelectorAll('.arrow-color').forEach((item: any) => {
-        if (dataLength < 3) item.classLis.add('arrows-visibility');
+      elem.querySelectorAll('.arrows-color').forEach((item: any) => {
+        if (dataLength < 3) item.classList.add('arrows-visibility');
       });
     }
   }
