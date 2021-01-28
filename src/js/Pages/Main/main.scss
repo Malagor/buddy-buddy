@@ -6,16 +6,19 @@
   font-size: 1.1rem;
   text-align: end;
 
-  @include phones {
+@include phones {
     font-size: 1.35rem;
   }
-  @include tablets {
+
+@include tablets {
     font-size: 1.4rem;
   }
-  @include laptop {
+
+@include laptop {
     font-size: 1.8rem;
   }
-  @include desktop {
+
+@include desktop {
     font-size: 1.8rem;
   }
 }
@@ -24,16 +27,19 @@
 .main--font-size {
   font-size: 0.9rem;
 
-  @include phones {
+@include phones {
     font-size: 0.95rem;
   }
-  @include tablets {
+
+@include tablets {
     font-size: 1rem;
   }
-  @include laptop {
+
+@include laptop {
     font-size: 1rem;
   }
-  @include desktop {
+
+@include desktop {
     font-size: 1rem;
   }
 }
@@ -46,13 +52,15 @@
   font-size: 1.2rem;
   text-align: center;
 
-  @include tablets {
+@include tablets {
     font-size: 1.4rem;
   }
-  @include laptop {
+
+@include laptop {
     font-size: 1.5rem;
   }
-  @include desktop {
+
+@include desktop {
     font-size: 1.5rem;
   }
 }
@@ -79,10 +87,11 @@
   height: 11rem;
   padding: 0;
 
-  @include laptop {
+@include laptop {
     height: 12rem;
   }
-  @include desktop {
+
+@include desktop {
     height: 12rem;
   }
 }
@@ -347,4 +356,8 @@
   font-size: rem(10px);
   text-align: center;
   opacity: 0.8;
+}
+
+.main-footer {
+  height: 2rem;
 }

@@ -271,6 +271,8 @@ export class Main extends Page {
             </div>
           </div>
         </div>
+        <div class="block__footer main-footer">
+        </div>
       </div>
     </div>`;
   }
