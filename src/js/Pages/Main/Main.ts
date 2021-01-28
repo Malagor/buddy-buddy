@@ -2,6 +2,7 @@ import { Currencies } from '../../Classes/Currencies';
 import { Page } from '../../Classes/Page';
 export class Main extends Page {
   counter: number = 0;
+  getBalanceForSliderGroup: (groupID: string) => void;
 
   static create(element: string): Main {
     const page: Main = new Main(element);
@@ -23,8 +24,8 @@ export class Main extends Page {
       if (list.length >= 3) {
         if (ind < 3) {
           result += `
-          <div class="avatars__wrapper--slider">
-            <img src="${item}" alt="user avatar" width="25px">
+          <div class="avatars__wrapper--slider ${ind === 0 && list.length === 3 ? 'avatars__wrapper--slider-special' : ''}">
+            <img src="${item}" alt="user avatar">
           </div>
           `;
         } else if (ind === 3) {
@@ -37,7 +38,7 @@ export class Main extends Page {
       } else {
         result += `
         <div class="avatars__wrapper--single">
-          <img src="${item}" alt="user avatar" width="25px">
+          <img src="${item}" alt="user avatar">
         </div>
         `;
       }
@@ -45,7 +46,7 @@ export class Main extends Page {
     return result;
   }
 
-  renderOneGroup(avatars: string, index: number, groupItem: any, length: number, currGroup: string): void {
+  renderOneGroup = (avatars: string, index: number, groupItem: any, length: number, currGroup: string): void => {
     const elems: any = document.querySelectorAll('.carousel-item__inner');
     const newIndex: number = length - index - 1;
     const elemIndex: number = newIndex % 2 === 0 ? newIndex / 2 : (newIndex - 1) / 2;
@@ -56,12 +57,6 @@ export class Main extends Page {
         <span>Current</span>
       </p>`
     : '';
-
-    const descriptionHTML: string = groupItem.description 
-    ? `<p class="slider__item__title--description">
-        <span>${groupItem.description}</span>
-      </p>`
-    : ''; 
 
     const group: string = `
     <div class="main__slider__item">
@@ -74,7 +69,12 @@ export class Main extends Page {
           ${currentGroupHTML} 
         </div>
       </div>
-      ${descriptionHTML} 
+      <p class="slider__item__title--description">
+        <span>${groupItem.description ? groupItem.description : 'No description.'}</span>
+      </p> 
+      <p class="slider__item__title--description ${groupItem.groupID}">
+      <span></span>
+      </p>
       <div class="slider__item__avatars">
       ${avatars}
       </div>
@@ -90,6 +90,24 @@ export class Main extends Page {
         ? elems[elemIndex].insertAdjacentHTML('beforeend', group)
         : elems[elemIndex].insertAdjacentHTML('afterbegin', group);
     }
+
+    this.getBalanceForSliderGroup(groupItem.groupID);
+  }
+
+  renderGroupBalance(data: any) {
+    const group: HTMLElement = document.querySelector(`.${data.groupId}`);
+    const balanceQuery = Currencies.fromUSD(data.currency);
+    balanceQuery(data.balance)
+    .then((sum: number) => {
+      const HTMLElem = group.firstElementChild;
+      HTMLElem.textContent = `${sum.toFixed(2)} ${data.currency}`;
+      if (sum > 0) {
+        HTMLElem.textContent = '+' + HTMLElem.textContent;
+        HTMLElem.classList.add('plus-cost');
+      }
+      if (sum < 0) HTMLElem.textContent = '-' + HTMLElem.textContent;
+      HTMLElem.classList.add('minus-cost');
+    })
   }
 
   renderCurrenciesTable(balance: number): void {
