@@ -5,7 +5,6 @@ import { getFormData } from '../../Util/getFormData';
 import { Modal } from 'bootstrap';
 import { eventForContactsList } from '../Contacts/eventForContactsList';
 import { onClickContactInContactsList } from '../Contacts/onClickContactInContactsList';
-import { stringify } from 'querystring';
 
 const defaultGroupLogo = require('../../../assets/images/default-group-logo.png');
 const defaultUserAvatar =  require('../../../assets/images/default-user-avatar.jpg');
@@ -13,9 +12,8 @@ const defaultUserAvatar =  require('../../../assets/images/default-user-avatar.j
 export class MyGroups extends Page {
   onCreateNewGroup: any;
   deleteGroup: any;
-  //deleteMemberFromGroup: any;
   onAddMember: any;
-  addMemberInDetailGroup: any
+  addMemberInDetailGroup: any;
   fillContactsList: any;
   onAddInfoForModalDetailGroup: any;
   addBalanceInGroupPage: any;
@@ -98,20 +96,20 @@ export class MyGroups extends Page {
 
     const cardGroup: HTMLElement = document.getElementById(`${data.groupKey}`);
     const divForUserList: HTMLElement = cardGroup.querySelector('#userList');
-    
+
     let countApproveUsers: number = 0;
     const participantsImg: string[] = [];
 
     listUsers.forEach((user: any) => {
-      const stateUser = user.groupList[data.groupKey].state
-      if(stateUser === 'approve') {
-      
+      const stateUser = user.groupList[data.groupKey].state;
+      if (stateUser === 'approve') {
+
         if (countApproveUsers < NUM_OF_IMG_IN_GROUP_CARD) {
           participantsImg.push(`<img class="card-group__img-avatar--mini" src="${user.avatar}" alt="icon">`);
         }
         countApproveUsers += 1;
       }
-   
+
     });
 
     if (countApproveUsers > NUM_OF_IMG_IN_GROUP_CARD) {
@@ -307,7 +305,6 @@ export class MyGroups extends Page {
       }
     });
 
-
     form.onsubmit = (event) => {
 
       if (!form.checkValidity()) {
@@ -357,14 +354,11 @@ export class MyGroups extends Page {
 
   addInfoForModalDetailGroup(data: any) {
     const divModalContent =  document.getElementById('modalContent');
-    //const btnSaveModal = document.querySelector('#buttonSaveModal');
 
     const dateCreate: Date = new Date(data.dataGroup.dateCreate);
     const dataCreateGroup: string = dateCreate.toLocaleString();
     const dateClose: Date = new Date(data.dataGroup.dateClose);
     const dataCloseGroup: string = dateClose.toLocaleString();
-
-    //btnSaveModal.classList.add('group-hidden');
 
     divModalContent.innerHTML = `
       <div class="card mb-3 card-detail">
@@ -392,8 +386,6 @@ export class MyGroups extends Page {
         <div id="modalUserListPending" class="card-detail__user-list">
           <p>Pending</p>
         </div>
-
-
       </div>
     `;
   }
@@ -404,8 +396,8 @@ export class MyGroups extends Page {
     divForBalanceModalCard.insertAdjacentHTML('beforeend', html);
   }
 
-  addModalUserData = (data: any) => { 
-    const thisUser = data.thisUid;   
+  addModalUserData = (data: any) => {
+    const thisUser = data.thisUid;
     const userId = data.userId;
     const author = data.dataGroup.author;
     const stateUser = data.user.groupList[data.groupId].state;
@@ -416,60 +408,33 @@ export class MyGroups extends Page {
       userId: data.userId,
       groupId: data.groupId
     };
-    let htmlButtonDeleteUser = null;
+    let isBtmForDeleteUser = false;
 
-
-    const addEventListenerFromButtonDelUser = () => {
+    const addEventListenerFromButtonDelUserInModal = (data: any) => {
       if (author === thisUser && userId !== author) {
-        const buttonDeleteUser = document.querySelector(`[btn-data-id-user="${data.userId}"]`)
-  
-        buttonDeleteUser.addEventListener('click', (e) => {
-    
-          const userId = e['toElement']['attributes']['btn-data-id-user']['value']
-          const groupId = e['toElement']['attributes']['btn-data-id-group']['value']
-  
-          const data = {
-            userId: userId,
-            groupId: groupId
-          }
-          
-          this.getUserBalanceInGroup(data)
-        })
+        this._addEventListenerFromButtonDelUser(data);
       }
-    }
+    };
 
     if (author === thisUser && userId !== author) {
-      htmlButtonDeleteUser = `<button type="button" class="btn-close" btn-data-id-user="${data.userId}" btn-data-id-group="${data.groupId}" aria-label="Close"></button>`;
+      isBtmForDeleteUser = true;
     }
-
-    const html = `
-      <div data-user-id-for-group=${data.userId} class="card modal-detail">
-        <img class="modal-detail__img" src="${data.user.avatar}" alt="avatar">
-        <div>
-          <p  class="modal-detail__name">${data.user.name}</p>
-          <p  class="modal-detail__account">${data.user.account}</p>
-        </div>
-        <div class="modal-detail__button">
-          ${ htmlButtonDeleteUser ?  htmlButtonDeleteUser : ''}
-        </div>
-      </div>
-    `;
+    const html = this._createUserCardFroModalDetail(data, isBtmForDeleteUser);
 
     const htmlBnt = `
       <div class="btn-group modal-detail__button-container" role="group" aria-label="Basic mixed styles example">
         <button id="btn-prove" type="button" class="btn btn btn-success modal-detail__button-confirmation">Prove</button>
         <button id="btn-disprove" type="button" class="btn btn-danger modal-detail__button-confirmation">Disprove</button>
       </div>
-    `
-  
+    `;
 
-    if(stateUser === 'approve') {
-      divForUserListApprove.insertAdjacentHTML('beforeend', html);  
-      addEventListenerFromButtonDelUser()
-      this.addUserBalanceInModalCardUser(dataForBalanceInModalCard);    
-    } else if(stateUser === 'pending') {
-      divForUserListPending.insertAdjacentHTML('beforeend', html); 
-      addEventListenerFromButtonDelUser() 
+    if (stateUser === 'approve') {
+      divForUserListApprove.insertAdjacentHTML('beforeend', html);
+      addEventListenerFromButtonDelUserInModal(data);
+      this.addUserBalanceInModalCardUser(dataForBalanceInModalCard);
+    } else if (stateUser === 'pending') {
+      divForUserListPending.insertAdjacentHTML('beforeend', html);
+      addEventListenerFromButtonDelUserInModal(data);
     }
 
     // выделение автора группы при прорисовке
@@ -479,25 +444,25 @@ export class MyGroups extends Page {
     }
 
     // если пользователь не подтвержден
-    if(stateUser ===  'pending' &&  userId === thisUser) {
+    if (stateUser ===  'pending' &&  userId === thisUser) {
       const cardThisUser = document.querySelector(`[data-user-id-for-group="${userId}"]`);
-      cardThisUser.insertAdjacentHTML('beforeend', htmlBnt); 
-      
-      const btnProve = document.querySelector('#btn-prove')
-      const btnDisprove = document.querySelector('#btn-disprove')
+      cardThisUser.insertAdjacentHTML('beforeend', htmlBnt);
+
+      const btnProve = document.querySelector('#btn-prove');
+      const btnDisprove = document.querySelector('#btn-disprove');
 
       btnProve.addEventListener('click', () => {
         console.log('btnProve');
-        this.addUserToGroup(data)
-      })
+        this.addUserToGroup(data);
+      });
 
       btnDisprove.addEventListener('click', () => {
         console.log('btnDisprove');
-        this.deleteUserToGroup(data)
-      })
+        this.deleteUserToGroup(data);
+      });
     }
 
-    if(author === thisUser && !document.querySelector('#addUserInGroupDetail')) {
+    if (author === thisUser && !document.querySelector('#addUserInGroupDetail')) {
 
       const html = `
         <div id="addUserInGroupDetail" class="row ">
@@ -515,93 +480,96 @@ export class MyGroups extends Page {
           </div>
 
         </div>
-      `
+      `;
       divModalContent.insertAdjacentHTML('beforeend', html); //
 
       document.querySelector('.contacts-user-list-detail').innerHTML = ''; //
       this.fillContactsList('.contacts-user-list-detail'); //
 
 
-    // Auto-filter contacts in member group list
+      // Auto-filter contacts in member group list
       const formMembers: HTMLInputElement = document.querySelector('#activeContact');
       eventForContactsList(formMembers);
 
-
-      onClickContactInContactsList('.contacts-user-list-detail') //
-
+      onClickContactInContactsList('.contacts-user-list-detail'); //
 
       const addGroupMember = document.querySelector('#addNewGroupMemberInDetail');
       addGroupMember.addEventListener('click', (ev) => {
-        document.querySelector('.modal-error-text').innerHTML = ''
-        
+        document.querySelector('.modal-error-text').innerHTML = '';
+
         ev.preventDefault();
         // console.log('Add new Member');
         const member: HTMLFormElement = document.querySelector('#activeContact');
 
         // проверки по введенным данным в интуп
-        let userAccount = null
+        let userAccount = null;
         const myRe = /@.+$/gm;
 
         try {
-          userAccount = myRe.exec(member.value)[0].slice(1); 
-          if(userAccount.slice(-1) === '>') {
-            userAccount =  userAccount.slice(0, -1)
+          userAccount = myRe.exec(member.value)[0].slice(1);
+          if (userAccount.slice(-1) === '>') {
+            userAccount =  userAccount.slice(0, -1);
           }
         } catch {
-          const textError = 'The user account was entered incorrectly, for example: @account'
-          this.addTextInHtmlBlock('.modal-error-text', textError)
+          const textError = 'The user account was entered incorrectly, for example: @account';
+          this.addTextInHtmlBlock('.modal-error-text', textError);
         }
 
-        console.log('userAccount', userAccount);
-        
         if (userAccount) {
           const dataForAddMember = {
             account: userAccount,
             groupId: data.groupId
-          }
-          this.addMemberInDetailGroup(dataForAddMember)
+          };
+          this.addMemberInDetailGroup(dataForAddMember);
         }
-        //console.log(userAccount)
 
-        document.getElementById('activeContact').value = "";
+        document.getElementById('activeContact').value = '';
       });
     }
   }
 
   addTextInHtmlBlock(selector: string, text: string) {
-    const div = document.querySelector(selector)
-    const html = `<p>${text}</p>`
-    div.insertAdjacentHTML('beforeend', html); 
+    const div = document.querySelector(selector);
+    const html = `<p>${text}</p>`;
+    div.insertAdjacentHTML('beforeend', html);
   }
 
   addNewUserInDetailGroup = (data: any, errorData: string) => {
-    console.log('addNewUserInDetailGroup', data, errorData)
+    console.log('addNewUserInDetailGroup', data, errorData);
 
-    const addEventListenerFromButtonDelUser = () => {
-    
-        const buttonDeleteUser = document.querySelector(`[btn-data-id-user="${data.userId}"]`)
-  
-        buttonDeleteUser.addEventListener('click', (e) => {
-    
-          const userId = e['toElement']['attributes']['btn-data-id-user']['value']
-          const groupId = e['toElement']['attributes']['btn-data-id-group']['value']
-  
-          const data = {
-            userId: userId,
-            groupId: groupId
-          }
-          console.log('data__get balance', data);
-          
-          this.getUserBalanceInGroup(data)
-        })
-      
-    }
-
-    if(errorData) {
-      this.addTextInHtmlBlock('.modal-error-text', errorData)
+    if (errorData) {
+      this.addTextInHtmlBlock('.modal-error-text', errorData);
     } else {
       const divForUserListPending = document.getElementById('modalUserListPending');
-      const html = `
+      const html = this._createUserCardFroModalDetail(data, true);
+
+      divForUserListPending.insertAdjacentHTML('beforeend', html);
+      this._addEventListenerFromButtonDelUser(data);
+    }
+  }
+
+  _addEventListenerFromButtonDelUser(data: any) {
+    const buttonDeleteUser = document.querySelector(`[btn-data-id-user="${data.userId}"]`);
+
+    buttonDeleteUser.addEventListener('click', (e) => {
+
+      const userId = e['toElement']['attributes']['btn-data-id-user']['value'];
+      const groupId = e['toElement']['attributes']['btn-data-id-group']['value'];
+
+      const data = {
+        userId: userId,
+        groupId: groupId
+      };
+      console.log('data__get balance', data);
+
+      this.getUserBalanceInGroup(data);
+    });
+  }
+
+  _createUserCardFroModalDetail(data: any, isBtn: boolean = false) {
+    const htmlButtonDeleteUser = `<button type="button" class="btn-close" btn-data-id-user="${data.userId}" btn-data-id-group="${data.groupId}" aria-label="Close"></button>`;
+
+    const html = `
         <div data-user-id-for-group=${data.userId} class="card modal-detail">
           <img class="modal-detail__img" src="${data.user.avatar}" alt="avatar">
           <div>
@@ -609,26 +577,22 @@ export class MyGroups extends Page {
             <p  class="modal-detail__account">${data.user.account}</p>
           </div>
           <div class="modal-detail__button">
-            <button type="button" class="btn-close" btn-data-id-user="${data.userId}" btn-data-id-group="${data.groupId}" aria-label="Close"></button>
+            ${ isBtn ?  htmlButtonDeleteUser : ''}
           </div>
         </div>
       `;
-      divForUserListPending.insertAdjacentHTML('beforeend', html); 
-      addEventListenerFromButtonDelUser()
-    }
-
-
+    return html;
   }
-  
+
   private addUserToGroup(data: any) {
-    console.log('data_addUserToGroup',data)
-    const thisUid = data.thisUid
-    const divUserCard = document.querySelector(`[data-user-id-for-group="${thisUid}"]`)
-    const divApproveUser = document.querySelector('#modalUserListApprove')
-    
-    const userAvatar = divUserCard.querySelector('img')
-    const userName = divUserCard.querySelector('.modal-detail__name')
-    const userAccount = divUserCard.querySelector('.modal-detail__account')
+    console.log('data_addUserToGroup', data);
+    const thisUid = data.thisUid;
+    const divUserCard = document.querySelector(`[data-user-id-for-group="${thisUid}"]`);
+    const divApproveUser = document.querySelector('#modalUserListApprove');
+
+    const userAvatar = divUserCard.querySelector('img');
+    const userName = divUserCard.querySelector('.modal-detail__name');
+    const userAccount = divUserCard.querySelector('.modal-detail__account');
 
     const html = `
       <div class="card modal-detail">
@@ -638,69 +602,56 @@ export class MyGroups extends Page {
           ${userAccount.outerHTML}
         </div>
       </div>
-    `
+    `;
     const dataForChangeUserStatus = {
       userId: thisUid,
       groupId: data.groupId,
       state: 'approve'
 
-    }
-    this.changeUserStatusInGroup(dataForChangeUserStatus)
+    };
+    this.changeUserStatusInGroup(dataForChangeUserStatus);
 
-    divUserCard.remove()
-    divApproveUser.insertAdjacentHTML('beforeend', html); 
+    divUserCard.remove();
+    divApproveUser.insertAdjacentHTML('beforeend', html);
   }
 
   private deleteUserToGroup(data: any) {
-    console.log('deleteUserToGroup',data)
-    const thisUid = data.thisUid
-    const groupId = data.groupId
-    const divUserCard = document.querySelector(`[data-user-id-for-group="${thisUid}"]`)
-    const divCardGroup = document.querySelector(`#${groupId}`)
-    
+    console.log('deleteUserToGroup', data);
+    const thisUid = data.thisUid;
+    const groupId = data.groupId;
+    const divUserCard = document.querySelector(`[data-user-id-for-group="${thisUid}"]`);
+    const divCardGroup = document.querySelector(`#${groupId}`);
+
     const dataForChangeUserStatus = {
       userId: thisUid,
       groupId: groupId,
       state: 'decline'
-    }
-    this.changeUserStatusInGroup(dataForChangeUserStatus)
-    divCardGroup.classList.add('group-hidden')
-    divUserCard.remove()
+    };
+    this.changeUserStatusInGroup(dataForChangeUserStatus);
+    divCardGroup.classList.add('group-hidden');
+    divUserCard.remove();
   }
 
-/*   addContactsToList = (data: any): void => {
-    const list = document.querySelector('.contacts-user-list');
-    const html = `
-      <li class="contact-list__item" data-user-id="${data.key}">
-        <img class="contact-list__avatar" src="${data.avatar}" alt="${data.name}">
-        <span class="contact-list__name">${data.name}</span><span class="contact-list__account"><@${data.account}></span>
-      </li>
-    `;
-    list.insertAdjacentHTML('afterbegin', html);
-  } */
-
   deleteUserFromGroup = (data: any) => {
-    if(data.balance === 0) {
+    if (data.balance === 0) {
       const dataForChangeUserStatus = {
         userId: data.userId,
         groupId: data.groupId,
         state: 'decline'
-      }
-      this.changeUserStatusInGroup(dataForChangeUserStatus)
+      };
+      this.changeUserStatusInGroup(dataForChangeUserStatus);
 
-      //this.deleteMemberFromGroup(data.groupId, data.userId)
-      const divUserCard = document.querySelector(`[data-user-id-for-group="${data.userId}"]`)
-      divUserCard.remove()
+      // this.deleteMemberFromGroup(data.groupId, data.userId)
+      const divUserCard = document.querySelector(`[data-user-id-for-group="${data.userId}"]`);
+      divUserCard.remove();
     } else {
-      alert('the user\'s balance must be zero')
+      // окно что балан пользователя не ноль
+      alert('the user\'s balance must be zero');
     }
-    // окно что балан пользователя не ноль
-    console.log('data__deleteUserFromGroup', data);
-    
   }
 
   addUserBalanceInModalDetailGroup(data: any) {
-    const divCardUser = document.querySelector(`[data-user-id-for-group="${data.userId}"]`)
+    const divCardUser = document.querySelector(`[data-user-id-for-group="${data.userId}"]`);
 
     const html = `
       <div class="modal-detail__balance">
@@ -730,14 +681,10 @@ export class MyGroups extends Page {
     });
   }
 
-/*   deleteMemberGroup(data: any): void {
-    // this.deleteMemberFromGroup()
-  } */
-
   addMembersGroup(data: any): void {
     if (data) {
       const members = document.querySelector('.group-members-avatar');
-     
+
       members.insertAdjacentHTML('beforeend', `
     <div class="col-3 col-sm-2 member" data-id="${data.key}">
       <div class="member__avatar text-center">

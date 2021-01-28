@@ -85,8 +85,7 @@ export class App {
 
       this.groups = MyGroups.create('.main');
       this.groups.onCreateNewGroup = this.onCreateNewGroup.bind(this);
-      this.groups.deleteGroup = this.deleteGroup.bind(this);
-      //this.groups.deleteMemberFromGroup = this.deleteMemberFromGroup.bind(this);
+      // this.groups.deleteGroup = this.deleteGroup.bind(this);
       this.groups.onAddMember = this.onAddGroupMember.bind(this);
       this.groups.fillContactsList = this.fillContactsList.bind(this);
       this.groups.onAddInfoForModalDetailGroup = this.onAddInfoForModalDetailGroup.bind(this);
@@ -234,18 +233,18 @@ export class App {
     this.database.getBalanceForUserInGroup(userId, groupId, 1, this.groups.addUserBalanceInModalDetailGroup);
   }
 
-  getUserBalanceInGroup(data: any){
+  getUserBalanceInGroup(data: any) {
     const { userId, groupId } = data;
     this.database.getBalanceForUserInGroup(userId, groupId, 1, this.groups.deleteUserFromGroup);
   }
 
-  changeUserStatusInGroup(data: IDataChangeStatus){
-    this.database.changeStatusUser(data)
+  changeUserStatusInGroup(data: IDataChangeStatus) {
+    this.database.changeStatusUser(data);
     this.notifications.decreaseNotificationMark(TypeOfNotifications.Group);
   }
 
   addMemberInDetailGroup(data: IDataAddMember) {
-    this.database.addMemberInGroup(data, this.groups.addNewUserInDetailGroup)
+    this.database.addMemberInGroup(data, this.groups.addNewUserInDetailGroup);
   }
 
   onTransactionsPage() {
@@ -398,10 +397,6 @@ export class App {
   deleteGroup(idGroup: string) {
     this.database.removeGroup(idGroup);
   }
-
-/*   deleteMemberFromGroup(idGroup: string, userId: string) {
-    this.database.removeMemberGroup(idGroup, userId);
-  } */
 
   onAddUserToContacts(userData: ISearchUserData, errorHandler: (message: string) => void): void {
     this.database.addUserToContacts(userData, errorHandler);
