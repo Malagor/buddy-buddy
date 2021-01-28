@@ -1,7 +1,7 @@
 import firebase from 'firebase';
 import 'firebase/auth';
 import { default as CyrillicToTranslit } from 'cyrillic-to-translit-js/CyrillicToTranslit';
-import { IDataForCreateGroup } from '../Interfaces/IGroupData';
+import { IDataForCreateGroup, IDataChangeStatus, IDataAddMember } from '../Interfaces/IGroupData';
 import { ISearchUserData } from '../Pages/Contacts/Contacts';
 import { IMessage, INewMessage } from '../Pages/Messenger/Messenger';
 import { IHandlers } from './App';
@@ -350,7 +350,6 @@ export class Database {
       .database()
       .ref(`User/${data.userId}/groupList`)
       .once('value', (snapshot) => {
-        console.log('User/${data.userId}/groupList', snapshot.val());
         if (!snapshot.val()) {
           currentGroup = true;
         }
@@ -520,36 +519,11 @@ export class Database {
       .set(groupKey);
   }
 
-  removeMemberGroup(groupId: string, userId: string) {
-    this.firebase
-      .database()
-      .ref(`Groups/${groupId}/userList/${userId}`)
-      .remove(error => {
-        if (error) {
-          console.log(error.message);
-        } else {
-          console.log('Deleted user from group successful');
-        }
-      });
-
-    this.firebase
-      .database()
-      .ref(`User/${userId}/groupList/${groupId}`)
-      .remove(error => {
-        if (error) {
-          console.log(error.message);
-        } else {
-          console.log('Deleted  group from userList successful');
-        }
-      });
-  }
-
   removeGroup(groupId: string) {
     this.firebase
       .database()
       .ref(`Groups/${groupId}`)
       .once('value', (snapshot) => {
-        console.log('snapshot', snapshot.val());
         if (snapshot.val()) {
           const userList = Object.keys(snapshot.val().userList);
           userList.forEach((user) => {
@@ -582,6 +556,83 @@ export class Database {
           });
       } else {
         console.log('Group not found');
+      }
+    });
+  }
+
+  changeStatusUser(data: IDataChangeStatus) {
+    const {userId, groupId, state} = data;
+    const dataBase =  this.firebase.database();
+
+    dataBase
+      .ref(`Groups/${groupId}/userList/${userId}`)
+      .set({state: state});
+
+    dataBase
+      .ref(`User/${userId}/groupList/${groupId}`)
+      .set({state: state});
+  }
+
+  addMemberInGroup(data: IDataAddMember, addNewUserInDetailGroup: any) {
+    const bace = this.firebase.database();
+    const userTable = bace.ref('User');
+    let errorData: string | null = null;
+
+    const addUserInPageAndBD = (userKey: string) => {
+      const dataForChangeStatusUser: IDataChangeStatus = {
+        userId: userKey,
+        groupId: data.groupId,
+        state: 'pending'
+      };
+      this. changeStatusUser(dataForChangeStatusUser);
+
+      bace
+      .ref(`User/${userKey}/`)
+      .once('value', (userInfo) => {
+        const userDetainInfo = {
+          userId: userInfo.key,
+          user: userInfo.val(),
+          groupId: data.groupId
+        };
+        addNewUserInDetailGroup(userDetainInfo, errorData);
+      });
+    };
+
+    userTable
+    .once('value', (userList) => {
+      const userObj = userList.val();
+      const keysList = Object.keys(userObj);
+      const ArrayUserKey: string[] = keysList.filter(key => {
+        if (userObj[key].account === data.account) return key;
+
+        return false;
+      });
+
+      const userKey = ArrayUserKey[0];
+
+      if (!userKey) {
+        errorData = 'User is missing';
+        addNewUserInDetailGroup(data, errorData);
+      } else {
+        bace
+        .ref(`Groups/${data.groupId}/userList/`)
+        .once('value', (userList) => {
+            const userListObj = userList.val();
+            const arrUsers = Object.keys(userListObj);
+            const userInfo = userListObj[userKey];
+
+            if (arrUsers.includes(userKey)) {
+              const stateUser = userListObj[userKey].state;
+              if (stateUser === 'approve' || stateUser === 'pending') {
+                errorData = 'The user is in the group';
+                addNewUserInDetailGroup(userInfo, errorData);
+              } else {
+                addUserInPageAndBD(userKey);
+              }
+            } else {
+              addUserInPageAndBD(userKey);
+            }
+        });
       }
     });
   }
@@ -737,7 +788,7 @@ export class Database {
     };
   }
 
-  contactsHandler = (renderContact: any): any => {
+  contactsHandler = (renderContact: any, selector: string | null): any => {
     return (snapshot: any): void => {
       if (snapshot) {
         const key: string = snapshot.key;
@@ -750,6 +801,7 @@ export class Database {
             const userData = snapshot.val();
             userData.key = key;
             userData.state = state;
+            userData.selector = selector;
             if (state !== 'decline') {
               renderContact(userData);
             }
