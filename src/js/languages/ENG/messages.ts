@@ -33,5 +33,26 @@ export const messagesENG = {
   'Approve': 'Approve',
   'Pending': 'Pending',
 
-  'Add': 'Add'
+  'Add': 'Add',
+
+  // Group  
+  'Groups': 'Groups',
+  'No groups': 'No groups yet.',
+  'Would': 'Would you like to create the first group?',
+  'Closed Group': 'Closed Groups',
+  'New group': 'New group',
+  'Balance': 'Balance',
+  'Create New Group': 'Create New Group',
+  'Title*': 'Title*',
+  'Please input title': ' Please input title.',
+  'Make the group current': 'Make the group current',
+  'Members': 'Members',
+  'Group Members': 'Group Members',
+  'Description': 'Description',
+  'Group details': 'Group details',
+  'Create date:': 'Create date:',
+  'Close date': 'Close date:',
+  'group is active': 'group is active',
+  'No description': 'No description...',
+  'Participants': 'Participants',
 };
