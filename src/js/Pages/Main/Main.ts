@@ -10,11 +10,11 @@ export class Main extends Page {
     return page;
   }
 
-  renderCommonBalance(balance: number): void {
+  renderCommonBalance(balance: number, currentCurrency: string): void {
     const bal: HTMLElement = document.querySelector('.balance__text');
 
     setTimeout(() => {
-      Currencies.getCurrencyRateByCode(bal.textContent).then(data => bal.textContent = `${(balance * data).toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ')} ${bal.textContent}`);
+      Currencies.getCurrencyRateByCode(currentCurrency).then(data => bal.textContent = `${(balance * data).toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ')} ${currentCurrency}`);
     }, 0);
   }
 
@@ -249,7 +249,6 @@ export class Main extends Page {
     document.querySelector('.block__image').setAttribute('src', data.avatar);
     document.querySelector('.block__image').setAttribute('alt', data.name);
     document.querySelector('.main__name-text').textContent = data.name;
-    document.querySelector('.balance__text').textContent = data.currency;
   }
 
   render(): void {
