@@ -168,40 +168,38 @@ export class Main extends Page {
           const date: Date = new Date(item.date);
           document.querySelector('.main__group-transactions').innerHTML += `
             <div class="card main-card-trans">
-              <div class="main-card-trans__wrapper">
-                <div class="main-card-trans__header main--font-size">
-                  <p class="card-trans__header__trans-name">
-                    <span class="card-trans__header__title">${
-                      item.description
-                    }</span>
-                  </p>
-                </div>
-                <div class="main-card-trans__main main--font-size">
-                  <p class="card-trans__main__cost">
-                    <span>
-                    </span>
-                  </p>
-                  <p class="card-trans__main__loc">
-                    <span class="card-trans__main__date">
-                    ${date.toLocaleDateString()} ${date.toLocaleTimeString().slice(0, 5)}
-                    </span>
-                  </p>
-                </div>
-                <p class="main-card-trans__footer">
-                  <span>${
-                    item.groupTitle
-                  } group</span>
+              <div class="main-card-trans__header main--font-size">
+                <p class="card-trans__header__trans-name">
+                  <span class="card-trans__header__title">${
+                    item.description
+                  }</span>
                 </p>
               </div>
+              <div class="main-card-trans__main main--font-size">
+                <p class="card-trans__main__cost">
+                  <span>
+                  </span>
+                </p>
+                <p class="card-trans__main__loc">
+                  <span class="card-trans__main__date">
+                  ${date.toLocaleDateString()} ${date.toLocaleTimeString().slice(0, 5)}
+                  </span>
+                </p>
+              </div>
+              <p class="main-card-trans__footer">
+                <span>${
+                  item.groupTitle
+                } group</span>
+              </p>
             </div>`;
 
           Currencies.getCurrencyRateByCode(item.currency)
             .then(data => {
-              const userCost: string = item.toUserList.find((it: any) => it[0] === item.uid) ?
-              `-${(item.toUserList.find((it: any) => it[0] === item.uid)[1].cost * data).toFixed(2)} ${item.currency}` :
-              `+${(item.totalCost * data).toFixed(2)} ${item.currency}`;
+              const userCost: string = item.toUserList.find((it: any) => it[0] === item.uid) 
+              ? `+${(item.toUserList.find((it: any) => it[0] === item.uid)[1].cost * data).toFixed(2)} ${item.currency}` 
+              : `-${(item.totalCost * data).toFixed(2)} ${item.currency}`;
               document.querySelectorAll('.card-trans__main__cost')[index].firstElementChild.textContent = userCost;
-              if (document.querySelectorAll('.card-trans__main__cost')[index].firstElementChild.textContent.trim()[0] === '-') {
+              if (document.querySelectorAll('.card-trans__main__cost')[index].firstElementChild.textContent.trim()[0] !== '+') {
                 document.querySelectorAll('.card-trans__main__cost')[index].firstElementChild.classList.add('minus-cost');
               } else {
                 document.querySelectorAll('.card-trans__main__cost')[index].firstElementChild.classList.add('plus-cost');
@@ -267,7 +265,7 @@ export class Main extends Page {
             <p class="align-self-start main--font-size">
               <span>My last transactions</span>
             </p>
-            <div class="main__group-transactions flex-column main__inner-card">
+            <div class="main__group-transactions main__inner-card">
             </div>
           </div>
         </div>

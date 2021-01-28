@@ -280,27 +280,50 @@
 }
 
 .main__group-transactions {
+  flex-direction: column;
   padding: 0;
   overflow: hidden;
   border: 1px solid rgba(0, 0, 0, 0.05);
   border-radius: 0.625rem;
+
+@include laptop {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-around;
+  }
+
+@include desktop {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-around;
+  }
 }
 
 .main-card-trans {
   display: flex;
   flex-direction: column;
   width: 100%;
-  border: none;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-  border-radius: 0;
-}
-
-.main-card-trans__wrapper {
-  display: flex;
-  flex-direction: column;
   width: 100%;
   max-width: rem(550px);
   padding: 0.3rem 0.5rem 0;
+  border: none;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  border-radius: 0;
+
+@include laptop {
+    max-width: 49.5%;
+    &:nth-last-child(2) {
+      border-bottom: none;
+    }
+  }
+
+@include desktop {
+    max-width: 49.5%;
+
+    &:nth-last-child(2) {
+      border-bottom: none;
+    }
+  }
 }
 
 .main-card-trans:nth-last-child(1) {
