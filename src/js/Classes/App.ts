@@ -241,6 +241,7 @@ export class App {
 
   changeUserStatusInGroup(data: IDataChangeStatus){
     this.database.changeStatusUser(data)
+    this.notifications.decreaseNotificationMark(TypeOfNotifications.Group);
   }
 
   addMemberInDetailGroup(data: IDataAddMember) {
