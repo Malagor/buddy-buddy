@@ -50,7 +50,7 @@ export class Main extends Page {
     const elems: any = document.querySelectorAll('.carousel-item__inner');
     const newIndex: number = length - index - 1;
     const elemIndex: number = newIndex % 2 === 0 ? newIndex / 2 : (newIndex - 1) / 2;
-    const defaultGroupIcon = 'https://firebasestorage.googleapis.com/v0/b/buddy-buddy-8e497.appspot.com/o/groups%2F%D0%91%D0%B5%D0%B7%20%D0%BD%D0%B0%D0%B7%D0%B2%D0%B0%D0%BD%D0%B8%D1%8F%20(1).png?alt=media&token=c8a9f87d-36be-4a16-8a27-e6850d5accc8';
+    const defaultGroupIcon = require('../../../assets/images/default-group-logo.png');
 
     const currentGroupHTML: string = groupItem.groupID === currGroup 
     ? `<p class="slider__current-group">
@@ -103,10 +103,11 @@ export class Main extends Page {
       HTMLElem.textContent = `${sum.toFixed(2)} ${data.currency}`;
       if (sum > 0) {
         HTMLElem.textContent = '+' + HTMLElem.textContent;
-        HTMLElem.classList.add('plus-cost');
+        group.classList.add('plus-cost');
       }
-      if (sum < 0) HTMLElem.textContent = '-' + HTMLElem.textContent;
-      HTMLElem.classList.add('minus-cost');
+      if (sum < 0) {
+        group.classList.add('minus-cost');
+      }
     })
   }
 

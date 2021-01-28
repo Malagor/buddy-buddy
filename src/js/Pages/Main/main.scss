@@ -152,6 +152,7 @@
   position: relative;
   margin-left: -6px;
   overflow: hidden;
+  background-color: rgba(255, 255, 255, 1);
   border-radius: 50%;
   img {
     position: absolute;
@@ -201,6 +202,7 @@
   width: rem(30px);
   height: rem(30px);
   overflow: hidden;
+  background-color: rgba(255, 255, 255, 1);
   border-radius: 50%;
 
   img {
@@ -435,12 +437,14 @@
   margin-bottom: 0;
 }
 
-.plus-cost {
-  color: rgb(0, 128, 0);
+.plus-cost,
+p.plus-cost > span {
+  color: rgba(0, 128, 0, 1);
 }
 
-.minus-cost {
-  color: rgb(255, 0, 0);
+.minus-cost,
+p.minus-cost > span {
+  color: rgba(255, 0, 0, 1);
 }
 
 .card-trans__main__loc {
