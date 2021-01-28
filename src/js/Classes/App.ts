@@ -246,7 +246,7 @@ export class App {
 
   getUserBalanceInGroup(data: any) {
     const { userId, groupId } = data;
-    this.database.getBalanceForUserInGroup(userId, groupId, 1, this.groups.deleteUserFromGroup);
+    this.database.getBalanceForUserInGroup(userId, groupId, this.groups.deleteUserFromGroup);
   }
 
   changeUserStatusInGroup(data: IDataChangeStatus) {

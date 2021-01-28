@@ -41,16 +41,6 @@
     }
   }
 
-  &__balance {
-    &--negative {
-      color: red;
-    }
-
-    &--positive {
-      color: green;
-    }
-  }
-
   &__box-logo-group {
     display: flex;
     justify-content: center;
@@ -151,7 +141,7 @@
   align-items: center;
   margin: rem(8px) 0 rem(16px) 0;
 
-  &--author {
+  &--author{
     background-color: rgba(128, 128, 128, 0.616);
   }
 
@@ -172,6 +162,9 @@
       right: 10px;
       top: 35%;
     }
+    &__balance{
+      margin: 0 4rem 0 auto;
+
       &--negative {
         color: red;
       }
@@ -179,7 +172,7 @@
       &--positive {
         color: green;
       }
-     
+    } 
     
     &__button-container{
       position: absolute;
