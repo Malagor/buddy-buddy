@@ -13,6 +13,16 @@ import { renderNonCheckedMember } from './renderNonCheckedMember';
 import { changeBalanceStyle } from './changeBalanceStyle';
 import { Currencies } from '../../Classes/Currencies';
 
+import { i18n } from '@lingui/core';
+import { transactionsRU } from '../../languages/RU/transactions';
+import { transactionsENG} from '../../languages/ENG/transactions';
+import { loadLanguage } from '../../Util/saveLoadLanguage';
+i18n.load('RU', transactionsRU);
+i18n.load('ENG', transactionsENG);
+
+const locale = loadLanguage();
+i18n.activate(locale);
+
 export class TransactionsList extends Page {
   onChangeState: any;
   onGetTransInfo: any;
@@ -179,7 +189,7 @@ export class TransactionsList extends Page {
         opt.setAttribute('selected', '');
       }
       if (selectValue === 'approve') {
-        detailsSelectWrapper.innerHTML = 'Подтверждено';
+        detailsSelectWrapper.innerHTML = `${i18n._('Approved')}`;
       }
     });
 
@@ -243,7 +253,7 @@ export class TransactionsList extends Page {
     const modalWrapper: HTMLElement = document.querySelector('.details__wrapper');
     const titleElement: HTMLElement = modalWrapper.querySelector('.details__group');
     titleElement.setAttribute('groupID', groupID);
-    titleElement.innerText = `Группа: ${title}`;
+    titleElement.innerText = `${i18n._('Group')}: ${title}`;
   }
 
   addOwnerInfo = (owner: any) => {
@@ -269,7 +279,7 @@ export class TransactionsList extends Page {
 
       const state: HTMLElement = member.querySelector('.details__member-state');
       if (currUser[1].state === 'pending') {
-        state.innerHTML = 'ожидание';
+        state.innerHTML = `${i18n._('pending')}`;
       } else if (currUser[1].state === 'approve') {
         state.innerHTML = `<i class="material-icons text-success">done</i>`;
         member.querySelector('.details__member-delete').classList.add('invisible');
@@ -316,7 +326,7 @@ export class TransactionsList extends Page {
         member.classList.remove('details__memb--not-checked');
         member.classList.add('details__memb--checked');
         member.setAttribute('user-state', 'pending');
-        member.querySelector('.details__member-state').innerHTML = 'ожидание';
+        member.querySelector('.details__member-state').innerHTML = `${i18n._('pending')}`;
         member.querySelector('.details__member-delete').innerHTML = '<i class="material-icons">clear</i>';
       }
       editSum(trans, modalWrapper);

@@ -4,7 +4,17 @@ import { Modal } from 'bootstrap';
 import { addMemberHTML } from './addMemberHTML';
 import { clearAllInputs } from './clearAllInputs';
 import { checkData } from './checkData';
-// import { sha256 } from 'js-sha256';
+
+import { i18n } from '@lingui/core';
+import { transactionsRU } from '../../languages/RU/transactions';
+import { transactionsENG} from '../../languages/ENG/transactions';
+import { loadLanguage } from '../../Util/saveLoadLanguage';
+
+i18n.load('RU', transactionsRU);
+i18n.load('ENG', transactionsENG);
+
+const locale = loadLanguage();
+i18n.activate(locale);
 export class NewTransaction extends Page {
   onCreateTransaction: any;
   onShowMembersOfGroup: any;
@@ -15,23 +25,22 @@ export class NewTransaction extends Page {
 
   render = (): void => {
 
-
     this.element.innerHTML = `
       <div class="new-trans modal-content">
         <div class="modal-header">
-          <h5 class="modal-title">Новая транзакция</h5>
+          <h5 class="modal-title">${i18n._('New transaction')}</h5>
           <button type="button" class="btn-close new-trans__close-modal" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
         <form class="all-forms">
             <div class="form-group row block--margin-adaptive">
-              <label for="group" class="new-trans__label col-sm-2 col-form-label">Группа</label>
+              <label for="group" class="new-trans__label col-sm-2 col-form-label">${i18n._('Group')}</label>
               <div class="col-sm-10">
                 <select id="group" class="new-trans__groups-list form-select"></select>
               </div>
             </div>
             <div class="form-group row block--margin-adaptive align-items-center">
-              <label for="descr" class="new-trans__label col-sm-2 col-form-label">Описание</label>
+              <label for="descr" class="new-trans__label col-sm-2 col-form-label">${i18n._('Description')}</label>
               <div class="col-sm-10">
                 <textarea id="descr" class="new-trans__descr input-required form-control" required></textarea>
               </div>
@@ -50,7 +59,7 @@ export class NewTransaction extends Page {
             <div class="add-check d-flex align-items-center mb-3">
               <div class="add-check__wrapper input-group">
                 <label class="add-check__label" for="input-file">
-                  <div class="add-check__text">Добавить чек</div>
+                  <div class="add-check__text">${i18n._('Add check')}</div>
                   <input id="input-file" type="file" accept="image/*" class="add-check__file" name="check" multiple>
                 </label>
               </div>
@@ -66,13 +75,13 @@ export class NewTransaction extends Page {
             </div>
             <div class="new-trans__members">
               <div class="new-trans__members-list d-flex flex-wrap justify-content-start"></div>
-              <button type="button" class="all-btn btn btn-secondary btn-sm">Выбрать всех</button>
+              <button type="button" class="all-btn btn btn-secondary btn-sm">${i18n._('Select all')}</button>
             </div>
             <div class="checked-members"></div>
           </form>
         </div>
         <div class="modal-footer">
-          <button type="button" class="new-trans__create-btn btn btn-primary w-100" data-bs-dismiss="modal" disabled>Создать транзакцию</button>
+          <button type="button" class="new-trans__create-btn btn btn-primary w-100" data-bs-dismiss="modal" disabled>${i18n._('Create transaction')}</button>
         </div>
       </div>
     `;
