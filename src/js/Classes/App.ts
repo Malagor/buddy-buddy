@@ -82,6 +82,7 @@ export class App {
       this.accountPage.checkUserID = this.checkUserID.bind(this);
 
       this.mainPage = Main.create('.main');
+      this.mainPage.getBalanceForSliderGroup = this.getBalanceForSliderGroup.bind(this);
 
       this.database.getUserInfo(uid, [this.layout.setSidebarData]);
 
@@ -190,6 +191,10 @@ export class App {
     this.database.getUserTransactions(uid, this.mainPage.renderTransactions);
     this.database.getBalanceForUserTotal(uid, this.mainPage.renderCommonBalance);
     this.database.getBalanceForUserTotal(uid, this.mainPage.renderCurrenciesTable);
+  }
+
+  getBalanceForSliderGroup(groupID: string) {
+    this.database.getBalanceForUserInGroup(this.database.uid, groupID, this.mainPage.renderGroupBalance);
   }
 
   updateOnAccountPage(data: any) {

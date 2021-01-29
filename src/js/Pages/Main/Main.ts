@@ -2,6 +2,7 @@ import { Currencies } from '../../Classes/Currencies';
 import { Page } from '../../Classes/Page';
 export class Main extends Page {
   counter: number = 0;
+  getBalanceForSliderGroup: (groupID: string) => void;
 
   static create(element: string): Main {
     const page: Main = new Main(element);
@@ -9,11 +10,11 @@ export class Main extends Page {
     return page;
   }
 
-  renderCommonBalance(balance: number): void {
+  renderCommonBalance(balance: number, currentCurrency: string): void {
     const bal: HTMLElement = document.querySelector('.balance__text');
 
     setTimeout(() => {
-      Currencies.getCurrencyRateByCode(bal.textContent).then(data => bal.textContent = `${(balance * data).toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ')} ${bal.textContent}`);
+      Currencies.getCurrencyRateByCode(currentCurrency).then(data => bal.textContent = `${(balance * data).toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ')} ${currentCurrency}`);
     }, 0);
   }
 
@@ -23,8 +24,8 @@ export class Main extends Page {
       if (list.length >= 3) {
         if (ind < 3) {
           result += `
-          <div class="avatars__wrapper--slider">
-            <img src="${item}" alt="user avatar" width="25px">
+          <div class="avatars__wrapper--slider ${ind === 0 && list.length === 3 ? 'avatars__wrapper--slider-special' : ''}">
+            <img src="${item}" alt="user avatar">
           </div>
           `;
         } else if (ind === 3) {
@@ -37,7 +38,7 @@ export class Main extends Page {
       } else {
         result += `
         <div class="avatars__wrapper--single">
-          <img src="${item}" alt="user avatar" width="25px">
+          <img src="${item}" alt="user avatar">
         </div>
         `;
       }
@@ -45,19 +46,34 @@ export class Main extends Page {
     return result;
   }
 
-  renderOneGroup(avatars: string, index: number, title: string, length: number, groupIcon: string, groupID: string, currGroup: string): void {
+  renderOneGroup = (avatars: string, index: number, groupItem: any, length: number, currGroup: string): void => {
     const elems: any = document.querySelectorAll('.carousel-item__inner');
     const newIndex: number = length - index - 1;
     const elemIndex: number = newIndex % 2 === 0 ? newIndex / 2 : (newIndex - 1) / 2;
-    console.log(groupID, currGroup);
+    const defaultGroupIcon = require('../../../assets/images/default-group-logo.png');
+
+    const currentGroupHTML: string = groupItem.groupID === currGroup 
+    ? `<p class="slider__current-group">
+        <span>Current</span>
+      </p>`
+    : '';
 
     const group: string = `
     <div class="main__slider__item">
       <div class="slider__item__img">
-        <img src="${groupIcon}" alt="group icon" width="100%">
+        <img src="${groupItem.icon ? groupItem.icon : defaultGroupIcon}" alt="group icon" width="95%">
+        <div class="item__img-title-wrapper">
+          <p class="slider__item__title">
+            <span>${groupItem.title}</span>
+          </p>
+          ${currentGroupHTML} 
+        </div>
       </div>
-      <p class="slider__item__title">
-        <span>${title}</span>
+      <p class="slider__item__title--description">
+        <span>${groupItem.description ? groupItem.description : 'No description.'}</span>
+      </p> 
+      <p class="slider__item__title--description ${groupItem.groupID}">
+      <span></span>
       </p>
       <div class="slider__item__avatars">
       ${avatars}
@@ -74,6 +90,25 @@ export class Main extends Page {
         ? elems[elemIndex].insertAdjacentHTML('beforeend', group)
         : elems[elemIndex].insertAdjacentHTML('afterbegin', group);
     }
+
+    this.getBalanceForSliderGroup(groupItem.groupID);
+  }
+
+  renderGroupBalance(data: any) {
+    const group: HTMLElement = document.querySelector(`.${data.groupId}`);
+    const balanceQuery = Currencies.fromUSD(data.currency);
+    balanceQuery(data.balance)
+    .then((sum: number) => {
+      const HTMLElem = group.firstElementChild;
+      HTMLElem.textContent = `${sum.toFixed(2)} ${data.currency}`;
+      if (sum > 0) {
+        HTMLElem.textContent = '+' + HTMLElem.textContent;
+        group.classList.add('plus-cost');
+      }
+      if (sum < 0) {
+        group.classList.add('minus-cost');
+      }
+    })
   }
 
   renderCurrenciesTable(balance: number): void {
@@ -122,8 +157,8 @@ export class Main extends Page {
         </a>
       </div>`;
 
-      elem.querySelectorAll('.arrow-color').forEach((item: any) => {
-        if (dataLength < 3) item.classLis.add('arrows-visibility');
+      elem.querySelectorAll('.arrows-color').forEach((item: any) => {
+        if (dataLength < 3) item.classList.add('arrows-visibility');
       });
     }
   }
@@ -168,40 +203,38 @@ export class Main extends Page {
           const date: Date = new Date(item.date);
           document.querySelector('.main__group-transactions').innerHTML += `
             <div class="card main-card-trans">
-              <div class="main-card-trans__wrapper">
-                <div class="main-card-trans__header main--font-size">
-                  <p class="card-trans__header__trans-name">
-                    <span class="card-trans__header__title">${
-                      item.description
-                    }</span>
-                  </p>
-                </div>
-                <div class="main-card-trans__main main--font-size">
-                  <p class="card-trans__main__cost">
-                    <span>
-                    </span>
-                  </p>
-                  <p class="card-trans__main__loc">
-                    <span class="card-trans__main__date">
-                    ${date.toLocaleDateString()} ${date.toLocaleTimeString().slice(0, 5)}
-                    </span>
-                  </p>
-                </div>
-                <p class="main-card-trans__footer">
-                  <span>${
-                    item.groupTitle
-                  } group</span>
+              <div class="main-card-trans__header main--font-size">
+                <p class="card-trans__header__trans-name">
+                  <span class="card-trans__header__title">${
+                    item.description
+                  }</span>
                 </p>
               </div>
+              <div class="main-card-trans__main main--font-size">
+                <p class="card-trans__main__cost">
+                  <span>
+                  </span>
+                </p>
+                <p class="card-trans__main__loc">
+                  <span class="card-trans__main__date">
+                  ${date.toLocaleDateString()} ${date.toLocaleTimeString().slice(0, 5)}
+                  </span>
+                </p>
+              </div>
+              <p class="main-card-trans__footer">
+                <span>${
+                  item.groupTitle
+                } group</span>
+              </p>
             </div>`;
 
           Currencies.getCurrencyRateByCode(item.currency)
             .then(data => {
-              const userCost: string = item.toUserList.find((it: any) => it[0] === item.uid) ?
-              `-${(item.toUserList.find((it: any) => it[0] === item.uid)[1].cost * data).toFixed(2)} ${item.currency}` :
-              `+${(item.totalCost * data).toFixed(2)} ${item.currency}`;
+              const userCost: string = item.toUserList.find((it: any) => it[0] === item.uid) 
+              ? `+${(item.toUserList.find((it: any) => it[0] === item.uid)[1].cost * data).toFixed(2)} ${item.currency}` 
+              : `-${(item.totalCost * data).toFixed(2)} ${item.currency}`;
               document.querySelectorAll('.card-trans__main__cost')[index].firstElementChild.textContent = userCost;
-              if (document.querySelectorAll('.card-trans__main__cost')[index].firstElementChild.textContent.trim()[0] === '-') {
+              if (document.querySelectorAll('.card-trans__main__cost')[index].firstElementChild.textContent.trim()[0] !== '+') {
                 document.querySelectorAll('.card-trans__main__cost')[index].firstElementChild.classList.add('minus-cost');
               } else {
                 document.querySelectorAll('.card-trans__main__cost')[index].firstElementChild.classList.add('plus-cost');
@@ -217,7 +250,6 @@ export class Main extends Page {
     document.querySelector('.block__image').setAttribute('src', data.avatar);
     document.querySelector('.block__image').setAttribute('alt', data.name);
     document.querySelector('.main__name-text').textContent = data.name;
-    document.querySelector('.balance__text').textContent = data.currency;
   }
 
   render(): void {
@@ -267,9 +299,11 @@ export class Main extends Page {
             <p class="align-self-start main--font-size">
               <span>My last transactions</span>
             </p>
-            <div class="main__group-transactions flex-column main__inner-card">
+            <div class="main__group-transactions main__inner-card">
             </div>
           </div>
+        </div>
+        <div class="block__footer main-footer">
         </div>
       </div>
     </div>`;
