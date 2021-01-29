@@ -33,5 +33,25 @@ export const messagesENG = {
   'Approve': 'Approve',
   'Pending': 'Pending',
 
-  'Add': 'Add'
+  'Add': 'Add',
+
+  'Transactions List' : 'Transactions List',
+  'All' : 'All',
+  'New transaction': 'New transaction',
+  'Add check': 'Add check',
+  'Check': 'Check',
+  'Select All': 'Select All',
+  'Group': 'Group',
+  'Description': 'Description',
+  'Sum': 'Sum',
+  'Create transaction': 'Create transaction',
+  'Comment': 'Comment',
+  'pending': 'pending',
+  'approve': 'approve',
+  'Approved':  'Approved',
+  'decline': 'decline',
+  'Save': 'Save',
+  'Delete': 'Delete',
+  'Add members':'Add members',
+  'Payer': 'Payer',
 };

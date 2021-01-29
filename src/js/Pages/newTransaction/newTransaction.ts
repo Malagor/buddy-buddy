@@ -6,12 +6,11 @@ import { clearAllInputs } from './clearAllInputs';
 import { checkData } from './checkData';
 
 import { i18n } from '@lingui/core';
-import { transactionsRU } from '../../languages/RU/transactions';
-import { transactionsENG} from '../../languages/ENG/transactions';
+import { messagesRU } from '../../languages/RU/messages';
+import { messagesENG } from '../../languages/ENG/messages';
 import { loadLanguage } from '../../Util/saveLoadLanguage';
-
-i18n.load('RU', transactionsRU);
-i18n.load('ENG', transactionsENG);
+i18n.load('RU', messagesRU);
+i18n.load('ENG', messagesENG);
 
 const locale = loadLanguage();
 i18n.activate(locale);
