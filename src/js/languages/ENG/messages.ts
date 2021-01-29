@@ -33,5 +33,21 @@ export const messagesENG = {
   'Approve': 'Approve',
   'Pending': 'Pending',
 
-  'Add': 'Add'
+  'Add': 'Add',
+
+  'Is occupied': 'Is occupied',
+  'Currency': 'Currency',
+  'Language': 'Language',
+  'Theme': 'Theme',
+  'Save': 'Save',
+  'Username': 'Username',
+
+  'Current': 'Current',
+  'No description': 'No description',
+  'No groups yet': 'No groups yet',
+  'No transactions yet': 'No transactions yet',
+  'Balance': 'Balance',
+  'Rate': 'Rate',
+  'My groups': 'My groups',
+  'My last transactions': 'My last transactions',
 };

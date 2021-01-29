@@ -76,10 +76,13 @@ export class App {
       this.userHandler = this.database.userHandler(this.layout.setSidebarData);
       this.database.userInfoListener(this.userHandler);
 
+      this.getUserLanguage();
+
       this.accountPage = AccountPage.create('.main');
       this.accountPage.updateInfo = this.updateOnAccountPage.bind(this);
       this.accountPage.changeTheme = this.changeTheme.bind(this);
       this.accountPage.checkUserID = this.checkUserID.bind(this);
+      this.accountPage.onAccountPageChangeLang = this.onAccountPageChangeLang.bind(this);
 
       this.mainPage = Main.create('.main');
       this.mainPage.getBalanceForSliderGroup = this.getBalanceForSliderGroup.bind(this);
@@ -161,6 +164,14 @@ export class App {
     );
   }
 
+  setUserLanguage(_: any, lang: string) {
+    localStorage.setItem('languageCode', lang);
+  }
+
+  getUserLanguage() {
+    this.database.getCurrenciesOrLangsOrThemes(this.database.uid, this.setUserLanguage, 'Language');
+  }
+
   loadCurrentPage() {
     const currentPage: string = localStorage.getItem('currentPage') || 'Main';
     this[`on${currentPage}Page`]();
@@ -200,6 +211,10 @@ export class App {
   updateOnAccountPage(data: any) {
     const uid: string = this.database.uid;
     this.database.updateUserInfo(uid, data);
+  }
+
+  onAccountPageChangeLang() {
+    this.accountPage.onlineChangingLang();
   }
 
   async onAccountPage() {

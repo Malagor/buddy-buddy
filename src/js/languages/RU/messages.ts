@@ -32,5 +32,21 @@ export const messagesRU = {
   'Contact`s name': 'Имя контакта',
   'Approve': 'Принять',
   'Pending': 'В ожидании',
-  'Add': 'Добавить'
+  'Add': 'Добавить',
+
+  'Is occupied': 'Занято',
+  'Currency': 'Валюта',
+  'Language': 'Язык',
+  'Theme': 'Тема',
+  'Save': 'Сохранить',
+  'Username': 'Имя пользователя',
+
+  'Current': 'Текущая',
+  'No description': 'Нет описания',
+  'No groups yet': 'Нет групп',
+  'No transactions yet': 'Нет транзакций',
+  'Balance': 'Баланс',
+  'Rate': 'Котировка',
+  'My groups': 'Мои группы',
+  'My last transactions': 'Мои последние транзакции',
 };
