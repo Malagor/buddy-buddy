@@ -120,7 +120,7 @@ export class TransactionsList extends Page {
   changeCardStyle = (transaction: HTMLElement, selectValue: string) => {
     if (selectValue === 'approve') {
       transaction.classList.remove('border-success', 'border-danger');
-    } else if (selectValue === 'abort') {
+    } else if (selectValue === 'decline') {
       transaction.classList.remove('border-success');
       transaction.classList.add('border-danger');
     } else if (selectValue === 'pending') {
@@ -260,7 +260,6 @@ export class TransactionsList extends Page {
     const notMembersWrapper: HTMLElement = modalWrapper.querySelector('.details__not-members');
     const member: HTMLElement = document.createElement('div');
     const currUser: any[] = Object.entries(trans.toUserList).find((userTrans: any) => userTrans[0] === user.key);
-
     if (currUser) {
       member.className = 'details__memb-wrapper details__memb--checked d-flex justify-content-between';
       member.setAttribute('user-id', user.key);
@@ -273,7 +272,7 @@ export class TransactionsList extends Page {
       } else if (currUser[1].state === 'approve') {
         state.innerHTML = `<i class="material-icons text-success">done</i>`;
         member.querySelector('.details__member-delete').classList.add('invisible');
-      } else if (currUser[1].state === 'abort') {
+      } else if (currUser[1].state === 'decline') {
         state.innerHTML = `<i class="material-icons text-danger">minimize</i>`;
       }
       membersWrapper.append(member);

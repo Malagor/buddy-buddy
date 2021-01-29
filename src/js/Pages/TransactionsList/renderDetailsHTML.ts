@@ -39,7 +39,7 @@ export const renderDetailsHTML = (trans: any, date: any, styles: any, ) => {
        <select class="details__state form-select" aria-label="Default select example">
          <option value="pending">ожидание</option>
          <option value="approve">подтвердить</option>
-         <option value="abort">отклонить</option>
+         <option value="decline">отклонить</option>
        </select>
      </div>
 

@@ -1207,8 +1207,16 @@ export class Database {
   }
 
   setNewStateTransaction(state: string, transID: string): void {
+    const base = this.firebase.database();
+    const userRef = base.ref('User');
     const refTrans = this.firebase.database().ref(`Transactions/${transID}/toUserList/${this.uid}/state`);
     refTrans.set(state)
+      .catch(error => {
+        console.log('Error: ' + error.code);
+      });
+    
+    userRef.child(`${this.uid}/transactionList/transID/state`)  
+    .set(state)
       .catch(error => {
         console.log('Error: ' + error.code);
       });

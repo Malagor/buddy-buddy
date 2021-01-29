@@ -364,6 +364,9 @@ export class App {
 
   onChangeState(state: string, transID: string) {
     this.database.setNewStateTransaction(state, transID);
+    // if(state === 'approve') {
+    //   this.notifications.decreaseNotificationMark(TypeOfNotifications.Transaction);
+    // }
   }
 
   onGetTransInfo(trans: any, groupID: string) {
