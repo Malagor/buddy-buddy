@@ -1215,7 +1215,7 @@ export class Database {
         console.log('Error: ' + error.code);
       });
     
-    userRef.child(`${this.uid}/transactionList/transID/state`)  
+    userRef.child(`${this.uid}/transactionList/${transID}/state`)  
     .set(state)
       .catch(error => {
         console.log('Error: ' + error.code);
@@ -1583,7 +1583,7 @@ export class Database {
             base.ref(`Transactions/${key}`)
               .once('value', snapshot => {
                 const transData = snapshot.val();
-                if (transData) {
+                if (transData && transData.state === 'opened') {
                   if (transData.userID === userId) {
                     balance += transData.totalCost;
                   }
@@ -1637,7 +1637,7 @@ export class Database {
             base.ref(`Transactions/${key}`)
               .once('value', snapshot => {
                 const transData = snapshot.val();
-                if (transData) {
+                if (transData && transData.state === 'opened') {
                   if (transData.userID === userID) {
                     balance += transData.totalCost;
                   }

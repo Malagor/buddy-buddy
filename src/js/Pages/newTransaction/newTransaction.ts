@@ -134,16 +134,6 @@ export class NewTransaction extends Page {
       }, 200);
     });
 
-    currInput.addEventListener('focus', () => {
-      currInput.value = '';
-      currInput.placeholder = document.querySelector('.curr--active-curr').textContent;
-    });
-
-    currInput.addEventListener('blur', () => {
-      currInput.value = document.querySelector('.curr--active-curr').textContent;
-      currInput.placeholder = 'Currency';
-    });
-
     currList.addEventListener('click', event => {
       const { target }: any = event;
       if (target.closest('.new-trans__curr-item')) {
