@@ -8,6 +8,8 @@ export class AccountPage extends Page {
   changeTheme: any;
   checkUserID: any;
   onAccountPageChangeLang: () => void;
+  locCounter: number = 0;
+  checkObj: { [key: string]: number } = {};
 
   static create(element: string): AccountPage {
     return new AccountPage(element);
@@ -162,6 +164,10 @@ export class AccountPage extends Page {
     const errorOfInput: HTMLElement = document.querySelector('.account__error');
     
     if (!data) {
+      if (!this.checkObj.account) {
+        this.locCounter++;
+      }
+      this.checkObj.account = 1;
       submitInfo.removeAttribute('disabled');
       inputID.classList.remove('error');
       errorOfInput.classList.remove('error--on');
@@ -220,9 +226,14 @@ export class AccountPage extends Page {
         pageInputs.forEach((item: HTMLInputElement, index: number): void => {
           if (item.classList.contains('account__input-curr')) {
             if (values[index] !== item.value.trim()) {
+              if (!this.checkObj[item.name]) this.locCounter++;
+              this.checkObj[item.name] = 1;
               submitInfo.removeAttribute('disabled');
+              
             } else {
-              submitInfo.setAttribute('disabled', 'true');
+              if (this.checkObj[item.name] === 1) this.locCounter--;
+              this.checkObj[item.name] = 0;
+              if (!this.locCounter) submitInfo.setAttribute('disabled', 'true');
             }
           }
         });
@@ -288,6 +299,8 @@ export class AccountPage extends Page {
 
     pageInputs.forEach((item: HTMLInputElement, index: number): void => {
         values.push(checkImg(item));
+        this.checkObj[item.name] = 0;
+        
         item.addEventListener('input', (): void => {
           if (item.type === 'file') {
             const reader: FileReader = new FileReader();
@@ -301,11 +314,19 @@ export class AccountPage extends Page {
           if (values[index] !== item.value.trim()) {
             if (item === inputID) {
               this.checkUserID(item.value.trim()); 
-            } else {
+            } else {             
+              if (!this.checkObj[item.name]) {
+                this.locCounter++;
+              }
+              this.checkObj[item.name] = 1;
               submitInfo.removeAttribute('disabled');
             }
           } else {
-            submitInfo.setAttribute('disabled', 'true');
+            if (this.checkObj[item.name] === 1) {
+              this.locCounter--;
+            }
+              this.checkObj[item.name] = 0;
+            if (!this.locCounter) submitInfo.setAttribute('disabled', 'true');
           }
         });
       });
