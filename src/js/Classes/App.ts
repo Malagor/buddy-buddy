@@ -235,12 +235,12 @@ export class App {
     this.groupHandler = this.database.groupHandler(this.groups.createGroupList, this.groups.addUserInGroupCard);
     this.database.getGroupList(this.groupHandler);
   }
-  /// при отрисове группы вызываю 
+
   onAddInfoForModalDetailGroup(idGroup: string) {
     this.database.getGroup(idGroup, this.groups.addInfoForModalDetailGroup, this.groups.addModalUserData);
     this.database.getBalanceInGroup(idGroup, 1, this.groups.addBalanceForModalGroupDetail);
   }
-  /// при отрисове деталей группы вызываю
+
   addBalanceInGroupPage(idGroup: string) {
     this.database.getBalanceInGroup(idGroup, 1, this.groups.addBalanceInGroupCard);
   }

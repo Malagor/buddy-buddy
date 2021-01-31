@@ -5,8 +5,8 @@ import { getFormData } from '../../Util/getFormData';
 import { Modal } from 'bootstrap';
 import { eventForContactsList } from '../Contacts/eventForContactsList';
 import { onClickContactInContactsList } from '../Contacts/onClickContactInContactsList';
-import { resolve } from '../../../../webpack.config';
-import { rejects } from 'assert';
+//import { resolve } from '../../../../webpack.config';
+//import { rejects } from 'assert';
 
 const defaultGroupLogo = require('../../../assets/images/default-group-logo.png');
 
@@ -40,7 +40,7 @@ export class MyGroups extends Page {
           </div>
           <div class="block__main">
             <div id="contentGroup" class="container">
-              <div id="divForListOpenGroups">
+              <div id="divForListOpenGroups" class="block__wrapper-card">
                 <div class="card-body data-is-not">
                   <h5 class="card-title">No groups yet.</h5>
                   <p class="card-text">Would you like to create the first group?</p>
@@ -92,6 +92,35 @@ export class MyGroups extends Page {
   }
 
   addUserInGroupCard(data: any) {
+    console.log('data', data)
+
+    const usersListObj = data.dataGroup.userList
+    const thisUid = data.thisUid
+ 
+    if(usersListObj[thisUid].state === 'pending') {
+      const cardGroup = document.querySelector(`#${data.groupKey}`)
+      cardGroup.classList.add('card-group--new-group')
+    }
+
+
+    const arrayUsers = data.arrayUsers
+    arrayUsers.forEach(userObj => {
+      console.log('userObj', userObj.userId === thisUid)
+      if(userObj.userId === thisUid &&
+        userObj.currentGroup === data.groupKey
+        ) {
+            const divCurrentGroup = document.querySelector(`#${data.groupKey}`)
+            divCurrentGroup.classList.add('test')
+        console.log(' divCurrentGroup',  divCurrentGroup);
+        
+        
+      }
+    });
+
+    //const currentlyGroup = data.arrayUsers[thisUid].
+
+
+    
     const NUM_OF_IMG_IN_GROUP_CARD: number = 5;
     const listUsers = data.arrayUsers;
 
@@ -615,16 +644,6 @@ export class MyGroups extends Page {
       }
       this.closeGroup(dataForCloseGroup)
 
-
-
- /*      const userList = Object.keys(data.dataGroup.userList);
-      userList.forEach((userId) => {
-        const dataForCloseGroup = {
-          userId: userId,
-          groupId: groupId
-        }
-        this.closeGroup(dataForCloseGroup)
-      }) */
     })
 
 

@@ -483,6 +483,7 @@ export class Database {
         const data: any = {
           dataGroup: snapshot.val(),
           groupKey: groupKey,
+          thisUid: this.uid
         };
 
         createGroupList(data);
@@ -490,14 +491,16 @@ export class Database {
         base
           .ref('User')
           .once('value', (snapshot) => {
-
+            //console.log('snapshot', snapshot.val())
             const snapshotUser = snapshot.val();
             const userList = Object.keys(snapshotUser);
 
             const arrayUsers: any[] = [];
             userList.forEach(user => {
-              if (userLIstInGroup.includes(user)) {
-                arrayUsers.push(snapshotUser[user]);
+              if (userLIstInGroup.includes(user)) {  
+                const userInfoObj = snapshotUser[user]
+                userInfoObj.userId = user
+                arrayUsers.push(userInfoObj);
               }
             });
             data.arrayUsers = arrayUsers;
@@ -630,7 +633,7 @@ export class Database {
       console.log('data_closeGroupChangeDataBase', data);
       const { balance, groupId } = data
 
-      if (balance === 0) {
+      if (balance !== 0) {
         console.log('Balance is zero - go delete group');
 
         changeStatusToClosed(userList)
@@ -641,7 +644,6 @@ export class Database {
         console.log('Balance is not zero - you do not close group');
       }
     }
-    /// тут вызываю получения баланса (balance)
     this.getBalanceInGroup(groupId, 1, closeGroupChangeDataBase)
 
   }

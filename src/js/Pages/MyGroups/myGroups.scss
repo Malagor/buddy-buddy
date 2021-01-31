@@ -5,6 +5,11 @@
   opacity: 0;
 }
 
+.test {
+  background: green;
+  order: -1;
+}
+
 .position-material-icons {
   position: absolute;
   right: 0;
@@ -21,8 +26,22 @@
   margin: rem(10px) 0 rem(10px) 0;
 }
 
+.block__wrapper-card {
+  display: flex;
+  flex-direction: column;
+}
+
 .card-group {
+  width: 100%;
   margin: auto;
+  border: 2px solid rgba(0,0,0,.05);
+  border-radius: .625rem;
+  box-shadow: 0 3px 5px rgba(0,0,0,.25);
+
+  &--new-group {
+    border: 2px solid rgba(10, 226, 21, 0.50);
+    box-shadow: 0 3px 5px rgba(0, 0, 0, 0.25);
+  }
 
   &__box-content {
     margin-top: 0.5rem;
@@ -33,11 +52,13 @@
     width: rem(60px);
     height: rem(60px);
     border-radius: 50%;
+    object-fit: cover; 
 
     &--mini {
       width: rem(25px);
       height: rem(25px);
       border-radius: 50%;
+      object-fit: cover; 
     }
   }
 
@@ -150,6 +171,7 @@
       width: rem(50px);
       height: rem(50px);
       border-radius: 50%;
+      object-fit: cover; 
     }
     &__name{
       margin: rem(5px);
