@@ -1,7 +1,7 @@
 import firebase from 'firebase';
 import 'firebase/auth';
 import { default as CyrillicToTranslit } from 'cyrillic-to-translit-js/CyrillicToTranslit';
-import { IDataForCreateGroup, IDataChangeStatus, IDataAddMember } from '../Interfaces/IGroupData';
+import { IDataForCreateGroup, IDataChangeStatus, IDataAddMember, IDataCloseGroup } from '../Interfaces/IGroupData';
 import { ISearchUserData } from '../Pages/Contacts/Contacts';
 import { IMessage, INewMessage } from '../Pages/Messenger/Messenger';
 import { IHandlers } from './App';
@@ -573,6 +573,77 @@ export class Database {
     dataBase
       .ref(`User/${userId}/groupList/${groupId}`)
       .set({state: state});
+  }
+
+  closeGroup(data: IDataCloseGroup){
+    const {userList, groupId} = data;
+    const dataBase =  this.firebase.database();
+
+    const changeStatusToClosed = (userList: string[]) => {
+      userList.forEach((userId) => {
+        const dataForChangeStatusUser = {
+          userId: userId,
+          groupId: groupId,
+          state: 'closed'
+        }
+        //+this.changeStatusUser(dataForChangeStatusUser)
+      })
+    }
+
+    const addDateClosedForGroup = (groupId: string) => {
+      dataBase
+        .ref(`Groups/${groupId}/dateClose/`)
+        .set(Date.now());
+    }
+
+    const closeTransaction = (groupId: string) => {
+      dataBase
+        .ref(`Groups/${groupId}/transactions/`)
+        .once('value', (transactionsList) => {
+          const transactionsListArray = transactionsList.val()
+          transactionsListArray.forEach((transaction: string) => {
+            dataBase
+              .ref(`Transactions/${transaction}/state`)
+              .set('closed');
+
+            dataBase
+            .ref(`Transactions/${transaction}/`)
+            .once('value', (transactions) => {
+              const transactionId = transactions.key
+              const transactionInfo = transactions.val()
+              
+              const transactionUserList = Object.keys(transactionInfo.toUserList) 
+              console.log('transactionUserList', transactionUserList);
+              transactionUserList.forEach((userId: string) => {
+                dataBase
+                  .ref(`User/${userId}/transactionList/${transactionId}/state`)
+                  .set('closed');
+              })
+              
+            })  
+          });
+
+        })
+    }
+
+    const closeGroupChangeDataBase = (data: any) => {
+      console.log('data_closeGroupChangeDataBase', data);
+      const { balance, groupId } = data
+
+      if (balance === 0) {
+        console.log('Balance is zero - go delete group');
+
+        changeStatusToClosed(userList)
+        addDateClosedForGroup(groupId)
+        closeTransaction(groupId)
+
+      } else {
+        console.log('Balance is not zero - you do not close group');
+      }
+    }
+    /// тут вызываю получения баланса (balance)
+    this.getBalanceInGroup(groupId, 1, closeGroupChangeDataBase)
+
   }
 
   addMemberInGroup(data: IDataAddMember, addNewUserInDetailGroup: any) {
@@ -1455,7 +1526,7 @@ export class Database {
         // Total group Balances
         const userListArray: { state: string, sum: number }[] = usersList.length ? Object.values(usersList) : [];
         let balance: number = userListArray.length ? userListArray.reduce((sum: number, userData: { sum: number }) => {
-          if (userData.sum > 0) {
+          if (userData.sum > 0) {  
             sum += userData.sum;
           }
           return sum;
@@ -1466,6 +1537,7 @@ export class Database {
           balance: balance,
           groupId: groupId,
         };
+        /// тут я получаю в балансе ноль (balance)
         funcForRender(data);
 
       })

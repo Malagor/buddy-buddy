@@ -6,7 +6,7 @@ import { Main } from '../Pages/Main/Main';
 import { MyGroups } from '../Pages/MyGroups/MyGroups';
 import { AccountPage } from '../Pages/AccountPage/AccountPage';
 
-import { IGroupDataAll, IDataForCreateGroup, IDataChangeStatus, IDataAddMember } from '../Interfaces/IGroupData';
+import { IGroupDataAll, IDataForCreateGroup, IDataChangeStatus, IDataAddMember, IDataCloseGroup } from '../Interfaces/IGroupData';
 import { TransactionsList } from '../Pages/TransactionsList/transactionsList';
 import { INotification, Notifications, TypeOfNotifications } from './Notifications';
 import { INewMessage, Messenger } from '../Pages/Messenger/Messenger';
@@ -96,6 +96,7 @@ export class App {
       this.groups.addUserBalanceInModalCardUser = this.addUserBalanceInModalCardUser.bind(this);
       this.groups.getUserBalanceInGroup = this.getUserBalanceInGroup.bind(this);
       this.groups.changeUserStatusInGroup = this.changeUserStatusInGroup.bind(this);
+      this.groups.closeGroup = this.closeGroup.bind(this);
       this.groups.addMemberInDetailGroup = this.addMemberInDetailGroup.bind(this);
 
 
@@ -234,12 +235,12 @@ export class App {
     this.groupHandler = this.database.groupHandler(this.groups.createGroupList, this.groups.addUserInGroupCard);
     this.database.getGroupList(this.groupHandler);
   }
-
+  /// при отрисове группы вызываю 
   onAddInfoForModalDetailGroup(idGroup: string) {
     this.database.getGroup(idGroup, this.groups.addInfoForModalDetailGroup, this.groups.addModalUserData);
     this.database.getBalanceInGroup(idGroup, 1, this.groups.addBalanceForModalGroupDetail);
   }
-
+  /// при отрисове деталей группы вызываю
   addBalanceInGroupPage(idGroup: string) {
     this.database.getBalanceInGroup(idGroup, 1, this.groups.addBalanceInGroupCard);
   }
@@ -257,6 +258,11 @@ export class App {
   changeUserStatusInGroup(data: IDataChangeStatus) {
     this.database.changeStatusUser(data);
     this.notifications.decreaseNotificationMark(TypeOfNotifications.Group);
+  }
+
+  closeGroup(data: IDataCloseGroup) {
+    this.database.closeGroup(data);
+    //.notifications.decreaseNotificationMark(TypeOfNotifications.Group);
   }
 
   addMemberInDetailGroup(data: IDataAddMember) {

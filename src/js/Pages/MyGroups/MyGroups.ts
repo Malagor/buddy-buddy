@@ -5,12 +5,14 @@ import { getFormData } from '../../Util/getFormData';
 import { Modal } from 'bootstrap';
 import { eventForContactsList } from '../Contacts/eventForContactsList';
 import { onClickContactInContactsList } from '../Contacts/onClickContactInContactsList';
+import { resolve } from '../../../../webpack.config';
+import { rejects } from 'assert';
 
 const defaultGroupLogo = require('../../../assets/images/default-group-logo.png');
 
 export class MyGroups extends Page {
   onCreateNewGroup: any;
-  deleteGroup: any;
+  closeGroup: any;
   onAddMember: any;
   addMemberInDetailGroup: any;
   fillContactsList: any;
@@ -462,8 +464,9 @@ export class MyGroups extends Page {
     }
 
     if (author === thisUser && !document.querySelector('#addUserInGroupDetail')) {
+      this._addCloseGroupBtn(data)
 
-      const html = `
+      const htmlAddMember = `
         <div id="addUserInGroupDetail" class="row ">
           <div class="dropdown col-10 modal-dropdown">
             <input class="form-control dropdown-toggle" type="text" id="activeContact" data-bs-toggle="dropdown" aria-expanded="false" placeholder="Members" autocomplete="off" name="name">
@@ -480,24 +483,23 @@ export class MyGroups extends Page {
 
         </div>
       `;
-      divModalContent.insertAdjacentHTML('beforeend', html); //
+      divModalContent.insertAdjacentHTML('beforeend', htmlAddMember);
 
-      document.querySelector('.contacts-user-list-detail').innerHTML = ''; //
-      this.fillContactsList('.contacts-user-list-detail'); //
+      document.querySelector('.contacts-user-list-detail').innerHTML = '';
+      this.fillContactsList('.contacts-user-list-detail');
 
 
       // Auto-filter contacts in member group list
       const formMembers: HTMLInputElement = document.querySelector('#activeContact');
       eventForContactsList(formMembers);
 
-      onClickContactInContactsList('.contacts-user-list-detail'); //
+      onClickContactInContactsList('.contacts-user-list-detail');
 
       const addGroupMember = document.querySelector('#addNewGroupMemberInDetail');
       addGroupMember.addEventListener('click', (ev) => {
         document.querySelector('.modal-error-text').innerHTML = '';
 
         ev.preventDefault();
-        // console.log('Add new Member');
         const member: HTMLFormElement = document.querySelector('#activeContact');
 
         // проверки по введенным данным в интуп
@@ -581,6 +583,51 @@ export class MyGroups extends Page {
         </div>
       `;
     return html;
+  }
+
+  _addCloseGroupBtn(data: any) {
+    const groupId = data.groupId;
+
+    const clearCloseGroupBtn = (): void => {
+      const closeGroupBtn = document.querySelector('#closeGroupBtn')
+      if (closeGroupBtn) {
+        closeGroupBtn.remove()
+      }
+    }
+    clearCloseGroupBtn()
+
+    const divFooterModal = document.querySelector('.modal-footer')
+    const htmlBtnCloseGroup = `
+    <div class="">
+      <button id="closeGroupBtn" type="button" class="btn btn-warning">Close group</button>
+    </div>
+    `
+    divFooterModal.insertAdjacentHTML('afterbegin', htmlBtnCloseGroup);
+    
+    const closeGroupBtn = document.querySelector('#closeGroupBtn')
+    closeGroupBtn.addEventListener('click', () => {
+      console.log('close group');
+      const userList = Object.keys(data.dataGroup.userList);
+
+      const dataForCloseGroup = {
+        userList: userList,
+        groupId: groupId
+      }
+      this.closeGroup(dataForCloseGroup)
+
+
+
+ /*      const userList = Object.keys(data.dataGroup.userList);
+      userList.forEach((userId) => {
+        const dataForCloseGroup = {
+          userId: userId,
+          groupId: groupId
+        }
+        this.closeGroup(dataForCloseGroup)
+      }) */
+    })
+
+
   }
 
   private addUserToGroup(data: any) {
