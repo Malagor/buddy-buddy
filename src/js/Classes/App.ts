@@ -343,7 +343,7 @@ export class App {
   }
 
   onCreateTransaction(transactionData: any) {
-    console.log('Trans data', transactionData);
+    // console.log('Trans data', transactionData);
     const toUsd = Currencies.toUSD(transactionData.currency);
     const userList = transactionData.toUserList;
     toUsd(transactionData.totalCost)
@@ -369,13 +369,13 @@ export class App {
 
   onChangeState(state: string, transID: string) {
     this.database.setNewStateTransaction(state, transID);
-    // if(state === 'approve') {
-    //   this.notifications.decreaseNotificationMark(TypeOfNotifications.Transaction);
-    // }
+    if(state === 'approve') {
+      this.notifications.decreaseNotificationMark(TypeOfNotifications.Transaction);
+    }
   }
 
-  onGetTransInfo(trans: any, groupID: string) {
-    this.database.getTransInfoModal(trans, groupID, this.transactionsList.addGroupTitle,
+  onGetTransInfo(transID: string, groupID: string) {
+    this.database.getTransInfoModal(transID, groupID, this.transactionsList.addGroupTitle,
     this.transactionsList.addMemberOfTransaction, this.transactionsList.addOwnerInfo);
   }
 
@@ -388,7 +388,7 @@ export class App {
         curCost.forEach((cost, index) => {
           editData[index].cost = cost;
         });
-        this.database.editTransaction(editData, transID, trans);
+        this.database.editTransaction(editData, transID, trans, this.transactionsList.addTransactionWrapper, this.transactionsList.addMyTransactions, this.transactionsList.addUserToList );
       });
   }
 

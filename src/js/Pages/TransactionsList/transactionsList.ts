@@ -107,19 +107,21 @@ export class TransactionsList extends Page {
         this.detailsModal.show();
         this.renderOutTrans(detailsModalWrapper, transID, trans, owner, ownUID, selectState.value);
       }
-    });
+    });  
   }
 
   changeSelectState = (select: HTMLSelectElement, trans: HTMLElement, transID: string): void => {
     select.addEventListener('change', () => {
       this.onChangeState(select.value, transID);
-      this.changeCardStyle(trans, select.value );
+      this.changeCardStyle(select, trans, select.value );
     });
   }
 
-  changeCardStyle = (transaction: HTMLElement, selectValue: string) => {
+  changeCardStyle = (select:HTMLSelectElement, transaction: HTMLElement, selectValue: string) => {
     if (selectValue === 'approve') {
       transaction.classList.remove('border-success', 'border-danger');
+      // select.classList.add('d-none'); 
+      select.setAttribute('disabled', '');   
     } else if (selectValue === 'decline') {
       transaction.classList.remove('border-success');
       transaction.classList.add('border-danger');
@@ -159,17 +161,27 @@ export class TransactionsList extends Page {
   }
 
   renderOutTrans = (wrapper: HTMLElement, transID: string, trans: any, owner: boolean, ownUID: string, selectValue: string): void => {
+    // console.log ('trans', trans);
 
     const styles = setDetailsStyles(trans, owner, ownUID);
     if (!trans.photo) {
       trans.photo = '';
     }
     wrapper.innerHTML = '';
+    // console.log ('detailswrapper',wrapper);
+
+    
     const date: any = getDate(trans.date);
     const baseHTML = renderDetailsHTML(trans, date, styles);
     wrapper.insertAdjacentHTML('beforeend', baseHTML);
 
-    this.onGetTransInfo(trans, trans.groupID);
+    const membersWrapper: HTMLElement = wrapper.querySelector('.details__members');
+    const notMembersWrapper: HTMLElement = wrapper.querySelector('.details__not-members');
+    membersWrapper.innerHTML = '';
+    notMembersWrapper.innerHTML = '';
+
+
+    this.onGetTransInfo(transID, trans.groupID);
 
     const detailsSelectWrapper: HTMLElement = wrapper.querySelector('.details__state-wrapper');
     const detailsSelect: HTMLSelectElement = wrapper.querySelector('.details__state');
@@ -185,8 +197,12 @@ export class TransactionsList extends Page {
 
     detailsSelect.addEventListener('change', () => {
       this.onChangeState(detailsSelect.value, transID);
+      if (detailsSelect.value === 'approve') {
+        detailsSelect.setAttribute('disabled', '');
+      }
       const optInCardSelect = document.getElementById(transID).querySelector('.trans-item__state').querySelectorAll('option');
-      const transaction = document.getElementById(transID);
+      const cardSelect: HTMLSelectElement = document.getElementById(transID).querySelector('.trans-item__state');
+      const transaction: HTMLElement = document.getElementById(transID);
       optInCardSelect.forEach((opt: HTMLOptionElement) => {
         if (opt.value === detailsSelect.value) {
           opt.setAttribute('selected', '');
@@ -194,7 +210,7 @@ export class TransactionsList extends Page {
           opt.removeAttribute('selected');
         }
 
-        this.changeCardStyle(transaction, detailsSelect.value, );
+        this.changeCardStyle(cardSelect, transaction, detailsSelect.value, );
       });
     });
 
@@ -255,6 +271,8 @@ export class TransactionsList extends Page {
   }
 
   addMemberOfTransaction = (trans: any, user: any) => {
+    // console.log('newTrans',trans );
+    // console.log ('userMember', user);
     const modalWrapper: HTMLElement = document.querySelector('.details__wrapper');
     const membersWrapper: HTMLElement = modalWrapper.querySelector('.details__members');
     const notMembersWrapper: HTMLElement = modalWrapper.querySelector('.details__not-members');
@@ -305,9 +323,13 @@ export class TransactionsList extends Page {
         notMembersWrapper.append(member);
         member.classList.add('details__memb--not-checked');
         member.classList.remove('details__memb--checked');
-        member.querySelector('.details__member-cost').value = '0.00';
+        member.querySelector('.details__member-cost').value = '';
+        member.querySelector('.details__member-cost').setAttribute('disabled','');
         member.querySelector('.details__member-cost').classList.add('non-fixed');
+        member.querySelector('.details__member-cost').classList.remove('fixed');
         member.querySelector('.details__member-comment').value = '';
+        member.querySelector('.details__member-comment').placeholder = '';
+        member.querySelector('.details__member-comment').setAttribute('disabled','');
         member.querySelector('.details__member-state').innerHTML = '';
         member.querySelector('.details__member-delete').innerHTML = '<i class="material-icons">add</i>';
       } else {
@@ -317,6 +339,9 @@ export class TransactionsList extends Page {
         member.setAttribute('user-state', 'pending');
         member.querySelector('.details__member-state').innerHTML = 'ожидание';
         member.querySelector('.details__member-delete').innerHTML = '<i class="material-icons">clear</i>';
+        member.querySelector('.details__member-comment').removeAttribute('disabled');
+        member.querySelector('.details__member-comment').placeholder = 'Комментарий';
+        member.querySelector('.details__member-cost').removeAttribute('disabled');
       }
       editSum(trans, modalWrapper);
       const notMembers = notMembersWrapper.querySelectorAll('.details__memb-wrapper');

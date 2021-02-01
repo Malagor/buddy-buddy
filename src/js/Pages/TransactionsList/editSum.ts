@@ -1,8 +1,11 @@
 export const editSum = (trans: any, wrapper: HTMLElement, membInput?: HTMLInputElement) => {
 
   const membersWrapper: HTMLElement = wrapper.querySelector('.details__members');
-  const fixedSums = membersWrapper.querySelectorAll('.fixed');
+  const fixedSums = membersWrapper.querySelectorAll('.fixed'); 
   const nonFixedSums = membersWrapper.querySelectorAll('.non-fixed');
+  // console.log ('fixedSums', fixedSums);
+  // console.log ('nonfixedSums', nonFixedSums);
+  // console.log ('totalcost', trans.totalCost);
   const btnSaveEdit = wrapper.querySelector('.details__save');
   if (nonFixedSums) {
     const numb: number = nonFixedSums.length;
@@ -11,7 +14,7 @@ export const editSum = (trans: any, wrapper: HTMLElement, membInput?: HTMLInputE
       sumOfFixed += +sum.value;
     });
     const restSum: number = +((+trans.totalCost - sumOfFixed) / numb).toFixed(2);
-    if (restSum > 0) {
+    if (restSum > 0 && ((+trans.totalCost) - (restSum + sumOfFixed)) < 0.01) {
       nonFixedSums.forEach((sum: HTMLFormElement) => {
         sum.value = +restSum.toFixed(2);
         if (membInput) {
