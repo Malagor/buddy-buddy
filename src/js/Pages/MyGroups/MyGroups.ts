@@ -92,8 +92,6 @@ export class MyGroups extends Page {
   }
 
   addUserInGroupCard(data: any) {
-    console.log('data', data)
-
     const usersListObj = data.dataGroup.userList
     const thisUid = data.thisUid
  
@@ -102,24 +100,14 @@ export class MyGroups extends Page {
       cardGroup.classList.add('card-group--new-group')
     }
 
-
     const arrayUsers = data.arrayUsers
-    arrayUsers.forEach(userObj => {
-      console.log('userObj', userObj.userId === thisUid)
+    arrayUsers.forEach((userObj: any) => {
       if(userObj.userId === thisUid &&
-        userObj.currentGroup === data.groupKey
-        ) {
-            const divCurrentGroup = document.querySelector(`#${data.groupKey}`)
-            divCurrentGroup.classList.add('test')
-        console.log(' divCurrentGroup',  divCurrentGroup);
-        
-        
+        userObj.currentGroup === data.groupKey) {
+          const divCurrentGroup = document.querySelector(`#${data.groupKey}`)
+          divCurrentGroup.classList.add('card-group__box-content--current')
       }
     });
-
-    //const currentlyGroup = data.arrayUsers[thisUid].
-
-
     
     const NUM_OF_IMG_IN_GROUP_CARD: number = 5;
     const listUsers = data.arrayUsers;
@@ -139,7 +127,6 @@ export class MyGroups extends Page {
         }
         countApproveUsers += 1;
       }
-
     });
 
     if (countApproveUsers > NUM_OF_IMG_IN_GROUP_CARD) {
@@ -173,10 +160,10 @@ export class MyGroups extends Page {
 
             <div class="row col">
               <div class="col-7">
-                <h5>${data.dataGroup.title}</h5>
+                <h5 class="card-group__title">${data.dataGroup.title}</h5>
               </div>
               <div class="col-5">
-                <h5>${dataCreateGroup.slice(0, 10)}</h5>
+                <h5 class="card-group__date">${dataCreateGroup.slice(0, 10)}</h5>
               </div>
             </div>
 
@@ -184,7 +171,7 @@ export class MyGroups extends Page {
               <div id="userList" class="col-7">
 
               </div>
-              <div id="balanceGroup" class="col-5">
+              <div id="balanceGroup" class="col-5 card-group__balance">
 
               </div>
             </div>
@@ -368,6 +355,10 @@ export class MyGroups extends Page {
         userList: users,
         currentGroup: currentGroup
       };
+
+      const oldCurrentGroup = document.querySelector('.card-group__box-content--current')
+      if(oldCurrentGroup) oldCurrentGroup.classList.remove('card-group__box-content--current')
+      
       this.onCreateNewGroup(groupDataAll);
       modalNewGroup.hide();
     };
@@ -397,24 +388,24 @@ export class MyGroups extends Page {
             <img class="card-detail__img-avatar" src="${data.dataGroup.icon ? data.dataGroup.icon : defaultGroupLogo}" alt="icon-group">
           </div>
           <div class="col-6 card-detail__box-logo-group">
-            <h5>${data.dataGroup.title}</h5>
-            <p>Create date: ${ dataCreateGroup.slice(0, 10) }</p>
-            <p>Close date:  ${ data.dataGroup.dateClose ? dataCloseGroup : 'group is active' }</p>
+            <h5 class="card-detail__title">${data.dataGroup.title}</h5>
+            <p class="card-detail__date">Create date: ${ dataCreateGroup.slice(0, 10) }</p>
+            <p class="card-detail__date">Close date:  ${ data.dataGroup.dateClose ? dataCloseGroup : 'group is active' }</p>
           </div>
           <div id="balanceModalGroup" class="col-3 card-detail__box-logo-group">
-          <h5>Balance</h5>
+          <h5 class="card-detail__balance">Balance</h5>
         </div>
         </div>
 
         <div class="row g-0 col card-detail__box-description">
-          <h5>Description</h5>
-          <p class="card-text">${data.dataGroup.description ? data.dataGroup.description : 'No description...'}</p>
+          <h5 class="card-detail__description">Description</h5>
+          <p class="card-text card-detail__text">${data.dataGroup.description ? data.dataGroup.description : 'No description...'}</p>
         </div>
         <div id="modalUserListApprove" class="card-detail__user-list">
-          <h5>Participants</h5>
+          <h5 class="card-detail__participants">Participants</h5>
         </div>
-        <div id="modalUserListPending" class="card-detail__user-list">
-          <p>Pending</p>
+        <div id="modalUserListPending" class="card-detail__user-list group-hidden">
+          <p class="card-detail__pending">Pending</p>
         </div>
       </div>
     `;
@@ -440,6 +431,10 @@ export class MyGroups extends Page {
     };
     let isBtmForDeleteUser = false;
 
+    if(author !== thisUser) {
+      this._clearCloseGroupBtn()
+    }
+
     const addEventListenerFromButtonDelUserInModal = (data: any) => {
       if (author === thisUser && userId !== author) {
         this._addEventListenerFromButtonDelUser(data);
@@ -449,9 +444,9 @@ export class MyGroups extends Page {
     if (author === thisUser && userId !== author) {
       isBtmForDeleteUser = true;
     }
-    const html = this._createUserCardFroModalDetail(data, isBtmForDeleteUser);
+    const html = this._createUserCardForModalDetail(data, isBtmForDeleteUser);
 
-    const htmlBnt = `
+    const htmlBtn = `
       <div class="btn-group modal-detail__button-container" role="group" aria-label="Basic mixed styles example">
         <button id="btn-prove" type="button" class="btn btn btn-success modal-detail__button-confirmation">Prove</button>
         <button id="btn-disprove" type="button" class="btn btn-danger modal-detail__button-confirmation">Disprove</button>
@@ -463,6 +458,7 @@ export class MyGroups extends Page {
       addEventListenerFromButtonDelUserInModal(data);
       this.addUserBalanceInModalCardUser(dataForBalanceInModalCard);
     } else if (stateUser === 'pending') {
+      divForUserListPending.classList.remove('group-hidden')
       divForUserListPending.insertAdjacentHTML('beforeend', html);
       addEventListenerFromButtonDelUserInModal(data);
     }
@@ -476,7 +472,7 @@ export class MyGroups extends Page {
     // если пользователь не подтвержден
     if (stateUser ===  'pending' &&  userId === thisUser) {
       const cardThisUser = document.querySelector(`[data-user-id-for-group="${userId}"]`);
-      cardThisUser.insertAdjacentHTML('beforeend', htmlBnt);
+      cardThisUser.insertAdjacentHTML('beforeend', htmlBtn);
 
       const btnProve = document.querySelector('#btn-prove');
       const btnDisprove = document.querySelector('#btn-disprove');
@@ -497,13 +493,10 @@ export class MyGroups extends Page {
 
       const htmlAddMember = `
         <div id="addUserInGroupDetail" class="row ">
-          <div class="dropdown col-10 modal-dropdown">
-            <input class="form-control dropdown-toggle" type="text" id="activeContact" data-bs-toggle="dropdown" aria-expanded="false" placeholder="Members" autocomplete="off" name="name">
-            <ul id="members-dropdown-menu" class="dropdown-menu contacts-user-list-detail members-dropdown-menu" aria-labelledby="Group Members">
+          <div class="dropdown col-12 modal-dropdown">
+            <input class="form-control dropdown-toggle modal-input" type="text" id="activeContact" data-bs-toggle="dropdown" aria-expanded="false" placeholder="Members" autocomplete="off" name="name">
+            <ul id="members-dropdown-menu" class="dropdown-menu contacts-user-list-detail members-dropdown-menu" aria-labelledby="Group Members">   
             </ul>
-          </div>
-
-          <div class="col-2 modal-wrapper-btn">
             <button type="button" class="btn btn-primary modal-btn-primary" id="addNewGroupMemberInDetail"><span>add</span></button>
           </div>
 
@@ -551,6 +544,7 @@ export class MyGroups extends Page {
             groupId: data.groupId
           };
           this.addMemberInDetailGroup(dataForAddMember);
+          document.querySelector('#modalUserListPending').classList.remove('group-hidden')
         }
 
         document.getElementById('activeContact').value = '';
@@ -571,7 +565,7 @@ export class MyGroups extends Page {
       this.addTextInHtmlBlock('.modal-error-text', errorData);
     } else {
       const divForUserListPending = document.getElementById('modalUserListPending');
-      const html = this._createUserCardFroModalDetail(data, true);
+      const html = this._createUserCardForModalDetail(data, true);
 
       divForUserListPending.insertAdjacentHTML('beforeend', html);
       this._addEventListenerFromButtonDelUser(data);
@@ -579,12 +573,12 @@ export class MyGroups extends Page {
   }
 
   _addEventListenerFromButtonDelUser(data: any) {
-    const buttonDeleteUser = document.querySelector(`[btn-data-id-user="${data.userId}"]`);
+    const buttonDeleteUser = document.querySelector(`[data-id-user="${data.userId}"]`);
 
     buttonDeleteUser.addEventListener('click', (e) => {
 
-      const userId = e['toElement']['attributes']['btn-data-id-user']['value'];
-      const groupId = e['toElement']['attributes']['btn-data-id-group']['value'];
+      const userId = e['toElement']['attributes']['data-id-user']['value'];
+      const groupId = e['toElement']['attributes']['data-id-group']['value'];
 
       const data = {
         userId: userId,
@@ -596,8 +590,8 @@ export class MyGroups extends Page {
     });
   }
 
-  _createUserCardFroModalDetail(data: any, isBtn: boolean = false) {
-    const htmlButtonDeleteUser = `<button type="button" class="btn-close" btn-data-id-user="${data.userId}" btn-data-id-group="${data.groupId}" aria-label="Close"></button>`;
+  _createUserCardForModalDetail(data: any, isBtn: boolean = false) {
+    const htmlButtonDeleteUser = `<button type="button" class="btn-close" data-id-user="${data.userId}" data-id-group="${data.groupId}" aria-label="Close"></button>`;
 
     const html = `
         <div data-user-id-for-group=${data.userId} class="card modal-detail">
@@ -614,16 +608,23 @@ export class MyGroups extends Page {
     return html;
   }
 
+  _clearCloseGroupBtn = (): void => {
+    const closeGroupBtn = document.querySelector('#closeGroupBtn')
+    if (closeGroupBtn) {
+      closeGroupBtn.remove()
+    }
+  }
+
   _addCloseGroupBtn(data: any) {
     const groupId = data.groupId;
 
-    const clearCloseGroupBtn = (): void => {
+ /*    const clearCloseGroupBtn = (): void => {
       const closeGroupBtn = document.querySelector('#closeGroupBtn')
       if (closeGroupBtn) {
         closeGroupBtn.remove()
       }
-    }
-    clearCloseGroupBtn()
+    } */
+    this._clearCloseGroupBtn()
 
     const divFooterModal = document.querySelector('.modal-footer')
     const htmlBtnCloseGroup = `
@@ -645,8 +646,6 @@ export class MyGroups extends Page {
       this.closeGroup(dataForCloseGroup)
 
     })
-
-
   }
 
   private addUserToGroup(data: any) {

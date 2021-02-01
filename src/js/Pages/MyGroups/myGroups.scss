@@ -5,11 +5,6 @@
   opacity: 0;
 }
 
-.test {
-  background: green;
-  order: -1;
-}
-
 .position-material-icons {
   position: absolute;
   right: 0;
@@ -46,6 +41,11 @@
   &__box-content {
     margin-top: 0.5rem;
     margin-bottom: 0.5rem;
+
+    &--current {
+      background: #a2a7a27a;
+      order: -1;
+    }
   }
 
   &__img-avatar {
@@ -93,7 +93,12 @@
 }
 
 .modal-dropdown {
+  display: flex;
   padding: rem(9px) rem(7px) rem(7px) rem(7px);
+}
+
+.modal-input{
+  margin: rem(7px);
 }
 
 .modal-btn-primary {
@@ -103,6 +108,11 @@
 .modal-wrapper-btn {
   margin: 0;
   padding: 0;
+}
+
+.modal-error-text{
+  margin: rem(3px);
+  color: red;
 }
 
 .member {
@@ -161,9 +171,12 @@
   flex-direction: row;
   align-items: center;
   margin: rem(8px) 0 rem(16px) 0;
+  border: 2px solid rgba(0,0,0,.05);
+  border-radius: .625rem;
+  box-shadow: 0 3px 5px rgba(0,0,0,.25);
 
   &--author{
-    background-color: rgba(128, 128, 128, 0.616);
+    background: #a2a7a27a;
   }
 
     &__img {
@@ -233,12 +246,79 @@
   .modal {
     left: 0;
   } 
-  .modal-detail__img {
-    margin: rem(6px);
-    width: rem(40px);
-    height: rem(40px);
-    border-radius: 50%;
+  .modal-detail {
+
+    &__img {
+      margin: rem(6px);
+      width: rem(40px);
+      height: rem(40px);
+      border-radius: 50%;
+    }
+
+    &__name, 
+    &__account {
+      font-size: rem(12px);
+      margin: rem(3px);
+    }
+
   }
+
+  .card-group {
+
+    &__title{
+      font-size: rem(14px);
+      font-weight: 500;
+    }
+
+    &__date{
+      font-size: rem(12px);
+    }
+
+    &__date,
+    &__balance {
+      font-size: rem(12px);
+    }
+  }
+
+  .card-detail {
+  
+    &__title,
+    &__description,
+    &__participants,
+    &__pending {
+      font-size: rem(14px);
+      font-weight: 500;
+    }
+
+    &__date,
+    &__balance,
+    &__text {
+      font-size: rem(12px);
+    }
+  
+    &__img-avatar {
+      display: block;
+      width: rem(70px);
+      height: rem(70px);
+      margin: auto;
+      border-radius: 50%;
+  
+      &--user {
+        width: rem(50px);
+        height: rem(50px);
+        border-radius: 50%;
+      }
+    }
+  
+    &__box-description {
+      margin: 0 0.8rem 0 0.8rem ;
+    }
+  
+    &__user-list {
+      margin: 0.8rem;
+    }
+  }
+
 }
 
 @media (max-width: 370px) {
