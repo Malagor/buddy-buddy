@@ -161,15 +161,11 @@ export class TransactionsList extends Page {
   }
 
   renderOutTrans = (wrapper: HTMLElement, transID: string, trans: any, owner: boolean, ownUID: string, selectValue: string): void => {
-    // console.log ('trans', trans);
-
     const styles = setDetailsStyles(trans, owner, ownUID);
     if (!trans.photo) {
       trans.photo = '';
     }
     wrapper.innerHTML = '';
-    // console.log ('detailswrapper',wrapper);
-
     
     const date: any = getDate(trans.date);
     const baseHTML = renderDetailsHTML(trans, date, styles);
@@ -180,9 +176,7 @@ export class TransactionsList extends Page {
     membersWrapper.innerHTML = '';
     notMembersWrapper.innerHTML = '';
 
-
     this.onGetTransInfo(transID, trans.groupID);
-
     const detailsSelectWrapper: HTMLElement = wrapper.querySelector('.details__state-wrapper');
     const detailsSelect: HTMLSelectElement = wrapper.querySelector('.details__state');
     const options: NodeListOf<HTMLElement> = detailsSelect.querySelectorAll('option');
@@ -209,7 +203,6 @@ export class TransactionsList extends Page {
         } else {
           opt.removeAttribute('selected');
         }
-
         this.changeCardStyle(cardSelect, transaction, detailsSelect.value, );
       });
     });
@@ -242,6 +235,7 @@ export class TransactionsList extends Page {
       const editData = this.getDataforEditTransaction(wrapper);
       this.onEditTransaction(editData, transID, trans);
       this.detailsModal.hide();
+      setTimeout(() => {this.changeBalance()}, 300);  
     });
 
     const btnDelete = wrapper.querySelector('.details__delete');
@@ -252,7 +246,18 @@ export class TransactionsList extends Page {
       const transCard = document.getElementById(transID);
       transCard.remove();
       this.onDeleteTransaction(groupID, transID);
+      this.changeBalance();   
     });
+  }
+
+  changeBalance = () => {
+    const groups: HTMLFormElement = document.querySelector('.trans-list__groups');
+    const groupID = groups.value;
+    if (groups.value === 'all-trans') {
+      this.onRenderTotalBalance();
+    } else {
+      this.onRenderGroupBalance(groupID);
+    }
   }
 
   addGroupTitle = (groupID: string, title: string) =>  {
@@ -271,8 +276,6 @@ export class TransactionsList extends Page {
   }
 
   addMemberOfTransaction = (trans: any, user: any) => {
-    // console.log('newTrans',trans );
-    // console.log ('userMember', user);
     const modalWrapper: HTMLElement = document.querySelector('.details__wrapper');
     const membersWrapper: HTMLElement = modalWrapper.querySelector('.details__members');
     const notMembersWrapper: HTMLElement = modalWrapper.querySelector('.details__not-members');
@@ -296,7 +299,7 @@ export class TransactionsList extends Page {
       membersWrapper.append(member);
 
     } else {
-      member.className = 'details__memb-wrapper details__memb--not-checked d-flex justify-content-between';
+      member.className = 'details__memb-wrapper details__memb--not-checked d-flex justify-content-start';
       member.setAttribute('user-id', user.key);
       member.innerHTML = renderNonCheckedMember(user);
       notMembersWrapper.append(member);
@@ -321,27 +324,29 @@ export class TransactionsList extends Page {
     member.querySelector('.details__member-delete').addEventListener('click', () => {
       if (member.querySelector('.details__member-delete').innerText === 'clear') {
         notMembersWrapper.append(member);
-        member.classList.add('details__memb--not-checked');
-        member.classList.remove('details__memb--checked');
+        member.classList.add('details__memb--not-checked', 'justify-content-start');
+        member.classList.remove('details__memb--checked', 'justify-content-between');
         member.querySelector('.details__member-cost').value = '';
-        member.querySelector('.details__member-cost').setAttribute('disabled','');
-        member.querySelector('.details__member-cost').classList.add('non-fixed');
+        member.querySelector('.details__member-cost').classList.add('non-fixed', 'd-none');
         member.querySelector('.details__member-cost').classList.remove('fixed');
         member.querySelector('.details__member-comment').value = '';
-        member.querySelector('.details__member-comment').placeholder = '';
-        member.querySelector('.details__member-comment').setAttribute('disabled','');
+        member.querySelector('.details__member-comment').classList.add('d-none');
         member.querySelector('.details__member-state').innerHTML = '';
+        member.querySelector('.details__member-state').classList.add('d-none');
         member.querySelector('.details__member-delete').innerHTML = '<i class="material-icons">add</i>';
-      } else {
+        member.querySelector('.details__member-delete').classList.add('ms-3');
+      } 
+      else {
         membersWrapper.append(member);
-        member.classList.remove('details__memb--not-checked');
-        member.classList.add('details__memb--checked');
+        member.classList.remove('details__memb--not-checked', 'justify-content-start');
+        member.classList.add('details__memb--checked', 'justify-content-between');
         member.setAttribute('user-state', 'pending');
         member.querySelector('.details__member-state').innerHTML = 'ожидание';
         member.querySelector('.details__member-delete').innerHTML = '<i class="material-icons">clear</i>';
-        member.querySelector('.details__member-comment').removeAttribute('disabled');
-        member.querySelector('.details__member-comment').placeholder = 'Комментарий';
-        member.querySelector('.details__member-cost').removeAttribute('disabled');
+        member.querySelector('.details__member-state').classList.remove('d-none');
+        member.querySelector('.details__member-comment').classList.remove('d-none');
+        member.querySelector('.details__member-cost').classList.remove('d-none');
+        member.querySelector('.details__member-delete').classList.remove('ms-3');
       }
       editSum(trans, modalWrapper);
       const notMembers = notMembersWrapper.querySelectorAll('.details__memb-wrapper');

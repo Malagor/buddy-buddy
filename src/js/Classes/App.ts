@@ -270,6 +270,10 @@ export class App {
     this.database.getBalanceForUserTotal(this.database.uid, this.transactionsList.addTotalBalance);
     this.transactionsList.newTrans.onCreateTransaction = this.onCreateTransaction.bind(this);
     this.transactionsList.newTrans.onShowMembersOfGroup = this.onShowMembersOfGroup.bind(this);
+
+    this.transactionsList.newTrans.onRenderGroupBalance = this.onRenderGroupBalanceNewTrans.bind(this);
+    this.transactionsList.newTrans.onRenderTotalBalance = this.onRenderTotalBalanceNewTrans.bind(this);
+    
     this.database.getCurrencyList(this.transactionsList.newTrans.addCurrencyList);
     this.database.getGroupsListForTransaction(this.transactionsList.newTrans.addGroupList);
     this.database.getMembersOfGroupFirst(this.transactionsList.newTrans.addMembersOfGroup);
@@ -401,6 +405,16 @@ export class App {
   }
 
   onRenderTotalBalance() {
+    this.database.getBalanceForUserTotal(this.database.uid, this.transactionsList.addTotalBalance);
+  }
+
+  onRenderGroupBalanceNewTrans(groupID: string) {
+    console.log ('render1');
+    this.database.getBalanceForUserInGroup(this.database.uid, groupID, this.transactionsList.addGroupBalance);
+  }
+
+  onRenderTotalBalanceNewTrans() {
+    console.log ('render2');
     this.database.getBalanceForUserTotal(this.database.uid, this.transactionsList.addTotalBalance);
   }
 

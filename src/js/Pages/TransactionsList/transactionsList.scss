@@ -46,8 +46,10 @@
 
   font-size: rem(20px);
   line-height: 1rem;
+  margin-top: rem(20px);
      @include phones {
        width: 40%;
+       margin-top: 0;
     }
 }
 
@@ -355,4 +357,5 @@
 
     object-fit: contain;
   }
+
 }
