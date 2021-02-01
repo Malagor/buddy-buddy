@@ -6,41 +6,50 @@ export const renderDetailsHTML = (trans: any, date: any, styles: any, ) => {
    </div>
    <div class="details__info modal-body">
 
-     <div class="details__date d-flex">
-       <div class="details__day">${date.localeDay}</div>
-       <div class="details__time">${date.localeTime}</div>
-     </div>
-
-     <div class="details__group"></div>
-
-     <div class="${styles.ownerDisplay} details__owner d-flex align-items-center">
-       <div>Плательщик: </div>
-       <div class="details__owner-info d-flex flex-column align-items-center">
+     <div class="details__date d-flex row">
+       <div class="col-5 col-sm-4">Дата:</div> 
+       <div class="col-7 col-sm-8 d-flex">   
+        <div class="details__day">${date.localeDay}</div>
+        <div class="details__time">${date.localeTime}</div>
        </div>
      </div>
 
-     <div class="details__cost">
-       <span>Сумма:</span>&nbsp;
-       <span class="fs-5 ${styles.colorText}">${styles.cost}</span>&nbsp;
-       <span class="fs-5 ${styles.colorText}">${trans.currency}</span>
+     <div class="details__group d-flex row"></div>
+
+     <div class="${styles.ownerDisplay} details__owner d-flex align-items-center row">
+       <div class="col-5 col-sm-4">Плательщик: </div>
+       <div class="col-7 col-sm-8 details__owner-info">
+       </div>
      </div>
 
-     <div class="${styles.commentDisplay} details__comment-box d-flex">
-       <div>Комментарий: </div>
-       <div class="details__comment">${styles.ownComment}</div>
+     <div class="details__cost d-flex row">
+       <div class="col-5 col-sm-4">Сумма:</div>
+       <div class="col-7 col-sm-8">
+          <span class="fs-5 ${styles.colorText}">${styles.cost}</span>&nbsp;
+          <span class="fs-5 ${styles.colorText}">${trans.currency}</span>
+       </div>  
      </div>
 
-     <div class="${styles.checkDisplay} details__check align-items-center d-flex">
-       <div>Чек: </div>
-       <div class="details__icon-wrapper"><img class="details__icon" src=${trans.photo[0]} alt="check"></div>
+     <div class="${styles.commentDisplay} details__comment-box d-flex row">
+       <div class="col-5 col-sm-4">Комментарий: </div>
+       <div class="col-7 col-sm-8 details__comment">${styles.ownComment}</div>
      </div>
 
-     <div class="${styles.selectDisplay} details__state-wrapper">
-       <select class="details__state form-select" aria-label="Default select example">
-         <option value="pending">ожидание</option>
-         <option value="approve">подтвердить</option>
-         <option value="decline">отклонить</option>
-       </select>
+     <div class="${styles.checkDisplay} details__check align-items-center d-flex row">
+       <div class="col-5 col-sm-4">Чек: </div>
+       <div class="col-7 col-sm-8 details__icon-wrapper"><img class="details__icon" src=${trans.photo[0]} alt="check"></div>
+     </div>
+
+     <div class="${styles.selectDisplay} details__state-wrapper d-flex row">
+       <div class="col-5 col-sm-4">Статус:</div> 
+       <div class="col-5 col-sm-5 details__state-wrap">
+          <select class="details__state form-select" aria-label="Default select example">
+            <option value="pending">ожидание</option>
+            <option value="approve">подтвердить</option>
+            <option value="decline">отклонить</option>
+          </select>
+       </div>
+    
      </div>
 
      <div class="modal fade details__check-modal" id="check" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">

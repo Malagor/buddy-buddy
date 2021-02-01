@@ -334,17 +334,17 @@
     line-height: 1rem;
   }
 
-  &__owner-name {
-    margin-left: rem(5px);
-  }
+  // &__owner-name {
+  //   margin-left: rem(5px);
+  // }
 
   &__comment {
     margin-left: rem(5px);
   }
 
-  &__state-wrapper {
-    width: 35%;
-    margin-top: rem(10px);
+  &__state-wrap {
+    width: 50%;
+
   }
 
   &__check-wrapper {

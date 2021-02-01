@@ -177,7 +177,7 @@ export class TransactionsList extends Page {
     notMembersWrapper.innerHTML = '';
 
     this.onGetTransInfo(transID, trans.groupID);
-    const detailsSelectWrapper: HTMLElement = wrapper.querySelector('.details__state-wrapper');
+    const detailsSelectWrapper: HTMLElement = wrapper.querySelector('.details__state-wrap');
     const detailsSelect: HTMLSelectElement = wrapper.querySelector('.details__state');
     const options: NodeListOf<HTMLElement> = detailsSelect.querySelectorAll('option');
     options.forEach((opt: HTMLOptionElement) => {
@@ -264,7 +264,11 @@ export class TransactionsList extends Page {
     const modalWrapper: HTMLElement = document.querySelector('.details__wrapper');
     const titleElement: HTMLElement = modalWrapper.querySelector('.details__group');
     titleElement.setAttribute('groupID', groupID);
-    titleElement.innerText = `Группа: ${title}`;
+    // titleElement.innerText = `Группа: ${title}`;
+     titleElement.innerHTML = `
+       <div class="col-5 col-sm-4">Группа:</div>
+       <div class="col-7 col-sm-8">${title}</div>
+     `;
   }
 
   addOwnerInfo = (owner: any) => {

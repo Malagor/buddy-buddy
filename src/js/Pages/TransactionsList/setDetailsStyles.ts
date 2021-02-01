@@ -31,6 +31,10 @@ export const setDetailsStyles = (trans: any, owner: boolean, ownUID: string) => 
     membDisplay = 'd-none';
     commentDisplay = '';
     selectDisplay = '';
+
+    if (ownComment === '') {
+      commentDisplay = 'd-none';
+    }
   }
 
   let btnSaveDisplay: string = '';
