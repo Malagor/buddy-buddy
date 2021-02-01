@@ -261,8 +261,8 @@ export class App {
   }
 
   closeGroup(data: IDataCloseGroup) {
-    this.database.closeGroup(data);
-    //.notifications.decreaseNotificationMark(TypeOfNotifications.Group);
+    this.database.closeGroup(data, this.groups.addNewUserInDetailGroup);
+    // .notifications.decreaseNotificationMark(TypeOfNotifications.Group);
   }
 
   addMemberInDetailGroup(data: IDataAddMember) {
@@ -452,10 +452,6 @@ export class App {
     };
 
     this.database.deleteHandlers(handlers);
-  }
-
-  deleteGroup(idGroup: string) {
-    this.database.removeGroup(idGroup);
   }
 
   onAddUserToContacts(userData: ISearchUserData, errorHandler: (message: string) => void): void {

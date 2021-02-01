@@ -496,9 +496,9 @@ export class Database {
 
             const arrayUsers: any[] = [];
             userList.forEach(user => {
-              if (userLIstInGroup.includes(user)) {  
-                const userInfoObj = snapshotUser[user]
-                userInfoObj.userId = user
+              if (userLIstInGroup.includes(user)) {
+                const userInfoObj = snapshotUser[user];
+                userInfoObj.userId = user;
                 arrayUsers.push(userInfoObj);
               }
             });
@@ -523,47 +523,6 @@ export class Database {
       .set(groupKey);
   }
 
-  removeGroup(groupId: string) {
-    this.firebase
-      .database()
-      .ref(`Groups/${groupId}`)
-      .once('value', (snapshot) => {
-        if (snapshot.val()) {
-          const userList = Object.keys(snapshot.val().userList);
-          userList.forEach((user) => {
-            this.firebase
-              .database()
-              .ref(`User/${user}/groupList/${groupId}`)
-              .remove(error => {
-                if (error) {
-                  console.log(error.message);
-                } else {
-                  console.log('Deleted group in user successful');
-                }
-              });
-          });
-        } else {
-          console.log('Group not found, delete users unsuccessful');
-        }
-        return snapshot.val();
-      }).then((snapshot) => {
-      if (snapshot.val()) {
-        this.firebase
-          .database()
-          .ref(`Groups/${groupId}`)
-          .remove(error => {
-            if (error) {
-              console.log(error.message);
-            } else {
-              console.log('Deleted group successful');
-            }
-          });
-      } else {
-        console.log('Group not found');
-      }
-    });
-  }
-
   changeStatusUser(data: IDataChangeStatus) {
     const { userId, groupId, state } = data;
     const dataBase = this.firebase.database();
@@ -577,32 +536,32 @@ export class Database {
       .set({ state: state });
   }
 
-  closeGroup(data: IDataCloseGroup){
+  closeGroup(data: IDataCloseGroup, renderFunction: any) {
     const {userList, groupId} = data;
     const dataBase =  this.firebase.database();
 
-    const changeStatusToClosed = (userList: string[]) => {
+    const changeStatusUserAndGroupListToClosed = (userList: string[]) => {
       userList.forEach((userId) => {
         const dataForChangeStatusUser = {
           userId: userId,
           groupId: groupId,
           state: 'closed'
-        }
-        //+this.changeStatusUser(dataForChangeStatusUser)
-      })
-    }
+        };
+        this.changeStatusUser(dataForChangeStatusUser);
+      });
+    };
 
     const addDateClosedForGroup = (groupId: string) => {
       dataBase
         .ref(`Groups/${groupId}/dateClose/`)
         .set(Date.now());
-    }
+    };
 
-    const closeTransaction = (groupId: string) => {
+    const closeTransactions = (groupId: string) => {
       dataBase
         .ref(`Groups/${groupId}/transactions/`)
         .once('value', (transactionsList) => {
-          const transactionsListArray = transactionsList.val()
+          const transactionsListArray = transactionsList.val();
           transactionsListArray.forEach((transaction: string) => {
             dataBase
               .ref(`Transactions/${transaction}/state`)
@@ -611,40 +570,39 @@ export class Database {
             dataBase
             .ref(`Transactions/${transaction}/`)
             .once('value', (transactions) => {
-              const transactionId = transactions.key
-              const transactionInfo = transactions.val()
-              
-              const transactionUserList = Object.keys(transactionInfo.toUserList) 
+              const transactionId = transactions.key;
+              const transactionInfo = transactions.val();
+
+              const transactionUserList = Object.keys(transactionInfo.toUserList);
               console.log('transactionUserList', transactionUserList);
               transactionUserList.forEach((userId: string) => {
                 dataBase
                   .ref(`User/${userId}/transactionList/${transactionId}/state`)
                   .set('closed');
-              })
-              
-            })  
+              });
+
+            });
           });
 
-        })
-    }
+        });
+    };
 
-    const closeGroupChangeDataBase = (data: any) => {
+    const closeGroupChangeDataBase = (data: any, fn = renderFunction) => {
       console.log('data_closeGroupChangeDataBase', data);
-      const { balance, groupId } = data
+      const { balance, groupId } = data;
 
-      if (balance !== 0) {
-        console.log('Balance is zero - go delete group');
+      if (balance === 0) {
 
-        changeStatusToClosed(userList)
-        addDateClosedForGroup(groupId)
-        closeTransaction(groupId)
+        changeStatusUserAndGroupListToClosed(userList);
+        addDateClosedForGroup(groupId);
+        closeTransactions(groupId);
 
       } else {
-        console.log('Balance is not zero - you do not close group');
+        const error = 'Balance is not zero - you do not close group';
+        fn('.modal-error-text', error);
       }
-    }
-    this.getBalanceInGroup(groupId, 1, closeGroupChangeDataBase)
-
+    };
+    this.getBalanceInGroup(groupId, 1, closeGroupChangeDataBase);
   }
 
   addMemberInGroup(data: IDataAddMember, addNewUserInDetailGroup: any) {
@@ -1539,22 +1497,22 @@ export class Database {
             });
         }
 
-        // console.log('usersList', usersList.length);
-        // // Total group Balances
-        // const userListArray: { state: string, sum: number }[] = usersList.length ? Object.values(usersList) : [];
-        // let balance: number = userListArray.length ? userListArray.reduce((sum: number, userData: { sum: number }) => {
-        //   if (userData.sum > 0) {
-        //     sum += userData.sum;
-        //   }
-        //   return sum;
-        // }, 0) : 0;
-        //
-        // balance *= currencyRate;
-        // const data = {
-        //   balance: balance,
-        //   groupId: groupId,
-        // };
-        // funcForRender(data);
+         console.log('usersList', usersList.length);
+         // Total group Balances
+         const userListArray: { state: string, sum: number }[] = usersList.length ? Object.values(usersList) : [];
+         let balance: number = userListArray.length ? userListArray.reduce((sum: number, userData: { sum: number }) => {
+           if (userData.sum > 0) {
+             sum += userData.sum;
+           }
+           return sum;
+         }, 0) : 0;
+
+         balance *= currencyRate;
+         const data = {
+            balance: balance,
+           groupId: groupId,
+         };
+         funcForRender(data);
       })
       .catch(error => {
         console.log(error.code);
