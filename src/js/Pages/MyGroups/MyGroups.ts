@@ -709,8 +709,8 @@ export class MyGroups extends Page {
       const divUserCard = document.querySelector(`[data-user-id-for-group="${data.userId}"]`);
       divUserCard.remove();
     } else {
-      // окно что балан пользователя не ноль
-      alert('the user\'s balance must be zero');
+      const errorData = 'The user\'s balance must be zero'
+      this.addTextInHtmlBlock('.modal-error-text', errorData);
     }
   }
 

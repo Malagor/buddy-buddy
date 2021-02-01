@@ -491,7 +491,6 @@ export class Database {
         base
           .ref('User')
           .once('value', (snapshot) => {
-            //console.log('snapshot', snapshot.val())
             const snapshotUser = snapshot.val();
             const userList = Object.keys(snapshotUser);
 
