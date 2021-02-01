@@ -38,7 +38,7 @@ export class TransactionsList extends Page {
   }
 
   addTotalBalance = (balance: number, currency: string): void => {
-    const balanceElement: HTMLElement = document.querySelector('.trans-list__user-balance'); 
+    const balanceElement: HTMLElement = document.querySelector('.trans-list__user-balance');
     const fromUsd = Currencies.fromUSD(currency);
     fromUsd(balance)
       .then((resBalance: number) => {
@@ -52,7 +52,7 @@ export class TransactionsList extends Page {
           `;
         }
         changeBalanceStyle(resBalance, balanceElement);
-      });    
+      });
   }
 
   addGroupBalance = (data: any): void => {
@@ -70,7 +70,7 @@ export class TransactionsList extends Page {
           `;
         }
         changeBalanceStyle(resBalance, balanceElement);
-      });  
+      });
   }
 
   addGroupToTransList = (groupID: string, groupTitle: string) => {
