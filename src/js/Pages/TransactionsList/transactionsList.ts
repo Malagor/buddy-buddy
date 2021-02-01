@@ -120,8 +120,8 @@ export class TransactionsList extends Page {
   changeCardStyle = (select:HTMLSelectElement, transaction: HTMLElement, selectValue: string) => {
     if (selectValue === 'approve') {
       transaction.classList.remove('border-success', 'border-danger');
-      // select.classList.add('d-none'); 
-      select.setAttribute('disabled', '');   
+      select.classList.add('d-none'); 
+      // select.setAttribute('disabled', '');   
     } else if (selectValue === 'decline') {
       transaction.classList.remove('border-success');
       transaction.classList.add('border-danger');
@@ -203,7 +203,7 @@ export class TransactionsList extends Page {
         } else {
           opt.removeAttribute('selected');
         }
-        this.changeCardStyle(cardSelect, transaction, detailsSelect.value, );
+        this.changeCardStyle(cardSelect, transaction, detailsSelect.value);
       });
     });
 
@@ -264,7 +264,6 @@ export class TransactionsList extends Page {
     const modalWrapper: HTMLElement = document.querySelector('.details__wrapper');
     const titleElement: HTMLElement = modalWrapper.querySelector('.details__group');
     titleElement.setAttribute('groupID', groupID);
-    // titleElement.innerText = `Группа: ${title}`;
      titleElement.innerHTML = `
        <div class="col-5 col-sm-4">Группа:</div>
        <div class="col-7 col-sm-8">${title}</div>

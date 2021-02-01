@@ -49,7 +49,6 @@ export const renderDetailsHTML = (trans: any, date: any, styles: any, ) => {
             <option value="decline">отклонить</option>
           </select>
        </div>
-    
      </div>
 
      <div class="modal fade details__check-modal" id="check" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">

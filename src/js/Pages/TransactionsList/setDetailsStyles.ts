@@ -42,7 +42,6 @@ export const setDetailsStyles = (trans: any, owner: boolean, ownUID: string) => 
     btnSaveDisplay = 'd-none';
   }
 
-
   let checkDisplay: string;
   if (trans.photo) {
     checkDisplay = 'd-flex';

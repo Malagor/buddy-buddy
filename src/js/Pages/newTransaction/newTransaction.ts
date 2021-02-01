@@ -4,7 +4,6 @@ import { Modal } from 'bootstrap';
 import { addMemberHTML } from './addMemberHTML';
 import { clearAllInputs } from './clearAllInputs';
 import { checkData } from './checkData';
-import { changeBalanceStyle } from '../TransactionsList/changeBalanceStyle';
 export class NewTransaction extends Page {
   onCreateTransaction: any;
   onShowMembersOfGroup: any;
@@ -16,7 +15,6 @@ export class NewTransaction extends Page {
   }
 
   render = (): void => {
-
 
     this.element.innerHTML = `
       <div class="new-trans modal-content">
