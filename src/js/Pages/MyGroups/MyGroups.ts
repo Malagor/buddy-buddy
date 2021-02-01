@@ -355,7 +355,8 @@ export class MyGroups extends Page {
       };
 
       const oldCurrentGroup = document.querySelector('.card-group__box-content--current');
-      if (oldCurrentGroup) oldCurrentGroup.classList.remove('card-group__box-content--current');
+      console.log('currentGroup', currentGroup)
+      if (oldCurrentGroup && currentGroup) oldCurrentGroup.classList.remove('card-group__box-content--current');
 
       this.onCreateNewGroup(groupDataAll);
       modalNewGroup.hide();
@@ -607,6 +608,16 @@ export class MyGroups extends Page {
     }
   }
 
+  answerDataBaseForClosedGroup(isSuccess: boolean, selector: null | string =null, textError: null | string =null){
+    if(isSuccess) {
+      document.querySelector('.btn-close').click()
+      document.querySelector(`#${selector}`).classList.add('group-hidden')
+
+    } else {
+      this.addTextInHtmlBlock(selector, textError)
+    }
+  }
+
   _addCloseGroupBtn(data: any) {
     this._clearCloseGroupBtn();
     const groupId = data.groupId;
@@ -629,7 +640,6 @@ export class MyGroups extends Page {
         groupId: groupId
       };
       this.closeGroup(dataForCloseGroup);
-
     });
   }
 
@@ -727,6 +737,8 @@ export class MyGroups extends Page {
     const divGroup = document.getElementById(`${data.groupKey}`);
 
     divGroup.addEventListener('click', () => {
+      console.log('data__', data);
+      
       this.onAddInfoForModalDetailGroup(keyGroup);
       modalGroupDetail.show();
     });

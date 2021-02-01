@@ -562,27 +562,30 @@ export class Database {
         .ref(`Groups/${groupId}/transactions/`)
         .once('value', (transactionsList) => {
           const transactionsListArray = transactionsList.val();
-          transactionsListArray.forEach((transaction: string) => {
-            dataBase
-              .ref(`Transactions/${transaction}/state`)
-              .set('closed');
-
-            dataBase
-            .ref(`Transactions/${transaction}/`)
-            .once('value', (transactions) => {
-              const transactionId = transactions.key;
-              const transactionInfo = transactions.val();
-
-              const transactionUserList = Object.keys(transactionInfo.toUserList);
-              console.log('transactionUserList', transactionUserList);
-              transactionUserList.forEach((userId: string) => {
-                dataBase
-                  .ref(`User/${userId}/transactionList/${transactionId}/state`)
-                  .set('closed');
+          
+          if(transactionsListArray) {
+            transactionsListArray.forEach((transaction: string) => {
+              dataBase
+                .ref(`Transactions/${transaction}/state`)
+                .set('closed');
+  
+              dataBase
+              .ref(`Transactions/${transaction}/`)
+              .once('value', (transactions) => {
+                const transactionId = transactions.key;
+                const transactionInfo = transactions.val();
+  
+                const transactionUserList = Object.keys(transactionInfo.toUserList);
+                console.log('transactionUserList', transactionUserList);
+                transactionUserList.forEach((userId: string) => {
+                  dataBase
+                    .ref(`User/${userId}/transactionList/${transactionId}/state`)
+                    .set('closed');
+                });
+  
               });
-
             });
-          });
+          }
 
         });
     };
@@ -597,9 +600,10 @@ export class Database {
         addDateClosedForGroup(groupId);
         closeTransactions(groupId);
 
+        fn(true, groupId);
       } else {
         const error = 'Balance is not zero - you do not close group';
-        fn('.modal-error-text', error);
+        fn(false, '.modal-error-text', error);
       }
     };
     this.getBalanceInGroup(groupId, 1, closeGroupChangeDataBase);

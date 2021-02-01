@@ -261,7 +261,7 @@ export class App {
   }
 
   closeGroup(data: IDataCloseGroup) {
-    this.database.closeGroup(data, this.groups.addNewUserInDetailGroup);
+    this.database.closeGroup(data, this.groups.answerDataBaseForClosedGroup);
     // .notifications.decreaseNotificationMark(TypeOfNotifications.Group);
   }
 
