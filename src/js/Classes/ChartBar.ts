@@ -3,11 +3,11 @@ import { Currencies } from './Currencies';
 
 type userListArray = [
   userDataObject[],
-  {[key: string] : string}
+  {[key: string]: string}
 ];
 
 type userDataObject = {
-  [key: string] : string | number
+  [key: string]: string | number
 };
 
 type configData = {
@@ -70,12 +70,12 @@ export class ChartBar {
       opacityColors: opacityColors,
       rightBalances: balancesArray,
       groupTitle: data[1].groupTitle,
-    }
+    };
   }
 
   generateRandomColor(): string {
     const letters: string = '0123456789ABCDEF';
-    let color: string = '#';    
+    let color: string = '#';
     for (let i = 0; i < 6; i += 1) {
       color += letters[Math.floor(Math.random() * letters.length)];
     }
@@ -104,9 +104,9 @@ export class ChartBar {
         backgroundColor: configData.opacityColors,
         hoverBackgroundColor: configData.colors,
         data: configData.rightBalances,
-        },]
+        }, ]
       };
-    
+
     const optionsInfo: any = {
       maintainAspectRatio: true,
       responsive: true,
@@ -126,7 +126,7 @@ export class ChartBar {
           },
           gridLines: {
             display: true,
-            color: "rgba(0, 0, 0, 0.05)"
+            color: 'rgba(0, 0, 0, 0.05)'
           },
         }],
         xAxes: [{
@@ -149,10 +149,10 @@ export class ChartBar {
         bodyAlign: 'center',
         callbacks: {
           title(toolTipItems: any) {
-            return toolTipItems[0].xLabel.join('\n');            
+            return toolTipItems[0].xLabel.join('\n');
           },
           label(toolTipItems: any) {
-            return `${toolTipItems.value} ${configData.groupCurrency}`; 
+            return `${toolTipItems.value} ${configData.groupCurrency}`;
           },
         },
       },
@@ -162,15 +162,13 @@ export class ChartBar {
       type: 'bar',
       data: dataInfo,
       options: optionsInfo,
-    }
+    };
   }
 
   getChart(config: { [key: string]: any }): Chart {
     const canvas = document.getElementById('ChartBar') as HTMLCanvasElement;
     const ctx: CanvasRenderingContext2D = canvas.getContext('2d');
-    const myChart: Chart = new Chart(ctx, config);
-
-    return myChart;
+    return new Chart.Chart(ctx, config);
   }
 
   getAvatarsLocation(chart: any, data: userDataObject[]) {
@@ -178,10 +176,10 @@ export class ChartBar {
     xAxis.ticks.forEach((_: void, index: number) => {
       const x = xAxis.getPixelForTick(index);
       const html = `<div class="wr" style="left: ${x - 12}px;">
-        <img src="${data[index].avatar}">
+        <img src="${data[index].avatar}" alt="${data[index].name}">
       </div>`;
       document.querySelector('.images-for-canvas').insertAdjacentHTML('beforeend', html);
-    })
+    });
   }
 
   eventsForChart(chart: any): void {
