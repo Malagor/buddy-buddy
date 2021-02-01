@@ -790,7 +790,7 @@ export class Database {
     };
   }
 
-  contactsHandler = (renderContact: any, selector: string | null): any => {
+  contactsHandler = (renderContact: any, selector?: string | null): any => {
     return (snapshot: any): void => {
       if (snapshot) {
         const key: string = snapshot.key;
@@ -803,7 +803,9 @@ export class Database {
             const userData = snapshot.val();
             userData.key = key;
             userData.state = state;
-            userData.selector = selector;
+            if (selector) {
+              userData.selector = selector;
+            }
             if (state !== 'decline') {
               renderContact(userData);
             }
