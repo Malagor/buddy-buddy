@@ -56,7 +56,7 @@ export class Messenger extends Page {
           <div class="message-list block--width-85 d-flex flex-column"></div>
         </div>
         <div class="block__footer">
-          <button type="button" class="btn btn-primary message__addBtn">${i18n._('New message')}</button>
+          <button type="button" class="btn btn-primary btn-primary-alternate message__addBtn">${i18n._('New message')}</button>
         </div>
       </div>
     </div>
@@ -80,7 +80,7 @@ export class Messenger extends Page {
           <div class="modal-body">
             <form id="messageForm">
               <div class="dropdown">
-                <input class="form-control dropdown-toggle" type="text" id="activeContact" data-bs-toggle="dropdown" aria-expanded="false" placeholder="${i18n._('Recipient')}" autocomplete="off" name="name">
+                <input class="form-control dropdown-toggle mb-2" type="text" id="activeContact" data-bs-toggle="dropdown" aria-expanded="false" placeholder="${i18n._('Recipient')}" autocomplete="off" name="name">
                 <input type="text" name="key" class="contact-user-id" hidden>
                 <ul class="dropdown-menu contacts-user-list" aria-labelledby="activeContact">
                 </ul>
@@ -89,7 +89,7 @@ export class Messenger extends Page {
                 <textarea class="form-control" id="formMessage" rows="3" placeholder="${i18n._('Message')}" minlength="3" name="message"></textarea>
               </div>
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">${i18n._('Close')}</button>
-              <button type="submit" class="btn btn-primary" form="messageForm">${i18n._('Send')}</input>
+              <button type="submit" class="btn btn-primary btn-primary-alternate" form="messageForm">${i18n._('Send')}</input>
             </form>
           </div>
         </div>
@@ -178,7 +178,7 @@ export class Messenger extends Page {
     if (!messageList) return;
 
     let html = `
-      <div class="message block__card flex-column block--width-85 ${directionClass} ${stateClass} col-10 mb-3" data-message-id="${data.messageId}">
+      <div class="message block__card flex-column ${directionClass} ${stateClass} mb-3" data-message-id="${data.messageId}">
           <div class="message__avatar-wrapper">
             <img src="" alt="">
           </div>
@@ -192,7 +192,7 @@ export class Messenger extends Page {
     if (data.isReceive) {
       html += `
         <div class="message__button">
-          <button type="button" class="btn btn-outline-primary btn-sm answer-button" data-user-uid="${data.key}">${i18n._('Answer')}</button>
+          <button type="button" class="btn btn-outline-primary btn-outline-primary-alternate btn-sm answer-button" data-user-uid="${data.key}">${i18n._('Answer')}</button>
         </div>
         `;
     }

@@ -1,10 +1,9 @@
 import { i18n } from '@lingui/core';
-import { transactionsRU } from '../../languages/RU/transactions';
-import { transactionsENG} from '../../languages/ENG/transactions';
+import { messagesRU } from '../../languages/RU/messages';
+import { messagesENG } from '../../languages/ENG/messages';
 import { loadLanguage } from '../../Util/saveLoadLanguage';
-
-i18n.load('RU', transactionsRU);
-i18n.load('ENG', transactionsENG);
+i18n.load('RU', messagesRU);
+i18n.load('ENG', messagesENG);
 
 const locale = loadLanguage();
 i18n.activate(locale);
@@ -15,9 +14,9 @@ export const renderNonCheckedMember = (user: any) => {
       <div class="details__avatar"><img src="${user.avatar}" alt=${user.name}></div>
       <div class="details__name">${user.name}</div>
     </div>
-    <input class="details__member-cost form-control form-control-sm non-fixed" type="text" value="0.00">
-    <textarea class="details__member-comment form-control" placeholder=${i18n._('Comment')}></textarea>
-    <div class="details__member-state d-flex justify-content-center"></div>
-    <button class="details__member-delete btn btn-outline-secondary btn-sm"><i class="material-icons">add</i></button>
+    <input class="details__member-cost form-control form-control-sm non-fixed d-none" type="text" value="">
+    <textarea class="details__member-comment form-control d-none" placeholder="${i18n._('Comment')}"></textarea>
+    <div class="details__member-state d-flex justify-content-center d-none"></div>
+    <button class="details__member-delete btn btn-outline-secondary btn-sm ms-3"><i class="material-icons">add</i></button>
   `;
 };

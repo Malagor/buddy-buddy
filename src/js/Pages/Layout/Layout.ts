@@ -32,8 +32,8 @@ export class Layout extends Page {
 
   render(): void {
     this.element.innerHTML = `
-    <header class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow">
-      <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3" href="#">${logo} Buddy-Buddy</a>
+    <header class="navbar navbar-dark sticky-top flex-md-nowrap p-0 shadow">
+      <a class="navbar-brand col-md-3 col-lg-3 col-xl-2 me-0 px-3" href="#">${logo} Buddy-Buddy</a>
       <button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
@@ -41,7 +41,7 @@ export class Layout extends Page {
 
     <div class="container">
       <div class="row">
-        <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
+        <nav id="sidebarMenu" class="col-md-3 col-lg-3 col-xl-2 d-md-block bg-light sidebar collapse">
           <div class="position-sticky pt-3 sidebar__header">
             <div class="sidebar-avatar__wrapper">
               <img class="sidebar-avatar__image" src="${defAvatar}" alt="">
@@ -114,11 +114,11 @@ export class Layout extends Page {
             </ul>
         </nav>
         </div>
-        <main class="col-md-9 ms-sm-auto justify-content-md-center col-lg-10 px-md-4 main">
+        <main class="col-md-9 ms-sm-auto justify-content-md-center col-lg-9 col-xl-10 px-md-4 main">
         </main>
       </div>
     </div>
-    <footer class="fixed-bottom bg-dark text-white d-none d-md-block footer ">
+    <footer class="fixed-bottom text-white d-none d-md-block footer ">
       <div class="footer__content row align-items-center">
         <div class="footer__title col-3">
           ${logo}
@@ -127,25 +127,25 @@ export class Layout extends Page {
         <div class="footer__authors col-6">
           <div class="row w-100">
             <div class="footer__author col-6 col-lg-3">
-              <a href="https://github.com/Malagor" class="footer__author__link" target="_blank">
+              <a href="https://github.com/Malagor" class="footer__author-link" target="_blank">
                 <p>Malagor</p>
                 <p class="footer__github">${githubLogo}</p>
               </a>
             </div>
             <div class="footer__author col-6 col-lg-3">
-              <a href="https://github.com/besovadevka" class="footer__author__link" target="_blank">
+              <a href="https://github.com/besovadevka" class="footer__author-link" target="_blank">
                 <p>besovadevka</p>
                 <p class="footer__github">${githubLogo}</p>
               </a>
             </div>
             <div class="footer__author col-6 col-lg-3">
-              <a href="https://github.com/gryzun33" class="footer__author__link" target="_blank">
+              <a href="https://github.com/gryzun33" class="footer__author-link" target="_blank">
                 <p>gryzun33</p>
                 <p class="footer__github">${githubLogo}</p>
               </a>
             </div>
             <div class="footer__author col-6 col-lg-3">
-              <a href="https://github.com/Andrei107Q" class="footer__author__link" target="_blank">
+              <a href="https://github.com/Andrei107Q" class="footer__author-link" target="_blank">
                 <p>Andrei107Q</p>
                 <p class="footer__github">${githubLogo}</p>
               </a>
@@ -207,7 +207,7 @@ export class Layout extends Page {
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary sideBar-modal-footer__cancel-btn" data-bs-dismiss="modal">${i18n._('Cancel')}</button>
-            <button type="button" class="btn btn-primary sideBar-modal-footer__signOut-btn" id="modalButtonOk">${i18n._('signOut')}</button>
+            <button type="button" class="btn btn-primary btn-primary-alternate sideBar-modal-footer__signOut-btn" id="modalButtonOk">${i18n._('signOut')}</button>
           </div>
         </div>
       </div>

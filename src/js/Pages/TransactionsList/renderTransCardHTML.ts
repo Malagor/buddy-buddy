@@ -1,10 +1,9 @@
 import { i18n } from '@lingui/core';
-import { transactionsRU } from '../../languages/RU/transactions';
-import { transactionsENG} from '../../languages/ENG/transactions';
+import { messagesRU } from '../../languages/RU/messages';
+import { messagesENG } from '../../languages/ENG/messages';
 import { loadLanguage } from '../../Util/saveLoadLanguage';
-
-i18n.load('RU', transactionsRU);
-i18n.load('ENG', transactionsENG);
+i18n.load('RU', messagesRU);
+i18n.load('ENG', messagesENG);
 
 const locale = loadLanguage();
 i18n.activate(locale);
@@ -27,7 +26,7 @@ export const renderTransCardHTML = (trans: any, date: any, styles: any ) => {
         <select class="trans-item__state form-select" aria-label="Default select example">
           <option ${styles.selectPending} value="pending">${i18n._('pending')}</option>
           <option ${styles.selectApprove} value="approve">${i18n._('approve')}</option>
-          <option ${styles.selectAbort} value="abort">${i18n._('decline')}</option>
+          <option ${styles.selectAbort} value="decline">${i18n._('decline')}</option>
         </select>
       </div>
     </div>

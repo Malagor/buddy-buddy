@@ -66,14 +66,14 @@ export class Main extends Page {
         <img src="${groupItem.icon ? groupItem.icon : defaultGroupIcon}" alt="group icon" width="95%">
         <div class="item__img-title-wrapper">
           <p class="slider__item__title">
-            <span>${groupItem.title}</span>
+            <span>${groupItem.title.length > 10 ? groupItem.title.slice(0, 10).trim() + '...' : groupItem.title}</span>
           </p>
           ${currentGroupHTML}
         </div>
       </div>
       <p class="slider__item__title--description">
-        <span>${groupItem.description ? groupItem.description : `${i18n._('No description')}.`}</span>
-      </p> 
+        <span>${groupItem.description ? (groupItem.description.length > 13 ? groupItem.description.slice(0, 13).trim() + '...' : groupItem.description) : `${i18n._('No description')}.`}</span>
+      </p>
       <p class="slider__item__title--description ${groupItem.groupID}">
       <span></span>
       </p>
@@ -208,7 +208,7 @@ export class Main extends Page {
               <div class="main-card-trans__header main--font-size">
                 <p class="card-trans__header__trans-name">
                   <span class="card-trans__header__title">${
-                    item.description
+                    item.description.length > 23 ? item.description.slice(0, 23).trim() + '...' : item.description
                   }</span>
                 </p>
               </div>
@@ -219,14 +219,14 @@ export class Main extends Page {
                 </p>
                 <p class="card-trans__main__loc">
                   <span class="card-trans__main__date">
-                  ${date.toLocaleDateString()} ${date.toLocaleTimeString().slice(0, 5)}
+                  ${date.toLocaleDateString().substr(0, 6) + date.toLocaleDateString().substr(8)} ${date.toLocaleTimeString().slice(0, 5)}
                   </span>
                 </p>
               </div>
               <p class="main-card-trans__footer">
-                <span>${
-                  item.groupTitle
-                } group</span>
+                <span><strong>Group:</strong> ${
+                  item.groupTitle.length > 30 ? item.groupTitle.slice(0, 23).trim() + '...' : item.groupTitle
+                }</span>
               </p>
             </div>`;
 

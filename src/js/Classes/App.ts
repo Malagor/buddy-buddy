@@ -297,6 +297,10 @@ export class App {
     this.database.getBalanceForUserTotal(this.database.uid, this.transactionsList.addTotalBalance);
     this.transactionsList.newTrans.onCreateTransaction = this.onCreateTransaction.bind(this);
     this.transactionsList.newTrans.onShowMembersOfGroup = this.onShowMembersOfGroup.bind(this);
+
+    this.transactionsList.newTrans.onRenderGroupBalance = this.onRenderGroupBalanceNewTrans.bind(this);
+    this.transactionsList.newTrans.onRenderTotalBalance = this.onRenderTotalBalanceNewTrans.bind(this);
+
     this.database.getCurrencyList(this.transactionsList.newTrans.addCurrencyList);
     this.database.getGroupsListForTransaction(this.transactionsList.newTrans.addGroupList);
     this.database.getMembersOfGroupFirst(this.transactionsList.newTrans.addMembersOfGroup);
@@ -370,7 +374,6 @@ export class App {
   }
 
   onCreateTransaction(transactionData: any) {
-    console.log('Trans data', transactionData);
     const toUsd = Currencies.toUSD(transactionData.currency);
     const userList = transactionData.toUserList;
     toUsd(transactionData.totalCost)
@@ -396,10 +399,13 @@ export class App {
 
   onChangeState(state: string, transID: string) {
     this.database.setNewStateTransaction(state, transID);
+    if (state === 'approve') {
+      this.notifications.decreaseNotificationMark(TypeOfNotifications.Transaction);
+    }
   }
 
-  onGetTransInfo(trans: any, groupID: string) {
-    this.database.getTransInfoModal(trans, groupID, this.transactionsList.addGroupTitle,
+  onGetTransInfo(transID: string, groupID: string) {
+    this.database.getTransInfoModal(transID, groupID, this.transactionsList.addGroupTitle,
     this.transactionsList.addMemberOfTransaction, this.transactionsList.addOwnerInfo);
   }
 
@@ -412,7 +418,7 @@ export class App {
         curCost.forEach((cost, index) => {
           editData[index].cost = cost;
         });
-        this.database.editTransaction(editData, transID, trans);
+        this.database.editTransaction(editData, transID, trans, this.transactionsList.addTransactionWrapper, this.transactionsList.addMyTransactions, this.transactionsList.addUserToList );
       });
   }
 
@@ -425,6 +431,14 @@ export class App {
   }
 
   onRenderTotalBalance() {
+    this.database.getBalanceForUserTotal(this.database.uid, this.transactionsList.addTotalBalance);
+  }
+
+  onRenderGroupBalanceNewTrans(groupID: string) {
+    this.database.getBalanceForUserInGroup(this.database.uid, groupID, this.transactionsList.addGroupBalance);
+  }
+
+  onRenderTotalBalanceNewTrans() {
     this.database.getBalanceForUserTotal(this.database.uid, this.transactionsList.addTotalBalance);
   }
 

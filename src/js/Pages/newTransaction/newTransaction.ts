@@ -6,18 +6,19 @@ import { clearAllInputs } from './clearAllInputs';
 import { checkData } from './checkData';
 
 import { i18n } from '@lingui/core';
-import { transactionsRU } from '../../languages/RU/transactions';
-import { transactionsENG} from '../../languages/ENG/transactions';
+import { messagesRU } from '../../languages/RU/messages';
+import { messagesENG } from '../../languages/ENG/messages';
 import { loadLanguage } from '../../Util/saveLoadLanguage';
-
-i18n.load('RU', transactionsRU);
-i18n.load('ENG', transactionsENG);
+i18n.load('RU', messagesRU);
+i18n.load('ENG', messagesENG);
 
 const locale = loadLanguage();
 i18n.activate(locale);
 export class NewTransaction extends Page {
   onCreateTransaction: any;
   onShowMembersOfGroup: any;
+  onRenderTotalBalance: any;
+  onRenderGroupBalance: any;
 
   static create(element: string): NewTransaction {
     return new NewTransaction(element);
@@ -81,7 +82,7 @@ export class NewTransaction extends Page {
           </form>
         </div>
         <div class="modal-footer">
-          <button type="button" class="new-trans__create-btn btn btn-primary w-100" data-bs-dismiss="modal" disabled>${i18n._('Create transaction')}</button>
+          <button type="button" class="new-trans__create-btn btn btn-primary btn-primary-alternate w-100" data-bs-dismiss="modal" disabled>${i18n._('Create transaction')}</button>
         </div>
       </div>
     `;
@@ -108,7 +109,7 @@ export class NewTransaction extends Page {
     userElement.setAttribute('user-id', `${userID}`);
     userElement.innerHTML = `
         <div class="member__avatar">
-          <img src="${userAvatar}" alt="#">
+          <img src="${userAvatar}" alt=${userName}>
         </div>
         <div class="member__name">${userName}</div>
       `;
@@ -141,16 +142,6 @@ export class NewTransaction extends Page {
       setTimeout( () => {
         document.querySelector('.curr--active-curr').scrollIntoView();
       }, 200);
-    });
-
-    currInput.addEventListener('focus', () => {
-      currInput.value = '';
-      currInput.placeholder = document.querySelector('.curr--active-curr').textContent;
-    });
-
-    currInput.addEventListener('blur', () => {
-      currInput.value = document.querySelector('.curr--active-curr').textContent;
-      currInput.placeholder = 'Currency';
     });
 
     currList.addEventListener('click', event => {
@@ -256,6 +247,16 @@ export class NewTransaction extends Page {
     };
   }
 
+  changeBalance = () => {
+    const groups: HTMLFormElement = document.querySelector('.trans-list__groups');
+    const groupID = groups.value;
+    if (groups.value === 'all-trans') {
+      this.onRenderTotalBalance();
+    } else {
+      this.onRenderGroupBalance(groupID);
+    }
+  }
+
   protected events(): void {
     const groups: HTMLFormElement = document.querySelector('.new-trans__groups-list');
     const checkedMembersList: HTMLElement = document.querySelector('.checked-members');
@@ -335,6 +336,7 @@ export class NewTransaction extends Page {
       const data = this.getDataforCreateTransaction();
       this.onCreateTransaction(data);
       clearAllInputs();
+      setTimeout(() => {this.changeBalance(); }, 500);
     });
 
     btnOpenCheck.addEventListener('click', () => {
