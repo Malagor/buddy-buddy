@@ -1,10 +1,9 @@
 import { i18n } from '@lingui/core';
-import { transactionsRU } from '../../languages/RU/transactions';
-import { transactionsENG} from '../../languages/ENG/transactions';
+import { messagesRU } from '../../languages/RU/messages';
+import { messagesENG } from '../../languages/ENG/messages';
 import { loadLanguage } from '../../Util/saveLoadLanguage';
-
-i18n.load('RU', transactionsRU);
-i18n.load('ENG', transactionsENG);
+i18n.load('RU', messagesRU);
+i18n.load('ENG', messagesENG);
 
 const locale = loadLanguage();
 i18n.activate(locale);
@@ -18,7 +17,7 @@ export const renderDetailsHTML = (trans: any, date: any, styles: any, ) => {
    <div class="details__info modal-body">
 
      <div class="details__date d-flex row">
-       <div class="col-5 col-sm-4">Дата:</div>
+       <div class="col-5 col-sm-4">${i18n._('Date')}:</div>
        <div class="col-7 col-sm-8 d-flex">
         <div class="details__day">${date.localeDay}</div>
         <div class="details__time">${date.localeTime}</div>
@@ -52,7 +51,7 @@ export const renderDetailsHTML = (trans: any, date: any, styles: any, ) => {
      </div>
 
      <div class="${styles.selectDisplay} details__state-wrapper d-flex row">
-       <div class="col-5 col-sm-4">Статус:</div>
+       <div class="col-5 col-sm-4">${i18n._('State')}:</div>
        <div class="col-5 col-sm-5 details__state-wrap">
           <select class="details__state form-select" aria-label="Default select example">
             <option value="pending">${i18n._('pending')}</option>
