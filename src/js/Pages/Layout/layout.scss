@@ -1,16 +1,14 @@
 @import "../../../scss/_misc/mixins";
 @import "../../../scss/_misc/variables";
-//@import "~bootstrap/scss/variables";
 
 html {
   min-height: 100vh;
   font-size: 14px;
 
-@include tablets {
+  @include tablets {
     font-size: 15px;
   }
-
-@include laptop {
+  @include laptop {
     font-size: 16px;
   }
 }
@@ -32,13 +30,11 @@ body {
 .sidebar {
   position: fixed;
   top: 0;
-
-/* rtl:raw:
+  /* rtl:raw:
   right: 0;
   */
   bottom: 0;
-
-/* rtl:remove */
+  /* rtl:remove */
   left: 0;
   z-index: 100; /* Behind the navbar */
   padding: rem(53px) 0 0; /* Height of navbar */
@@ -66,11 +62,11 @@ body {
 }
 
 .sidebar .nav-link.active {
-  color: #297eff;
+  color: $primary-alternate;
 }
 
 .footer .nav-link.active {
-  color: #297eff;
+  color: $primary-alternate;
 }
 
 .sidebar .nav-link:hover .feather,
@@ -97,6 +93,10 @@ body {
 /*
  * Navbar
  */
+
+.navbar {
+  background: $color-navbar;
+}
 
 .navbar-brand {
   padding-top: 0.75rem;
@@ -168,13 +168,9 @@ main.main {
 
 footer.footer {
   height: 4rem;
-  //display: flex;
-  //flex-direction: column;
-  //justify-content: center;
-  //align-items: center;
-  //padding: 0 rem(16px);
-  //
-  //grid-area: footer;
+
+  background: $color-navbar;
+
   p {
     margin: 0;
   }
@@ -187,7 +183,7 @@ footer.footer {
 .footer__title,
 .footer__content,
 .footer__school,
-.footer__author__link {
+.footer__author-link {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -256,7 +252,7 @@ footer.footer {
   }
 }
 
-.footer__author__link {
+.footer__author-link {
   justify-content: flex-start;
   font-size: rem(14.4px);
   color: rgba(255, 255, 255, 1);
@@ -266,6 +262,7 @@ footer.footer {
   gap: 0.3rem;
   &:hover {
     opacity: 1;
+    color: rgba(255, 255, 255, 1);
   }
 
   @media screen and (max-width: 768px) {
@@ -294,4 +291,38 @@ footer.footer {
     width: rem(40px);
     height: rem(23px);
   }
+}
+
+.btn-primary-alternate {
+  border-color: $primary-alternate;
+  background: $primary-alternate;
+
+  .btn-check:focus + &,
+  &:hover,
+  &:focus {
+    color: $color-white;
+    border-color: $primary-alternate-hover;
+    background: $primary-alternate-hover;
+  }
+
+  &:disabled {
+    border-color: lighten($primary-alternate, 3%);
+    background: lighten($primary-alternate, 3%);
+  }
+}
+
+.btn-outline-primary-alternate {
+  border-color: $primary-alternate;
+  color: $primary-alternate;
+
+  &:hover {
+    border-color: $primary-alternate-hover;
+    background: $primary-alternate-hover;
+    color: $color-white;
+  }
+}
+
+.form-check-input:checked {
+  background-color: $primary-alternate;
+  border-color: $primary-alternate;
 }

@@ -1,17 +1,25 @@
 @import "src/scss/_misc/mixins";
+@import "src/scss/_misc/variables";
+
 
 .message {
-  font-size: 0.8rem;
-  background: #f1f1f1;
   display: grid;
   align-items: center;
+  font-size: 0.8rem;
+  background: #f1f1f1;
+
+  min-width: 55%;
+  max-width: 85%;
+
   grid-gap: 0.5rem;
+  grid-template-areas: "avatar name time" "message message button";
   grid-template-columns: 3rem 1fr 6rem;
   grid-template-rows: auto auto;
-  grid-template-areas: "avatar name time" "message message button";
 
   &--own {
-    background: #F0B791;
+    background: $primary-alternate-hover;
+    color: $color-white;
+
     grid-template-areas: "avatar name time" "message message message";
   }
 }
@@ -21,6 +29,7 @@
   height: 3rem;
   overflow: hidden;
   border-radius: 50%;
+
   grid-area: avatar;
 
   img {
@@ -71,13 +80,13 @@
 
 
 ul.dropdown-search-box {
-  max-height: 300px;
   width: 270px;
+  max-height: 300px;
   overflow-y: auto;
 }
 ul.dropdown-search-box .search-box {
   padding: 0 5px 5px 5px;
-  border-bottom: 1px solid #ddd;
+  border-bottom: 1px solid #dddddd;
 }
 
 ul.contacts-user-list {
@@ -91,16 +100,17 @@ ul.contacts-user-list {
   transition: 0.3s;
 
   &:hover {
-    background: #ddd;
+    background: #dddddd;
   }
 }
 
 .contact-list__avatar {
-  height: 1.5rem;
   width: 1.5rem;
-  object-fit: cover;
-  border-radius: 50%;
+  height: 1.5rem;
   margin-right: 0.5rem;
+  border-radius: 50%;
+
+  object-fit: cover;
 }
 
 .contact-list__name {

@@ -11,15 +11,13 @@
   margin-top: rem(-92px);
   padding: rem(80px) 0 rem(68px);
 
-@include tablets {
+  @include tablets {
     padding-bottom: rem(80px);
   }
-
-@include laptop {
+  @include laptop {
     padding-bottom: rem(80px);
   }
-
-@include desktop {
+  @include desktop {
     padding-bottom: rem(80px);
   }
 }
@@ -47,11 +45,10 @@
   padding: 0.5rem 1.5rem 0.5rem 2.3rem;
   border-bottom: 1px solid rgba(0, 0, 0, 0.05);
 
-@include laptop {
+  @include laptop {
     padding: 0.5rem 2rem 0.5rem 2.5rem;
   }
-
-@include desktop {
+  @include desktop {
     padding: 0.5rem 1rem 0.5rem 1.5rem;
   }
 }
@@ -141,15 +138,13 @@
   font-size: 1.2rem;
   color: rgba(0, 0, 0, 1);
 
-@include tablets {
+  @include tablets {
     font-size: 1.4rem;
   }
-
-@include laptop {
+  @include laptop {
     font-size: 1.5rem;
   }
-
-@include desktop {
+  @include desktop {
     font-size: 1.5rem;
   }
 }
@@ -165,11 +160,10 @@
   background-color: rgba(255, 255, 255, 1);
   border-top: 1px solid rgba(0, 0, 0, 0.05);
 
-@include laptop {
+  @include laptop {
     padding: 0.5rem 2rem;
   }
-
-@include desktop {
+  @include desktop {
     padding: 0.5rem 1rem;
   }
 }
@@ -182,7 +176,6 @@
   border-radius: rem(10px);
   & > .main__balance {
     margin: 0;
-    font-size: 1.35rem;
   }
 }
 
@@ -198,12 +191,10 @@
   @include phones {
     margin-bottom: 1rem;
   }
-
-@include tablets {
+  @include tablets {
     margin-bottom: 1rem;
   }
-
-@include laptop {
+  @include laptop {
     margin-bottom: 1rem;
   }
 }
@@ -212,12 +203,10 @@
   @include phones {
     width: 100%;
   }
-
-@include tablets {
+  @include tablets {
     width: 100%;
   }
-
-@include laptop {
+  @include laptop {
     width: 100%;
   }
 }

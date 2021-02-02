@@ -41,16 +41,6 @@
     }
   }
 
-  &__balance {
-    &--negative {
-      color: red;
-    }
-
-    &--positive {
-      color: green;
-    }
-  }
-
   &__box-logo-group {
     display: flex;
     justify-content: center;
@@ -58,8 +48,8 @@
   }
 }
 
-.closed-group-hidden {
-  display: none;
+.group-hidden {
+  display: none!important;
 }
 
 .modal-top {
@@ -67,39 +57,29 @@
 }
 
 .form-title {
-  padding: 0;
   margin: 0;
   margin-top: rem(8px);
+  padding: 0;
 }
 
 .input-logo-group {
   position: absolute;
-  bottom: 0;
+  right: 0;
+  bottom: -4px;
+  z-index: 1;
+  width: rem(20px);
   opacity: 0;
 }
 
-.add-new-group {
-  //position: fixed;
-  //right: 14%;
-  //bottom: rem(90px);
-  //width: rem(51px);
-  //height: rem(51px);
-  //border-radius: 50%;
-
-  //&__icon {
-  //  margin: 5px 0 0 -1px;
-  //}
-}
-
-.modal-dropdown{
+.modal-dropdown {
   padding: rem(9px) rem(7px) rem(7px) rem(7px);
 }
 
-.modal-btn-primary{
+.modal-btn-primary {
   margin: rem(8px);
 }
 
-.modal-wrapper-btn{
+.modal-wrapper-btn {
   margin: 0;
   padding: 0;
 }
@@ -120,21 +100,128 @@
   }
 }
 
-#members-dropdown-menu{
+#members-dropdown-menu {
   width: 96.5%;
 }
-/* ul.contacts-user-list {
-  width: 96.5%!important;
-} */
+
 .form-switch{
   margin-top: 0.5rem;
 }
 
+.card-detail {
+  padding-top: rem(12px);
+
+  &__img-avatar {
+    display: block;
+    width: rem(85px);
+    height: rem(85px);
+    margin: auto;
+    border-radius: 50%;
+
+    &--user {
+      width: rem(60px);
+      height: rem(60px);
+      border-radius: 50%;
+    }
+  }
+
+  &__box-description {
+    margin: 0 1rem 0 1rem ;
+  }
+
+  &__user-list {
+    margin: 1rem;
+  }
+}
+
+.modal-detail {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin: rem(8px) 0 rem(16px) 0;
+
+  &--author{
+    background-color: rgba(128, 128, 128, 0.616);
+  }
+
+    &__img {
+      margin: rem(8px);
+      width: rem(50px);
+      height: rem(50px);
+      border-radius: 50%;
+    }
+    &__name{
+      margin: rem(5px);
+    }
+    &__account{
+      margin: rem(5px);
+    }
+    &__button{
+      position: absolute;
+      right: 10px;
+      top: 35%;
+    }
+    &__balance{
+      margin: 0 4rem 0 auto;
+
+      &--negative {
+        color: red;
+      }
+  
+      &--positive {
+        color: green;
+      }
+    } 
+    
+    &__button-container{
+      position: absolute;
+      right: rem(20px);
+      height: rem(30px);
+    }
+
+    &__button-confirmation{
+      padding: 3px;
+    }
+}
+
+  .container-group-detail{
+    max-width: 90%;
+  }
+
 @media(max-width: 450px) {
-  .form-title{
+  .form-title {
     width: 60%;
   }
-  .form-check-label{
+  .form-check-label {
     font-size: 0.7rem;
+  }
+}
+
+@media (max-width: 575px) {
+  .modal {
+    left: 4%;
+  } 
+}
+
+@media (max-width: 430px) {
+  .modal-dialog {
+    max-width: 98%;
+  }
+  .modal {
+    left: 0;
+  } 
+  .modal-detail__img {
+    margin: rem(6px);
+    width: rem(40px);
+    height: rem(40px);
+    border-radius: 50%;
+  }
+}
+
+@media (max-width: 370px) {
+  .modal-detail__button-confirmation{
+    padding: 3px;
+    font-size: rem(10px);
   }
 }

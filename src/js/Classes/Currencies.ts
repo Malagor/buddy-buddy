@@ -1,3 +1,17 @@
+const API_KEYS: string[] = [
+  'f8ce043338904bab9b6c958cf1a2c82e',
+  '1d859700e3714101823ba43b320cb428',
+  'b6d119de27cd49369c69065d3c6b86dc',
+  '31889a35c8674d5b8690f784b83c3411',
+  '546065976e2f41ae85962a4cad418646'
+];
+
+function getRandAPI(): string {
+  const countApi = API_KEYS.length;
+  const index = Math.floor(Math.random() * countApi) + 1;
+  return API_KEYS[index - 1];
+}
+
 export class Currencies {
   static getCurrenciesList(errorHandler?: (message: string) => void) {
     const url = 'https://openexchangerates.org/api/currencies.json';
@@ -19,7 +33,7 @@ export class Currencies {
   }
 
   static getCurrencyRateByCode(code: string, errorHandler?: (message: string) => void) {
-    const url = `https://openexchangerates.org/api/latest.json?app_id=376d918973ab407cb9515b65e53b88d8&symbols=${code}`;
+    const url = `https://openexchangerates.org/api/latest.json?app_id=${getRandAPI()}&symbols=${code}`;
 
     return fetch(url)
       .then(response => {
@@ -38,7 +52,7 @@ export class Currencies {
   }
 
   static getCurrencyRates(errorHandler?: (message: string) => void) {
-    const url = `https://openexchangerates.org/api/latest.json?app_id=376d918973ab407cb9515b65e53b88d8`;
+    const url = `https://openexchangerates.org/api/latest.json?app_id=${getRandAPI()}`;
 
     return fetch(url)
       .then(response => {
@@ -57,7 +71,7 @@ export class Currencies {
   }
 
   static toUSD(fromCurrency: string, errorHandler?: (message: string) => void) {
-    const url = `https://openexchangerates.org/api/latest.json?app_id=376d918973ab407cb9515b65e53b88d8&symbols=${fromCurrency}`;
+    const url = `https://openexchangerates.org/api/latest.json?app_id=${getRandAPI()}&symbols=${fromCurrency}`;
 
     return (sum: number) => fetch(url)
       .then(response => {
@@ -77,7 +91,7 @@ export class Currencies {
   }
 
   static fromUSD(toCurrency: string, errorHandler?: (message: string) => void) {
-    const url = `https://openexchangerates.org/api/latest.json?app_id=376d918973ab407cb9515b65e53b88d8&symbols=${toCurrency}`;
+    const url = `https://openexchangerates.org/api/latest.json?app_id=${getRandAPI()}&symbols=${toCurrency}`;
 
     return (sum: number) => fetch(url)
       .then(response => {
@@ -94,5 +108,23 @@ export class Currencies {
           console.log(error);
         }
       });
+  }
+
+  static transferToCurrencies(currencyCodesArray: string[]) {
+    const curQieries = currencyCodesArray.map(code => Currencies.getCurrencyRateByCode(code));
+
+    return (sum: number) => {
+      return Promise
+        .all(curQieries)
+        .then(data => {
+          return currencyCodesArray.map((currency, index) => {
+            return {
+              currency,
+              rate: data[index],
+              result: sum * data[index],
+            };
+          });
+        });
+    };
   }
 }
