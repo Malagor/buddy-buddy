@@ -6,7 +6,7 @@ import { Main } from '../Pages/Main/Main';
 import { MyGroups } from '../Pages/MyGroups/MyGroups';
 import { AccountPage } from '../Pages/AccountPage/AccountPage';
 
-import { IGroupDataAll, IDataForCreateGroup } from '../Interfaces/IGroupData';
+import { IGroupDataAll, IDataForCreateGroup, IDataChangeStatus, IDataAddMember } from '../Interfaces/IGroupData';
 import { TransactionsList } from '../Pages/TransactionsList/transactionsList';
 import { INotification, Notifications, TypeOfNotifications } from './Notifications';
 import { INewMessage, Messenger } from '../Pages/Messenger/Messenger';
@@ -82,18 +82,21 @@ export class App {
       this.accountPage.checkUserID = this.checkUserID.bind(this);
 
       this.mainPage = Main.create('.main');
+      this.mainPage.getBalanceForSliderGroup = this.getBalanceForSliderGroup.bind(this);
 
       this.database.getUserInfo(uid, [this.layout.setSidebarData]);
 
       this.groups = MyGroups.create('.main');
       this.groups.onCreateNewGroup = this.onCreateNewGroup.bind(this);
-      this.groups.deleteGroup = this.deleteGroup.bind(this);
-      this.groups.deleteMemberFromGroup = this.deleteMemberFromGroup.bind(this);
+      // this.groups.deleteGroup = this.deleteGroup.bind(this);
       this.groups.onAddMember = this.onAddGroupMember.bind(this);
       this.groups.fillContactsList = this.fillContactsList.bind(this);
       this.groups.onAddInfoForModalDetailGroup = this.onAddInfoForModalDetailGroup.bind(this);
       this.groups.addBalanceInGroupPage = this.addBalanceInGroupPage.bind(this);
       this.groups.addUserBalanceInModalCardUser = this.addUserBalanceInModalCardUser.bind(this);
+      this.groups.getUserBalanceInGroup = this.getUserBalanceInGroup.bind(this);
+      this.groups.changeUserStatusInGroup = this.changeUserStatusInGroup.bind(this);
+      this.groups.addMemberInDetailGroup = this.addMemberInDetailGroup.bind(this);
 
 
       this.transactionsList = TransactionsList.create('.main');
@@ -190,6 +193,10 @@ export class App {
     this.database.getBalanceForUserTotal(uid, this.mainPage.renderCurrenciesTable);
   }
 
+  getBalanceForSliderGroup(groupID: string) {
+    this.database.getBalanceForUserInGroup(this.database.uid, groupID, this.mainPage.renderGroupBalance);
+  }
+
   updateOnAccountPage(data: any) {
     const uid: string = this.database.uid;
     this.database.updateUserInfo(uid, data);
@@ -240,6 +247,20 @@ export class App {
   addUserBalanceInModalCardUser(data: any) {
     const { userId, groupId } = data;
     this.database.getBalanceForUserInGroup(userId, groupId, this.groups.addUserBalanceInModalDetailGroup);
+  }
+
+  getUserBalanceInGroup(data: any) {
+    const { userId, groupId } = data;
+    this.database.getBalanceForUserInGroup(userId, groupId, this.groups.deleteUserFromGroup);
+  }
+
+  changeUserStatusInGroup(data: IDataChangeStatus) {
+    this.database.changeStatusUser(data);
+    this.notifications.decreaseNotificationMark(TypeOfNotifications.Group);
+  }
+
+  addMemberInDetailGroup(data: IDataAddMember) {
+    this.database.addMemberInGroup(data, this.groups.addNewUserInDetailGroup);
   }
 
   onTransactionsPage() {
@@ -431,10 +452,6 @@ export class App {
     this.database.removeGroup(idGroup);
   }
 
-  deleteMemberFromGroup(idGroup: string, userId: string) {
-    this.database.removeMemberGroup(idGroup, userId);
-  }
-
   onAddUserToContacts(userData: ISearchUserData, errorHandler: (message: string) => void): void {
     this.database.addUserToContacts(userData, errorHandler);
   }
@@ -446,8 +463,8 @@ export class App {
     this.database.changeContactState(contactId, state);
   }
 
-  fillContactsList() {
-    const renderContact = this.database.contactsHandler(this.contacts.addContactsToList);
+  fillContactsList(selector: string | null = null) {
+    const renderContact = this.database.contactsHandler(this.contacts.addContactsToList, selector);
     this.database.getContactsList(renderContact);
   }
 
