@@ -1,4 +1,6 @@
 @import "src/scss/_misc/mixins";
+@import "src/scss/_misc/variables";
+
 
 .message {
   display: grid;
@@ -6,13 +8,17 @@
   font-size: 0.8rem;
   background: #f1f1f1;
 
+  min-width: 55%;
+  max-width: 85%;
+
   grid-gap: 0.5rem;
   grid-template-areas: "avatar name time" "message message button";
   grid-template-columns: 3rem 1fr 6rem;
   grid-template-rows: auto auto;
 
   &--own {
-    background: #f0b791;
+    background: $primary-alternate-hover;
+    color: $color-white;
 
     grid-template-areas: "avatar name time" "message message message";
   }

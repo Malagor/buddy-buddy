@@ -1,6 +1,8 @@
-export const onClickContactInContactsList = (): void => {
-  const contactList = document.querySelector('.contacts-user-list');
+export const onClickContactInContactsList = (selector: string | null = null): void => {
+  const contactList = document.querySelector(`${selector ? selector : '.contacts-user-list'}`);
   contactList.addEventListener('click', event => {
+    console.log('onClickContactInContactsList');
+
     const { target }: any = event;
 
     if (target.closest('.contact-list__item')) {

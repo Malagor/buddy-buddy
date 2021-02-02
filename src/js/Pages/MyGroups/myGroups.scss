@@ -41,16 +41,6 @@
     }
   }
 
-  &__balance {
-    &--negative {
-      color: red;
-    }
-
-    &--positive {
-      color: green;
-    }
-  }
-
   &__box-logo-group {
     display: flex;
     justify-content: center;
@@ -59,7 +49,7 @@
 }
 
 .group-hidden {
-  display: none;
+  display: none!important;
 }
 
 .modal-top {
@@ -113,10 +103,8 @@
 #members-dropdown-menu {
   width: 96.5%;
 }
-/* ul.contacts-user-list {
-  width: 96.5%!important;
-} */
-.form-switch {
+
+.form-switch{
   margin-top: 0.5rem;
 }
 
@@ -153,40 +141,53 @@
   align-items: center;
   margin: rem(8px) 0 rem(16px) 0;
 
-  &--author {
+  &--author{
     background-color: rgba(128, 128, 128, 0.616);
   }
 
-  &__img {
-    width: rem(50px);
-    height: rem(50px);
-    margin: rem(8px);
-    border-radius: 50%;
-  }
-  &__name {
-    margin: rem(5px);
-  }
-  &__account {
-    margin: rem(5px);
-  }
-  &__button {
-    position: absolute;
-    /* bottom: 26px; */
-    top: 35%;
-    right: 10px;
-  }
-  &__balance {
-    margin: 0 4rem 0 auto;
+    &__img {
+      margin: rem(8px);
+      width: rem(50px);
+      height: rem(50px);
+      border-radius: 50%;
+    }
+    &__name{
+      margin: rem(5px);
+    }
+    &__account{
+      margin: rem(5px);
+    }
+    &__button{
+      position: absolute;
+      right: 10px;
+      top: 35%;
+    }
+    &__balance{
+      margin: 0 4rem 0 auto;
 
-    &--negative {
-      color: red;
+      &--negative {
+        color: red;
+      }
+  
+      &--positive {
+        color: green;
+      }
+    } 
+    
+    &__button-container{
+      position: absolute;
+      right: rem(20px);
+      height: rem(30px);
     }
 
-    &--positive {
-      color: green;
+    &__button-confirmation{
+      padding: 3px;
     }
-  }
 }
+
+  .container-group-detail{
+    max-width: 90%;
+  }
 
 @media(max-width: 450px) {
   .form-title {
@@ -194,5 +195,27 @@
   }
   .form-check-label {
     font-size: 0.7rem;
+  }
+}
+
+@media (max-width: 430px) {
+  .modal-dialog {
+    max-width: 98%;
+  }
+  .modal {
+    left: 0;
+  } 
+  .modal-detail__img {
+    margin: rem(6px);
+    width: rem(40px);
+    height: rem(40px);
+    border-radius: 50%;
+  }
+}
+
+@media (max-width: 370px) {
+  .modal-detail__button-confirmation{
+    padding: 3px;
+    font-size: rem(10px);
   }
 }
