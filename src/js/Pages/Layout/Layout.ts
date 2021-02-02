@@ -233,7 +233,6 @@ export class Layout extends Page {
     document.querySelector('.sideBar-modal-body').textContent = i18n._('Are you sure you want to SignOut?');
     document.querySelector('.sideBar-modal-footer__cancel-btn').textContent = i18n._('Cancel');
     document.querySelector('.sideBar-modal-footer__signOut-btn').textContent = i18n._('signOut');
-
   }
 
   protected events(): void {
