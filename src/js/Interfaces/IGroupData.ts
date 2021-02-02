@@ -30,3 +30,8 @@ export interface IDataAddMember {
   account: string;
   groupId: string;
 }
+
+export interface IDataCloseGroup {
+  userList: string[];
+  groupId: string;
+}
