@@ -6,7 +6,7 @@ import { Main } from '../Pages/Main/Main';
 import { MyGroups } from '../Pages/MyGroups/MyGroups';
 import { AccountPage } from '../Pages/AccountPage/AccountPage';
 
-import { IGroupDataAll, IDataForCreateGroup, IDataChangeStatus, IDataAddMember } from '../Interfaces/IGroupData';
+import { IGroupDataAll, IDataForCreateGroup, IDataChangeStatus, IDataAddMember, IDataCloseGroup } from '../Interfaces/IGroupData';
 import { TransactionsList } from '../Pages/TransactionsList/transactionsList';
 import { INotification, Notifications, TypeOfNotifications } from './Notifications';
 import { INewMessage, Messenger } from '../Pages/Messenger/Messenger';
@@ -98,6 +98,7 @@ export class App {
       this.groups.addUserBalanceInModalCardUser = this.addUserBalanceInModalCardUser.bind(this);
       this.groups.getUserBalanceInGroup = this.getUserBalanceInGroup.bind(this);
       this.groups.changeUserStatusInGroup = this.changeUserStatusInGroup.bind(this);
+      this.groups.closeGroup = this.closeGroup.bind(this);
       this.groups.addMemberInDetailGroup = this.addMemberInDetailGroup.bind(this);
 
 
@@ -240,13 +241,13 @@ export class App {
     this.database.getGroupList(this.groupHandler);
   }
 
-  onAddInfoForModalDetailGroup(idGroup: string) {
-    this.database.getGroup(idGroup, this.groups.addInfoForModalDetailGroup, this.groups.addModalUserData);
-    this.database.getBalanceInGroup(idGroup, 1, this.groups.addBalanceForModalGroupDetail);
+  onAddInfoForModalDetailGroup(groupId: string, userId: string) {
+    this.database.getGroup(groupId, this.groups.addInfoForModalDetailGroup, this.groups.addModalUserData);
+    this.database.getBalanceForGroup(groupId, userId, this.groups.addBalanceForModalGroupDetail);
   }
 
-  addBalanceInGroupPage(idGroup: string) {
-    this.database.getBalanceInGroup(idGroup, 1, this.groups.addBalanceInGroupCard);
+  addBalanceInGroupPage(groupId: string, userId: string) {
+    this.database.getBalanceForGroup(groupId, userId, this.groups.addBalanceInGroupCard);
   }
 
   addUserBalanceInModalCardUser(data: any) {
@@ -262,6 +263,11 @@ export class App {
   changeUserStatusInGroup(data: IDataChangeStatus) {
     this.database.changeStatusUser(data);
     this.notifications.decreaseNotificationMark(TypeOfNotifications.Group);
+  }
+
+  closeGroup(data: IDataCloseGroup) {
+    this.database.closeGroup(data, this.groups.answerDataBaseForClosedGroup);
+    // .notifications.decreaseNotificationMark(TypeOfNotifications.Group);
   }
 
   addMemberInDetailGroup(data: IDataAddMember) {
@@ -465,10 +471,6 @@ export class App {
     };
 
     this.database.deleteHandlers(handlers);
-  }
-
-  deleteGroup(idGroup: string) {
-    this.database.removeGroup(idGroup);
   }
 
   onAddUserToContacts(userData: ISearchUserData, errorHandler: (message: string) => void): void {
