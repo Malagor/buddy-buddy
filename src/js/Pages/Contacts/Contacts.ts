@@ -2,8 +2,6 @@ import { Page } from '../../Classes/Page';
 import { getFormData } from '../../Util/getFormData';
 import { Modal } from 'bootstrap';
 
-const modalHtml = require('./modal.html');
-
 export interface ISearchUserData {
   name?: string;
   account?: string;
@@ -44,7 +42,7 @@ export class Contacts extends Page {
       </div>
     `;
 
-    html += modalHtml;
+    html += this.modalHtml();
 
     this.element.innerHTML = html;
 
@@ -178,5 +176,35 @@ export class Contacts extends Page {
       </li>
     `;
     list.insertAdjacentHTML('afterbegin', html);
+  }
+
+    modalHtml = () => {
+    return `
+    <div id="deleteUserModal" class="modal fade " tabindex="-1">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Delete User from Contact List</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <p>Are you sure you want to remove this user from your contacts?</p>
+            <div class="delete-modal__user" data-id-user="">
+              <div class="delete-modal__avatar">
+                <img src="" alt="">
+              </div>
+              <div class="delete-modal__name"></div>
+              <div class="delete-modal__account"></div>
+            </div>
+
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary" id="deleteUserBtn">Yes, delete user</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    `;
   }
 }
