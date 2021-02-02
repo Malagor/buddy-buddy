@@ -50,7 +50,6 @@ export class App {
   init() {
     this.database.onUserIsLogin = this.isUserLogin.bind(this);
     this.database.init();
-    // this.database.createBasicTables();
   }
 
   isUserLogin(state: boolean, uid?: string) {
@@ -63,11 +62,9 @@ export class App {
 
       // SIDEBAR
       this.layout.onSignOut = this.onSignOut.bind(this);
-      this.layout.onStatisticsPage = this.onStatisticsPage.bind(this);
       this.layout.onMainPage = this.onMainPage.bind(this);
       this.layout.onGroupsPage = this.onGroupsPage.bind(this);
       this.layout.onTransactionsPage = this.onTransactionsPage.bind(this);
-      this.layout.onSettingsPage = this.onSettingsPage.bind(this);
       this.layout.onHelpPage = this.onHelpPage.bind(this);
       this.layout.onAccountPage = this.onAccountPage.bind(this);
       this.layout.onMessagesPage = this.onMessagesPage.bind(this);
@@ -123,7 +120,6 @@ export class App {
       this.loadCurrentPage();
       this.changeTheme();
     } else {
-      console.log(`isUserLogon = ${state}`);
       this.authPage = AuthPage.create('#app');
       this.authPage.onLoadSignInPage = this.loadSignInPage.bind(this);
       this.authPage.onGoogleReg = this.onGoogleReg.bind(this);
@@ -302,19 +298,9 @@ export class App {
     this.database.getMessageList(this.messageHandler);
   }
 
-  onStatisticsPage() {
-    this.deleteHandlers();
-    console.log('Load Statistics Page!');
-  }
-
-  onSettingsPage() {
-    this.deleteHandlers();
-    console.log('Load Settings Page!');
-  }
-
   onHelpPage() {
     this.deleteHandlers();
-    console.log('Load Help Page!');
+
   }
 
   onGoogleReg() {
@@ -489,34 +475,4 @@ export class App {
     this.database.deleteUserFromContactsList(this.database.uid, contactId);
     this.notifications.decreaseNotificationMark(TypeOfNotifications.Contact);
   }
-
-  // createUser(uid: string) {
-  //   const form: HTMLFormElement = document.querySelector('#my-form');
-  //   const formData: { [k: string]: any } = getFormData(form);
-  //
-  //   const storageRef = firebase.storage().ref();
-  //   const userRef = firebase.database().ref(`User/${uid}`);
-  //   const file = document.querySelector('#avatar').files[0];
-  //
-  //   const metadata = {
-  //     'contentType': file.type,
-  //   };
-  //
-  //   storageRef.child('images/' + file.name).put(file, metadata).then(function(snapshot) {
-  //     snapshot.ref.getDownloadURL()
-  //       .then((url) => {
-  //         formData['avatar'] = url;
-  //       })
-  //       .then(formData => {
-  //         console.log('formData', formData);
-  //         userRef.set(formData);
-  //       })
-  //       .catch(error => {
-  //         console.log(error.code);
-  //         console.log(error.message);
-  //       });
-  //   });
-  // }
-
-
 }
