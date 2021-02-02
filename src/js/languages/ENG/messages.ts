@@ -47,6 +47,7 @@ export const messagesENG = {
   'Rate': 'Rate',
   'My groups': 'My groups',
   'My last transactions': 'My last transactions',
+  'Group': 'Group',
 
   // Transactions
   'Transactions List' : 'Transactions List',

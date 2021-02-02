@@ -224,7 +224,7 @@ export class Main extends Page {
                 </p>
               </div>
               <p class="main-card-trans__footer">
-                <span><strong>Group:</strong> ${
+                <span><strong>${i18n._('Group')}:</strong> ${
                   item.groupTitle.length > 30 ? item.groupTitle.slice(0, 23).trim() + '...' : item.groupTitle
                 }</span>
               </p>

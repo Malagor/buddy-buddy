@@ -47,6 +47,7 @@ export const messagesRU = {
   'Rate': 'Котировка',
   'My groups': 'Мои группы',
   'My last transactions': 'Мои последние транзакции',
+  'Group': 'Группа',
 
   // Group
   'Groups': 'Группы',
