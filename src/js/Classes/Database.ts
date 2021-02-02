@@ -1,7 +1,7 @@
 import firebase from 'firebase';
 import 'firebase/auth';
 import { default as CyrillicToTranslit } from 'cyrillic-to-translit-js/CyrillicToTranslit';
-import { IDataForCreateGroup, IDataChangeStatus, IDataAddMember } from '../Interfaces/IGroupData';
+import { IDataAddMember, IDataChangeStatus, IDataForCreateGroup } from '../Interfaces/IGroupData';
 import { ISearchUserData } from '../Pages/Contacts/Contacts';
 import { IMessage, INewMessage } from '../Pages/Messenger/Messenger';
 import { IHandlers } from './App';
@@ -240,15 +240,15 @@ export class Database {
         })
         .map(async (item: any, index: number) => {
           const elem: any = await item.userList
-          .filter((item: any[]) => item[1].state === 'approve')
-          .map(async (it: any) => {
-            const res: any = await this.firebase
-            .database()
-            .ref(`User/${it[0]}`)
-            .once('value', (snapshot) => snapshot);
-            it = res.val().avatar;
-            return it;
-          });
+            .filter((item: any[]) => item[1].state === 'approve')
+            .map(async (it: any) => {
+              const res: any = await this.firebase
+                .database()
+                .ref(`User/${it[0]}`)
+                .once('value', (snapshot) => snapshot);
+              it = res.val().avatar;
+              return it;
+            });
           await Promise.all(elem).then((userList: any) => {
             if (userList.length) callback2(callback(userList), index, item, value.length, currentUserGroup);
           });
@@ -563,16 +563,16 @@ export class Database {
   }
 
   changeStatusUser(data: IDataChangeStatus) {
-    const {userId, groupId, state} = data;
-    const dataBase =  this.firebase.database();
+    const { userId, groupId, state } = data;
+    const dataBase = this.firebase.database();
 
     dataBase
       .ref(`Groups/${groupId}/userList/${userId}`)
-      .set({state: state});
+      .set({ state: state });
 
     dataBase
       .ref(`User/${userId}/groupList/${groupId}`)
-      .set({state: state});
+      .set({ state: state });
   }
 
   addMemberInGroup(data: IDataAddMember, addNewUserInDetailGroup: any) {
@@ -584,59 +584,59 @@ export class Database {
       const dataForChangeStatusUser: IDataChangeStatus = {
         userId: userKey,
         groupId: data.groupId,
-        state: 'pending'
+        state: 'pending',
       };
-      this. changeStatusUser(dataForChangeStatusUser);
+      this.changeStatusUser(dataForChangeStatusUser);
 
       bace
-      .ref(`User/${userKey}/`)
-      .once('value', (userInfo) => {
-        const userDetainInfo = {
-          userId: userInfo.key,
-          user: userInfo.val(),
-          groupId: data.groupId
-        };
-        addNewUserInDetailGroup(userDetainInfo, errorData);
-      });
+        .ref(`User/${userKey}/`)
+        .once('value', (userInfo) => {
+          const userDetainInfo = {
+            userId: userInfo.key,
+            user: userInfo.val(),
+            groupId: data.groupId,
+          };
+          addNewUserInDetailGroup(userDetainInfo, errorData);
+        });
     };
 
     userTable
-    .once('value', (userList) => {
-      const userObj = userList.val();
-      const keysList = Object.keys(userObj);
-      const ArrayUserKey: string[] = keysList.filter(key => {
-        if (userObj[key].account === data.account) return key;
+      .once('value', (userList) => {
+        const userObj = userList.val();
+        const keysList = Object.keys(userObj);
+        const ArrayUserKey: string[] = keysList.filter(key => {
+          if (userObj[key].account === data.account) return key;
 
-        return false;
-      });
+          return false;
+        });
 
-      const userKey = ArrayUserKey[0];
+        const userKey = ArrayUserKey[0];
 
-      if (!userKey) {
-        errorData = 'User is missing';
-        addNewUserInDetailGroup(data, errorData);
-      } else {
-        bace
-        .ref(`Groups/${data.groupId}/userList/`)
-        .once('value', (userList) => {
-            const userListObj = userList.val();
-            const arrUsers = Object.keys(userListObj);
-            const userInfo = userListObj[userKey];
+        if (!userKey) {
+          errorData = 'User is missing';
+          addNewUserInDetailGroup(data, errorData);
+        } else {
+          bace
+            .ref(`Groups/${data.groupId}/userList/`)
+            .once('value', (userList) => {
+              const userListObj = userList.val();
+              const arrUsers = Object.keys(userListObj);
+              const userInfo = userListObj[userKey];
 
-            if (arrUsers.includes(userKey)) {
-              const stateUser = userListObj[userKey].state;
-              if (stateUser === 'approve' || stateUser === 'pending') {
-                errorData = 'The user is in the group';
-                addNewUserInDetailGroup(userInfo, errorData);
+              if (arrUsers.includes(userKey)) {
+                const stateUser = userListObj[userKey].state;
+                if (stateUser === 'approve' || stateUser === 'pending') {
+                  errorData = 'The user is in the group';
+                  addNewUserInDetailGroup(userInfo, errorData);
+                } else {
+                  addUserInPageAndBD(userKey);
+                }
               } else {
                 addUserInPageAndBD(userKey);
               }
-            } else {
-              addUserInPageAndBD(userKey);
-            }
-        });
-      }
-    });
+            });
+        }
+      });
   }
 
   countGroupsInvite(setNotificationMark: { (type: TypeOfNotifications, num: number): void; (arg0: TypeOfNotifications, arg1: number): void; }): void {
@@ -984,13 +984,13 @@ export class Database {
         groupsIDList.forEach((groupID: any, index: number) => {
           if (groupsState[index].state === 'approve') {
             this.firebase
-            .database()
-            .ref(`Groups/${groupID}`)
-            .once('value', (snapshot) => {
-              if (!snapshot.val().dateClose) {
-                renderGroupList(groupID, snapshot.val().title, currGroup);
-              }
-            });
+              .database()
+              .ref(`Groups/${groupID}`)
+              .once('value', (snapshot) => {
+                if (!snapshot.val().dateClose) {
+                  renderGroupList(groupID, snapshot.val().title, currGroup);
+                }
+              });
           }
         });
       }, (error: { code: string; message: any }) => {
@@ -1017,11 +1017,11 @@ export class Database {
             memberList.forEach((userID, index) => {
               if (memberState[index].state === 'approve') {
                 this.firebase
-                .database()
-                .ref(`User/${userID}`)
-                .once('value', (snapshot) => {
-                  renderMembers(snapshot.key, snapshot.val().name, snapshot.val().avatar);
-                });
+                  .database()
+                  .ref(`User/${userID}`)
+                  .once('value', (snapshot) => {
+                    renderMembers(snapshot.key, snapshot.val().name, snapshot.val().avatar);
+                  });
               }
             });
           });
@@ -1041,11 +1041,11 @@ export class Database {
         memberList.forEach((userID, index) => {
           if (memberState[index].state === 'approve') {
             this.firebase
-            .database()
-            .ref(`User/${userID}`)
-            .once('value', (snapshot) => {
-              renderMembers(snapshot.key, snapshot.val().name, snapshot.val().avatar);
-            });
+              .database()
+              .ref(`User/${userID}`)
+              .once('value', (snapshot) => {
+                renderMembers(snapshot.key, snapshot.val().name, snapshot.val().avatar);
+              });
           }
         });
       }, (error: { code: string; message: any }) => {
@@ -1067,7 +1067,7 @@ export class Database {
       }
     });
 
-    const toUserList: {[k: string]: any} = {};
+    const toUserList: { [k: string]: any } = {};
     data.toUserList.forEach((user: { cost: any; comment: any; state: any; costFix: any; userID: string; }) => {
       const userId: string = user.userID;
       toUserList[userId] = {
@@ -1086,7 +1086,7 @@ export class Database {
       currency: data.currency,
       groupID: data.groupID,
       state: 'opened',
-      toUserList
+      toUserList,
     };
     const transKey = transRef.push(setData).key;
 
@@ -1151,7 +1151,7 @@ export class Database {
       });
   }
 
-  transactionHandler = (renderWrapper: any, renderTransaction: any, renderUser: any ) => {
+  transactionHandler = (renderWrapper: any, renderTransaction: any, renderUser: any) => {
     const base = this.firebase.database();
     const userRef = base.ref('User');
     const transRef = base.ref('Transactions');
@@ -1159,65 +1159,65 @@ export class Database {
       const transID = snapshot.key;
       renderWrapper(transID);
       transRef.child(`${transID}`)
-      .once('value', (snapshot) => {
-        const trans = snapshot.val();
-        if (trans.state !== 'opened') return;
-        const userIDList: string[] = Object.keys(snapshot.val().toUserList);
-        const userList: any[] = Object.values(snapshot.val().toUserList);
-        const fromUsd = Currencies.fromUSD(trans.currency);
-        if (snapshot.val().userID === this.uid) {
-          fromUsd(trans.totalCost)
-            .then(totalCost => {
-              trans.totalCost = totalCost;
-              const queryes = userList.map((user: any) => fromUsd(user.cost));
-              Promise.all(queryes)
-                .then(curCost => {
-                  curCost.forEach((cost, index) => {
-                    trans.toUserList[userIDList[index]].cost = cost;
-                  });
-                  renderTransaction(transID, trans, true, this.uid);
-                  const numbOfUsers = userIDList.length;
-                  userIDList.forEach((userID: any) => {
-                    userRef.child(`${userID}`)
-                    .once('value', (snapshot) => {
-                      const user = {
-                        id: snapshot.key,
-                        userName: snapshot.val().name,
-                        avatar: snapshot.val().avatar,
-                      };
-                      renderUser(transID, user, numbOfUsers, true);
+        .once('value', (snapshot) => {
+          const trans = snapshot.val();
+          if (trans.state !== 'opened') return;
+          const userIDList: string[] = Object.keys(snapshot.val().toUserList);
+          const userList: any[] = Object.values(snapshot.val().toUserList);
+          const fromUsd = Currencies.fromUSD(trans.currency);
+          if (snapshot.val().userID === this.uid) {
+            fromUsd(trans.totalCost)
+              .then(totalCost => {
+                trans.totalCost = totalCost;
+                const queryes = userList.map((user: any) => fromUsd(user.cost));
+                Promise.all(queryes)
+                  .then(curCost => {
+                    curCost.forEach((cost, index) => {
+                      trans.toUserList[userIDList[index]].cost = cost;
+                    });
+                    renderTransaction(transID, trans, true, this.uid);
+                    const numbOfUsers = userIDList.length;
+                    userIDList.forEach((userID: any) => {
+                      userRef.child(`${userID}`)
+                        .once('value', (snapshot) => {
+                          const user = {
+                            id: snapshot.key,
+                            userName: snapshot.val().name,
+                            avatar: snapshot.val().avatar,
+                          };
+                          renderUser(transID, user, numbOfUsers, true);
+                        });
                     });
                   });
-                });
-            });
-        } else if (Object.keys(snapshot.val().toUserList).some((user: any) => user === this.uid)) {
-          fromUsd(trans.totalCost)
-            .then(totalCost => {
-              trans.totalCost = totalCost;
-              const queryes = userList.map((user: any) => fromUsd(user.cost));
-              Promise.all(queryes)
-                .then(curCost => {
-                  curCost.forEach((cost, index) => {
-                    trans.toUserList[userIDList[index]].cost = cost;
+              });
+          } else if (Object.keys(snapshot.val().toUserList).some((user: any) => user === this.uid)) {
+            fromUsd(trans.totalCost)
+              .then(totalCost => {
+                trans.totalCost = totalCost;
+                const queryes = userList.map((user: any) => fromUsd(user.cost));
+                Promise.all(queryes)
+                  .then(curCost => {
+                    curCost.forEach((cost, index) => {
+                      trans.toUserList[userIDList[index]].cost = cost;
+                    });
+                    renderTransaction(transID, trans, false, this.uid);
+                    const userID = trans.userID;
+                    userRef.child(`${userID}`)
+                      .once('value', (snapshot) => {
+                        const user = {
+                          id: snapshot.key,
+                          userName: snapshot.val().name,
+                          avatar: snapshot.val().avatar,
+                        };
+                        renderUser(transID, user, 0, false);
+                      });
                   });
-                  renderTransaction(transID, trans, false, this.uid);
-                  const userID = trans.userID;
-                  userRef.child(`${userID}`)
-                  .once('value', (snapshot) => {
-                    const user = {
-                      id: snapshot.key,
-                      userName: snapshot.val().name,
-                      avatar: snapshot.val().avatar,
-                    };
-                    renderUser(transID, user, 0, false);
-                  });
-                });
-            });
-        } else return;
-      })
-      .catch(error => {
-        console.log('Error: ' + error.code);
-      });
+              });
+          } else return;
+        })
+        .catch(error => {
+          console.log('Error: ' + error.code);
+        });
     };
   }
 
@@ -1254,13 +1254,13 @@ export class Database {
         userList.forEach((userID: string, index: number) => {
           if (userState[index].state === 'approve') {
             this.firebase
-            .database()
-            .ref(`User/${userID}`)
-            .once('value', (snapshot) => {
-              const dataUser = snapshot.val();
-              dataUser.key = userID;
-              renderUser(trans, dataUser);
-            });
+              .database()
+              .ref(`User/${userID}`)
+              .once('value', (snapshot) => {
+                const dataUser = snapshot.val();
+                dataUser.key = userID;
+                renderUser(trans, dataUser);
+              });
           }
         });
       }, (error: { code: string; }) => {
@@ -1271,7 +1271,7 @@ export class Database {
       .database()
       .ref(`User/${trans.userID}`)
       .once('value', (snapshot) => {
-         renderOwner(snapshot.val());
+        renderOwner(snapshot.val());
       }, (error: { code: string; }) => {
         console.log('Error: ' + error.code);
       });
@@ -1294,37 +1294,37 @@ export class Database {
         newData.state = 'approve';
       }
       transRef.child(`${transID}/toUserList/${newUser.userID}`)
-      .set(newData)
-      .catch(error => {
-        console.log('Error: ' + error.code);
-      });
+        .set(newData)
+        .catch(error => {
+          console.log('Error: ' + error.code);
+        });
 
       userRef.child(`${newUser.userID}/transactionList/${transID}/state`)
-      .set(newUser.state)
-      .catch(error => {
-        console.log('Error: ' + error.code);
-      });
+        .set(newUser.state)
+        .catch(error => {
+          console.log('Error: ' + error.code);
+        });
     });
 
     oldUsersID.forEach((oldUser: string) => {
       if (!newUsers.includes(oldUser)) {
         transRef.child(`${transID}/toUserList/${oldUser}`)
-        .remove(error => {
-              if (error) {
-                console.log(error.message);
-              } else {
-                console.log('Delete user');
-              }
-        });
+          .remove(error => {
+            if (error) {
+              console.log(error.message);
+            } else {
+              console.log('Delete user');
+            }
+          });
 
         userRef.child(`${oldUser}/transactionList/${transID}`)
-        .remove(error => {
-          if (error) {
-            console.log(error.message);
-          } else {
-            console.log('Delete transID');
-          }
-        });
+          .remove(error => {
+            if (error) {
+              console.log(error.message);
+            } else {
+              console.log('Delete transID');
+            }
+          });
       }
     });
   }
@@ -1335,54 +1335,54 @@ export class Database {
     const transRef = base.ref('Transactions');
     const groupRef = base.ref('Groups');
     transRef.child(`${transID}/toUserList`)
-    .once('value', (snapshot) => {
-      const users = Object.keys(snapshot.val());
-      users.forEach((userID) => {
-        userRef.child(`${userID}/transactionList/${transID}`)
-        .remove()
-        .catch(error => {
-          if (error) {
-            console.log(error.message);
-          } else {
-            console.log('Удаление из списка трназакций у юзера');
-          }
+      .once('value', (snapshot) => {
+        const users = Object.keys(snapshot.val());
+        users.forEach((userID) => {
+          userRef.child(`${userID}/transactionList/${transID}`)
+            .remove()
+            .catch(error => {
+              if (error) {
+                console.log(error.message);
+              } else {
+                console.log('Удаление из списка трназакций у юзера');
+              }
+            });
         });
       });
-    });
 
     transRef.child(`${transID}`)
-    .remove()
-    .catch(error => {
-      if (error) {
-        console.log(error.message);
-      } else {
-        console.log('Удаление из списка трназакций');
-      }
-    });
+      .remove()
+      .catch(error => {
+        if (error) {
+          console.log(error.message);
+        } else {
+          console.log('Удаление из списка трназакций');
+        }
+      });
 
     userRef.child(`${this.uid}/transactionList/${transID}`)
-    .remove()
-    .catch(error => {
-      if (error) {
-        console.log(error.message);
-      } else {
-        console.log('Удаление из списка трназакций у хозяина');
-      }
-    });
+      .remove()
+      .catch(error => {
+        if (error) {
+          console.log(error.message);
+        } else {
+          console.log('Удаление из списка трназакций у хозяина');
+        }
+      });
 
     groupRef.child(`${groupID}/transactions`)
-    .transaction(list => {
-      const i = list.indexOf(transID);
-      list.splice(i, 1);
-      return list;
-    })
-    .catch(error => {
-      if (error) {
-        console.log(error.message);
-      } else {
-        console.log('Удаление из списка трназакций в группе');
-      }
-    });
+      .transaction(list => {
+        const i = list.indexOf(transID);
+        list.splice(i, 1);
+        return list;
+      })
+      .catch(error => {
+        if (error) {
+          console.log(error.message);
+        } else {
+          console.log('Удаление из списка трназакций в группе');
+        }
+      });
   }
 
   addUserToContacts(userData: ISearchUserData, errorHandler: (message: string) => void) {
@@ -1436,51 +1436,56 @@ export class Database {
         const transactionsId: string[] = snapshot.val().transactions || [];
 
         if (transactionsId.length) {
-          transactionsId.forEach(transID => {
-            base.ref(`Transactions/${transID}`)
-              .once('value', snapshot => {
-                const transactionData = snapshot.val();
-                if (transactionData) {
-                  const fromUserId = transactionData.userID;
-                  const fromCost = transactionData.totalCost;
-
-                  // increase balance "User FROM"
-                  if (usersList[fromUserId].sum == null) {
-                    usersList[fromUserId].sum = 0;
-                  }
-                  usersList[fromUserId].sum += fromCost;
-
-                  // decrease balances "Users TO"
-                  const toUserList = transactionData.toUserList;
-                  const toUserIdList = Object.keys(toUserList);
-
-                  toUserIdList.forEach(userId => {
-                    if (usersList[userId].sum == null) {
-                      usersList[userId].sum = 0;
-                    }
-                    usersList[userId].sum -= toUserList[userId].cost;
-                  });
-                }
-              });
+          const transQueries = transactionsId.map(transId => {
+            return this.getTransactionById(transId);
           });
+
+          Promise.all(transQueries)
+            .then(data => data.map(transSnapshot => transSnapshot.val()))
+            .then(transactionArray => {
+              transactionArray.forEach(transactionData => {
+                const fromUserId = transactionData.userID;
+                const fromCost = transactionData.totalCost;
+
+                // increase balance "User FROM"
+                if (usersList[fromUserId].sum == null) {
+                  usersList[fromUserId].sum = 0;
+                }
+                usersList[fromUserId].sum += fromCost;
+
+                // decrease balances "Users TO"
+                const toUserList = transactionData.toUserList;
+                const toUserIdList = Object.keys(toUserList);
+
+                toUserIdList.forEach(userId => {
+                  if (usersList[userId].sum == null) {
+                    usersList[userId].sum = 0;
+                  }
+                  usersList[userId].sum -= toUserList[userId].cost;
+                });
+              });
+            })
+            .then(() => {
+              const userListArray: { state: string, sum: number }[] = Object.values(usersList) || [];
+
+              let balance: number = userListArray.length ? userListArray.reduce((sum: number, userData: { sum: number }) => {
+                if (userData.sum > 0) {
+                  sum += userData.sum;
+                }
+                return sum;
+              }, 0) : 0;
+
+              balance *= currencyRate;
+              return {
+                balance: balance,
+                groupId: groupId,
+              };
+            })
+            .then(data => {
+              funcForRender(data);
+            })
+          ;
         }
-
-        // Total group Balances
-        const userListArray: { state: string, sum: number }[] = usersList.length ? Object.values(usersList) : [];
-        let balance: number = userListArray.length ? userListArray.reduce((sum: number, userData: { sum: number }) => {
-          if (userData.sum > 0) {
-            sum += userData.sum;
-          }
-          return sum;
-        }, 0) : 0;
-
-        balance *= currencyRate;
-        const data = {
-          balance: balance,
-          groupId: groupId,
-        };
-        funcForRender(data);
-
       })
       .catch(error => {
         console.log(error.code);
@@ -1506,7 +1511,7 @@ export class Database {
         Promise.all(usersQuery)
           .then(userInfoArray => {
             const graphData: { [key: string]: any; } = {};
-            const groupData: { [key: string]: string } = {groupTitle: snapshot.val().title};
+            const groupData: { [key: string]: string } = { groupTitle: snapshot.val().title };
 
             userInfoArray.forEach((userInfo) => {
               graphData[userInfo.key] = {
@@ -1573,9 +1578,7 @@ export class Database {
   getTransactionById(transactionID: string): any {
     return this.firebase.database()
       .ref(`Transactions/${transactionID}`)
-      .once('value', snapshot => {
-        return snapshot;
-      });
+      .once('value', snapshot => snapshot);
   }
 
   getBalanceForUserInGroup(userId: string, groupId: string, funcForRender: (data: any) => void, errorHandler?: (message: string) => void) {
@@ -1610,7 +1613,7 @@ export class Database {
         }
       });
 
-      base.ref(`User/${userId}/currency`)
+    base.ref(`User/${userId}/currency`)
       .once('value', (snapshot) => {
         const curr = snapshot.val();
         const data = {

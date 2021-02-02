@@ -54,7 +54,7 @@ export class Main extends Page {
     const elemIndex: number = newIndex % 2 === 0 ? newIndex / 2 : (newIndex - 1) / 2;
     const defaultGroupIcon = require('../../../assets/images/default-group-logo.png');
 
-    const currentGroupHTML: string = groupItem.groupID === currGroup 
+    const currentGroupHTML: string = groupItem.groupID === currGroup
     ? `<p class="slider__current-group">
         <span>${i18n._('Current')}</span>
       </p>`
@@ -68,7 +68,7 @@ export class Main extends Page {
           <p class="slider__item__title">
             <span>${groupItem.title}</span>
           </p>
-          ${currentGroupHTML} 
+          ${currentGroupHTML}
         </div>
       </div>
       <p class="slider__item__title--description">
@@ -110,7 +110,7 @@ export class Main extends Page {
       if (sum < 0) {
         group.classList.add('minus-cost');
       }
-    })
+    });
   }
 
   renderCurrenciesTable(balance: number): void {
@@ -232,8 +232,8 @@ export class Main extends Page {
 
           Currencies.getCurrencyRateByCode(item.currency)
             .then(data => {
-              const userCost: string = item.toUserList.find((it: any) => it[0] === item.uid) 
-              ? `+${(item.toUserList.find((it: any) => it[0] === item.uid)[1].cost * data).toFixed(2)} ${item.currency}` 
+              const userCost: string = item.toUserList.find((it: any) => it[0] === item.uid)
+              ? `+${(item.toUserList.find((it: any) => it[0] === item.uid)[1].cost * data).toFixed(2)} ${item.currency}`
               : `-${(item.totalCost * data).toFixed(2)} ${item.currency}`;
               document.querySelectorAll('.card-trans__main__cost')[index].firstElementChild.textContent = userCost;
               if (document.querySelectorAll('.card-trans__main__cost')[index].firstElementChild.textContent.trim()[0] !== '+') {

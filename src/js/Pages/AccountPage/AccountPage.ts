@@ -162,7 +162,7 @@ export class AccountPage extends Page {
     const submitInfo: HTMLElement = document.querySelector('.account__input-submit');
     const inputID: HTMLInputElement = document.querySelector('.account__double-form--second');
     const errorOfInput: HTMLElement = document.querySelector('.account__error');
-    
+
     if (!data) {
       if (!this.checkObj.account) {
         this.locCounter++;
