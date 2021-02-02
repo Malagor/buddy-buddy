@@ -143,7 +143,7 @@ export class AccountPage extends Page {
         <div class="block__footer">
           <div class="form-group row">
             <div class="col-sm-10 d-flex block--width-adaptive">
-              <button type="submit" class="account__input-submit btn btn-primary mx-auto" disabled>
+              <button type="submit" class="account__input-submit btn btn-primary btn-primary-alternate mx-auto" disabled>
                 Save
               </button>
             </div>
