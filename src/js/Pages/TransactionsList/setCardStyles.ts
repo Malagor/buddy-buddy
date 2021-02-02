@@ -25,7 +25,7 @@ export const setCardStyles = (trans: any, owner: boolean, ownUID: string) => {
         if (user[1].state === 'pending') {
           selectPending = 'selected';
           border = 'border-success';
-        } else if (user[1].state === 'abort') {
+        } else if (user[1].state === 'decline') {
           selectAbort = 'selected';
           border = 'border-danger';
         } else if (user[1].state === 'approve') {
@@ -34,7 +34,7 @@ export const setCardStyles = (trans: any, owner: boolean, ownUID: string) => {
         }
       }
     });
-  } else if (Object.entries(trans.toUserList).some((user: any) => user[1].state === 'abort')) {
+  } else if (Object.entries(trans.toUserList).some((user: any) => user[1].state === 'decline')) {
     border = 'border-danger';
   } else if (Object.entries(trans.toUserList).some((user: any) => user[1].state === 'pending')) {
     border = 'border-warning';

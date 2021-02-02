@@ -31,13 +31,16 @@ export const setDetailsStyles = (trans: any, owner: boolean, ownUID: string) => 
     membDisplay = 'd-none';
     commentDisplay = '';
     selectDisplay = '';
+
+    if (ownComment === '') {
+      commentDisplay = 'd-none';
+    }
   }
 
   let btnSaveDisplay: string = '';
   if (!owner) {
     btnSaveDisplay = 'd-none';
   }
-
 
   let checkDisplay: string;
   if (trans.photo) {
