@@ -70,7 +70,7 @@ export class MyGroups extends Page {
             </div>
           </div>
           <div class="block__footer">
-            <button type="button" class="btn btn-primary add-new-group" data-bs-toggle="modal" data-bs-target="#addNewGroupModal">${i18n._('New group')}</button>
+            <button type="button" class="btn btn-primary btn-primary-alternate add-new-group" data-bs-toggle="modal" data-bs-target="#addNewGroupModal">${i18n._('New group')}</button>
           </div>
         </div>
       </div>
@@ -230,7 +230,7 @@ export class MyGroups extends Page {
                 </div>
 
                 <div class="col-2 modal-wrapper-btn">
-                  <button type="button" class="btn btn-primary modal-btn-primary" id="addNewGroupMember"><span>${i18n._('Add')}</span></button>
+                  <button type="button" class="btn btn-primary modal-btn-primary btn-primary-alternate" id="addNewGroupMember"><span>${i18n._('Add')}</span></button>
                 </div>
               </div>
 
@@ -242,7 +242,7 @@ export class MyGroups extends Page {
 
               <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">${i18n._('Close')}</button>
-                <button type="submit" class="btn btn-primary" id="createGroupBtn">${i18n._('Create New Group')}</button>
+                <button type="submit" class="btn btn-primary btn-primary-alternate" id="createGroupBtn">${i18n._('Create New Group')}</button>
               </div>
 
             </form>
@@ -578,7 +578,7 @@ export class MyGroups extends Page {
   _createUserCardFroModalDetail(data: any, isBtn: boolean = false) {
     const htmlButtonDeleteUser = `<button type="button" class="btn-close" btn-data-id-user="${data.userId}" btn-data-id-group="${data.groupId}" aria-label="Close"></button>`;
 
-    const html = `
+    return `
         <div data-user-id-for-group=${data.userId} class="card modal-detail">
           <img class="modal-detail__img" src="${data.user.avatar}" alt="avatar">
           <div>
@@ -586,11 +586,10 @@ export class MyGroups extends Page {
             <p  class="modal-detail__account">${data.user.account}</p>
           </div>
           <div class="modal-detail__button">
-            ${ isBtn ?  htmlButtonDeleteUser : ''}
+            ${isBtn ? htmlButtonDeleteUser : ''}
           </div>
         </div>
       `;
-    return html;
   }
 
   private addUserToGroup(data: any) {

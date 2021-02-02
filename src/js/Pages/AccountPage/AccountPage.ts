@@ -143,7 +143,7 @@ export class AccountPage extends Page {
         <div class="block__footer">
           <div class="form-group row">
             <div class="col-sm-10 d-flex block--width-adaptive">
-              <button type="submit" class="account__input-submit btn btn-primary mx-auto" disabled>
+              <button type="submit" class="account__input-submit btn btn-primary btn-primary-alternate mx-auto" disabled>
                 Save
               </button>
             </div>
@@ -157,7 +157,7 @@ export class AccountPage extends Page {
     const submitInfo: HTMLElement = document.querySelector('.account__input-submit');
     const inputID: HTMLInputElement = document.querySelector('.account__double-form--second');
     const errorOfInput: HTMLElement = document.querySelector('.account__error');
-    
+
     if (!data) {
       submitInfo.removeAttribute('disabled');
       inputID.classList.remove('error');
@@ -294,7 +294,7 @@ export class AccountPage extends Page {
           }
           if (values[index] !== item.value.trim()) {
             if (item === inputID) {
-              this.checkUserID(item.value.trim()); 
+              this.checkUserID(item.value.trim());
             } else {
               submitInfo.removeAttribute('disabled');
             }
