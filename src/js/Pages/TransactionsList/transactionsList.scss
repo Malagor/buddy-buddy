@@ -298,6 +298,7 @@
   &__member-comment {
     width: 30%;
     font-size: rem(12px);
+    resize: none;
 
     @include phones {
       width: 35%;
