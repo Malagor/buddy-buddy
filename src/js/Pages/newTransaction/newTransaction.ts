@@ -72,7 +72,7 @@ export class NewTransaction extends Page {
           </form>
         </div>
         <div class="modal-footer">
-          <button type="button" class="new-trans__create-btn btn btn-primary w-100" data-bs-dismiss="modal" disabled>Создать транзакцию</button>
+          <button type="button" class="new-trans__create-btn btn btn-primary btn-primary-alternate w-100" data-bs-dismiss="modal" disabled>Создать транзакцию</button>
         </div>
       </div>
     `;

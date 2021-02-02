@@ -17,7 +17,7 @@ export const renderTransListHTML = () => {
        </div>
 
        <div class="block__footer">
-         <button class="new-trans-btn btn btn-primary" data-bs-toggle="modal" data-bs-target="#new-trans-modal">Новая транзакция</button>
+         <button class="new-trans-btn btn btn-primary btn-primary-alternate" data-bs-toggle="modal" data-bs-target="#new-trans-modal">Новая транзакция</button>
        </div>
      </div>
    </div>

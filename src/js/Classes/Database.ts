@@ -1,7 +1,7 @@
 import firebase from 'firebase';
 import 'firebase/auth';
 import { default as CyrillicToTranslit } from 'cyrillic-to-translit-js/CyrillicToTranslit';
-import { IDataForCreateGroup, IDataChangeStatus, IDataAddMember } from '../Interfaces/IGroupData';
+import { IDataAddMember, IDataChangeStatus, IDataForCreateGroup } from '../Interfaces/IGroupData';
 import { ISearchUserData } from '../Pages/Contacts/Contacts';
 import { IMessage, INewMessage } from '../Pages/Messenger/Messenger';
 import { IHandlers } from './App';
@@ -790,7 +790,7 @@ export class Database {
     };
   }
 
-  contactsHandler = (renderContact: any, selector: string | null): any => {
+  contactsHandler = (renderContact: any, selector?: string | null): any => {
     return (snapshot: any): void => {
       if (snapshot) {
         const key: string = snapshot.key;
@@ -803,7 +803,9 @@ export class Database {
             const userData = snapshot.val();
             userData.key = key;
             userData.state = state;
-            userData.selector = selector;
+            if (selector) {
+              userData.selector = selector;
+            }
             if (state !== 'decline') {
               renderContact(userData);
             }
@@ -1482,68 +1484,57 @@ export class Database {
         const usersList = snapshot.val().userList || [];
         const transactionsId: string[] = snapshot.val().transactions || [];
 
-        // if (transactionsId.length) {
-        //   transactionsId.forEach(transID => {
-        //     base.ref(`Transactions/${transID}`)
-        //       .once('value', snapshot => {
-        //         const transactionData = snapshot.val();
-        //         if (transactionData) {
-        //           const fromUserId = transactionData.userID;
-        //           const fromCost = transactionData.totalCost;
-        //
-        //           // increase balance "User FROM"
-        //           if (usersList[fromUserId].sum == null) {
-        //             usersList[fromUserId].sum = 0;
-        //           }
-        //           usersList[fromUserId].sum += fromCost;
-        //
-        //           // decrease balances "Users TO"
-        //           const toUserList = transactionData.toUserList;
-        //           const toUserIdList = Object.keys(toUserList);
-        //
-        //           toUserIdList.forEach(userId => {
-        //             if (usersList[userId].sum == null) {
-        //               usersList[userId].sum = 0;
-        //             }
-        //             usersList[userId].sum -= toUserList[userId].cost;
-        //           });
-        //         }
-        //       });
-        //   });
-        // }
-
         if (transactionsId.length) {
-
           const transQueries = transactionsId.map(transId => {
             return this.getTransactionById(transId);
           });
 
-          console.log('transQueries', transQueries.length);
           Promise.all(transQueries)
             .then(data => data.map(transSnapshot => transSnapshot.val()))
+            .then(transactionArray => {
+              transactionArray.forEach(transactionData => {
+                const fromUserId = transactionData.userID;
+                const fromCost = transactionData.totalCost;
+
+                // increase balance "User FROM"
+                if (usersList[fromUserId].sum == null) {
+                  usersList[fromUserId].sum = 0;
+                }
+                usersList[fromUserId].sum += fromCost;
+
+                // decrease balances "Users TO"
+                const toUserList = transactionData.toUserList;
+                const toUserIdList = Object.keys(toUserList);
+
+                toUserIdList.forEach(userId => {
+                  if (usersList[userId].sum == null) {
+                    usersList[userId].sum = 0;
+                  }
+                  usersList[userId].sum -= toUserList[userId].cost;
+                });
+              });
+            })
+            .then(() => {
+              const userListArray: { state: string, sum: number }[] = Object.values(usersList) || [];
+
+              let balance: number = userListArray.length ? userListArray.reduce((sum: number, userData: { sum: number }) => {
+                if (userData.sum > 0) {
+                  sum += userData.sum;
+                }
+                return sum;
+              }, 0) : 0;
+
+              balance *= currencyRate;
+              return {
+                balance: balance,
+                groupId: groupId,
+              };
+            })
             .then(data => {
-              console.log('Promise.all', data);
-
-            });
+              funcForRender(data);
+            })
+          ;
         }
-
-        // console.log('usersList', usersList.length);
-        // // Total group Balances
-        // const userListArray: { state: string, sum: number }[] = usersList.length ? Object.values(usersList) : [];
-        // let balance: number = userListArray.length ? userListArray.reduce((sum: number, userData: { sum: number }) => {
-        //   if (userData.sum > 0) {
-        //     sum += userData.sum;
-        //   }
-        //   return sum;
-        // }, 0) : 0;
-        //
-        // balance *= currencyRate;
-        // const data = {
-        //   balance: balance,
-        //   groupId: groupId,
-        // };
-        // funcForRender(data);
-
       })
       .catch(error => {
         console.log(error.code);
