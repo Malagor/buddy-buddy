@@ -391,7 +391,7 @@ export class App {
         curCost.forEach((cost, index) => {
           editData[index].cost = cost;
         });
-        this.database.editTransaction(editData, transID, trans, this.transactionsList.addTransactionWrapper, this.transactionsList.addMyTransactions, this.transactionsList.addUserToList );
+        this.database.editTransaction(editData, transID, trans, this.transactionsList.addMyTransactions, this.transactionsList.addUserToList );
       });
   }
 

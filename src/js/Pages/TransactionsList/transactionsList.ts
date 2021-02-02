@@ -101,7 +101,8 @@ export class TransactionsList extends Page {
     const selectState: HTMLSelectElement = transaction.querySelector('.trans-item__state');
     this.changeSelectState(selectState, transaction, transID);
     const detailsModalWrapper: HTMLElement = document.querySelector('.details__wrapper');
-    transaction.addEventListener('click', (e) => {
+    const transactionWrapper = transaction.querySelector('.trans-item__wrapper');
+    transactionWrapper.addEventListener('click', (e) => {
       const { target }: any = e;
       if (!target.closest('.trans-item__state')) {
         this.detailsModal.show();
