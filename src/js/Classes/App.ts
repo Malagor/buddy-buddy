@@ -226,6 +226,7 @@ export class App {
 
   onAccountPageChangeLang() {
     this.accountPage.onlineChangingLang();
+    this.layout.onlineChangingLang();
   }
 
   async onAccountPage() {
