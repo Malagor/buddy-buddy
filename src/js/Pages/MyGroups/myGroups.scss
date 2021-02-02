@@ -1,6 +1,7 @@
 @import "./src/scss/_misc/mixins";
 @import "../../../scss/_misc/variables.scss";
 
+
 .transparent {
   opacity: 0;
 }
@@ -28,14 +29,15 @@
 
 .card-group {
   width: 100%;
+  max-width: rem(740px);
   margin: auto;
   border: 2px solid rgba(0,0,0,.05);
   border-radius: .625rem;
   box-shadow: 0 3px 5px rgba(0,0,0,.25);
-  max-width: rem(740px);
+  cursor: pointer;
 
   &--new-group {
-    border: 2px solid rgba(10, 226, 21, 0.50);
+    border: 2px solid $primary-alternate;
     box-shadow: 0 3px 5px rgba(0, 0, 0, 0.25);
   }
 
@@ -44,7 +46,8 @@
     margin-bottom: 0.5rem;
 
     &--current {
-      background: #a2a7a27a;
+      color: $color-white;
+      background: $primary-alternate;
       order: -1;
     }
   }
@@ -186,7 +189,7 @@
   &__wrapper{
     display: flex;
     width: 100%;
-    align-items: baseline;
+    align-items: center;
     justify-content: space-between;
   }
 
@@ -201,7 +204,8 @@
   }
 
   &--author{
-    background: #a2a7a27a;
+    color: $color-text;
+    background: $color-accent-4;
   }
 
     &__img {
@@ -219,12 +223,10 @@
     }
     &__button{
       margin: rem(5px);
-/*       position: absolute;
-      right: 10px;
-      top: 35%; */
     }
+
     &__balance{
-      //margin: 0 4rem 0 auto;
+      text-align: end;
 
       &--negative {
         color: red;
@@ -243,6 +245,7 @@
 
     &__button-confirmation{
       padding: 3px;
+      color: $color-white;
     }
 }
 
@@ -256,13 +259,7 @@
     padding: 0 rem(40px);
   }
 
-/* @media(max-width: 720px) {
-  .modal-wrapper-content{
-    flex-direction: column;
-  }
-} */
-
-@media(max-width: 450px) {
+@media (max-width: 450px) {
   .form-title {
     width: 60%;
   }
@@ -273,9 +270,7 @@
   .modal-chart {
     margin: 0.8rem 0.8rem 0.8rem; 
   }
-}
 
-@media (max-width: 430px) {
   .modal-dialog {
     max-width: 95%;
   }
@@ -299,11 +294,15 @@
 
     &__balance {
       font-size: 0.8rem;
-      //margin: 0 2.7rem 0 auto;
     }
   }
 
   .card-group {
+
+    &__img-avatar {
+      width: 3rem;
+      height: 3rem;
+    }
 
     &__title{
       font-size: rem(14px);
@@ -318,6 +317,8 @@
     &__balance {
       font-size: rem(12px);
     }
+
+
   }
 
   .card-detail {

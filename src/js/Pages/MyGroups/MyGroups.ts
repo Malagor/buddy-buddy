@@ -88,12 +88,11 @@ export class MyGroups extends Page {
     if (!data.dataGroup.dateClose) {
       HTMLListOpenGroups.insertAdjacentHTML('afterbegin', this.createCard(data));
       this.eventsAddEventListenerForGroup(data);
+      this.addBalanceInGroupPage(data.groupKey, data.thisUid);
     } else {
       document.querySelector('#accordionForClosedGroup').classList.remove('group-hidden');
       HTMLListClosedGroups.insertAdjacentHTML('afterbegin', this.createCard(data));
     }
-
-    this.addBalanceInGroupPage(data.groupKey, data.thisUid);
   }
 
   addUserInGroupCard(data: any) {
@@ -146,13 +145,15 @@ export class MyGroups extends Page {
     const divCardGroup = document.querySelector(`#${data.groupId}`);
     const divForBalanceInCardGroup = divCardGroup.querySelector(`#balanceGroup`);
 
-    const html = `<p>${data.balance.toFixed(2)} ${data.currencyName}</p>`;
+    const html = `<h5 class="card-group__date"">${data.balance.toFixed(2)} ${data.currencyName}</h5>`;
     divForBalanceInCardGroup.insertAdjacentHTML('afterbegin', html);
   }
 
   createCard(data: any) {
-    const date: Date = new Date(data.dataGroup.dateCreate);
-    const dataCreateGroup: string = date.toLocaleString();
+    const dateCreate: Date = new Date(data.dataGroup.dateCreate);
+    const dataCreateGroup: string = dateCreate.toLocaleString();
+    const dateClose: Date = new Date(data.dataGroup.dateClose);
+    const dataCloseGroup: string = dateClose.toLocaleString();
 
     return `
       <div id=${data.groupKey} class="card mb-3 card-group">
@@ -177,7 +178,7 @@ export class MyGroups extends Page {
 
               </div>
               <div id="balanceGroup" class="col-5 card-group__balance">
-
+                ${data.dataGroup.dateClose ? `<h5 class="card-group__date">${dataCloseGroup.slice(0, 10)}</h5>`: ''}
               </div>
             </div>
 
@@ -460,10 +461,10 @@ export class MyGroups extends Page {
     const html = this._createUserCardForModalDetail(data, isBtmForDeleteUser);
 
     const htmlBtn = `
-      <div class="btn-group modal-detail__button-container" role="group" aria-label="Basic mixed styles example">
-        <button id="btn-prove" type="button" class="btn btn btn-success modal-detail__button-confirmation">Prove</button>
-        <button id="btn-disprove" type="button" class="btn btn-danger modal-detail__button-confirmation">Disprove</button>
-      </div>
+    <div class="modal-detail__button-container">
+      <button id="btn-prove" type="button" class="btn btn-primary-alternate modal-detail__button-confirmation">Prove</button>
+      <button id="btn-disprove" type="button" class="btn btn-secondary modal-detail__button-confirmation">Disprove</button>
+    </div>
     `;
 
     if (stateUser === 'approve') {
@@ -508,7 +509,7 @@ export class MyGroups extends Page {
             <input class="form-control dropdown-toggle modal-input" type="text" id="activeContact" data-bs-toggle="dropdown" aria-expanded="false" placeholder="Members" autocomplete="off" name="name">
             <ul id="members-dropdown-menu" class="dropdown-menu contacts-user-list-detail members-dropdown-menu" aria-labelledby="Group Members">
             </ul>
-            <button type="button" class="btn btn-primary modal-btn-primary" id="addNewGroupMemberInDetail"><span>add</span></button>
+            <button type="button" class="btn btn-primary btn-primary-alternate modal-btn-primary" id="addNewGroupMemberInDetail"><span>add</span></button>
           </div>
 
           <div class="col modal-error-text">
@@ -651,7 +652,7 @@ export class MyGroups extends Page {
     const divFooterModal = document.querySelector('.modal-footer');
     const htmlBtnCloseGroup = `
     <div class="">
-      <button id="closeGroupBtn" type="button" class="btn btn-warning">Close group</button>
+      <button id="closeGroupBtn" type="button" class="btn btn-primary btn-primary-alternate">Close group</button>
     </div>
     `;
     divFooterModal.insertAdjacentHTML('afterbegin', htmlBtnCloseGroup);
