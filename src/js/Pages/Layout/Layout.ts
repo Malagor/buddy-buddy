@@ -219,10 +219,10 @@ export class Layout extends Page {
   }
 
   onlineChangingLang() {
-    document.querySelector('.sidebarMainLink').querySelector('.nav-link__text').textContent = i18n._('mainPage');
-    document.querySelector('.sidebarGroupsLink').querySelector('.nav-link__text').textContent = i18n._('groupsPage');
-    document.querySelector('.sidebarTransactionsLink').querySelector('.nav-link__text').textContent = i18n._('transactionsPage');
-    document.querySelector('.sidebarMessagesLink').querySelector('.nav-link__text').textContent = i18n._('messagesPage');
+    document.querySelectorAll('.sidebarMainLink').forEach(item => item.querySelector('.nav-link__text').textContent = i18n._('mainPage'));
+    document.querySelectorAll('.sidebarGroupsLink').forEach(item => item.querySelector('.nav-link__text').textContent = i18n._('groupsPage'));
+    document.querySelectorAll('.sidebarTransactionsLink').forEach(item => item.querySelector('.nav-link__text').textContent = i18n._('transactionsPage'));
+    document.querySelectorAll('.sidebarMessagesLink').forEach(item => item.querySelector('.nav-link__text').textContent = i18n._('messagesPage'));
 
     document.querySelector('.signOut-text-link').textContent = i18n._('signOut');
 
