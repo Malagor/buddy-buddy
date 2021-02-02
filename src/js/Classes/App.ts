@@ -347,7 +347,6 @@ export class App {
   }
 
   onCreateTransaction(transactionData: any) {
-    // console.log('Trans data', transactionData);
     const toUsd = Currencies.toUSD(transactionData.currency);
     const userList = transactionData.toUserList;
     toUsd(transactionData.totalCost)
@@ -409,12 +408,10 @@ export class App {
   }
 
   onRenderGroupBalanceNewTrans(groupID: string) {
-    console.log ('render1');
     this.database.getBalanceForUserInGroup(this.database.uid, groupID, this.transactionsList.addGroupBalance);
   }
 
   onRenderTotalBalanceNewTrans() {
-    console.log ('render2');
     this.database.getBalanceForUserTotal(this.database.uid, this.transactionsList.addTotalBalance);
   }
 

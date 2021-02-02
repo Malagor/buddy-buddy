@@ -937,7 +937,6 @@ export class Database {
     callback(values, currentCurrency);
   }
 
-  // запросы по транзакциям
   getCurrencyList(renderCurrencyList: any): void {
     this.firebase
       .database()
@@ -1211,7 +1210,7 @@ export class Database {
   setNewStateTransaction(state: string, transID: string): void {
     const base = this.firebase.database();
     const userRef = base.ref('User');
-    const refTrans = this.firebase.database().ref(`Transactions/${transID}/toUserList/${this.uid}/state`);
+    const refTrans = base.ref(`Transactions/${transID}/toUserList/${this.uid}/state`);
     refTrans.set(state)
       .catch(error => {
         console.log('Error: ' + error.code);
@@ -1242,7 +1241,6 @@ export class Database {
     this.firebase.database().ref(`Transactions/${transID}/`)
       .once('value', (snapshot) => {
         const trans: any = snapshot.val();
-        // console.log ('trans in database', trans); 
         const userIDList: string[] = Object.keys(snapshot.val().toUserList);
         const userListTrans: any[] = Object.values(snapshot.val().toUserList);
         const fromUsd = Currencies.fromUSD(trans.currency);
@@ -1292,7 +1290,6 @@ export class Database {
   }
 
   editTransaction = (editData: any, transID: string, trans: any, renderWrapper: any, renderTransaction: any, renderUser: any) => {
-    // console.log('transbeforeedit', trans);
     const base = this.firebase.database();
     const userRef = base.ref('User');
     const transRef = base.ref('Transactions');

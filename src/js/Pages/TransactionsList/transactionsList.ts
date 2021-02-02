@@ -120,8 +120,7 @@ export class TransactionsList extends Page {
   changeCardStyle = (select:HTMLSelectElement, transaction: HTMLElement, selectValue: string) => {
     if (selectValue === 'approve') {
       transaction.classList.remove('border-success', 'border-danger');
-      select.classList.add('d-none'); 
-      // select.setAttribute('disabled', '');   
+      select.classList.add('d-none');  
     } else if (selectValue === 'decline') {
       transaction.classList.remove('border-success');
       transaction.classList.add('border-danger');
@@ -148,7 +147,6 @@ export class TransactionsList extends Page {
       `;
 
       usersList.append(userWrapper);
-
         if (i > 3) {
           if (usersList.querySelector('.add-numb')) {
             usersList.querySelector('.add-numb').remove();
