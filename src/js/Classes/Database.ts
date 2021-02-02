@@ -1486,7 +1486,6 @@ export class Database {
               });
             })
             .then(() => {
-              console.log('d')
               const userListArray: { state: string, sum: number }[] = Object.values(usersList) || [];
 
               let balance: number = userListArray.length ? userListArray.reduce((sum: number, userData: { sum: number }) => {
@@ -1503,7 +1502,6 @@ export class Database {
               };
             })
             .then(data => {
-              console.log('data))))', data)
               funcForRender(data);
             })
           ;

@@ -608,7 +608,7 @@ export class MyGroups extends Page {
     }
   }
 
-  answerDataBaseForClosedGroup(isSuccess: boolean, selector: null | string =null, textError: null | string =null){
+  answerDataBaseForClosedGroup = (isSuccess: boolean, selector: null | string =null, textError: null | string =null) => {
     if(isSuccess) {
       document.querySelector('.btn-close').click()
       document.querySelector(`#${selector}`).remove()
