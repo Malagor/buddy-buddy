@@ -36,7 +36,7 @@ export class Contacts extends Page {
                 <span class="input-group-text" id="name-addon">Name</span>
                 <input type="text" class="form-control" placeholder="Contact\`s name" aria-label="Contact\`s name" aria-describedby="name-addon" name="name">
               </div>
-              <button type="submit" class="btn btn-primary search-form__button" form="contactForm">Add</button>
+              <button type="submit" class="btn btn-primary btn-primary-alternate search-form__button" form="contactForm">Add</button>
               <div class="contact__message error-message"></div>
             </form>
             <div class="contacts-list block--width-85"></div>

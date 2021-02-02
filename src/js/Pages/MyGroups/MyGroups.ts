@@ -60,7 +60,7 @@ export class MyGroups extends Page {
             </div>
           </div>
           <div class="block__footer">
-            <button type="button" class="btn btn-primary add-new-group" data-bs-toggle="modal" data-bs-target="#addNewGroupModal">New group</button>
+            <button type="button" class="btn btn-primary btn-primary-alternate add-new-group" data-bs-toggle="modal" data-bs-target="#addNewGroupModal">New group</button>
           </div>
         </div>
       </div>
@@ -236,7 +236,7 @@ export class MyGroups extends Page {
                 </div>
 
                 <div class="col-2 modal-wrapper-btn">
-                  <button type="button" class="btn btn-primary modal-btn-primary" id="addNewGroupMember"><span>add</span></button>
+                  <button type="button" class="btn btn-primary modal-btn-primary btn-primary-alternate" id="addNewGroupMember"><span>add</span></button>
                 </div>
               </div>
 
@@ -248,7 +248,7 @@ export class MyGroups extends Page {
 
               <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="submit" class="btn btn-primary" id="createGroupBtn">Create New Group</button>
+                <button type="submit" class="btn btn-primary btn-primary-alternate" id="createGroupBtn">Create New Group</button>
               </div>
 
             </form>
@@ -585,7 +585,7 @@ export class MyGroups extends Page {
   _createUserCardForModalDetail(data: any, isBtn: boolean = false) {
     const htmlButtonDeleteUser = `<button type="button" class="btn-close" data-id-user="${data.userId}" data-id-group="${data.groupId}" aria-label="Close"></button>`;
 
-    const html = `
+    return `
         <div data-user-id-for-group=${data.userId} class="card modal-detail">
           <img class="modal-detail__img" src="${data.user.avatar}" alt="avatar">
           <div>
@@ -593,11 +593,10 @@ export class MyGroups extends Page {
             <p  class="modal-detail__account">${data.user.account}</p>
           </div>
           <div class="modal-detail__button">
-            ${ isBtn ?  htmlButtonDeleteUser : ''}
+            ${isBtn ? htmlButtonDeleteUser : ''}
           </div>
         </div>
       `;
-    return html;
   }
 
   _clearCloseGroupBtn = (): void => {
