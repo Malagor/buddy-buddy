@@ -1,7 +1,7 @@
 import { Page } from '../../Classes/Page';
 import { IGroupData, IGroupDataAll } from '../../Interfaces/IGroupData';
 import { getFormData } from '../../Util/getFormData';
-import { ChartBar } from '../../Classes/ChartBar'
+import { ChartBar } from '../../Classes/ChartBar';
 
 import { Modal } from 'bootstrap';
 import { eventForContactsList } from '../Contacts/eventForContactsList';
@@ -74,7 +74,7 @@ export class MyGroups extends Page {
   }
 
   renderChart() {
-    console.log("sss");
+    console.log('sss');
     const chart: any = ChartBar.create('.modal-chart');
     return chart.buildingChart;
   }
@@ -178,7 +178,7 @@ export class MyGroups extends Page {
 
               </div>
               <div id="balanceGroup" class="col-5 card-group__balance">
-                ${data.dataGroup.dateClose ? `<h5 class="card-group__date">${dataCloseGroup.slice(0, 10)}</h5>`: ''}
+                ${data.dataGroup.dateClose ? `<h5 class="card-group__date">${dataCloseGroup.slice(0, 10)}</h5>` : ''}
               </div>
             </div>
 
@@ -623,7 +623,7 @@ export class MyGroups extends Page {
               ${isBtn ? htmlButtonDeleteUser : ''}
             </div>
           </div>
-          
+
         </div>
       `;
   }
@@ -740,7 +740,7 @@ export class MyGroups extends Page {
 
   addUserBalanceInModalDetailGroup(data: any) {
     const divCardUser = document.querySelector(`[data-user-id-for-group="${data.userId}"]`);
-    const divForBtb = divCardUser.querySelector('.modal-detail__wrapper') 
+    const divForBtb = divCardUser.querySelector('.modal-detail__wrapper');
 
     const html = `
       <div class="modal-detail__balance">

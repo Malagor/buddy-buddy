@@ -1261,8 +1261,8 @@ export class Database {
       .catch(error => {
         console.log('Error: ' + error.code);
       });
-    
-    userRef.child(`${this.uid}/transactionList/${transID}/state`)  
+
+    userRef.child(`${this.uid}/transactionList/${transID}/state`)
     .set(state)
       .catch(error => {
         console.log('Error: ' + error.code);
@@ -1283,7 +1283,7 @@ export class Database {
   }
 
   getTransInfoModal(transID: string, groupID: string, renderGroupTitle: any, renderUser: any, renderOwner: any) {
-    
+
     this.firebase.database().ref(`Transactions/${transID}/`)
       .once('value', (snapshot) => {
         const trans: any = snapshot.val();
@@ -1327,10 +1327,10 @@ export class Database {
                         renderOwner(snapshot.val());
                     }, (error: { code: string; }) => {
                       console.log('Error: ' + error.code);
-                    });                  
+                    });
                 });
             });
-      },(error: { code: string; }) => {
+      }, (error: { code: string; }) => {
         console.log('Error: ' + error.code);
       });
   }
@@ -1420,7 +1420,7 @@ export class Database {
               });
             });
         });
-      })
+      });
     }, 500);
   }
 
