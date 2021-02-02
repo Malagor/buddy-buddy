@@ -333,13 +333,8 @@
     line-height: 1rem;
   }
 
-  &__comment {
-    margin-left: rem(5px);
-  }
-
   &__state-wrap {
     width: 50%;
-
   }
 
   &__check-wrapper {
@@ -352,5 +347,4 @@
 
     object-fit: contain;
   }
-
 }
