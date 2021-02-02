@@ -16,7 +16,7 @@ export const renderTransCardHTML = (trans: any, date: any, styles: any ) => {
         <select class="trans-item__state form-select" aria-label="Default select example">
           <option ${styles.selectPending} value="pending">ожидание</option>
           <option ${styles.selectApprove} value="approve">подтвердить</option>
-          <option ${styles.selectAbort} value="abort">отклонить</option>
+          <option ${styles.selectAbort} value="decline">отклонить</option>
         </select>
       </div>
     </div>
