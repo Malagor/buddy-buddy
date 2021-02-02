@@ -32,9 +32,9 @@ export const messagesRU = {
   'Contact`s name': 'Имя контакта',
   'Approve': 'Принять',
   'Pending': 'В ожидании',
-  'Add': 'Добавить', 
+  'Add': 'Добавить',
 
-    // Group  
+    // Group
     'Groups': 'Группы',
     'No groups': 'Еще нет групп',
     'Would': 'Вы хотите создать первую группу?',

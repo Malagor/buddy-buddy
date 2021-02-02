@@ -35,7 +35,7 @@ export const messagesENG = {
 
   'Add': 'Add',
 
-  // Group  
+  // Group
   'Groups': 'Groups',
   'No groups': 'No groups yet.',
   'Would': 'Would you like to create the first group?',

@@ -337,7 +337,7 @@ export class NewTransaction extends Page {
       const data = this.getDataforCreateTransaction();
       this.onCreateTransaction(data);
       clearAllInputs();
-      setTimeout(() => {this.changeBalance()}, 500);
+      setTimeout(() => {this.changeBalance(); }, 500);
     });
 
     btnOpenCheck.addEventListener('click', () => {

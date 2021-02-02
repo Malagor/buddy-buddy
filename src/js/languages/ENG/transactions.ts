@@ -16,6 +16,6 @@ export const transactionsENG = {
   'decline': 'decline',
   'Save': 'Save',
   'Delete': 'Delete',
-  'Add members':'Add members',
+  'Add members': 'Add members',
   'Payer': 'Payer',
 };

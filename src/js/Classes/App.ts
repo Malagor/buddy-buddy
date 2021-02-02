@@ -273,7 +273,7 @@ export class App {
 
     this.transactionsList.newTrans.onRenderGroupBalance = this.onRenderGroupBalanceNewTrans.bind(this);
     this.transactionsList.newTrans.onRenderTotalBalance = this.onRenderTotalBalanceNewTrans.bind(this);
-    
+
     this.database.getCurrencyList(this.transactionsList.newTrans.addCurrencyList);
     this.database.getGroupsListForTransaction(this.transactionsList.newTrans.addGroupList);
     this.database.getMembersOfGroupFirst(this.transactionsList.newTrans.addMembersOfGroup);
@@ -372,7 +372,7 @@ export class App {
 
   onChangeState(state: string, transID: string) {
     this.database.setNewStateTransaction(state, transID);
-    if(state === 'approve') {
+    if (state === 'approve') {
       this.notifications.decreaseNotificationMark(TypeOfNotifications.Transaction);
     }
   }
