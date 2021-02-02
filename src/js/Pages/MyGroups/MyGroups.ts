@@ -86,7 +86,7 @@ export class MyGroups extends Page {
       HTMLListClosedGroups.insertAdjacentHTML('afterbegin', this.createCard(data));
     }
 
-    this.addBalanceInGroupPage(data.groupKey, data.thisUid, 'addBalanceInGroupCard');
+    this.addBalanceInGroupPage(data.groupKey, data.thisUid);
   }
 
   addUserInGroupCard(data: any) {
@@ -736,8 +736,7 @@ export class MyGroups extends Page {
     const divGroup = document.getElementById(`${data.groupKey}`);
 
     divGroup.addEventListener('click', () => {
-      this.onAddInfoForModalDetailGroup(keyGroup);
-      this.addBalanceInGroupPage(keyGroup, data.thisUid, 'addBalanceForModalGroupDetail');
+      this.onAddInfoForModalDetailGroup(keyGroup, data.thisUid);
       modalGroupDetail.show();
     });
   }

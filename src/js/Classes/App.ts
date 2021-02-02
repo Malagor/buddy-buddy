@@ -236,12 +236,13 @@ export class App {
     this.database.getGroupList(this.groupHandler);
   }
 
-  onAddInfoForModalDetailGroup(idGroup: string) {
-    this.database.getGroup(idGroup, this.groups.addInfoForModalDetailGroup, this.groups.addModalUserData);
+  onAddInfoForModalDetailGroup(groupId: string, userId: string) {
+    this.database.getGroup(groupId, this.groups.addInfoForModalDetailGroup, this.groups.addModalUserData);
+    this.database.getBalanceForGroup(groupId, userId, this.groups.addBalanceForModalGroupDetail);
   }
 
-  addBalanceInGroupPage(groupId: string, userId: string, method: string) {
-    this.database.getBalanceForGroup(groupId, userId,  eval(`this.groups.${method}`));
+  addBalanceInGroupPage(groupId: string, userId: string) {
+    this.database.getBalanceForGroup(groupId, userId, this.groups.addBalanceInGroupCard);
   }
 
   addUserBalanceInModalCardUser(data: any) {
