@@ -18,6 +18,8 @@ i18n.activate(locale);
 export class NewTransaction extends Page {
   onCreateTransaction: any;
   onShowMembersOfGroup: any;
+  onRenderTotalBalance: any;
+  onRenderGroupBalance: any;
 
   static create(element: string): NewTransaction {
     return new NewTransaction(element);
@@ -143,16 +145,6 @@ export class NewTransaction extends Page {
       }, 200);
     });
 
-    currInput.addEventListener('focus', () => {
-      currInput.value = '';
-      currInput.placeholder = document.querySelector('.curr--active-curr').textContent;
-    });
-
-    currInput.addEventListener('blur', () => {
-      currInput.value = document.querySelector('.curr--active-curr').textContent;
-      currInput.placeholder = 'Currency';
-    });
-
     currList.addEventListener('click', event => {
       const { target }: any = event;
       if (target.closest('.new-trans__curr-item')) {
@@ -256,6 +248,16 @@ export class NewTransaction extends Page {
     };
   }
 
+  changeBalance = () => {
+    const groups: HTMLFormElement = document.querySelector('.trans-list__groups');
+    const groupID = groups.value;
+    if (groups.value === 'all-trans') {
+      this.onRenderTotalBalance();
+    } else {
+      this.onRenderGroupBalance(groupID);
+    }
+  }
+
   protected events(): void {
     const groups: HTMLFormElement = document.querySelector('.new-trans__groups-list');
     const checkedMembersList: HTMLElement = document.querySelector('.checked-members');
@@ -335,6 +337,7 @@ export class NewTransaction extends Page {
       const data = this.getDataforCreateTransaction();
       this.onCreateTransaction(data);
       clearAllInputs();
+      setTimeout(() => {this.changeBalance()}, 500);
     });
 
     btnOpenCheck.addEventListener('click', () => {

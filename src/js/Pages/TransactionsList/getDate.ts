@@ -2,7 +2,7 @@
     const dayOptions = {
       year: '2-digit',
       month: '2-digit',
-      day: 'numeric',
+      day: '2-digit',
     };
 
     const timeOptions = {
