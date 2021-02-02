@@ -70,13 +70,14 @@ export class Messenger extends Page {
           <div class="modal-body">
             <form id="messageForm">
               <div class="dropdown">
-                <input class="form-control dropdown-toggle mb-2" type="text" id="activeContact" data-bs-toggle="dropdown" aria-expanded="false" placeholder="Recipient" autocomplete="off" name="name">
+                <input class="form-control dropdown-toggle mb-2" type="text" id="activeContact" data-bs-toggle="dropdown" aria-expanded="false" placeholder="Recipient*" autocomplete="off" name="name" required>
                 <input type="text" name="key" class="contact-user-id" hidden>
                 <ul class="dropdown-menu contacts-user-list" aria-labelledby="activeContact">
                 </ul>
               </div>
+              <div class="recipient-user"></div>
               <div class="mb-3">
-                <textarea class="form-control" id="formMessage" rows="3" placeholder="Message" minlength="3" name="message"></textarea>
+                <textarea class="form-control" id="formMessage" rows="3" placeholder="Message*" minlength="3" name="message" required></textarea>
               </div>
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
               <button type="submit" class="btn btn-primary btn-primary-alternate" form="messageForm">Send</input>
@@ -132,13 +133,14 @@ export class Messenger extends Page {
       const formData = getFormData(form);
 
       const messageData: INewMessage = {
+        fromUser: null,
         toUser: formData.key,
         message: formData.message,
         date: Date.now(),
-        fromUser: null,
         isRead: false,
       };
       this.sendNewMessage(messageData);
+      this.clearMessageForm();
       modal.hide();
     };
   }
@@ -211,12 +213,11 @@ export class Messenger extends Page {
 
   // Add Recipient User Name+Avatar in Message Form
   addUserForSendMessage = (userData: any): void => {
-    const userWrapper: HTMLElement = document.querySelector('.recipient-user');
+    const formRecipient: HTMLInputElement = document.querySelector('#activeContact');
+    formRecipient.value = `${userData.name} <@${userData.account}>`;
+    const idInput: HTMLInputElement = document.querySelector('.contact-user-id');
+    idInput.value = userData.key;
 
-    userWrapper.innerHTML = `
-      <div class="recipient-user__image-wrapper"><img src="${userData.avatar}" alt="${userData.name}"></div>
-      <div class="recipient-user__name" data-user-uid="${userData.key}">${userData.name}</div>
-    `;
   }
 
   // Displays an error message in the form
@@ -229,24 +230,30 @@ export class Messenger extends Page {
 
   // Calls a modal window for a response with the recipient's data filled in
   callAnswerModal = (data: any): void => {
-    const formRecipient: HTMLFormElement = this.element.querySelector('#formRecipient');
+    // const formRecipient: HTMLFormElement = this.element.querySelector('#formRecipient');
+    const formRecipient: HTMLInputElement = this.element.querySelector('#activeContact');
     formRecipient.value = data.account;
 
     this.addUserForSendMessage(data);
 
-    const modalBtn: HTMLElement = this.element.querySelector('.message__addBtn');
+    const modalBtn: HTMLButtonElement = this.element.querySelector('.message__addBtn');
     modalBtn.click();
 
-    const formMessage: HTMLFormElement = this.element.querySelector('#formMessage');
+    const formMessage: HTMLTextAreaElement = this.element.querySelector('#formMessage');
     formMessage.focus();
-
   }
 
-  renderCarrency(data: any) {
-    console.log(data);
-  }
+  clearMessageForm() {
+    const activeContact: HTMLInputElement = document.querySelector('#activeContact');
+    activeContact.value = '';
 
-  errorHandler(message: string): void {
-    console.error(message);
+    const contactUserIdInput: HTMLInputElement = document.querySelector('.contact-user-id');
+    contactUserIdInput.value = '';
+
+    const formMessage: HTMLTextAreaElement = document.querySelector('#formMessage');
+    formMessage.value = '';
+
+    const errorMessage: HTMLElement = document.querySelector('.recipient-user');
+    errorMessage.innerHTML = '';
   }
 }
