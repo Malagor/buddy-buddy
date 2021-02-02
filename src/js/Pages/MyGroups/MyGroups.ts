@@ -1,6 +1,7 @@
 import { Page } from '../../Classes/Page';
 import { IGroupData, IGroupDataAll } from '../../Interfaces/IGroupData';
 import { getFormData } from '../../Util/getFormData';
+import { ChartBar } from '../../Classes/ChartBar'
 
 import { Modal } from 'bootstrap';
 import { eventForContactsList } from '../Contacts/eventForContactsList';
@@ -37,7 +38,7 @@ export class MyGroups extends Page {
             <p class="block__title">Groups</p>
           </div>
           <div class="block__main">
-            <div id="contentGroup" class="container">
+            <div id="contentGroup" class="container container-group">
               <div id="divForListOpenGroups" class="block__wrapper-card">
                 <div class="card-body data-is-not">
                   <h5 class="card-title">No groups yet.</h5>
@@ -70,6 +71,12 @@ export class MyGroups extends Page {
     html += this.modalNewGroup();
     this.element.innerHTML = html;
     this.events();
+  }
+
+  renderChart() {
+    console.log("sss");
+    const chart: any = ChartBar.create('.modal-chart');
+    return chart.buildingChart;
   }
 
   createGroupList = (data: any) => {
@@ -268,12 +275,22 @@ export class MyGroups extends Page {
               <h5 class="modal-title">Group details</h5>
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div id="modalContent" class="modal-body">
-              <p>Modal body text goes here.</p>
+
+            <div class="row g-0 col modal-wrapper-content">
+              <div class="col-12 col-md-6">
+                <div id="modalContent" class="modal-body">
+                  <p>Modal body text goes here.</p>
+                </div>
+              </div>
+              <div class="col-12 col-md-6">
+                <div class="modal-chart">
+                </div>
+              </div>
             </div>
+
             <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            </div>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          </div>
           </div>
         </div>
       </div>
@@ -587,14 +604,25 @@ export class MyGroups extends Page {
 
     return `
         <div data-user-id-for-group=${data.userId} class="card modal-detail">
-          <img class="modal-detail__img" src="${data.user.avatar}" alt="avatar">
+
+          <div class="modal-detail__wrapper">
+            <div class="modal-detail__img-name">
+              <div>
+                <img class="modal-detail__img" src="${data.user.avatar}" alt="avatar">
+              </div>
+              <div class="modal-detail__name-account">
+                <p  class="modal-detail__name">${data.user.name}</p>
+                <p  class="modal-detail__account">${data.user.account}</p>
+              </div>
+            </div>
+          </div>
+
           <div>
-            <p  class="modal-detail__name">${data.user.name}</p>
-            <p  class="modal-detail__account">${data.user.account}</p>
+            <div class="modal-detail__button">
+              ${isBtn ? htmlButtonDeleteUser : ''}
+            </div>
           </div>
-          <div class="modal-detail__button">
-            ${isBtn ? htmlButtonDeleteUser : ''}
-          </div>
+          
         </div>
       `;
   }
@@ -711,13 +739,14 @@ export class MyGroups extends Page {
 
   addUserBalanceInModalDetailGroup(data: any) {
     const divCardUser = document.querySelector(`[data-user-id-for-group="${data.userId}"]`);
+    const divForBtb = divCardUser.querySelector('.modal-detail__wrapper') 
 
     const html = `
       <div class="modal-detail__balance">
         <span>${data.balance.toFixed(2)} ${data.currency}</span>
       </div>
     `;
-    divCardUser.insertAdjacentHTML('beforeend', html);
+    divForBtb.insertAdjacentHTML('beforeend', html);
 
     const divForBalance = divCardUser.querySelector('.modal-detail__balance');
     if (data.balance > 0) {

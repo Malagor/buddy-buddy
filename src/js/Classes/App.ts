@@ -88,7 +88,7 @@ export class App {
 
       this.groups = MyGroups.create('.main');
       this.groups.onCreateNewGroup = this.onCreateNewGroup.bind(this);
-      // this.groups.deleteGroup = this.deleteGroup.bind(this);
+
       this.groups.onAddMember = this.onAddGroupMember.bind(this);
       this.groups.fillContactsList = this.fillContactsList.bind(this);
       this.groups.onAddInfoForModalDetailGroup = this.onAddInfoForModalDetailGroup.bind(this);
@@ -98,6 +98,7 @@ export class App {
       this.groups.changeUserStatusInGroup = this.changeUserStatusInGroup.bind(this);
       this.groups.closeGroup = this.closeGroup.bind(this);
       this.groups.addMemberInDetailGroup = this.addMemberInDetailGroup.bind(this);
+      //this.groups.renderChart = this.renderChart.bind(this);
 
 
       this.transactionsList = TransactionsList.create('.main');
@@ -239,6 +240,7 @@ export class App {
   onAddInfoForModalDetailGroup(groupId: string, userId: string) {
     this.database.getGroup(groupId, this.groups.addInfoForModalDetailGroup, this.groups.addModalUserData);
     this.database.getBalanceForGroup(groupId, userId, this.groups.addBalanceForModalGroupDetail);
+    this.database.getDataForGraphGroupBalance(groupId, this.groups.renderChart());
   }
 
   addBalanceInGroupPage(groupId: string, userId: string) {
@@ -262,7 +264,6 @@ export class App {
 
   closeGroup(data: IDataCloseGroup) {
     this.database.closeGroup(data, this.groups.answerDataBaseForClosedGroup);
-    // .notifications.decreaseNotificationMark(TypeOfNotifications.Group);
   }
 
   addMemberInDetailGroup(data: IDataAddMember) {
