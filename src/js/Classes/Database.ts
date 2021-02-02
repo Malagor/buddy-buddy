@@ -539,7 +539,7 @@ export class Database {
   closeGroup(data: IDataCloseGroup, renderFunction: any) {
     const {userList, groupId} = data;
     const dataBase =  this.firebase.database();
-
+  
     const changeStatusUserAndGroupListToClosed = (userList: string[]) => {
       userList.forEach((userId) => {
         const dataForChangeStatusUser = {
@@ -595,7 +595,6 @@ export class Database {
       const { balance, groupId } = data;
 
       if (balance === 0) {
-
         changeStatusUserAndGroupListToClosed(userList);
         addDateClosedForGroup(groupId);
         closeTransactions(groupId);
@@ -1487,6 +1486,7 @@ export class Database {
               });
             })
             .then(() => {
+              console.log('d')
               const userListArray: { state: string, sum: number }[] = Object.values(usersList) || [];
 
               let balance: number = userListArray.length ? userListArray.reduce((sum: number, userData: { sum: number }) => {
@@ -1503,9 +1503,16 @@ export class Database {
               };
             })
             .then(data => {
+              console.log('data))))', data)
               funcForRender(data);
             })
           ;
+        } else {
+          const dataForBalance = {
+            balance: 0,
+            groupId: groupId,
+          }
+          funcForRender(dataForBalance)
         }
       })
       .catch(error => {
