@@ -13,6 +13,9 @@ import { INewMessage, Messenger } from '../Pages/Messenger/Messenger';
 import { Contacts, ISearchUserData } from '../Pages/Contacts/Contacts';
 import { Currencies } from './Currencies';
 
+import { i18n } from '@lingui/core';
+
+
 export interface IHandlers {
   messages: any;
   groups: any;
@@ -53,8 +56,11 @@ export class App {
     // this.database.createBasicTables();
   }
 
-  isUserLogin(state: boolean, uid?: string) {
+  async isUserLogin(state: boolean, uid?: string) {
     if (state) {
+
+      await this.getUserLanguage();
+      
       // user signin
       this.layout = Layout.create('#app');
       this.layout.render();
@@ -75,8 +81,6 @@ export class App {
 
       this.userHandler = this.database.userHandler(this.layout.setSidebarData);
       this.database.userInfoListener(this.userHandler);
-
-      this.getUserLanguage();
 
       this.accountPage = AccountPage.create('.main');
       this.accountPage.updateInfo = this.updateOnAccountPage.bind(this);
@@ -143,8 +147,14 @@ export class App {
   onSignOut(): any {
     this.deleteHandlers();
     this.database.signOut();
-    this.database.deleteUserInfoListener(this.userHandler);
+    this.database.deleteUserInfoListener(this.userHandler);    
     this.database.init();
+
+    // Alternative decision
+
+    // window.localStorage.clear();
+    // window.indexedDB.deleteDatabase('firebaseLocalStorageDb');
+    // window.location.reload();
   }
 
   onSignIn(email: string, password: string, name: string): void {
@@ -164,12 +174,13 @@ export class App {
     );
   }
 
-  setUserLanguage(_: any, lang: string) {
+  setUserLanguage(lang: string) {
     localStorage.setItem('languageCode', lang);
+    i18n.activate(lang);
   }
 
-  getUserLanguage() {
-    this.database.getCurrenciesOrLangsOrThemes(this.database.uid, this.setUserLanguage, 'Language');
+  async getUserLanguage() {
+    await this.database.getCurrentLang(this.database.uid, this.setUserLanguage);
   }
 
   loadCurrentPage() {
@@ -178,7 +189,7 @@ export class App {
   }
 
   setCurrentPage(name: string): void {
-    localStorage.setItem('currentPage', name);
+    localStorage.setItem('currentPage', name);    
   }
 
   changeTheme(theme: string = 'light'): void {
