@@ -109,7 +109,7 @@ export class NewTransaction extends Page {
     userElement.setAttribute('user-id', `${userID}`);
     userElement.innerHTML = `
         <div class="member__avatar">
-          <img src="${userAvatar}" alt="#">
+          <img src="${userAvatar}" alt=${userName}>
         </div>
         <div class="member__name">${userName}</div>
       `;

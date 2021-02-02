@@ -32,9 +32,9 @@ export const messagesENG = {
   'Contact`s name': 'Contact`s name',
   'Approve': 'Approve',
   'Pending': 'Pending',
-
   'Add': 'Add',
 
+  // transactions 
   'Transactions List' : 'Transactions List',
   'All' : 'All',
   'New transaction': 'New transaction',
@@ -42,7 +42,6 @@ export const messagesENG = {
   'Check': 'Check',
   'Select All': 'Select All',
   'Group': 'Group',
-  'Description': 'Description',
   'Sum': 'Sum',
   'Create transaction': 'Create transaction',
   'Comment': 'Comment',
@@ -54,6 +53,8 @@ export const messagesENG = {
   'Delete': 'Delete',
   'Add members':'Add members',
   'Payer': 'Payer',
+  'Date': 'Date',
+  'State': 'State',
 
   // Group  
   'Groups': 'Groups',

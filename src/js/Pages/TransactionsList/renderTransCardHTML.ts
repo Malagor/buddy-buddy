@@ -24,9 +24,9 @@ export const renderTransCardHTML = (trans: any, date: any, styles: any ) => {
        <div class="trans-item__cost  ${styles.colorCost} text-end">${styles.cost} ${trans.currency}</div>
        <div class="trans-item__state-wrap ${styles.btnDisplay} align-self-end">
         <select class="trans-item__state form-select" aria-label="Default select example">
-          <option ${styles.selectPending} value="pending">ожидание</option>
-          <option ${styles.selectApprove} value="approve">подтвердить</option>
-          <option ${styles.selectAbort} value="decline">отклонить</option>
+          <option ${styles.selectPending} value="pending">${i18n._('pending')}</option>
+          <option ${styles.selectApprove} value="approve">${i18n._('approve')}</option>
+          <option ${styles.selectAbort} value="decline">${i18n._('decline')}</option>
         </select>
       </div>
     </div>
