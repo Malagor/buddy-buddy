@@ -86,7 +86,7 @@ export class MyGroups extends Page {
       HTMLListClosedGroups.insertAdjacentHTML('afterbegin', this.createCard(data));
     }
 
-    this.addBalanceInGroupPage(data.groupKey);
+    this.addBalanceInGroupPage(data.groupKey, data.thisUid, 'addBalanceInGroupCard');
   }
 
   addUserInGroupCard(data: any) {
@@ -139,7 +139,7 @@ export class MyGroups extends Page {
     const divCardGroup = document.querySelector(`#${data.groupId}`);
     const divForBalanceInCardGroup = divCardGroup.querySelector(`#balanceGroup`);
 
-    const html = `<p>Balance ${data.balance} </p>`;
+    const html = `<p>${data.balance.toFixed(2)} ${data.currencyName}</p>`;
     divForBalanceInCardGroup.insertAdjacentHTML('afterbegin', html);
   }
 
@@ -355,7 +355,6 @@ export class MyGroups extends Page {
       };
 
       const oldCurrentGroup = document.querySelector('.card-group__box-content--current');
-      console.log('currentGroup', currentGroup)
       if (oldCurrentGroup && currentGroup) oldCurrentGroup.classList.remove('card-group__box-content--current');
 
       this.onCreateNewGroup(groupDataAll);
@@ -410,7 +409,7 @@ export class MyGroups extends Page {
 
   addBalanceForModalGroupDetail(data: any) {
     const divForBalanceModalCard = document.querySelector('#balanceModalGroup');
-    const html = `<h5>${data.balance}</h5>`;
+    const html = `<h5>${data.balance.toFixed(2)} ${data.currencyName}</h5>`;
     divForBalanceModalCard.insertAdjacentHTML('beforeend', html);
   }
 
@@ -423,8 +422,8 @@ export class MyGroups extends Page {
     const divForUserListPending = document.getElementById('modalUserListPending');
     const divModalContent = document.getElementById('modalContent');
     const dataForBalanceInModalCard = {
-      userId: data.userId,
-      groupId: data.groupId
+      groupId: data.groupId,
+      userId: data.userId
     };
     let isBtmForDeleteUser = false;
 
@@ -608,13 +607,13 @@ export class MyGroups extends Page {
     }
   }
 
-  answerDataBaseForClosedGroup = (isSuccess: boolean, selector: null | string =null, textError: null | string =null) => {
-    if(isSuccess) {
-      document.querySelector('.btn-close').click()
-      document.querySelector(`#${selector}`).remove()
+  answerDataBaseForClosedGroup = (isSuccess: boolean, selector: null | string = null, textError: null | string = null) => {
+    if (isSuccess) {
+      document.querySelector('.btn-close').click();
+      document.querySelector(`#${selector}`).remove();
 
     } else {
-      this.addTextInHtmlBlock(selector, textError)
+      this.addTextInHtmlBlock(selector, textError);
     }
   }
 
@@ -716,7 +715,7 @@ export class MyGroups extends Page {
 
     const html = `
       <div class="modal-detail__balance">
-        <span>${data.balance.toFixed(2)}</span>
+        <span>${data.balance.toFixed(2)} ${data.currency}</span>
       </div>
     `;
     divCardUser.insertAdjacentHTML('beforeend', html);
@@ -737,9 +736,8 @@ export class MyGroups extends Page {
     const divGroup = document.getElementById(`${data.groupKey}`);
 
     divGroup.addEventListener('click', () => {
-      console.log('data__', data);
-      
       this.onAddInfoForModalDetailGroup(keyGroup);
+      this.addBalanceInGroupPage(keyGroup, data.thisUid, 'addBalanceForModalGroupDetail');
       modalGroupDetail.show();
     });
   }

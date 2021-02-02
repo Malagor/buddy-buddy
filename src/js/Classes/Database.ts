@@ -513,6 +513,19 @@ export class Database {
     });
   }
 
+  getBalanceForGroup(groupId: string, userId: string, renderFn: any) {
+    const base = this.firebase.database();
+
+    base.ref(`User/${userId}/currency`)
+    .once('value', (snapshot) => {
+      const curr = snapshot.val();
+
+      Currencies.getCurrencyRateByCode(curr).then(coefficientCurr => {
+        this.getBalanceInGroup(groupId, coefficientCurr, renderFn, null, curr);
+      });
+    });
+  }
+
   addCurrentGroup(data: any) {
     const userIdAuthor: string = data.userId;
     const groupKey = data.groupKey;
@@ -539,7 +552,7 @@ export class Database {
   closeGroup(data: IDataCloseGroup, renderFunction: any) {
     const {userList, groupId} = data;
     const dataBase =  this.firebase.database();
-  
+
     const changeStatusUserAndGroupListToClosed = (userList: string[]) => {
       userList.forEach((userId) => {
         const dataForChangeStatusUser = {
@@ -562,27 +575,26 @@ export class Database {
         .ref(`Groups/${groupId}/transactions/`)
         .once('value', (transactionsList) => {
           const transactionsListArray = transactionsList.val();
-          
-          if(transactionsListArray) {
+
+          if (transactionsListArray) {
             transactionsListArray.forEach((transaction: string) => {
               dataBase
                 .ref(`Transactions/${transaction}/state`)
                 .set('closed');
-  
+
               dataBase
               .ref(`Transactions/${transaction}/`)
               .once('value', (transactions) => {
                 const transactionId = transactions.key;
                 const transactionInfo = transactions.val();
-  
+
                 const transactionUserList = Object.keys(transactionInfo.toUserList);
-                console.log('transactionUserList', transactionUserList);
                 transactionUserList.forEach((userId: string) => {
                   dataBase
                     .ref(`User/${userId}/transactionList/${transactionId}/state`)
                     .set('closed');
                 });
-  
+
               });
             });
           }
@@ -591,7 +603,6 @@ export class Database {
     };
 
     const closeGroupChangeDataBase = (data: any, fn = renderFunction) => {
-      console.log('data_closeGroupChangeDataBase', data);
       const { balance, groupId } = data;
 
       if (balance === 0) {
@@ -605,7 +616,7 @@ export class Database {
         fn(false, '.modal-error-text', error);
       }
     };
-    this.getBalanceInGroup(groupId, 1, closeGroupChangeDataBase);
+    // this.getBalanceInGroup(groupId, 1, closeGroupChangeDataBase);
   }
 
   addMemberInGroup(data: IDataAddMember, addNewUserInDetailGroup: any) {
@@ -1446,7 +1457,7 @@ export class Database {
       });
   }
 
-  getBalanceInGroup(groupId: string, currencyRate: number = 1, funcForRender: (data: any) => void, errorHandler?: (message: string) => void) {
+  getBalanceInGroup(groupId: string, currencyRate: number = 1, funcForRender: (data: any) => void, errorHandler?: (message: string) => void, currencyName?: string) {
 
     const base = this.firebase.database();
 
@@ -1499,6 +1510,7 @@ export class Database {
               return {
                 balance: balance,
                 groupId: groupId,
+                currencyName: currencyName ? currencyName : null
               };
             })
             .then(data => {
@@ -1509,8 +1521,9 @@ export class Database {
           const dataForBalance = {
             balance: 0,
             groupId: groupId,
-          }
-          funcForRender(dataForBalance)
+            currencyName: currencyName ? currencyName : null
+          };
+          funcForRender(dataForBalance);
         }
       })
       .catch(error => {

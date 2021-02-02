@@ -238,11 +238,10 @@ export class App {
 
   onAddInfoForModalDetailGroup(idGroup: string) {
     this.database.getGroup(idGroup, this.groups.addInfoForModalDetailGroup, this.groups.addModalUserData);
-    this.database.getBalanceInGroup(idGroup, 1, this.groups.addBalanceForModalGroupDetail);
   }
 
-  addBalanceInGroupPage(idGroup: string) {
-    this.database.getBalanceInGroup(idGroup, 1, this.groups.addBalanceInGroupCard);
+  addBalanceInGroupPage(groupId: string, userId: string, method: string) {
+    this.database.getBalanceForGroup(groupId, userId,  eval(`this.groups.${method}`));
   }
 
   addUserBalanceInModalCardUser(data: any) {
