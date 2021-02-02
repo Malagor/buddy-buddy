@@ -1483,7 +1483,7 @@ export class Database {
       });
   }
 
-  getDataForGraphGroupBalance(groupId: string, uid: string, funcHandler: (graphData: any) => void, errorHandler?: (message: string) => void) {
+  getDataForGraphGroupBalance(groupId: string, funcHandler: (graphData: any) => void, errorHandler?: (message: string) => void) {
     this.firebase
       .database()
       .ref(`Groups/${groupId}`)
@@ -1508,7 +1508,7 @@ export class Database {
                 avatar: userInfo.val().avatar,
                 userBalance: 0,
               };
-              if (userInfo.key === uid) {
+              if (userInfo.key === this.uid) {
                 groupData.currency = userInfo.val().currency;
               }
             });
