@@ -8,9 +8,10 @@
   align-items: center;
   padding: 1rem 0;
   border-bottom: 1px solid rgba(0,0,0,0.05);
-   @include phones {
-      flex-direction: row;
-    }
+
+  @include phones {
+    flex-direction: row;
+  }
 }
 
 .translist__header {
@@ -36,21 +37,20 @@
 }
 
 .trans-list__groups {
-
-    @include phones {
-       width: 60%;
-    }
+  @include phones {
+    width: 60%;
+  }
 }
 
 .trans-list__user-balance {
-
+  margin-top: rem(20px);
   font-size: rem(20px);
   line-height: 1rem;
-  margin-top: rem(20px);
-     @include phones {
-       width: 40%;
-       margin-top: 0;
-    }
+
+  @include phones {
+    width: 40%;
+    margin-top: 0;
+  }
 }
 
 .trans-list__list {
@@ -298,6 +298,7 @@
   &__member-comment {
     width: 30%;
     font-size: rem(12px);
+    resize: none;
 
     @include phones {
       width: 35%;
@@ -332,13 +333,8 @@
     line-height: 1rem;
   }
 
-  &__comment {
-    margin-left: rem(5px);
-  }
-
   &__state-wrap {
     width: 50%;
-
   }
 
   &__check-wrapper {
@@ -351,5 +347,4 @@
 
     object-fit: contain;
   }
-
 }

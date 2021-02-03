@@ -1007,6 +1007,20 @@ export class Database {
     callback(values, currentCurrency);
   }
 
+  async getCurrentLang(uid: string, callback: (lang: string) => void) {
+    await this.firebase
+      .database()
+      .ref(`User/${uid}/language`)
+      .once('value', (snapshot) => {
+        const lang: string = snapshot.val();
+        callback(lang);
+      }, (error: { code: string; message: any }) => {
+        console.log('Error:\n ' + error.code);
+        console.log(error.message);
+      });
+  }
+
+  // запросы по транзакциям
   getCurrencyList(renderCurrencyList: any): void {
     this.firebase
       .database()
@@ -1359,7 +1373,7 @@ export class Database {
       });
   }
 
-  editTransaction = (editData: any, transID: string, trans: any, renderWrapper: any, renderTransaction: any, renderUser: any) => {
+  editTransaction = (editData: any, transID: string, trans: any, renderTransaction: any, renderUser: any) => {
     const base = this.firebase.database();
     const userRef = base.ref('User');
     const transRef = base.ref('Transactions');
@@ -1407,9 +1421,6 @@ export class Database {
     });
 
     setTimeout(() => {
-      const transaction: HTMLElement = document.getElementById(transID);
-      transaction.remove();
-      renderWrapper(transID);
       base.ref(`Transactions/${transID}`)
       .once('value', (snapshot) => {
         const newTrans = snapshot.val();
@@ -1608,7 +1619,7 @@ export class Database {
       });
   }
 
-  getDataForGraphGroupBalance(groupId: string, funcHandler: (graphData: any) => void, errorHandler?: (message: string) => void) {
+  getDataForGraphGroupBalance(groupId: string, funcHandler: (graphData: any) => void, uid: string, errorHandler?: (message: string) => void) {
     this.firebase
       .database()
       .ref(`Groups/${groupId}`)
@@ -1633,7 +1644,7 @@ export class Database {
                 avatar: userInfo.val().avatar,
                 userBalance: 0,
               };
-              if (userInfo.key === this.uid) {
+              if (userInfo.key === uid) {
                 groupData.currency = userInfo.val().currency;
               }
             });
@@ -1822,6 +1833,14 @@ export class Database {
       });
   }
 
+  getUserTheme(callback: (theme: string) => void): void {
+    this.firebase.database()
+      .ref(`User/${this.uid}/theme`)
+      .once('value', async snapshot => {
+        callback(snapshot.val().toLowerCase());
+      });
+  }
+
   createBasicTables() {
       // THEMES
       const themeData1 = {
@@ -1834,7 +1853,7 @@ export class Database {
       const themeBase2 = firebase.database().ref(`Theme/Dark`);
       themeBase1.set(themeData1);
       themeBase2.set(themeData2);
-    
+
     //  CURRENCY
       Currencies.getCurrenciesList(this.addCurrencyToBase);
 

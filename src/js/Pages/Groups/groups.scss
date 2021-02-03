@@ -35,9 +35,9 @@
   width: 100%;
   max-width: rem(740px);
   margin: auto;
-  border: 2px solid rgba(0,0,0,.05);
-  border-radius: .625rem;
-  box-shadow: 0 3px 5px rgba(0,0,0,.25);
+  border: 2px solid rgba(0,0,0,0.05);
+  border-radius: 0.625rem;
+  box-shadow: 0 3px 5px rgba(0,0,0,0.25);
   cursor: pointer;
 
   &--new-group {
@@ -59,13 +59,15 @@
     width: rem(60px);
     height: rem(60px);
     border-radius: 50%;
-    object-fit: cover; 
+
+    object-fit: cover;
 
     &--mini {
       width: rem(25px);
       height: rem(25px);
       border-radius: 50%;
-      object-fit: cover; 
+
+      object-fit: cover;
     }
   }
 
@@ -84,7 +86,7 @@
   margin: 1rem 0 0 0;
 }
 
-.modal-chart{
+.modal-chart {
   margin: 1rem 2rem 2rem 2rem;
 }
 
@@ -110,7 +112,7 @@
   padding: rem(9px) rem(7px) rem(7px) rem(7px);
 }
 
-.modal-input{
+.modal-input {
   margin: rem(7px);
 }
 
@@ -123,7 +125,7 @@
   padding: 0;
 }
 
-.modal-error-text{
+.modal-error-text {
   margin: rem(3px);
 }
 
@@ -147,7 +149,7 @@
   width: 96.5%;
 }
 
-.form-switch{
+.form-switch {
   margin-top: 0.5rem;
 }
 
@@ -181,18 +183,18 @@
   position: relative;
   display: flex;
   flex-direction: row;
+  justify-content: space-between;
   align-items: center;
   margin: rem(8px) 0 rem(16px) 0;
-  border: 2px solid rgba(0,0,0,.05);
-  border-radius: .625rem;
-  box-shadow: 0 3px 5px rgba(0,0,0,.25);
-  justify-content: space-between;
+  border: 2px solid rgba(0,0,0,0.05);
+  border-radius: 0.625rem;
+  box-shadow: 0 3px 5px rgba(0,0,0,0.25);
 
-  &__wrapper{
+  &__wrapper {
     display: flex;
-    width: 100%;
-    align-items: center;
     justify-content: space-between;
+    align-items: center;
+    width: 100%;
   }
 
   &__img-name {
@@ -205,53 +207,54 @@
     justify-content: center;
   }
 
-  &--author{
+  &--author {
     color: $color-text;
     background: $color-neutral;
   }
 
-    &__img {
-      margin: rem(8px);
-      width: rem(50px);
-      height: rem(50px);
-      border-radius: 50%;
-      object-fit: cover; 
-    }
-    &__name{
-      margin: rem(5px);
-    }
-    &__account{
-      margin: rem(5px);
-    }
-    &__button{
-      margin: rem(5px);
-    }
+  &__img {
+    width: rem(50px);
+    height: rem(50px);
+    margin: rem(8px);
+    border-radius: 50%;
 
-    &__balance{
-      text-align: end;
-    } 
-    
-    &__button-container{
-      position: absolute;
-      right: rem(20px);
-      height: rem(30px);
-    }
+    object-fit: cover;
+  }
+  &__name {
+    margin: rem(5px);
+  }
+  &__account {
+    margin: rem(5px);
+  }
+  &__button {
+    margin: rem(5px);
+  }
 
-    &__button-confirmation{
-      padding: 3px;
-      color: $color-white;
-    }
+  &__balance {
+    text-align: end;
+  }
+
+  &__button-container {
+    position: absolute;
+    right: rem(20px);
+    height: rem(30px);
+  }
+
+  &__button-confirmation {
+    padding: 3px;
+    color: $color-white;
+  }
 }
 
-  .container-group-detail{
-    width: 90%;
-    max-width: 90%;
-    margin: rem(50px) auto  auto auto;  
-  }
-  
-  .container-group{
-    padding: 0 rem(40px);
-  }
+.container-group-detail {
+  width: 90%;
+  max-width: 90%;
+  margin: rem(50px) auto  auto auto;
+}
+
+.container-group {
+  padding: 0 rem(40px);
+}
 
 @media (max-width: 450px) {
   .form-title {
@@ -262,7 +265,7 @@
   }
 
   .modal-chart {
-    margin: 0.8rem 0.8rem 0.8rem; 
+    margin: 0.8rem 0.8rem 0.8rem;
   }
 
   .modal-dialog {
@@ -270,20 +273,19 @@
   }
   .modal {
     left: 0;
-  } 
+  }
   .modal-detail {
-
     &__img {
-      margin: rem(6px);
       width: rem(40px);
       height: rem(40px);
+      margin: rem(6px);
       border-radius: 50%;
     }
 
-    &__name, 
+    &__name,
     &__account {
-      font-size: rem(12px);
       margin: rem(3px);
+      font-size: rem(12px);
     }
 
     &__balance {
@@ -292,18 +294,17 @@
   }
 
   .card-group {
-
     &__img-avatar {
       width: 3rem;
       height: 3rem;
     }
 
-    &__title{
-      font-size: rem(14px);
+    &__title {
       font-weight: 500;
+      font-size: rem(14px);
     }
 
-    &__date{
+    &__date {
       font-size: rem(12px);
     }
 
@@ -311,18 +312,15 @@
     &__balance {
       font-size: rem(12px);
     }
-
-
   }
 
   .card-detail {
-  
     &__title,
     &__description,
     &__participants,
     &__pending {
-      font-size: rem(14px);
       font-weight: 500;
+      font-size: rem(14px);
     }
 
     &__date,
@@ -330,38 +328,37 @@
     &__text {
       font-size: rem(12px);
     }
-  
+
     &__img-avatar {
       display: block;
       width: rem(70px);
       height: rem(70px);
       margin: auto;
       border-radius: 50%;
-  
+
       &--user {
         width: rem(50px);
         height: rem(50px);
         border-radius: 50%;
       }
     }
-  
+
     &__box-description {
       margin: 0 0.8rem 0 0.8rem ;
     }
-  
+
     &__user-list {
       margin: 0.8rem;
     }
   }
 
-  .container-group{
+  .container-group {
     padding: 0 rem(20px);
   }
-
 }
 
 @media (max-width: 370px) {
-  .modal-detail__button-confirmation{
+  .modal-detail__button-confirmation {
     padding: 3px;
     font-size: rem(10px);
   }
