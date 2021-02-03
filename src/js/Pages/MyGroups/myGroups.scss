@@ -1,7 +1,6 @@
 @import "./src/scss/_misc/mixins";
 @import "../../../scss/_misc/variables.scss";
 
-
 .transparent {
   opacity: 0;
 }
@@ -122,7 +121,6 @@
 
 .modal-error-text{
   margin: rem(3px);
-  color: red;
 }
 
 .member {
@@ -205,7 +203,7 @@
 
   &--author{
     color: $color-text;
-    background: $color-accent-4;
+    background: rgba(128, 128, 128, 0.5);
   }
 
     &__img {
@@ -227,14 +225,6 @@
 
     &__balance{
       text-align: end;
-
-      &--negative {
-        color: red;
-      }
-  
-      &--positive {
-        color: green;
-      }
     } 
     
     &__button-container{
