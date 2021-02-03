@@ -74,7 +74,6 @@ export class MyGroups extends Page {
   }
 
   renderChart() {
-    console.log('sss');
     const chart: any = ChartBar.create('.modal-chart');
     return chart.buildingChart;
   }
@@ -294,7 +293,7 @@ export class MyGroups extends Page {
             </div>
 
             <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary btn-primary-alternate" data-bs-dismiss="modal">Close</button>
           </div>
           </div>
         </div>
@@ -656,7 +655,7 @@ export class MyGroups extends Page {
     const divFooterModal = document.querySelector('.modal-footer');
     const htmlBtnCloseGroup = `
     <div class="">
-      <button id="closeGroupBtn" type="button" class="btn btn-primary btn-primary-alternate">Close group</button>
+      <button id="closeGroupBtn" type="button" class="btn btn-secondary">Close group</button>
     </div>
     `;
     divFooterModal.insertAdjacentHTML('afterbegin', htmlBtnCloseGroup);

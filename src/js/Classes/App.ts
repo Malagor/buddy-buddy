@@ -98,9 +98,8 @@ export class App {
       this.groups.changeUserStatusInGroup = this.changeUserStatusInGroup.bind(this);
       this.groups.closeGroup = this.closeGroup.bind(this);
       this.groups.addMemberInDetailGroup = this.addMemberInDetailGroup.bind(this);
-      // this.groups.renderChart = this.renderChart.bind(this);
 
-
+      
       this.transactionsList = TransactionsList.create('.main');
       this.transactionsList.onChangeState = this.onChangeState.bind(this);
       this.transactionsList.onGetTransInfo = this.onGetTransInfo.bind(this);
