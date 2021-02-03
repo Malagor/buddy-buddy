@@ -20,7 +20,7 @@ export const clearAllInputs = (): void => {
   checksWrapper.innerHTML = '';
 
   currInput.value = currency.textContent;
-  
+
   document.querySelector('.add-check__icon-wrapper').classList.add('hidden');
 
 };
