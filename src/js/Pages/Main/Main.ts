@@ -1,5 +1,7 @@
 import { Currencies } from '../../Classes/Currencies';
 import { Page } from '../../Classes/Page';
+import { i18n } from '@lingui/core';
+
 export class Main extends Page {
   counter: number = 0;
   getBalanceForSliderGroup: (groupID: string) => void;
@@ -54,7 +56,7 @@ export class Main extends Page {
 
     const currentGroupHTML: string = groupItem.groupID === currGroup
     ? `<p class="slider__current-group">
-        <span>Current</span>
+        <span>${i18n._('Current')}</span>
       </p>`
     : '';
 
@@ -70,7 +72,7 @@ export class Main extends Page {
         </div>
       </div>
       <p class="slider__item__title--description">
-        <span>${groupItem.description ? (groupItem.description.length > 13 ? groupItem.description.slice(0, 13).trim() + '...' : groupItem.description) : 'No description.'}</span>
+        <span>${groupItem.description ? (groupItem.description.length > 13 ? groupItem.description.slice(0, 13).trim() + '...' : groupItem.description) : `${i18n._('No description')}.`}</span>
       </p>
       <p class="slider__item__title--description ${groupItem.groupID}">
       <span></span>
@@ -138,7 +140,7 @@ export class Main extends Page {
       elem.innerHTML = `
       <div class="card">
         <div class="card-body d-flex align-items-center flex-column">
-          <h6 class="card-title m-0 main--font-size">No groups yet.</h6>
+          <h6 class="card-title m-0 main--font-size">${i18n._('No groups yet')}.</h6>
         </div>
       </div>
       `;
@@ -190,7 +192,7 @@ export class Main extends Page {
       document.querySelector('.main__group-transactions').innerHTML = `
       <div class="card main__card-no-trans mx-auto">
         <div class="card-body d-flex align-items-center flex-column justify-content-center">
-          <h6 class="card-title m-0 main--font-size">No transactions yet.</h6>
+          <h6 class="card-title m-0 main--font-size">${i18n._('No transactions yet')}.</h6>
         </div>
       </div>
       `;
@@ -222,7 +224,7 @@ export class Main extends Page {
                 </p>
               </div>
               <p class="main-card-trans__footer">
-                <span><strong>Group:</strong> ${
+                <span><strong>${i18n._('Group')}:</strong> ${
                   item.groupTitle.length > 30 ? item.groupTitle.slice(0, 23).trim() + '...' : item.groupTitle
                 }</span>
               </p>
@@ -270,7 +272,7 @@ export class Main extends Page {
               </p>
             </div>
             <p class="main__balance align-self-start block__element-gap">
-              <span>Balance</span>
+              <span>${i18n._('Balance')}</span>
               <span class="balance__text d-block"></span>
             </p>
           </div>
@@ -279,9 +281,9 @@ export class Main extends Page {
               <thead>
                 <tr>
                   <th scope="col">#</th>
-                  <th scope="col">Currency</th>
-                  <th scope="col">Rate</th>
-                  <th scope="col">Balance</th>
+                  <th scope="col">${i18n._('Currency')}</th>
+                  <th scope="col">${i18n._('Rate')}</th>
+                  <th scope="col">${i18n._('Balance')}</th>
                 </tr>
               </thead>
               <tbody>
@@ -290,14 +292,14 @@ export class Main extends Page {
           </div>
           <div class="block__card flex-column block--width-85">
             <p class="align-self-start main--font-size">
-              <span>My groups</span>
+              <span>${i18n._('My groups')}</span>
             </p>
             <div class="main__group-slider flex-column main__inner-card">
             </div>
           </div>
           <div class="block__card flex-column block--width-85">
             <p class="align-self-start main--font-size">
-              <span>My last transactions</span>
+              <span>${i18n._('My last transactions')}</span>
             </p>
             <div class="main__group-transactions main__inner-card">
             </div>

@@ -11,8 +11,8 @@
     };
 
     const date: Date = new Date(data);
-    const localeDay: string = date.toLocaleString('ru-RU', dayOptions);
-    const localeTime: string = date.toLocaleString('ru-RU', timeOptions);
+    const localeDay: string = date.toLocaleString('RU-RU', dayOptions);
+    const localeTime: string = date.toLocaleString('RU-RU', timeOptions);
 
     return {
       localeDay,

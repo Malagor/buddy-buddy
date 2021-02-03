@@ -1,6 +1,13 @@
 import { Page } from '../../Classes/Page';
 import { Modal } from 'bootstrap';
 import { currentYear } from '../../Util/currentYear';
+import { i18n } from '@lingui/core';
+import { messagesRU } from '../../languages/RU/messages';
+import { messagesENG } from '../../languages/ENG/messages';
+i18n.load('RU', messagesRU);
+i18n.load('ENG', messagesENG);
+i18n.activate('ENG');
+
 
 const defAvatar = require('../../../assets/images/default-user-avatar.jpg');
 const logo = require('../../../assets/icons/team.svg');
@@ -46,62 +53,51 @@ export class Layout extends Page {
           <ul class="nav flex-column">
               <li class="nav-item">
                 <a class="nav-link sidebarMainLink" href="#">
-                  <i class="material-icons">house</i><span class="nav-link__text">Главная</span>
+                  <i class="material-icons">house</i><span class="nav-link__text">${i18n._('mainPage')}</span>
                 </a>
               </li>
               <li class="nav-item">
                 <a class="nav-link sidebarAccountLink" href="#" id="sidebarAccountLink">
-                  <i class="material-icons">person</i><span class="nav-link__text">Аккаунт</span>
+                  <i class="material-icons">person</i><span class="nav-link__text">${i18n._('accountPage')}</span>
                 </a>
               </li>
               <li class="nav-item">
                 <a class="nav-link sidebarContactsLink" href="#">
-                  <i class="material-icons">contacts</i><span class="nav-link__text">Контакты</span>
+                  <i class="material-icons">contacts</i><span class="nav-link__text">${i18n._('contactsPage')}</span>
                   <span class="badge bg-danger"></span>
                 </a>
               </li>
               <li class="nav-item">
                 <a class="nav-link sidebarGroupsLink" href="#">
-                  <i class="material-icons">groups</i><span class="nav-link__text">Группы</span>
+                  <i class="material-icons">groups</i><span class="nav-link__text">${i18n._('groupsPage')}</span>
                   <span class="badge bg-danger"></span>
                 </a>
               </li>
               <li class="nav-item">
                 <a class="nav-link sidebarTransactionsLink" href="#">
-                  <i class="material-icons">receipt_long</i><span class="nav-link__text">Транзакции</span>
+                  <i class="material-icons">receipt_long</i><span class="nav-link__text">${i18n._('transactionsPage')}</span>
                   <span class="badge bg-danger"></span>
                 </a>
               </li>
               <li class="nav-item">
                 <a class="nav-link sidebarMessagesLink" href="#">
-                 <i class="material-icons">speaker_notes</i><span class="nav-link__text">Сообщения</span>
-                 <span class="badge bg-danger"></span>
+                  <i class="material-icons">speaker_notes</i><span class="nav-link__text">${i18n._('messagesPage')}</span>
+                  <span class="badge bg-danger"></span>
                 </a>
               </li>
             </ul>
           <hr>
           <ul class="nav flex-column mb-2">
               <li class="nav-item">
-                <a class="nav-link sidebarStatisticsLink" href="#" id="sidebarStatisticsLink">
-                 <i class="material-icons">bar_chart</i><span class="nav-link__text">Статистика</span>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link sidebarSettingsLink" href="#" id="sidebarSettingsLink">
-                  <i class="material-icons">settings</i>
-            <span class="nav-link__text">Настройки</span>
-                </a>
-              </li>
-              <li class="nav-item">
                 <a class="nav-link sidebarHelpLink" href="#" id="sidebarHelpLink">
                   <i class="material-icons">help_outline</i>
-            <span class="nav-link__text">Помощь</span>
+                  <span class="nav-link__text">${i18n._('helpPage')}</span>
                 </a>
               </li>
               <li class="nav-item">
                 <a class="nav-link" href="#" id="signOut" data-bs-toggle="modal" data-bs-target="#singOutModal">
                   <i class="material-icons">power_settings_new</i>
-            <span class="nav-link__text">Выход</span>
+                  <span class="nav-link__text signOut-text-link">${i18n._('signOut')}</span>
                 </a>
               </li>
             </ul>
@@ -157,14 +153,14 @@ export class Layout extends Page {
         <div class="footer__title col-3">
           <div class="nav-item">
             <a class="nav-link sidebarMainLink" aria-current="page" href="#">
-              <i class="material-icons">house</i><span class="d-none d-sm-block nav-link__text">Главная</span>
+              <i class="material-icons">house</i><span class="d-none d-sm-block nav-link__text">${i18n._('mainPage')}</span>
             </a>
           </div>
         </div>
         <div class="footer__title col-3">
           <div class="nav-item">
             <a class="nav-link sidebarGroupsLink" href="#">
-              <i class="material-icons">groups</i><span class="d-none d-sm-block nav-link__text">Группы</span>
+              <i class="material-icons">groups</i><span class="d-none d-sm-block nav-link__text">${i18n._('groupsPage')}</span>
               <span class="badge bg-danger"></span>
             </a>
           </div>
@@ -172,7 +168,7 @@ export class Layout extends Page {
         <div class="footer__title col-3">
           <div class="nav-item">
             <a class="nav-link sidebarTransactionsLink" href="#">
-              <i class="material-icons">receipt_long</i><span class="d-none d-sm-block nav-link__text">Транзакции</span>
+              <i class="material-icons">receipt_long</i><span class="d-none d-sm-block nav-link__text">${i18n._('transactionsPage')}</span>
               <span class="badge bg-danger"></span>
             </a>
           </div>
@@ -180,8 +176,8 @@ export class Layout extends Page {
         <div class="footer__school col-3">
           <div class="nav-item">
             <a class="nav-link sidebarMessagesLink" href="#">
-             <i class="material-icons">speaker_notes</i><span class="d-none d-sm-block nav-link__text">Сообщения</span>
-             <span class="badge bg-danger"></span>
+              <i class="material-icons">speaker_notes</i><span class="d-none d-sm-block nav-link__text">${i18n._('messagesPage')}</span>
+              <span class="badge bg-danger"></span>
             </a>
           </div>
         </div>
@@ -192,15 +188,15 @@ export class Layout extends Page {
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title">Action Confirmation</h5>
+            <h5 class="modal-title sideBar-modal-title">${i18n._('Action Confirmation')}</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
-            <p>Are you sure you want to SignOut?</p>
+            <p class="sideBar-modal-body">${i18n._('Are you sure you want to SignOut?')}</p>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-            <button type="button" class="btn btn-primary btn-primary-alternate" id="modalButtonOk">SignOut</button>
+            <button type="button" class="btn btn-secondary sideBar-modal-footer__cancel-btn" data-bs-dismiss="modal">${i18n._('Cancel')}</button>
+            <button type="button" class="btn btn-primary btn-primary-alternate sideBar-modal-footer__signOut-btn" id="modalButtonOk">${i18n._('signOut')}</button>
           </div>
         </div>
       </div>
@@ -209,6 +205,24 @@ export class Layout extends Page {
     `;
 
     this.events();
+  }
+
+  onlineChangingLang() {
+    document.querySelectorAll('.sidebarMainLink').forEach(item => item.querySelector('.nav-link__text').textContent = i18n._('mainPage'));
+    document.querySelectorAll('.sidebarGroupsLink').forEach(item => item.querySelector('.nav-link__text').textContent = i18n._('groupsPage'));
+    document.querySelectorAll('.sidebarTransactionsLink').forEach(item => item.querySelector('.nav-link__text').textContent = i18n._('transactionsPage'));
+    document.querySelectorAll('.sidebarMessagesLink').forEach(item => item.querySelector('.nav-link__text').textContent = i18n._('messagesPage'));
+
+    document.querySelector('.signOut-text-link').textContent = i18n._('signOut');
+
+    document.querySelector('.sidebarAccountLink').querySelector('.nav-link__text').textContent = i18n._('accountPage');
+    document.querySelector('.sidebarContactsLink').querySelector('.nav-link__text').textContent = i18n._('contactsPage');
+    document.querySelector('.sidebarHelpLink').querySelector('.nav-link__text').textContent = i18n._('helpPage');
+
+    document.querySelector('.sideBar-modal-title').textContent = i18n._('Action Confirmation');
+    document.querySelector('.sideBar-modal-body').textContent = i18n._('Are you sure you want to SignOut?');
+    document.querySelector('.sideBar-modal-footer__cancel-btn').textContent = i18n._('Cancel');
+    document.querySelector('.sideBar-modal-footer__signOut-btn').textContent = i18n._('signOut');
   }
 
   protected events(): void {

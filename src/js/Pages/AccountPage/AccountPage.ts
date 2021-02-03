@@ -1,10 +1,15 @@
 import { Page } from '../../Classes/Page';
 import { getFormData } from '../../Util/getFormData';
+import { i18n } from '@lingui/core';
+import { saveLanguage } from '../../Util/saveLoadLanguage';
 
 export class AccountPage extends Page {
   updateInfo: any;
   changeTheme: any;
   checkUserID: any;
+  onAccountPageChangeLang: () => void;
+  locCounter: number = 0;
+  checkObj: { [key: string]: number } = {};
 
   static create(element: string): AccountPage {
     return new AccountPage(element);
@@ -63,7 +68,7 @@ export class AccountPage extends Page {
       <div class="block__content">
         <div class="block__header">
           <p class="block__title">
-            Account
+          ${i18n._('Account')}
           </p>
         </div>
         <div class="block__main">
@@ -85,43 +90,43 @@ export class AccountPage extends Page {
                 </p>
               </div>
               <div class="form-group row block--margin-adaptive w-100">
-                <label for="account" class="col-sm-2 col-form-label">
-                  Account
+                <label for="account" class="col-sm-2 col-form-label label--account">
+                  ${i18n._('Account')}
                 </label>
                 <div class="account__double-form col-sm-10 account--input-size">
                   <div class="account__error">
-                    <span>Is occupied.</span>
+                    <span>${i18n._('Is occupied')}.</span>
                   </div>
                   <div class="input-group-prepend account__double-form--first">
                     <span class="input-group-text" id="addon-wrapping">
                       @
                     </span>
                   </div>
-                  <input type="text" name="account" class="account__double-form--second form-control account__input account__input-id" placeholder="Username" aria-label="User ID" aria-describedby="addon-wrapping">
+                  <input type="text" name="account" class="account__double-form--second form-control account__input account__input-id" placeholder="${i18n._('Username')}" aria-label="User ID" aria-describedby="addon-wrapping">
                 </div>
               </div>
               <div class="form-group row block--margin-adaptive w-100">
-                <label for="surname" class="col-sm-2 col-form-label">
-                  Name
+                <label for="surname" class="col-sm-2 col-form-label label--name">
+                  ${i18n._('Name')}
                 </label>
                 <div class="col-sm-10 account--input-size">
-                  <input type="text" name="name" aria-label="Username" class="form-control account__input account__input-name" placeholder="Name">
+                  <input type="text" name="name" aria-label="Username" class="form-control account__input account__input-name" placeholder="${i18n._('Name')}">
                 </div>
               </div>
               <div class="form-group row block--margin-adaptive w-100">
-                <span class="col-sm-2 col-form-label">
-                  Currency
+                <span class="col-sm-2 col-form-label label--currency">
+                  ${i18n._('Currency')}
                 </span>
                 <div class="col-sm-10 dropdown curr-wrapper account--input-size">
                   <i class="material-icons">search</i>
-                  <input class="form-control dropdown-toggle account__input-curr account__input" type="text" id="activeCurrency" data-bs-toggle="dropdown" aria-expanded="false" placeholder="Currency" autocomplete="off" name="currency">
+                  <input class="form-control dropdown-toggle account__input-curr account__input" type="text" id="activeCurrency" data-bs-toggle="dropdown" aria-expanded="false" placeholder="${i18n._('Currency')}" autocomplete="off" name="currency">
                   <ul id="curr__list" class="dropdown-menu curr-list members-dropdown-menu" aria-labelledby="Currencies">
                   </ul>
                 </div>
               </div>
               <div class="form-group row block--margin-adaptive w-100">
-                <span class="col-sm-2 col-form-label">
-                  Language
+                <span class="col-sm-2 col-form-label label--lang">
+                  ${i18n._('Language')}
                 </span>
                 <div class="col-sm-10 account--input-size">
                   <select name="language" class="form-select form-select--lang account--input-size mx-0 account__input" aria-label="Languages select">
@@ -129,8 +134,8 @@ export class AccountPage extends Page {
                 </div>
               </div>
               <div class="form-group row block--margin-adaptive w-100">
-                <span class="col-sm-2 col-form-label">
-                  Theme
+                <span class="col-sm-2 col-form-label label--theme">
+                  ${i18n._('Theme')}
                 </span>
                 <div class="col-sm-10 account--input-size">
                   <select name="theme" class="form-select form-select--theme account--input-size mx-0 account__input" aria-label="Themes select">
@@ -144,7 +149,7 @@ export class AccountPage extends Page {
           <div class="form-group row">
             <div class="col-sm-10 d-flex block--width-adaptive">
               <button type="submit" class="account__input-submit btn btn-primary btn-primary-alternate mx-auto" disabled>
-                Save
+                ${i18n._('Save')}
               </button>
             </div>
           </div>
@@ -159,6 +164,10 @@ export class AccountPage extends Page {
     const errorOfInput: HTMLElement = document.querySelector('.account__error');
 
     if (!data) {
+      if (!this.checkObj.account) {
+        this.locCounter++;
+      }
+      this.checkObj.account = 1;
       submitInfo.removeAttribute('disabled');
       inputID.classList.remove('error');
       errorOfInput.classList.remove('error--on');
@@ -217,9 +226,14 @@ export class AccountPage extends Page {
         pageInputs.forEach((item: HTMLInputElement, index: number): void => {
           if (item.classList.contains('account__input-curr')) {
             if (values[index] !== item.value.trim()) {
+              if (!this.checkObj[item.name]) this.locCounter++;
+              this.checkObj[item.name] = 1;
               submitInfo.removeAttribute('disabled');
+
             } else {
-              submitInfo.setAttribute('disabled', 'true');
+              if (this.checkObj[item.name] === 1) this.locCounter--;
+              this.checkObj[item.name] = 0;
+              if (!this.locCounter) submitInfo.setAttribute('disabled', 'true');
             }
           }
         });
@@ -274,14 +288,19 @@ export class AccountPage extends Page {
         });
       this.updateInfo(newData);
       if (currentTheme !== newCurrentTheme) this.changeTheme(newCurrentTheme.toLowerCase());
+      saveLanguage(newData.language);
+      i18n.activate(newData.language);
       idValue.textContent = `@${newData.account}`;
       nameInput.value = newData.name;
       submitInfo.setAttribute('disabled', 'true');
       currentTheme = newCurrentTheme;
+      this.onAccountPageChangeLang();
     });
 
     pageInputs.forEach((item: HTMLInputElement, index: number): void => {
         values.push(checkImg(item));
+        this.checkObj[item.name] = 0;
+
         item.addEventListener('input', (): void => {
           if (item.type === 'file') {
             const reader: FileReader = new FileReader();
@@ -296,12 +315,30 @@ export class AccountPage extends Page {
             if (item === inputID) {
               this.checkUserID(item.value.trim());
             } else {
+              if (!this.checkObj[item.name]) {
+                this.locCounter++;
+              }
+              this.checkObj[item.name] = 1;
               submitInfo.removeAttribute('disabled');
             }
           } else {
-            submitInfo.setAttribute('disabled', 'true');
+            if (this.checkObj[item.name] === 1) {
+              this.locCounter--;
+            }
+              this.checkObj[item.name] = 0;
+            if (!this.locCounter) submitInfo.setAttribute('disabled', 'true');
           }
         });
       });
+  }
+
+  onlineChangingLang() {
+    document.querySelector('.block__title').textContent = i18n._('Account');
+    document.querySelector('.label--account').textContent = i18n._('Account');
+    document.querySelector('.label--name').textContent = i18n._('Name');
+    document.querySelector('.label--lang').textContent = i18n._('Language');
+    document.querySelector('.label--currency').textContent = i18n._('Currency');
+    document.querySelector('.label--theme').textContent = i18n._('Theme');
+    document.querySelector('.account__input-submit').textContent = i18n._('Save');
   }
 }

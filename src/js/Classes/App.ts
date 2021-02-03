@@ -6,12 +6,22 @@ import { Main } from '../Pages/Main/Main';
 import { MyGroups } from '../Pages/MyGroups/MyGroups';
 import { AccountPage } from '../Pages/AccountPage/AccountPage';
 
-import { IGroupDataAll, IDataForCreateGroup, IDataChangeStatus, IDataAddMember, IDataCloseGroup } from '../Interfaces/IGroupData';
+import {
+  IGroupDataAll,
+  IDataForCreateGroup,
+  IDataChangeStatus,
+  IDataAddMember,
+  IDataCloseGroup,
+} from '../Interfaces/IGroupData';
 import { TransactionsList } from '../Pages/TransactionsList/transactionsList';
 import { INotification, Notifications, TypeOfNotifications } from './Notifications';
 import { INewMessage, Messenger } from '../Pages/Messenger/Messenger';
 import { Contacts, ISearchUserData } from '../Pages/Contacts/Contacts';
+import { Help } from '../Pages/Help/Help';
 import { Currencies } from './Currencies';
+
+import { i18n } from '@lingui/core';
+
 
 export interface IHandlers {
   messages: any;
@@ -32,6 +42,7 @@ export class App {
   private notifications: Notifications;
   private messenger: Messenger;
   private contacts: Contacts;
+  private helpPage: Help;
   private contactsHandler: void;
   private messageHandler: (snapshot: any) => void;
   private transactionHandler: (snapshot: any) => void;
@@ -56,6 +67,8 @@ export class App {
     if (state) {
       
       await this.getUserTheme();
+      await this.getUserLanguage();
+
       // user signin
       this.layout = Layout.create('#app');
       this.layout.render();
@@ -79,6 +92,7 @@ export class App {
       this.accountPage.updateInfo = this.updateOnAccountPage.bind(this);
       this.accountPage.changeTheme = this.changeTheme.bind(this);
       this.accountPage.checkUserID = this.checkUserID.bind(this);
+      this.accountPage.onAccountPageChangeLang = this.onAccountPageChangeLang.bind(this);
 
       this.mainPage = Main.create('.main');
       this.mainPage.getBalanceForSliderGroup = this.getBalanceForSliderGroup.bind(this);
@@ -98,7 +112,7 @@ export class App {
       this.groups.closeGroup = this.closeGroup.bind(this);
       this.groups.addMemberInDetailGroup = this.addMemberInDetailGroup.bind(this);
 
-      
+
       this.transactionsList = TransactionsList.create('.main');
       this.transactionsList.onChangeState = this.onChangeState.bind(this);
       this.transactionsList.onGetTransInfo = this.onGetTransInfo.bind(this);
@@ -118,6 +132,8 @@ export class App {
       this.contacts.addUserToContacts = this.onAddUserToContacts.bind(this);
       this.contacts.onChangeContactState = this.onChangeContactState.bind(this);
       this.contacts.onDeleteContact = this.onDeleteContact.bind(this);
+
+      this.helpPage = Help.create('.main');
 
       this.loadCurrentPage();
     } else {
@@ -140,15 +156,16 @@ export class App {
     this.database.signOut();
     this.database.deleteUserInfoListener(this.userHandler);
     this.database.init();
+
+    // Alternative decision
+
+    // window.localStorage.clear();
+    // window.indexedDB.deleteDatabase('firebaseLocalStorageDb');
+    // window.location.reload();
   }
 
   onSignIn(email: string, password: string, name: string): void {
-    this.database.createUserByEmail(
-      email,
-      password,
-      name,
-      this.regPage.showErrorMessage,
-    );
+    this.database.createUserByEmail(email, password, name, this.regPage.showErrorMessage);
   }
 
   onLogin(email: string, password: string): void {
@@ -157,6 +174,15 @@ export class App {
       password,
       this.authPage.showErrorMessage,
     );
+  }
+
+  setUserLanguage(lang: string) {
+    localStorage.setItem('languageCode', lang);
+    i18n.activate(lang);
+  }
+
+  async getUserLanguage() {
+    await this.database.getCurrentLang(this.database.uid, this.setUserLanguage);
   }
 
   loadCurrentPage() {
@@ -202,6 +228,11 @@ export class App {
   updateOnAccountPage(data: any) {
     const uid: string = this.database.uid;
     this.database.updateUserInfo(uid, data);
+  }
+
+  onAccountPageChangeLang() {
+    this.accountPage.onlineChangingLang();
+    this.layout.onlineChangingLang();
   }
 
   async onAccountPage() {
@@ -305,7 +336,7 @@ export class App {
 
   onHelpPage() {
     this.deleteHandlers();
-
+    this.helpPage.render();
   }
 
   onGoogleReg() {
@@ -376,7 +407,7 @@ export class App {
 
   onGetTransInfo(transID: string, groupID: string) {
     this.database.getTransInfoModal(transID, groupID, this.transactionsList.addGroupTitle,
-    this.transactionsList.addMemberOfTransaction, this.transactionsList.addOwnerInfo);
+      this.transactionsList.addMemberOfTransaction, this.transactionsList.addOwnerInfo);
   }
 
   onEditTransaction(editData: any, transID: string, trans: any) {
@@ -387,7 +418,7 @@ export class App {
         curCost.forEach((cost, index) => {
           editData[index].cost = cost;
         });
-        this.database.editTransaction(editData, transID, trans, this.transactionsList.addMyTransactions, this.transactionsList.addUserToList );
+        this.database.editTransaction(editData, transID, trans, this.transactionsList.addMyTransactions, this.transactionsList.addUserToList);
       });
   }
 

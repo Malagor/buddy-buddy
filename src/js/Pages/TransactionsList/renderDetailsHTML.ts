@@ -1,3 +1,13 @@
+import { i18n } from '@lingui/core';
+import { messagesRU } from '../../languages/RU/messages';
+import { messagesENG } from '../../languages/ENG/messages';
+import { loadLanguage } from '../../Util/saveLoadLanguage';
+i18n.load('RU', messagesRU);
+i18n.load('ENG', messagesENG);
+
+const locale = loadLanguage();
+i18n.activate(locale);
+
 export const renderDetailsHTML = (trans: any, date: any, styles: any, ) => {
    return `
    <div class="details__header modal-header">
@@ -7,7 +17,7 @@ export const renderDetailsHTML = (trans: any, date: any, styles: any, ) => {
    <div class="details__info modal-body">
 
      <div class="details__date d-flex row">
-       <div class="col-5 col-sm-4">Дата:</div>
+       <div class="col-5 col-sm-4">${i18n._('Date')}:</div>
        <div class="col-7 col-sm-8 d-flex">
         <div class="details__day">${date.localeDay}</div>
         <div class="details__time">${date.localeTime}</div>
@@ -17,13 +27,13 @@ export const renderDetailsHTML = (trans: any, date: any, styles: any, ) => {
      <div class="details__group d-flex row"></div>
 
      <div class="${styles.ownerDisplay} details__owner d-flex align-items-center row">
-       <div class="col-5 col-sm-4">Плательщик: </div>
+       <div class="col-5 col-sm-4">${i18n._('Payer')}: </div>
        <div class="col-7 col-sm-8 details__owner-info">
        </div>
      </div>
 
      <div class="details__cost d-flex row">
-       <div class="col-5 col-sm-4">Сумма:</div>
+       <div class="col-5 col-sm-4">${i18n._('Sum')}:</div>
        <div class="col-7 col-sm-8">
           <span class="fs-5 ${styles.colorText}">${styles.cost}</span>&nbsp;
           <span class="fs-5 ${styles.colorText}">${trans.currency}</span>
@@ -31,22 +41,22 @@ export const renderDetailsHTML = (trans: any, date: any, styles: any, ) => {
      </div>
 
      <div class="${styles.commentDisplay} details__comment-box d-flex row">
-       <div class="col-5 col-sm-4">Комментарий: </div>
+       <div class="col-5 col-sm-4">${i18n._('Comment')}: </div>
        <div class="col-7 col-sm-8 details__comment">${styles.ownComment}</div>
      </div>
 
      <div class="${styles.checkDisplay} details__check align-items-center d-flex row">
-       <div class="col-5 col-sm-4">Чек: </div>
+       <div class="col-5 col-sm-4">${i18n._('Check')}: </div>
        <div class="col-7 col-sm-8 details__icon-wrapper"><img class="details__icon" src=${trans.photo[0]} alt="check"></div>
      </div>
 
      <div class="${styles.selectDisplay} details__state-wrapper d-flex row">
-       <div class="col-5 col-sm-4">Статус:</div>
+       <div class="col-5 col-sm-4">${i18n._('State')}:</div>
        <div class="col-5 col-sm-5 details__state-wrap">
           <select class="details__state form-select" aria-label="Default select example">
-            <option value="pending">ожидание</option>
-            <option value="approve">подтвердить</option>
-            <option value="decline">отклонить</option>
+            <option value="pending">${i18n._('pending')}</option>
+            <option value="approve">${i18n._('approve')}</option>
+            <option value="decline">${i18n._('decline')}</option>
           </select>
        </div>
      </div>
@@ -64,12 +74,12 @@ export const renderDetailsHTML = (trans: any, date: any, styles: any, ) => {
    </div>
    <div class="${styles.membDisplay} details__members modal-body">
    </div>
-   <button class=" ${styles.membDisplay} details__add-memb btn btn-secondary btn-sm" type="button" data-bs-toggle="collapse" data-bs-target="#notMembers">Добавить участников</button>
+   <button class=" ${styles.membDisplay} details__add-memb btn btn-secondary btn-sm" type="button" data-bs-toggle="collapse" data-bs-target="#notMembers">${i18n._('Add members')}</button>
    <div class=" ${styles.membDisplay} details__not-members modal-body collapse" id="notMembers">
    </div>
    <div class="modal-footer ${styles.btnSaveDisplay}">
-     <button type="button" class="details__delete btn btn-danger">Удалить</button>
-     <button type="button" class="details__save btn btn-primary btn-primary-alternate">Сохранить</button>
+     <button type="button" class="details__delete btn btn-danger">${i18n._('Delete')}</button>
+     <button type="button" class="details__save btn btn-primary btn-primary-alternate">${i18n._('Save')}</button>
    </div>
  `;
 };
