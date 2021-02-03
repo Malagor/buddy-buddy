@@ -1,6 +1,14 @@
 @import "./src/scss/_misc/mixins";
 @import "../_misc/variables.scss";
 
+.theme--dark input {
+  background: $ultra-light;
+}
+
+.theme--dark select {
+  background: $ultra-light;
+}
+
 .block__wrapper {
   position: relative;
   display: flex;
@@ -33,6 +41,12 @@
   background-color: rgba(255, 255, 255, 1);
   border-radius: rem(15px);
   box-shadow: 0 0 10px 5px rgba(0, 0, 0, 0.075);
+
+  .theme--dark & {
+    background: $ultra-dark;
+    box-shadow: 0 0 10px 5px rgba(255, 255, 255, 0.075);
+    color: $color-white;
+  }
 }
 
 .block__header {
@@ -138,6 +152,10 @@
   font-size: 1.2rem;
   color: rgba(0, 0, 0, 1);
 
+  .theme--dark & {
+    color: $color-white;
+  }
+
   @include tablets {
     font-size: 1.4rem;
   }
@@ -159,6 +177,10 @@
   padding: 0.5rem 1.5rem;
   background-color: rgba(255, 255, 255, 1);
   border-top: 1px solid rgba(0, 0, 0, 0.05);
+
+  .theme--dark & {
+    background: $ultra-dark;
+  }
 
   @include laptop {
     padding: 0.5rem 2rem;
