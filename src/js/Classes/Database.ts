@@ -1334,7 +1334,7 @@ export class Database {
       });
   }
 
-  editTransaction = (editData: any, transID: string, trans: any, renderWrapper: any, renderTransaction: any, renderUser: any) => {
+  editTransaction = (editData: any, transID: string, trans: any, renderTransaction: any, renderUser: any) => {
     const base = this.firebase.database();
     const userRef = base.ref('User');
     const transRef = base.ref('Transactions');
@@ -1382,9 +1382,6 @@ export class Database {
     });
 
     setTimeout(() => {
-      const transaction: HTMLElement = document.getElementById(transID);
-      transaction.remove();
-      renderWrapper(transID);
       base.ref(`Transactions/${transID}`)
       .once('value', (snapshot) => {
         const newTrans = snapshot.val();

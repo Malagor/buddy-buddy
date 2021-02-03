@@ -92,7 +92,7 @@ export class App {
 
       this.groups = MyGroups.create('.main');
       this.groups.onCreateNewGroup = this.onCreateNewGroup.bind(this);
-      // this.groups.deleteGroup = this.deleteGroup.bind(this);
+
       this.groups.onAddMember = this.onAddGroupMember.bind(this);
       this.groups.fillContactsList = this.fillContactsList.bind(this);
       this.groups.onAddInfoForModalDetailGroup = this.onAddInfoForModalDetailGroup.bind(this);
@@ -103,7 +103,7 @@ export class App {
       this.groups.closeGroup = this.closeGroup.bind(this);
       this.groups.addMemberInDetailGroup = this.addMemberInDetailGroup.bind(this);
 
-
+      
       this.transactionsList = TransactionsList.create('.main');
       this.transactionsList.onChangeState = this.onChangeState.bind(this);
       this.transactionsList.onGetTransInfo = this.onGetTransInfo.bind(this);
@@ -262,6 +262,7 @@ export class App {
   onAddInfoForModalDetailGroup(groupId: string, userId: string) {
     this.database.getGroup(groupId, this.groups.addInfoForModalDetailGroup, this.groups.addModalUserData);
     this.database.getBalanceForGroup(groupId, userId, this.groups.addBalanceForModalGroupDetail);
+    this.database.getDataForGraphGroupBalance(groupId, this.groups.renderChart());
   }
 
   addBalanceInGroupPage(groupId: string, userId: string) {
@@ -285,7 +286,6 @@ export class App {
 
   closeGroup(data: IDataCloseGroup) {
     this.database.closeGroup(data, this.groups.answerDataBaseForClosedGroup);
-    // .notifications.decreaseNotificationMark(TypeOfNotifications.Group);
   }
 
   addMemberInDetailGroup(data: IDataAddMember) {
@@ -403,14 +403,13 @@ export class App {
 
   onEditTransaction(editData: any, transID: string, trans: any) {
     const toUsd = Currencies.toUSD(trans.currency);
-    toUsd(trans.totalCost);
     const queryes = editData.map((user: { cost: any; }) => toUsd(user.cost));
     Promise.all(queryes)
       .then(curCost => {
         curCost.forEach((cost, index) => {
           editData[index].cost = cost;
         });
-        this.database.editTransaction(editData, transID, trans, this.transactionsList.addTransactionWrapper, this.transactionsList.addMyTransactions, this.transactionsList.addUserToList );
+        this.database.editTransaction(editData, transID, trans, this.transactionsList.addMyTransactions, this.transactionsList.addUserToList );
       });
   }
 

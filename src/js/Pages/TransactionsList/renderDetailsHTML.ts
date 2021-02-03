@@ -79,7 +79,7 @@ export const renderDetailsHTML = (trans: any, date: any, styles: any, ) => {
    </div>
    <div class="modal-footer ${styles.btnSaveDisplay}">
      <button type="button" class="details__delete btn btn-danger">${i18n._('Delete')}</button>
-     <button type="button" class="details__save btn btn-primary">${i18n._('Save')}</button>
+     <button type="button" class="details__save btn btn-primary btn-primary-alternate">${i18n._('Save')}</button>
    </div>
  `;
 };
