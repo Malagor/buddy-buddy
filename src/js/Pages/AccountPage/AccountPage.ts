@@ -229,7 +229,7 @@ export class AccountPage extends Page {
               if (!this.checkObj[item.name]) this.locCounter++;
               this.checkObj[item.name] = 1;
               submitInfo.removeAttribute('disabled');
-              
+
             } else {
               if (this.checkObj[item.name] === 1) this.locCounter--;
               this.checkObj[item.name] = 0;
@@ -300,7 +300,7 @@ export class AccountPage extends Page {
     pageInputs.forEach((item: HTMLInputElement, index: number): void => {
         values.push(checkImg(item));
         this.checkObj[item.name] = 0;
-        
+
         item.addEventListener('input', (): void => {
           if (item.type === 'file') {
             const reader: FileReader = new FileReader();
@@ -313,8 +313,8 @@ export class AccountPage extends Page {
           }
           if (values[index] !== item.value.trim()) {
             if (item === inputID) {
-              this.checkUserID(item.value.trim()); 
-            } else {             
+              this.checkUserID(item.value.trim());
+            } else {
               if (!this.checkObj[item.name]) {
                 this.locCounter++;
               }
@@ -339,6 +339,6 @@ export class AccountPage extends Page {
     document.querySelector('.label--lang').textContent = i18n._('Language');
     document.querySelector('.label--currency').textContent = i18n._('Currency');
     document.querySelector('.label--theme').textContent = i18n._('Theme');
-    document.querySelector('.account__input-submit').textContent = i18n._('Save');   
+    document.querySelector('.account__input-submit').textContent = i18n._('Save');
   }
 }

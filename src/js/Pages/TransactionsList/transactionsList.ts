@@ -327,7 +327,7 @@ export class TransactionsList extends Page {
     const membInput: HTMLInputElement = member.querySelector('.details__member-cost');
     const membDeleteBtn: HTMLButtonElement = member.querySelector('.details__member-delete');
     const membComment: HTMLFormElement = member.querySelector('.details__member-comment');
-    const membState:HTMLElement = member.querySelector('.details__member-state');
+    const membState: HTMLElement = member.querySelector('.details__member-state');
 
     membInput.addEventListener('input', () => {
       if (+membInput.value >= 0 ) {

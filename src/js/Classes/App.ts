@@ -6,7 +6,13 @@ import { Main } from '../Pages/Main/Main';
 import { MyGroups } from '../Pages/MyGroups/MyGroups';
 import { AccountPage } from '../Pages/AccountPage/AccountPage';
 
-import { IGroupDataAll, IDataForCreateGroup, IDataChangeStatus, IDataAddMember, IDataCloseGroup } from '../Interfaces/IGroupData';
+import {
+  IGroupDataAll,
+  IDataForCreateGroup,
+  IDataChangeStatus,
+  IDataAddMember,
+  IDataCloseGroup,
+} from '../Interfaces/IGroupData';
 import { TransactionsList } from '../Pages/TransactionsList/transactionsList';
 import { INotification, Notifications, TypeOfNotifications } from './Notifications';
 import { INewMessage, Messenger } from '../Pages/Messenger/Messenger';
@@ -59,7 +65,7 @@ export class App {
     if (state) {
 
       await this.getUserLanguage();
-      
+
       // user signin
       this.layout = Layout.create('#app');
       this.layout.render();
@@ -103,7 +109,7 @@ export class App {
       this.groups.closeGroup = this.closeGroup.bind(this);
       this.groups.addMemberInDetailGroup = this.addMemberInDetailGroup.bind(this);
 
-      
+
       this.transactionsList = TransactionsList.create('.main');
       this.transactionsList.onChangeState = this.onChangeState.bind(this);
       this.transactionsList.onGetTransInfo = this.onGetTransInfo.bind(this);
@@ -144,7 +150,7 @@ export class App {
   onSignOut(): any {
     this.deleteHandlers();
     this.database.signOut();
-    this.database.deleteUserInfoListener(this.userHandler);    
+    this.database.deleteUserInfoListener(this.userHandler);
     this.database.init();
 
     // Alternative decision
@@ -155,12 +161,7 @@ export class App {
   }
 
   onSignIn(email: string, password: string, name: string): void {
-    this.database.createUserByEmail(
-      email,
-      password,
-      name,
-      this.regPage.showErrorMessage,
-    );
+    this.database.createUserByEmail(email, password, name, this.regPage.showErrorMessage);
   }
 
   onLogin(email: string, password: string): void {
@@ -186,7 +187,7 @@ export class App {
   }
 
   setCurrentPage(name: string): void {
-    localStorage.setItem('currentPage', name);    
+    localStorage.setItem('currentPage', name);
   }
 
   changeTheme(theme: string = 'light'): void {
@@ -398,7 +399,7 @@ export class App {
 
   onGetTransInfo(transID: string, groupID: string) {
     this.database.getTransInfoModal(transID, groupID, this.transactionsList.addGroupTitle,
-    this.transactionsList.addMemberOfTransaction, this.transactionsList.addOwnerInfo);
+      this.transactionsList.addMemberOfTransaction, this.transactionsList.addOwnerInfo);
   }
 
   onEditTransaction(editData: any, transID: string, trans: any) {
@@ -409,7 +410,7 @@ export class App {
         curCost.forEach((cost, index) => {
           editData[index].cost = cost;
         });
-        this.database.editTransaction(editData, transID, trans, this.transactionsList.addMyTransactions, this.transactionsList.addUserToList );
+        this.database.editTransaction(editData, transID, trans, this.transactionsList.addMyTransactions, this.transactionsList.addUserToList);
       });
   }
 

@@ -1806,7 +1806,7 @@ export class Database {
       const themeBase2 = firebase.database().ref(`Theme/Dark`);
       themeBase1.set(themeData1);
       themeBase2.set(themeData2);
-    
+
     //  CURRENCY
       Currencies.getCurrenciesList(this.addCurrencyToBase);
 
