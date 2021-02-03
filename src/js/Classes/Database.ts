@@ -607,7 +607,8 @@ export class Database {
         fn(false, '.modal-error-text', error);
       }
     };
-    // this.getBalanceInGroup(groupId, 1, closeGroupChangeDataBase);
+    
+    this.getBalanceInGroup(groupId, 1, closeGroupChangeDataBase);
   }
 
   addMemberInGroup(data: IDataAddMember, addNewUserInDetailGroup: any) {

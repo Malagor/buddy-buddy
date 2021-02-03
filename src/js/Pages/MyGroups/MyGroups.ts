@@ -45,7 +45,7 @@ export class MyGroups extends Page {
                   <p class="card-text">Would you like to create the first group?</p>
                 </div>
               </div>
-              <div class="accordion group-hidden" id="accordionForClosedGroup">
+              <div class="accordion accordion-main group-hidden" id="accordionForClosedGroup">
                 <div class="accordion-item">
                   <h2 class="accordion-header" id="headingOne">
                     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
