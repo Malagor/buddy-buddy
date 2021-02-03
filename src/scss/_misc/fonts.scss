@@ -1,0 +1,40 @@
+@font-face {
+  font-style: normal;
+  font-weight: normal;
+  font-family: "Material Icons";
+
+  font-display: swap;
+  src: url("../assets/fonts/material-icons/MaterialIcons-Regular.eot");
+  src: local("Material Icons"), local("MaterialIcons-Regular"),
+  url("../assets/fonts/material-icons/MaterialIcons-Regular.eot?#iefix") format("embedded-opentype"),
+  url("../assets/fonts/material-icons/MaterialIcons-Regular.woff2") format("woff2"),
+  url("../assets/fonts/material-icons/MaterialIcons-Regular.woff") format("woff"),
+  url("../assets/fonts/material-icons/MaterialIcons-Regular.ttf") format("truetype");
+}
+
+//@mixin Roboto($style: regular) {
+//  @if $style == light {
+//    font-weight: 300;
+//    font-family: "Roboto", sans-serif;
+//  }
+//
+//  @if $style == regular {
+//    font-weight: normal;
+//    font-family: "Roboto", sans-serif;
+//  }
+//
+//  @if $style == medium {
+//    font-weight: 500;
+//    font-family: "Roboto", sans-serif;
+//  }
+//
+//  @if $style == bold {
+//    font-weight: bold;
+//    font-family: "Roboto", sans-serif;
+//  }
+//
+//  @if $style == mono-bold {
+//    font-weight: bold;
+//    font-family: "Roboto Mono", monospace;
+//  }
+//}

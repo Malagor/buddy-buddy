@@ -1,0 +1,350 @@
+@import "./src/scss/_misc/variables";
+@import "./src/scss/_misc/mixins";
+
+.block__groups {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 0;
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+
+  @include phones {
+    flex-direction: row;
+  }
+}
+
+.translist__header {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.translist__header--main {
+  position: sticky;
+  padding: 0.5rem 1.5rem 0.5rem 2.3rem;
+  background-color: rgba(255, 255, 255, 1);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+
+  @include laptop {
+    padding: 0.5rem 2rem 0.5rem 2.5rem;
+  }
+  @include desktop {
+    padding: 0.5rem 1rem 0.5rem 1.5rem;
+  }
+}
+
+.trans-list__groups {
+  @include phones {
+    width: 60%;
+  }
+}
+
+.trans-list__user-balance {
+  margin-top: rem(20px);
+  font-size: rem(20px);
+  line-height: 1rem;
+
+  @include phones {
+    width: 40%;
+    margin-top: 0;
+  }
+}
+
+.trans-list__list {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  padding: 1.5rem 0;
+  overflow-y: auto;
+
+  gap: 1rem;
+  @include desktop {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-content: flex-start;
+    width: 84%;
+    height: 100%;
+  }
+  scrollbar-color: rgba(0, 0, 0, 0.05) rgb(170, 170, 170);
+  scrollbar-width: thin;
+
+  &::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+    background-color: rgba(0, 0, 0, 0.05);
+    opacity: 0.7;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: rgb(170, 170, 170);
+  }
+}
+
+.trans-item {
+  width: 85%;
+  min-height: rem(120px);
+  padding: 0.5rem;
+  border: 2px solid rgba(0, 0, 0, 0.05);
+  border-radius: rem(10px);
+  box-shadow: 0 3px 5px rgba(0,0,0,0.25);
+
+  @include desktop {
+    width: 47%;
+    margin: rem(5px);
+  }
+  &:hover {
+    cursor: pointer;
+  }
+
+  &__header {
+    width: 100%;
+    margin-bottom: rem(5px);
+  }
+
+  &__descr {
+    width: 100%;
+    font-size: rem(14px);
+
+    @include phones {
+      font-size: rem(16px);
+    }
+  }
+
+  &__date {
+    width: 20%;
+  }
+
+  &__day {
+    font-size: rem(14px);
+
+    @include phones {
+      font-size: rem(16px);
+    }
+  }
+
+  &__time {
+    font-size: rem(12px);
+
+    @include phones {
+      font-size: rem(14px);
+    }
+  }
+
+  &__users {
+    width: 35%;
+
+    @include phones {
+      width: 45%;
+    }
+
+    .user {
+      display: none;
+      margin-left: -20px;
+      &__avatar {
+        width: rem(35px);
+        height: rem(35px);
+        overflow: hidden;
+        border-radius: 50%;
+
+        @include phones {
+          width: rem(45px);
+          height: rem(45px);
+        }
+        @include desktop {
+          width: rem(40px);
+          height: rem(40px);
+        }
+      }
+
+      &__avatar > img {
+        width: 100%;
+        height: 100%;
+
+        object-fit: contain;
+      }
+
+      &__name {
+        max-width: rem(100px);
+        font-size: rem(12px);
+        line-height: 0.8rem;
+        text-align: center;
+      }
+    }
+
+    .user:nth-child(1) {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-left: 0;
+    }
+
+    .user:nth-child(2),
+    .user:nth-child(3) {
+      display: flex;
+    }
+
+    .add-numb {
+      font-size: rem(20px);
+    }
+  }
+
+  &__cost-state {
+    width: 45%;
+
+    @include phones {
+      width: 35%;
+    }
+  }
+
+  &__cost {
+    font-size: rem(16px);
+    line-height: 1rem;
+    letter-spacing: 0.3px;
+
+    @include phones {
+      font-size: rem(20px);
+    }
+    @include desktop {
+      font-size: rem(16px);
+    }
+  }
+
+  &__state-wrap {
+    margin-top: rem(15px);
+  }
+
+  &__state {
+    width: rem(130px);
+    font-size: rem(12px);
+  }
+}
+
+.details {
+  &__time {
+    margin-left: rem(10px);
+  }
+
+  &__icon-wrapper {
+    width: rem(40px);
+    height: rem(40px);
+    margin-left: rem(10px);
+    border: 1px solid gray;
+    border-radius: 5px;
+    &:hover {
+      cursor: pointer;
+    }
+
+    & > img {
+      width: 100%;
+      height: 100%;
+
+      object-fit: cover;
+    }
+  }
+
+  &__members {
+    margin-top: rem(10px);
+  }
+
+  &__memb-wrapper {
+    align-items: center;
+    height: rem(70px);
+    margin-bottom: rem(5px);
+  }
+
+  &__member {
+    width: rem(70px);
+  }
+
+  &__avatar {
+    width: rem(35px);
+    height: rem(35px);
+    overflow: hidden;
+    background-color: blue;
+    border-radius: 50%;
+    transition: transform 0.3s ease-out;
+
+    @include phones {
+      width: rem(40px);
+      height: rem(40px);
+    }
+  }
+
+  &__avatar > img {
+    width: 100%;
+    height: 100%;
+
+    object-fit: contain;
+  }
+
+  &__name {
+    max-width: rem(50px);
+    font-size: rem(12px);
+    line-height: 1rem;
+    text-align: center;
+  }
+
+  &__member-cost {
+    width: 18%;
+  }
+
+  &__member-comment {
+    width: 30%;
+    font-size: rem(12px);
+    resize: none;
+
+    @include phones {
+      width: 35%;
+      font-size: rem(14px);
+    }
+  }
+
+  &__member-state {
+    width: 18%;
+    font-size: rem(12px);
+
+    @include phones {
+      width: 15%;
+      font-size: rem(14px);
+    }
+  }
+
+  &__member-delete {
+    width: rem(20px);
+    height: rem(20px);
+    padding: 0;
+
+    & > i {
+      font-size: rem(12px);
+    }
+  }
+
+  &__add-memb {
+    width: rem(150px);
+    margin-bottom: 0.5rem;
+    margin-left: 1rem;
+    line-height: 1rem;
+  }
+
+  &__state-wrap {
+    width: 50%;
+  }
+
+  &__check-wrapper {
+    width: 100%;
+    margin-bottom: rem(20px);
+  }
+
+  &__check-image {
+    width: 100%;
+
+    object-fit: contain;
+  }
+}

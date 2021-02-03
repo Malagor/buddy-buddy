@@ -1,0 +1,122 @@
+@import "src/scss/_misc/mixins";
+@import "src/scss/_misc/variables";
+
+
+.message {
+  display: grid;
+  align-items: center;
+  min-width: 55%;
+  max-width: 85%;
+  font-size: 0.8rem;
+  background: #f1f1f1;
+
+  grid-gap: 0.5rem;
+  grid-template-areas: "avatar name time" "message message button";
+  grid-template-columns: 3rem 1fr 6rem;
+  grid-template-rows: auto auto;
+
+  &--own {
+    color: $color-white;
+    background: $primary-alternate-hover;
+
+    grid-template-areas: "avatar name time" "message message message";
+  }
+}
+
+.message__avatar-wrapper {
+  width: 3rem;
+  height: 3rem;
+  overflow: hidden;
+  border-radius: 50%;
+
+  grid-area: avatar;
+
+  img {
+    width: 100%;
+    height: 100%;
+
+    object-fit: contain;
+  }
+}
+
+.message__user-name {
+  grid-area: name;
+}
+
+.message__time {
+  grid-area: time;
+}
+
+.message__text {
+  grid-area: message;
+}
+
+.message__button {
+  grid-area: button;
+}
+
+.recipient-user {
+  display: flex;
+}
+
+.recipient-user__image-wrapper {
+  width: 2rem;
+  height: 2rem;
+  margin-right: 0.5rem;
+
+  img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+
+    object-fit: contain;
+  }
+}
+
+.message--not-read {
+  box-shadow: 0 0 3px green;
+}
+
+
+ul.dropdown-search-box {
+  width: 270px;
+  max-height: 300px;
+  overflow-y: auto;
+}
+ul.dropdown-search-box .search-box {
+  padding: 0 5px 5px 5px;
+  border-bottom: 1px solid #dddddd;
+}
+
+ul.contacts-user-list {
+  width: 90%;
+  max-height: rem(150px);
+  overflow-y: auto;
+}
+.contact-list__item {
+  padding: 0.5rem;
+  cursor: pointer;
+  transition: 0.3s;
+
+  &:hover {
+    background: #dddddd;
+  }
+}
+
+.contact-list__avatar {
+  width: 1.5rem;
+  height: 1.5rem;
+  margin-right: 0.5rem;
+  border-radius: 50%;
+
+  object-fit: cover;
+}
+
+.contact-list__name {
+  margin-right: 0.5rem;
+}
+
+.contact-list__account {
+  font-size: 0.9rem;
+  opacity: 0.8;
+}
