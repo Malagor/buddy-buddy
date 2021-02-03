@@ -275,7 +275,7 @@ export class App {
 
     this.transactionsList.newTrans.onRenderGroupBalance = this.onRenderGroupBalanceNewTrans.bind(this);
     this.transactionsList.newTrans.onRenderTotalBalance = this.onRenderTotalBalanceNewTrans.bind(this);
-    
+
     this.database.getCurrencyList(this.transactionsList.newTrans.addCurrencyList);
     this.database.getGroupsListForTransaction(this.transactionsList.newTrans.addGroupList);
     this.database.getMembersOfGroupFirst(this.transactionsList.newTrans.addMembersOfGroup);
@@ -364,7 +364,7 @@ export class App {
 
   onChangeState(state: string, transID: string) {
     this.database.setNewStateTransaction(state, transID);
-    if(state === 'approve') {
+    if (state === 'approve') {
       this.notifications.decreaseNotificationMark(TypeOfNotifications.Transaction);
     }
   }
@@ -377,8 +377,8 @@ export class App {
   onEditTransaction(editData: any, transID: string, trans: any) {
     const toUsd = Currencies.toUSD(trans.currency);
     toUsd(trans.totalCost);
-    const queryes = editData.map((user: { cost: any; }) => toUsd(user.cost));
-    Promise.all(queryes)
+    const queries = editData.map((user: { cost: any; }) => toUsd(user.cost));
+    Promise.all(queries)
       .then(curCost => {
         curCost.forEach((cost, index) => {
           editData[index].cost = cost;
@@ -473,6 +473,5 @@ export class App {
   onDeleteContact(contactId: string): void {
     this.database.deleteUserFromContactsList(contactId);
     this.database.deleteUserFromContactsList(this.database.uid, contactId);
-    this.notifications.decreaseNotificationMark(TypeOfNotifications.Contact);
   }
 }
