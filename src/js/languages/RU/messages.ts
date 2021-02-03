@@ -65,7 +65,7 @@ export const messagesRU = {
   'Description': 'Описание',
   'Group details': 'Детали группы',
   'Create date:': 'Дата создания:',
-  'Close date': 'Дата закрытия:',
+  'Close date': 'Дата закрытия',
   'group is active': 'группа открыта',
   'No description': 'Нет описания...',
   'Participants': 'Участники',

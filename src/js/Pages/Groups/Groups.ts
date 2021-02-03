@@ -418,7 +418,7 @@ export class Groups extends Page {
           <div class="col-6 card-detail__box-logo-group">
             <h5 class="card-detail__title">${data.dataGroup.title}</h5>
             <p class="card-detail__date">${i18n._('Create date')}: ${ dataCreateGroup.slice(0, 10) }</p>
-            <p class="card-detail__date">${i18n._('Close date')}:  ${ data.dataGroup.dateClose ? dataCloseGroup : i18n._('group is active')}</p>
+            <p class="card-detail__date">${i18n._('Close date')}: ${ data.dataGroup.dateClose ? dataCloseGroup : i18n._('group is active')}</p>
           </div>
           <div id="balanceModalGroup" class="col-3 card-detail__box-logo-group">
           <h5 class="card-detail__balance">${i18n._('Balance')}</h5>
