@@ -1,5 +1,6 @@
 @import "./src/scss/_misc/mixins";
 @import "../../../scss/_misc/variables.scss";
+@import "~bootstrap/scss/bootstrap";
 
 .account__input {
   cursor: pointer;
@@ -23,7 +24,8 @@
   }
 
   .account__double-form--second.error {
-    color: rgba(255, 0, 0, 0.5);
+    color: $danger;
+    opacity: 0.5;
   }
 
   .account__error {
@@ -33,8 +35,9 @@
     width: 100%;
     height: rem(20px);
     text-align: end;
-    color: rgba(255, 0, 0, 0.5);
+    color: $danger;
     visibility: hidden;
+    opacity: 0.5;
   }
   .account__error.error--on {
     visibility: visible;

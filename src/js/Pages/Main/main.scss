@@ -1,5 +1,6 @@
 @import "./src/scss/_misc/mixins";
 @import "../../../scss/_misc/variables.scss";
+@import "~bootstrap/scss/bootstrap";
 
 .main__balance {
   margin: 2rem 0 0;
@@ -426,12 +427,12 @@
 
 .plus-cost,
 p.plus-cost > span {
-  color: rgba(0, 128, 0, 1);
+  color: $success;
 }
 
 .minus-cost,
 p.minus-cost > span {
-  color: rgba(255, 0, 0, 1);
+  color: $danger;
 }
 
 .card-trans__main__loc {
