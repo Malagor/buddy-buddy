@@ -1,6 +1,8 @@
 @import "./src/scss/_misc/mixins";
 @import "../../../scss/_misc/variables.scss";
-@import "~bootstrap/scss/bootstrap";
+@import "~bootstrap/scss/functions";
+@import "~bootstrap/scss/variables";
+@import "~bootstrap/scss/mixins";
 
 .main__balance {
   margin: 2rem 0 0;
@@ -236,6 +238,7 @@
   align-items: center;
   height: rem(20px);
   margin-bottom: 0;
+  line-height: 1rem;
   line-height: 0.8rem;
 
   span {
