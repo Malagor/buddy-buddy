@@ -390,7 +390,6 @@ export class App {
 
   onEditTransaction(editData: any, transID: string, trans: any) {
     const toUsd = Currencies.toUSD(trans.currency);
-    toUsd(trans.totalCost);
     const queryes = editData.map((user: { cost: any; }) => toUsd(user.cost));
     Promise.all(queryes)
       .then(curCost => {
