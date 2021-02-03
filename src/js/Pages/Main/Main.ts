@@ -64,7 +64,7 @@ export class Main extends Page {
         <img src="${groupItem.icon ? groupItem.icon : defaultGroupIcon}" alt="group icon" width="95%">
         <div class="item__img-title-wrapper">
           <p class="slider__item__title">
-            <span>${groupItem.title.length > 10 ? groupItem.title.slice(0, 10).trim() + '...' : groupItem.title}</span>
+            <span>${groupItem.title.length > 21 ? groupItem.title.slice(0, 21).trim() + '...' : groupItem.title}</span>
           </p>
           ${currentGroupHTML}
         </div>
