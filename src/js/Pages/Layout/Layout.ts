@@ -45,7 +45,7 @@ export class Layout extends Page {
           <hr>
           <ul class="nav flex-column">
               <li class="nav-item">
-                <a class="nav-link sidebarMainLink active" href="#">
+                <a class="nav-link sidebarMainLink" href="#">
                   <i class="material-icons">house</i><span class="nav-link__text">Главная</span>
                 </a>
               </li>
@@ -213,6 +213,7 @@ export class Layout extends Page {
 
   protected events(): void {
     const myModal = document.getElementById('singOutModal');
+    document.querySelector(`.sidebar${localStorage.getItem('currentPage') || 'Main'}Link`).classList.add('active');
 
     const signOutModal = new Modal(myModal);
 
