@@ -530,19 +530,24 @@ export class Database {
   changeStatusUser(data: IDataChangeStatus) {
     const { userId, groupId, state } = data;
     const dataBase = this.firebase.database();
+    console.log(1);
 
-    dataBase
-      .ref(`Groups/${groupId}/userList/${userId}`)
-      .set({ state: state });
+    this.firebase.database()
+    .ref(`Groups/${groupId}/userList/${userId}/state/`)
+    .set(state)
 
-    dataBase
-      .ref(`User/${userId}/groupList/${groupId}`)
-      .set({ state: state });
+    setTimeout(() => {
+      console.log(2);
+      this.firebase.database()
+      .ref(`User/${userId}/groupList/${groupId}/state/`)
+      .set(state)
+    },600)
+
   }
 
   clearCurrentGroup(userId: string, groupId: string) {
     const dataBase =  this.firebase.database();
-       
+
     dataBase
     .ref(`User/${userId}/currentGroup/`)
     .once('value', (snapshot) => {
