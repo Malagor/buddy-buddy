@@ -77,7 +77,6 @@ export const messagesRU = {
   'Add check': 'Добавить чек',
   'Check': 'Чек',
   'Select all': 'Выбрать всех',
-  'Group': 'Группа',
   'Sum': 'Сумма',
   'Create transaction': 'Создать транзакцию',
   'Comment': 'Комментарий',
