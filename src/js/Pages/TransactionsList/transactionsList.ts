@@ -101,13 +101,14 @@ export class TransactionsList extends Page {
     const selectState: HTMLSelectElement = transaction.querySelector('.trans-item__state');
     this.changeSelectState(selectState, transaction, transID);
     const detailsModalWrapper: HTMLElement = document.querySelector('.details__wrapper');
-    transaction.addEventListener('click', (e) => {
+    const transactionWrapper = transaction.querySelector('.trans-item__wrapper');
+    transactionWrapper.addEventListener('click', (e) => {
       const { target }: any = e;
       if (!target.closest('.trans-item__state')) {
         this.detailsModal.show();
         this.renderOutTrans(detailsModalWrapper, transID, trans, owner, ownUID, selectState.value);
       }
-    });  
+    });
   }
 
   changeSelectState = (select: HTMLSelectElement, trans: HTMLElement, transID: string): void => {
@@ -117,10 +118,10 @@ export class TransactionsList extends Page {
     });
   }
 
-  changeCardStyle = (select:HTMLSelectElement, transaction: HTMLElement, selectValue: string) => {
+  changeCardStyle = (select: HTMLSelectElement, transaction: HTMLElement, selectValue: string) => {
     if (selectValue === 'approve') {
       transaction.classList.remove('border-success', 'border-danger');
-      select.classList.add('d-none');  
+      select.classList.add('d-none');
     } else if (selectValue === 'decline') {
       transaction.classList.remove('border-success');
       transaction.classList.add('border-danger');
@@ -164,7 +165,7 @@ export class TransactionsList extends Page {
       trans.photo = '';
     }
     wrapper.innerHTML = '';
-    
+
     const date: any = getDate(trans.date);
     const baseHTML = renderDetailsHTML(trans, date, styles);
     wrapper.insertAdjacentHTML('beforeend', baseHTML);
@@ -233,7 +234,7 @@ export class TransactionsList extends Page {
       const editData = this.getDataforEditTransaction(wrapper);
       this.onEditTransaction(editData, transID, trans);
       this.detailsModal.hide();
-      setTimeout(() => {this.changeBalance()}, 300);  
+      setTimeout(() => {this.changeBalance(); }, 300);
     });
 
     const btnDelete = wrapper.querySelector('.details__delete');
@@ -244,7 +245,7 @@ export class TransactionsList extends Page {
       const transCard = document.getElementById(transID);
       transCard.remove();
       this.onDeleteTransaction(groupID, transID);
-      this.changeBalance();   
+      this.changeBalance();
     });
   }
 
@@ -314,6 +315,10 @@ export class TransactionsList extends Page {
     }
 
     const membInput: HTMLInputElement = member.querySelector('.details__member-cost');
+    const membDeleteBtn: HTMLButtonElement = member.querySelector('.details__member-delete');
+    const membComment: HTMLFormElement = member.querySelector('.details__member-comment');
+    const membState:HTMLElement = member.querySelector('.details__member-state');
+     
     membInput.addEventListener('input', () => {
       if (+membInput.value >= 0 ) {
         membInput.classList.add('fixed');
@@ -322,32 +327,31 @@ export class TransactionsList extends Page {
       }
     });
 
-    member.querySelector('.details__member-delete').addEventListener('click', () => {
-      if (member.querySelector('.details__member-delete').innerText === 'clear') {
+    membDeleteBtn.addEventListener('click', () => {
+      if (membDeleteBtn.innerText === 'clear') {
         notMembersWrapper.append(member);
         member.classList.add('details__memb--not-checked', 'justify-content-start');
         member.classList.remove('details__memb--checked', 'justify-content-between');
-        member.querySelector('.details__member-cost').value = '';
-        member.querySelector('.details__member-cost').classList.add('non-fixed', 'd-none');
-        member.querySelector('.details__member-cost').classList.remove('fixed');
-        member.querySelector('.details__member-comment').value = '';
-        member.querySelector('.details__member-comment').classList.add('d-none');
-        member.querySelector('.details__member-state').innerHTML = '';
-        member.querySelector('.details__member-state').classList.add('d-none');
-        member.querySelector('.details__member-delete').innerHTML = '<i class="material-icons">add</i>';
-        member.querySelector('.details__member-delete').classList.add('ms-3');
-      } 
-      else {
+        membInput.value = '';
+        membInput.classList.add('non-fixed', 'd-none');
+        membInput.classList.remove('fixed');
+        membComment.value = '';
+        membComment.classList.add('d-none');
+        membState.innerHTML = '';
+        membState.classList.add('d-none');
+        membDeleteBtn.innerHTML = '<i class="material-icons">add</i>';
+        membDeleteBtn.classList.add('ms-3');
+      } else {
         membersWrapper.append(member);
         member.classList.remove('details__memb--not-checked', 'justify-content-start');
         member.classList.add('details__memb--checked', 'justify-content-between');
         member.setAttribute('user-state', 'pending');
-        member.querySelector('.details__member-state').innerHTML = 'ожидание';
-        member.querySelector('.details__member-delete').innerHTML = '<i class="material-icons">clear</i>';
-        member.querySelector('.details__member-state').classList.remove('d-none');
-        member.querySelector('.details__member-comment').classList.remove('d-none');
-        member.querySelector('.details__member-cost').classList.remove('d-none');
-        member.querySelector('.details__member-delete').classList.remove('ms-3');
+        membState.innerHTML = 'ожидание';
+        membDeleteBtn.innerHTML = '<i class="material-icons">clear</i>';
+        membState.classList.remove('d-none');
+        membComment.classList.remove('d-none');
+        membInput.classList.remove('d-none');
+        membDeleteBtn.classList.remove('ms-3');
       }
       editSum(trans, modalWrapper);
       const notMembers = notMembersWrapper.querySelectorAll('.details__memb-wrapper');
@@ -364,11 +368,13 @@ export class TransactionsList extends Page {
     const newMembers = transWrapper.querySelectorAll('.details__memb--checked');
     newMembers.forEach((member: HTMLElement) => {
       const newUser: any = {};
+      const membInput: HTMLInputElement = member.querySelector('.details__member-cost');
+      const membComment: HTMLFormElement = member.querySelector('.details__member-comment');
       newUser.userID = member.getAttribute('user-id');
-      newUser.cost = member.querySelector('.details__member-cost').value;
-      newUser.comment = member.querySelector('.details__member-comment').value;
+      newUser.cost = membInput.value;
+      newUser.comment = membComment.value;
       newUser.state = member.getAttribute('user-state');
-      if (member.querySelector('.details__member-cost').classList.contains('fixed')) {
+      if (membInput.classList.contains('fixed')) {
         newUser.costFix = 'fixed';
       } else {
         newUser.costFix = 'non-fixed';

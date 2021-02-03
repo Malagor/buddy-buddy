@@ -41,19 +41,16 @@ export class Database {
       if (user) {
         // User is signed in.
         this.uid = user.uid;
-        // console.log('Current user.uid = ', this.uid);
         this.onUserIsLogin(true, this.uid);
       } else {
         // No user is signed in.
         this.uid = null;
-        console.log('No user');
         this.onUserIsLogin(false);
       }
     });
   }
 
   createUserByEmail(email: string, password: string, nameUser: string = '', errorHandleFunction: any) {
-    console.log(email + ' : ' + password + ' : ' + nameUser);
     const userData = {
       name: nameUser,
       avatar: defaultAvatar,
@@ -85,7 +82,6 @@ export class Database {
       .auth()
       .signInWithPopup(provider)
       .then((result) => {
-        console.log('createUserByGoogle => result:', result);
 
         const profile: any = result.additionalUserInfo.profile;
         const uid = result.user.uid;
@@ -274,10 +270,7 @@ export class Database {
     this.firebase
       .auth()
       .signOut()
-      .then(function() {
-        console.log('Signout Succesfull');
-      }, function(error) {
-        console.log('Signout Failed');
+      .then(function() {}, function(error) {
         console.log(error.code);
         console.log(error.message);
       });
@@ -292,7 +285,6 @@ export class Database {
       .once('value')
       .then((snapshot) => {
         const key = Object.keys(snapshot.val());
-        console.log(key, snapshot.val()[`${key}`]);
 
         const data = {
           name: snapshot.val()[`${key}`].name,
@@ -303,7 +295,6 @@ export class Database {
         handlerFunc(data);
       })
       .catch((error) => {
-        console.log('Error retrieving user data');
         console.log(error.code);
         console.log(error.message);
         if (errorFunc) {
@@ -689,7 +680,6 @@ export class Database {
       .ref('Groups')
       .on('child_added', snapshot => {
         const userList = snapshot.val().userList;
-        // console.log('countGroupsInvite', userList);
         Object.keys(userList).forEach(user => {
           if (user === this.uid && userList[user].state !== 'approve') {
             setNotificationMark(TypeOfNotifications.Group, 1);
@@ -854,8 +844,6 @@ export class Database {
               renderContact(userData);
             }
           });
-      } else {
-        console.log('No Contacts');
       }
     };
   }
@@ -874,7 +862,6 @@ export class Database {
   }
 
   userInfoListener(userHandler: (snapshot: any) => void, errorHandler?: (message: string) => void): void {
-    console.log('UserInfoListener ...');
     this.firebase.database()
       .ref(`User/${this.uid}`)
       .on('child_changed', userHandler,
@@ -938,8 +925,6 @@ export class Database {
       .remove(error => {
         if (error) {
           console.log(error.message);
-        } else {
-          console.log('User deleted');
         }
       });
 
@@ -1261,8 +1246,8 @@ export class Database {
       .catch(error => {
         console.log('Error: ' + error.code);
       });
-    
-    userRef.child(`${this.uid}/transactionList/${transID}/state`)  
+
+    userRef.child(`${this.uid}/transactionList/${transID}/state`)
     .set(state)
       .catch(error => {
         console.log('Error: ' + error.code);
@@ -1283,7 +1268,7 @@ export class Database {
   }
 
   getTransInfoModal(transID: string, groupID: string, renderGroupTitle: any, renderUser: any, renderOwner: any) {
-    
+
     this.firebase.database().ref(`Transactions/${transID}/`)
       .once('value', (snapshot) => {
         const trans: any = snapshot.val();
@@ -1327,15 +1312,15 @@ export class Database {
                         renderOwner(snapshot.val());
                     }, (error: { code: string; }) => {
                       console.log('Error: ' + error.code);
-                    });                  
+                    });
                 });
             });
-      },(error: { code: string; }) => {
+      }, (error: { code: string; }) => {
         console.log('Error: ' + error.code);
       });
   }
 
-  editTransaction = (editData: any, transID: string, trans: any, renderWrapper: any, renderTransaction: any, renderUser: any) => {
+  editTransaction = (editData: any, transID: string, trans: any, renderTransaction: any, renderUser: any) => {
     const base = this.firebase.database();
     const userRef = base.ref('User');
     const transRef = base.ref('Transactions');
@@ -1370,8 +1355,6 @@ export class Database {
           .remove(error => {
             if (error) {
               console.log(error.message);
-            } else {
-              console.log('Delete user');
             }
           });
 
@@ -1379,17 +1362,12 @@ export class Database {
           .remove(error => {
             if (error) {
               console.log(error.message);
-            } else {
-              console.log('Delete transID');
             }
           });
       }
     });
 
     setTimeout(() => {
-      const transaction: HTMLElement = document.getElementById(transID);
-      transaction.remove();
-      renderWrapper(transID);
       base.ref(`Transactions/${transID}`)
       .once('value', (snapshot) => {
         const newTrans = snapshot.val();
@@ -1420,7 +1398,7 @@ export class Database {
               });
             });
         });
-      })
+      });
     }, 500);
   }
 
@@ -1438,8 +1416,6 @@ export class Database {
             .catch(error => {
               if (error) {
                 console.log(error.message);
-              } else {
-                console.log('Удаление из списка трназакций у юзера');
               }
             });
         });
@@ -1450,8 +1426,6 @@ export class Database {
       .catch(error => {
         if (error) {
           console.log(error.message);
-        } else {
-          console.log('Удаление из списка трназакций');
         }
       });
 
@@ -1460,8 +1434,6 @@ export class Database {
       .catch(error => {
         if (error) {
           console.log(error.message);
-        } else {
-          console.log('Удаление из списка трназакций у хозяина');
         }
       });
 
@@ -1472,11 +1444,7 @@ export class Database {
         return list;
       })
       .catch(error => {
-        if (error) {
-          console.log(error.message);
-        } else {
-          console.log('Удаление из списка трназакций в группе');
-        }
+        console.log(error.message);
       });
   }
 
@@ -1736,7 +1704,6 @@ export class Database {
   }
 
   getBalanceForUserTotal(userID: string, funcForRender: (balance: number, currency: string) => void, errorHandler?: (message: string) => void) {
-    console.log('getBalanceForUserTotal ...');
     const base = this.firebase.database();
     let balance: number = 0;
     base.ref(`User/${userID}`)
@@ -1814,70 +1781,40 @@ export class Database {
   }
 
   createBasicTables() {
-    //   // THEMES
-    //   const themeData1 = {
-    //     name: 'Light',
-    //   };
-    //   const themeData2 = {
-    //     name: 'Dark',
-    //   };
-    //   const themeBase1 = firebase.database().ref(`Theme/Light`);
-    //   const themeBase2 = firebase.database().ref(`Theme/Dark`);
-    //   themeBase1.set(themeData1);
-    //   themeBase2.set(themeData2);
-    //
+      // THEMES
+      const themeData1 = {
+        name: 'Light',
+      };
+      const themeData2 = {
+        name: 'Dark',
+      };
+      const themeBase1 = firebase.database().ref(`Theme/Light`);
+      const themeBase2 = firebase.database().ref(`Theme/Dark`);
+      themeBase1.set(themeData1);
+      themeBase2.set(themeData2);
+    
     //  CURRENCY
-    // const currencyArray = [
-    //   {
-    //     code: 'USD',
-    //     name: 'United States Dollar',
-    //   },
-    //   {
-    //     code: 'EUR',
-    //     name: 'Euro',
-    //   },
-    //   {
-    //     code: 'BYN',
-    //     name: 'Belarusian Ruble',
-    //   },
-    //   {
-    //     code: 'RUB',
-    //     name: 'Russian Ruble',
-    //   },
-    // ];
-    // currencyArray.forEach(cur => {
-    //   this.firebase.database()
-    //     .ref(`Currency/${cur.code}`)
-    //     .set({ name: cur.name })
-    //     .catch(error => {
-    //       console.log(error);
-    //     });
-    // });
+      Currencies.getCurrenciesList(this.addCurrencyToBase);
 
-    // Currencies.getCurrenciesList(this.addCurrencyToBase);
-
-
-    //   //
-    //   // LANGUAGE
-    //   const lang1 = {
-    //     name: 'ENG',
-    //   };
-    //   const lang2 = {
-    //     name: 'RU',
-    //   };
-    //   const lang3 = {
-    //     name: 'BEL',
-    //   };
-    //   const langBase1 = firebase.database().ref(`Language/ENG`);
-    //   const langBase2 = firebase.database().ref(`Language/RU`);
-    //   const langBase3 = firebase.database().ref(`Language/BEL`);
-    //   langBase1.set(lang1);
-    //   langBase2.set(lang2);
-    //   langBase3.set(lang3);
+      // LANGUAGE
+      const lang1 = {
+        name: 'ENG',
+      };
+      const lang2 = {
+        name: 'RU',
+      };
+      const lang3 = {
+        name: 'BEL',
+      };
+      const langBase1 = firebase.database().ref(`Language/ENG`);
+      const langBase2 = firebase.database().ref(`Language/RU`);
+      const langBase3 = firebase.database().ref(`Language/BEL`);
+      langBase1.set(lang1);
+      langBase2.set(lang2);
+      langBase3.set(lang3);
   }
 
   addCurrencyToBase = (data: any): void => {
-    console.log(data);
     const keys = Object.keys(data);
 
     keys.forEach(key => {
