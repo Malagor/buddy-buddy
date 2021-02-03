@@ -436,6 +436,8 @@ export class MyGroups extends Page {
   }
 
   addModalUserData = (data: any) => {
+    console.log('data', data);
+    
     const thisUser = data.thisUid;
     const userId = data.userId;
     const author = data.dataGroup.author;
@@ -445,7 +447,8 @@ export class MyGroups extends Page {
     const divModalContent = document.getElementById('modalContent');
     const dataForBalanceInModalCard = {
       groupId: data.groupId,
-      userId: data.userId
+      userId: data.userId,
+      thisUid: data.thisUid
     };
     let isBtmForDeleteUser = false;
 

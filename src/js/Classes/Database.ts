@@ -517,6 +517,24 @@ export class Database {
     });
   }
 
+  getBalanceForUser(data: any, fn) {
+    const { userId, groupId, thisUid } = data;
+    const base = this.firebase.database();
+
+    base.ref(`User/${thisUid}/currency`)
+    .once('value', (snapshot) => {
+      const curr = snapshot.val();
+
+      Currencies.getCurrencyRateByCode(curr).then(coefficientCurr => {
+        const getDataBalance = (data: any) => {
+          data.currency = curr
+          data.balance = coefficientCurr *  data.balance
+          fn(data)
+        }
+        this.getBalanceForUserInGroup(userId, groupId, getDataBalance)
+      });
+    });
+  }
   addCurrentGroup(data: any) {
     const userIdAuthor: string = data.userId;
     const groupKey = data.groupKey;
@@ -1675,7 +1693,7 @@ export class Database {
       .once('value', snapshot => snapshot);
   }
 
-  getBalanceForUserInGroup(userId: string, groupId: string, funcForRender: (data: any) => void, errorHandler?: (message: string) => void) {
+  getBalanceForUserInGroup(userId: string, groupId: string, funcForRender: (data: any) => void, errorHandler?: (message: string) => void, ) {
     const base = this.firebase.database();
     let balance: number = 0;
     base.ref(`Groups/${groupId}/`)
