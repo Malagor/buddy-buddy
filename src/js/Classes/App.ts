@@ -272,7 +272,7 @@ export class App {
   onAddInfoForModalDetailGroup(groupId: string, userId: string) {
     this.database.getGroup(groupId, this.groups.addInfoForModalDetailGroup, this.groups.addModalUserData);
     this.database.getBalanceForGroup(groupId, userId, this.groups.addBalanceForModalGroupDetail);
-    this.database.getDataForGraphGroupBalance(groupId, this.groups.renderChart());
+    this.database.getDataForGraphGroupBalance(groupId, this.groups.renderChart(), userId);
   }
 
   addBalanceInGroupPage(groupId: string, userId: string) {

@@ -50,7 +50,7 @@ export class Groups extends Page {
           </div>
           <div class="block__main">
             <div id="contentGroup" class="container container-group">
-              <div id="divForListOpenGroups" class="block__wrapper-card">
+              <div id="divForListOpenGroups">
                 <div class="card-body data-is-not">
                   <h5 class="card-title">${i18n._('No groups')}</h5>
                   <p class="card-text">${i18n._('Would')}</p>
@@ -170,7 +170,7 @@ export class Groups extends Page {
     }
 
     return `
-      <div id=${data.groupKey} class="card mb-3 card-group">
+      <div id=${data.groupKey} class="card mb-3 card-group block--width-85-md">
         <div class="row g-0 col">
           <div class="col-3 card-group__box-logo-group">
             <img class="card-group__img-avatar" src="${data.dataGroup.icon ? data.dataGroup.icon : defaultGroupLogo}" alt="icon-group">
@@ -770,9 +770,9 @@ export class Groups extends Page {
 
     const divForBalance = divCardUser.querySelector('.modal-detail__balance');
     if (data.balance > 0) {
-      divForBalance.classList.add('text-danger');
-    } else if (data.balance < 0) {
       divForBalance.classList.add('text-success');
+    } else if (data.balance < 0) {
+      divForBalance.classList.add('text-danger');
     }
   }
 
