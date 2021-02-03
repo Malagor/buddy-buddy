@@ -59,7 +59,7 @@ export const messagesRU = {
   'Create New Group': 'Создать новую группу',
   'Title*': 'Название*',
   'Please input title': ' Введите название.',
-  'Make the group current': 'Сдулать группу по умолчанию',
+  'Make the group current': 'Сделать группу по умолчанию',
   'Members': 'Участники',
   'Group Members': 'Участники группы',
   'Description': 'Описание',
