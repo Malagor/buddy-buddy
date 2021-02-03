@@ -152,16 +152,15 @@ export class App {
   }
 
   onSignOut(): any {
-    this.deleteHandlers();
-    this.database.signOut();
-    this.database.deleteUserInfoListener(this.userHandler);
-    this.database.init();
+    // this.deleteHandlers();
+    // this.database.signOut();
+    // this.database.deleteUserInfoListener(this.userHandler);
+    // this.database.init();
 
     // Alternative decision
-
-    // window.localStorage.clear();
-    // window.indexedDB.deleteDatabase('firebaseLocalStorageDb');
-    // window.location.reload();
+    window.localStorage.clear();
+    window.indexedDB.deleteDatabase('firebaseLocalStorageDb');
+    window.location.reload();
   }
 
   onSignIn(email: string, password: string, name: string): void {
