@@ -5,11 +5,10 @@ html {
   min-height: 100vh;
   font-size: 14px;
 
-@include tablets {
+  @include tablets {
     font-size: 15px;
   }
-
-@include laptop {
+  @include laptop {
     font-size: 16px;
   }
 }
@@ -31,13 +30,11 @@ body {
 .sidebar {
   position: fixed;
   top: 0;
-
-/* rtl:raw:
+  /* rtl:raw:
   right: 0;
   */
   bottom: 0;
-
-/* rtl:remove */
+  /* rtl:remove */
   left: 0;
   z-index: 100; /* Behind the navbar */
   padding: rem(53px) 0 0; /* Height of navbar */

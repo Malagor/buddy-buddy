@@ -505,6 +505,5 @@ export class App {
   onDeleteContact(contactId: string): void {
     this.database.deleteUserFromContactsList(contactId);
     this.database.deleteUserFromContactsList(this.database.uid, contactId);
-    this.notifications.decreaseNotificationMark(TypeOfNotifications.Contact);
   }
 }
