@@ -7,8 +7,8 @@ export const renderDetailsHTML = (trans: any, date: any, styles: any, ) => {
    <div class="details__info modal-body">
 
      <div class="details__date d-flex row">
-       <div class="col-5 col-sm-4">Дата:</div> 
-       <div class="col-7 col-sm-8 d-flex">   
+       <div class="col-5 col-sm-4">Дата:</div>
+       <div class="col-7 col-sm-8 d-flex">
         <div class="details__day">${date.localeDay}</div>
         <div class="details__time">${date.localeTime}</div>
        </div>
@@ -27,7 +27,7 @@ export const renderDetailsHTML = (trans: any, date: any, styles: any, ) => {
        <div class="col-7 col-sm-8">
           <span class="fs-5 ${styles.colorText}">${styles.cost}</span>&nbsp;
           <span class="fs-5 ${styles.colorText}">${trans.currency}</span>
-       </div>  
+       </div>
      </div>
 
      <div class="${styles.commentDisplay} details__comment-box d-flex row">
@@ -41,7 +41,7 @@ export const renderDetailsHTML = (trans: any, date: any, styles: any, ) => {
      </div>
 
      <div class="${styles.selectDisplay} details__state-wrapper d-flex row">
-       <div class="col-5 col-sm-4">Статус:</div> 
+       <div class="col-5 col-sm-4">Статус:</div>
        <div class="col-5 col-sm-5 details__state-wrap">
           <select class="details__state form-select" aria-label="Default select example">
             <option value="pending">ожидание</option>
@@ -69,7 +69,7 @@ export const renderDetailsHTML = (trans: any, date: any, styles: any, ) => {
    </div>
    <div class="modal-footer ${styles.btnSaveDisplay}">
      <button type="button" class="details__delete btn btn-danger">Удалить</button>
-     <button type="button" class="details__save btn btn-primary">Сохранить</button>
+     <button type="button" class="details__save btn btn-primary btn-primary-alternate">Сохранить</button>
    </div>
  `;
 };

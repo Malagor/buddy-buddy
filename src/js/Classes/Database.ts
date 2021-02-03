@@ -1246,8 +1246,8 @@ export class Database {
       .catch(error => {
         console.log('Error: ' + error.code);
       });
-    
-    userRef.child(`${this.uid}/transactionList/${transID}/state`)  
+
+    userRef.child(`${this.uid}/transactionList/${transID}/state`)
     .set(state)
       .catch(error => {
         console.log('Error: ' + error.code);
@@ -1268,7 +1268,7 @@ export class Database {
   }
 
   getTransInfoModal(transID: string, groupID: string, renderGroupTitle: any, renderUser: any, renderOwner: any) {
-    
+
     this.firebase.database().ref(`Transactions/${transID}/`)
       .once('value', (snapshot) => {
         const trans: any = snapshot.val();
@@ -1312,15 +1312,15 @@ export class Database {
                         renderOwner(snapshot.val());
                     }, (error: { code: string; }) => {
                       console.log('Error: ' + error.code);
-                    });                  
+                    });
                 });
             });
-      },(error: { code: string; }) => {
+      }, (error: { code: string; }) => {
         console.log('Error: ' + error.code);
       });
   }
 
-  editTransaction = (editData: any, transID: string, trans: any, renderWrapper: any, renderTransaction: any, renderUser: any) => {
+  editTransaction = (editData: any, transID: string, trans: any, renderTransaction: any, renderUser: any) => {
     const base = this.firebase.database();
     const userRef = base.ref('User');
     const transRef = base.ref('Transactions');
@@ -1368,9 +1368,6 @@ export class Database {
     });
 
     setTimeout(() => {
-      const transaction: HTMLElement = document.getElementById(transID);
-      transaction.remove();
-      renderWrapper(transID);
       base.ref(`Transactions/${transID}`)
       .once('value', (snapshot) => {
         const newTrans = snapshot.val();
@@ -1401,7 +1398,7 @@ export class Database {
               });
             });
         });
-      })
+      });
     }, 500);
   }
 
