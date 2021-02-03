@@ -1580,7 +1580,7 @@ export class Database {
       });
   }
 
-  getDataForGraphGroupBalance(groupId: string, funcHandler: (graphData: any) => void, errorHandler?: (message: string) => void) {
+  getDataForGraphGroupBalance(groupId: string, funcHandler: (graphData: any) => void, uid: string, errorHandler?: (message: string) => void) {
     this.firebase
       .database()
       .ref(`Groups/${groupId}`)
@@ -1605,7 +1605,7 @@ export class Database {
                 avatar: userInfo.val().avatar,
                 userBalance: 0,
               };
-              if (userInfo.key === this.uid) {
+              if (userInfo.key === uid) {
                 groupData.currency = userInfo.val().currency;
               }
             });
@@ -1791,6 +1791,14 @@ export class Database {
       .once('value', async snapshot => {
         const data = snapshot.val();
         callback(innerCallback, data);
+      });
+  }
+
+  getUserTheme(callback: (theme: string) => void): void {
+    this.firebase.database()
+      .ref(`User/${this.uid}/theme`)
+      .once('value', async snapshot => {
+        callback(snapshot.val().toLowerCase());
       });
   }
 

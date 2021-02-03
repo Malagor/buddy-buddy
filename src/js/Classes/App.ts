@@ -65,7 +65,8 @@ export class App {
 
   async isUserLogin(state: boolean, uid?: string) {
     if (state) {
-
+      
+      await this.getUserTheme();
       await this.getUserLanguage();
 
       // user signin
@@ -135,8 +136,6 @@ export class App {
       this.helpPage = Help.create('.main');
 
       this.loadCurrentPage();
-      this.changeTheme();
-
     } else {
       this.authPage = AuthPage.create('#app');
       this.authPage.onLoadSignInPage = this.loadSignInPage.bind(this);
@@ -195,7 +194,11 @@ export class App {
     localStorage.setItem('currentPage', name);
   }
 
-  changeTheme(theme: string = 'light'): void {
+  getUserTheme() {
+    this.database.getUserTheme(this.changeTheme);
+  }
+
+  changeTheme(theme: string): void {
     const bodyClassList: any = document.querySelector('body').classList;
     if (!bodyClassList.length) {
       bodyClassList.add(`theme--${theme}`);

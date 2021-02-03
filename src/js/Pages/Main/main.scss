@@ -1,5 +1,8 @@
 @import "./src/scss/_misc/mixins";
 @import "../../../scss/_misc/variables.scss";
+@import "~bootstrap/scss/functions";
+@import "~bootstrap/scss/variables";
+@import "~bootstrap/scss/mixins";
 
 .main__balance {
   margin: 2rem 0 0;
@@ -226,6 +229,7 @@
   align-items: center;
   height: rem(20px);
   margin-bottom: 0;
+  line-height: 1rem;
   line-height: 0.8rem;
 
   span {
@@ -256,6 +260,8 @@
 }
 
 .slider__current-group {
+  position: absolute;
+  bottom: 0.2rem;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -412,12 +418,12 @@
 
 .plus-cost,
 p.plus-cost > span {
-  color: rgba(0, 128, 0, 1);
+  color: $success;
 }
 
 .minus-cost,
 p.minus-cost > span {
-  color: rgba(255, 0, 0, 1);
+  color: $danger;
 }
 
 .card-trans__main__loc {

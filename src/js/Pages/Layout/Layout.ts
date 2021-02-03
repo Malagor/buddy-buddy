@@ -52,7 +52,7 @@ export class Layout extends Page {
           <hr>
           <ul class="nav flex-column">
               <li class="nav-item">
-                <a class="nav-link sidebarMainLink active" href="#">
+                <a class="nav-link sidebarMainLink" href="#">
                   <i class="material-icons">house</i><span class="nav-link__text">${i18n._('mainPage')}</span>
                 </a>
               </li>
@@ -152,7 +152,7 @@ export class Layout extends Page {
       <div class="footer__content row align-items-center">
         <div class="footer__title col-3">
           <div class="nav-item">
-            <a class="nav-link sidebarMainLink active" aria-current="page" href="#">
+            <a class="nav-link sidebarMainLink" aria-current="page" href="#">
               <i class="material-icons">house</i><span class="d-none d-sm-block nav-link__text">${i18n._('mainPage')}</span>
             </a>
           </div>
@@ -227,6 +227,7 @@ export class Layout extends Page {
 
   protected events(): void {
     const myModal = document.getElementById('singOutModal');
+    document.querySelectorAll(`.sidebar${localStorage.getItem('currentPage') || 'Main'}Link`).forEach(item => item.classList.add('active'));
 
     const signOutModal = new Modal(myModal);
 

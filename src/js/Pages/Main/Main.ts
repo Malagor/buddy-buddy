@@ -66,7 +66,7 @@ export class Main extends Page {
         <img src="${groupItem.icon ? groupItem.icon : defaultGroupIcon}" alt="group icon" width="95%">
         <div class="item__img-title-wrapper">
           <p class="slider__item__title">
-            <span>${groupItem.title.length > 10 ? groupItem.title.slice(0, 10).trim() + '...' : groupItem.title}</span>
+            <span>${groupItem.title.length > 21 ? groupItem.title.slice(0, 21).trim() + '...' : groupItem.title}</span>
           </p>
           ${currentGroupHTML}
         </div>
@@ -190,7 +190,7 @@ export class Main extends Page {
     if (!data.length) {
 
       document.querySelector('.main__group-transactions').innerHTML = `
-      <div class="card main__card-no-trans">
+      <div class="card main__card-no-trans mx-auto">
         <div class="card-body d-flex align-items-center flex-column justify-content-center">
           <h6 class="card-title m-0 main--font-size">${i18n._('No transactions yet')}.</h6>
         </div>
