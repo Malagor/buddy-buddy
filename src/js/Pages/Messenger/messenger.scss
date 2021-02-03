@@ -5,11 +5,10 @@
 .message {
   display: grid;
   align-items: center;
-  font-size: 0.8rem;
-  background: #f1f1f1;
-
   min-width: 55%;
   max-width: 85%;
+  font-size: 0.8rem;
+  background: #f1f1f1;
 
   grid-gap: 0.5rem;
   grid-template-areas: "avatar name time" "message message button";
@@ -17,8 +16,8 @@
   grid-template-rows: auto auto;
 
   &--own {
-    background: $primary-alternate-hover;
     color: $color-white;
+    background: $primary-alternate-hover;
 
     grid-template-areas: "avatar name time" "message message message";
   }
