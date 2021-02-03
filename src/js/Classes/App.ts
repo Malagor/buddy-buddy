@@ -334,6 +334,7 @@ export class App {
   }
 
   onHelpPage() {
+    this.setCurrentPage('Help');
     this.deleteHandlers();
     this.helpPage.render();
   }

@@ -7,3 +7,4 @@ import './Groups/groups.scss';
 import './NewTransaction/newTransaction.scss';
 import './Messenger/messenger.scss';
 import './Contacts/contacs.scss';
+import './Help/Help.scss';
