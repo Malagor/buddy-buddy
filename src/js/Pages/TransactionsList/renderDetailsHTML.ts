@@ -69,7 +69,7 @@ export const renderDetailsHTML = (trans: any, date: any, styles: any, ) => {
    </div>
    <div class="modal-footer ${styles.btnSaveDisplay}">
      <button type="button" class="details__delete btn btn-danger">Удалить</button>
-     <button type="button" class="details__save btn btn-primary">Сохранить</button>
+     <button type="button" class="details__save btn btn-primary btn-primary-alternate">Сохранить</button>
    </div>
  `;
 };
