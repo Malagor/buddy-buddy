@@ -1,3 +1,4 @@
+
 import { i18n } from '@lingui/core';
 import { messagesRU } from '../../languages/RU/messages';
 import { messagesENG } from '../../languages/ENG/messages';
@@ -14,7 +15,7 @@ export const renderTransListHTML = () => {
    <div class="block__wrapper">
      <div class="block__content">
        <div class="translist__header translist__header--main">
-         <p class="block__title">${i18n._('Transactions list')}</p>
+         <p class="block__title">${i18n._('Transactions List')}</p>
        </div>
 
        <div class="block__groups block--width-85">

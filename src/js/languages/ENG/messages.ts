@@ -49,7 +49,7 @@ export const messagesENG = {
   'My last transactions': 'My last transactions',
 
   // Transactions
-  'Transactions List' : 'Transactions List',
+  'Transactions List' : 'Transactions list',
   'All' : 'All',
   'New transaction': 'New transaction',
   'Add check': 'Add check',
@@ -75,6 +75,7 @@ export const messagesENG = {
   'No groups': 'No groups yet.',
   'Would': 'Would you like to create the first group?',
   'Closed Group': 'Closed Groups',
+  'Close group': 'Close group',
   'New group': 'New group',
   'Balance': 'Balance',
   'Create New Group': 'Create New Group',
@@ -85,8 +86,8 @@ export const messagesENG = {
   'Group Members': 'Group Members',
   'Description': 'Description',
   'Group details': 'Group details',
-  'Create date:': 'Create date:',
-  'Close date': 'Close date:',
+  'Create date': 'Create date',
+  'Close date': 'Close date',
   'group is active': 'group is active',
   'No description': 'No description...',
   'Participants': 'Participants',
@@ -187,4 +188,9 @@ export const messagesENG = {
   'When you sent some message, your recipient will receive a notification in the form of a marker in the menu.': 'When you sent some message, your recipient will receive a notification in the form of a marker in the menu.',
   'Reply to message': 'Reply to message',
   'For a quick reply to a message, you can press the corresponding "Answer" button in the message, the recipient will be added in the corresponding field automatically. All that remains is to write a message and send.': 'For a quick reply to a message, you can press the corresponding "Answer" button in the message, the recipient will be added in the corresponding field automatically. All that remains is to write a message and send.',
+  
+  
+  'User is missing': 'User is missing',
+  'The user is in the group': 'The user is in the group',
+  'The user account was entered incorrectly, for example: @account': 'The user account was entered incorrectly, for example: @account'
 };
