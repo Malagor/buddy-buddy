@@ -444,3 +444,11 @@ p.minus-cost > span {
 .main-footer {
   height: 2rem;
 }
+
+.theme--dark table {
+  color: $color-white;  
+}
+
+.theme--dark .card-title {
+  color: $color-text;  
+}

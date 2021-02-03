@@ -9,6 +9,16 @@
   background: $ultra-light;
 }
 
+.theme--dark textarea {
+  background: $ultra-light;
+}
+
+.theme--dark .modal-content {
+  background: $super-dark;
+  color: $color-white;
+  border-color: $middle-dark;
+}
+
 .block__wrapper {
   position: relative;
   display: flex;
