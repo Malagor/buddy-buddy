@@ -14,7 +14,7 @@ i18n.activate(locale);
 
 const logo = require('../../../assets/icons/team.svg');
 
-export class RegistrationPage extends Page {
+export class Registration extends Page {
   onSignIn: any;
   goToLoginPage: any;
   onGoogleReg: any;
@@ -24,7 +24,7 @@ export class RegistrationPage extends Page {
   }
 
   static create(element: string) {
-    return new RegistrationPage(element);
+    return new Registration(element);
   }
 
   public render(): void {

@@ -1,10 +1,10 @@
 import { Database } from './Database';
 import { Layout } from '../Pages/Layout/Layout';
 import { AuthPage } from '../Pages/AuthPage/AuthPage';
-import { RegistrationPage } from '../Pages/RegistrationPage/RegistrationPage';
+import { Registration } from '../Pages/Registration/Registration';
 import { Main } from '../Pages/Main/Main';
-import { MyGroups } from '../Pages/MyGroups/MyGroups';
-import { AccountPage } from '../Pages/AccountPage/AccountPage';
+import { Groups } from '../Pages/Groups/Groups';
+import { Account } from '../Pages/Account/Account';
 
 import {
   IGroupDataAll,
@@ -34,10 +34,10 @@ export class App {
   private database: Database;
   private layout: Layout;
   private authPage: AuthPage;
-  private regPage: RegistrationPage;
+  private regPage: Registration;
   private mainPage: Main;
-  private groups: MyGroups;
-  private accountPage: AccountPage;
+  private groups: Groups;
+  private accountPage: Account;
   private transactionsList: TransactionsList;
   private notifications: Notifications;
   private messenger: Messenger;
@@ -87,7 +87,7 @@ export class App {
       this.userHandler = this.database.userHandler(this.layout.setSidebarData);
       this.database.userInfoListener(this.userHandler);
 
-      this.accountPage = AccountPage.create('.main');
+      this.accountPage = Account.create('.main');
       this.accountPage.updateInfo = this.updateOnAccountPage.bind(this);
       this.accountPage.changeTheme = this.changeTheme.bind(this);
       this.accountPage.checkUserID = this.checkUserID.bind(this);
@@ -98,7 +98,7 @@ export class App {
 
       this.database.getUserInfo(uid, [this.layout.setSidebarData]);
 
-      this.groups = MyGroups.create('.main');
+      this.groups = Groups.create('.main');
       this.groups.onCreateNewGroup = this.onCreateNewGroup.bind(this);
 
       this.groups.onAddMember = this.onAddGroupMember.bind(this);
@@ -143,7 +143,7 @@ export class App {
       this.authPage.onGoogleReg = this.onGoogleReg.bind(this);
       this.authPage.onLogin = this.onLogin.bind(this);
 
-      this.regPage = RegistrationPage.create('#app');
+      this.regPage = Registration.create('#app');
       this.regPage.onSignIn = this.onSignIn.bind(this);
       this.regPage.goToLoginPage = this.loadLoginPage.bind(this);
       this.regPage.onGoogleReg = this.onGoogleReg.bind(this);

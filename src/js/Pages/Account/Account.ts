@@ -3,7 +3,7 @@ import { getFormData } from '../../Util/getFormData';
 import { i18n } from '@lingui/core';
 import { saveLanguage } from '../../Util/saveLoadLanguage';
 
-export class AccountPage extends Page {
+export class Account extends Page {
   updateInfo: any;
   changeTheme: any;
   checkUserID: any;
@@ -11,8 +11,8 @@ export class AccountPage extends Page {
   locCounter: number = 0;
   checkObj: { [key: string]: number } = {};
 
-  static create(element: string): AccountPage {
-    return new AccountPage(element);
+  static create(element: string): Account {
+    return new Account(element);
   }
 
   renderLangOrTheme(data: any, currentOption: string): void {

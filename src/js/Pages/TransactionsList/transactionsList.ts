@@ -1,5 +1,5 @@
 import { Page } from '../../Classes/Page';
-import { NewTransaction } from '../newTransaction/newTransaction';
+import { NewTransaction } from '../NewTransaction/NewTransaction';
 import { Modal } from 'bootstrap';
 import { getDate } from './getDate';
 import { editSum } from './editSum';

@@ -1,9 +1,9 @@
 import './Layout/layout.scss';
 import './AuthPage/authPage.scss';
 import './Main/main.scss';
-import './AccountPage/AccountPage.scss';
+import './Account/account.scss';
 import './TransactionsList/transactionsList.scss';
-import './MyGroups/myGroups.scss';
-import './newTransaction/newTransaction.scss';
+import './Groups/groups.scss';
+import './NewTransaction/newTransaction.scss';
 import './Messenger/messenger.scss';
 import './Contacts/contacs.scss';

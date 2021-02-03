@@ -19,7 +19,7 @@ i18n.activate(locale);
 
 const defaultGroupLogo = require('../../../assets/images/default-group-logo.png');
 
-export class MyGroups extends Page {
+export class Groups extends Page {
   onCreateNewGroup: any;
   closeGroup: any;
   onAddMember: any;
@@ -32,8 +32,8 @@ export class MyGroups extends Page {
   changeUserStatusInGroup: any;
 
 
-  static create(el: string): MyGroups {
-    const page = new MyGroups(el);
+  static create(el: string): Groups {
+    const page = new Groups(el);
     page.addMembersGroup = page.addMembersGroup.bind(page);
     page.createGroupList = page.createGroupList.bind(page);
     return page;
