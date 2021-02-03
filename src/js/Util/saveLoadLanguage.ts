@@ -4,7 +4,7 @@ export const saveLanguage = (languageCode: string): void => {
 
 export const loadLanguage = (): string => {
   try {
-    return localStorage.getItem('languageCode');
+    return localStorage.getItem('languageCode') || 'ENG';
   } catch (e) {
     console.log(e.type);
     console.log(e.message);

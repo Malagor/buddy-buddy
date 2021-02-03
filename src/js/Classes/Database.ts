@@ -983,6 +983,20 @@ export class Database {
     callback(values, currentCurrency);
   }
 
+  async getCurrentLang(uid: string, callback: (lang: string) => void) {
+    await this.firebase
+      .database()
+      .ref(`User/${uid}/language`)
+      .once('value', (snapshot) => {
+        const lang: string = snapshot.val();
+        callback(lang);
+      }, (error: { code: string; message: any }) => {
+        console.log('Error:\n ' + error.code);
+        console.log(error.message);
+      });
+  }
+
+  // запросы по транзакциям
   getCurrencyList(renderCurrencyList: any): void {
     this.firebase
       .database()

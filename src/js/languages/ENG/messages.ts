@@ -34,6 +34,20 @@ export const messagesENG = {
   'Pending': 'Pending',
   'Add': 'Add',
 
+  // Account & Main
+  'Is occupied': 'Is occupied',
+  'Currency': 'Currency',
+  'Language': 'Language',
+  'Theme': 'Theme',
+  'Username': 'Username',
+
+  'Current': 'Current',
+  'No groups yet': 'No groups yet',
+  'No transactions yet': 'No transactions yet',
+  'Rate': 'Rate',
+  'My groups': 'My groups',
+  'My last transactions': 'My last transactions',
+
   // Transactions
   'Transactions List' : 'Transactions List',
   'All' : 'All',

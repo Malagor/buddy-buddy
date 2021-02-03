@@ -34,6 +34,21 @@ export const messagesRU = {
   'Pending': 'В ожидании',
   'Add': 'Добавить',
 
+  // Account & Main
+  'Is occupied': 'Занято',
+  'Currency': 'Валюта',
+  'Language': 'Язык',
+  'Theme': 'Тема',
+  'Username': 'Имя пользователя',
+
+  'Current': 'Текущая',
+  'No groups yet': 'Нет групп',
+  'No transactions yet': 'Нет транзакций',
+  'Rate': 'Котировка',
+  'My groups': 'Мои группы',
+  'My last transactions': 'Мои последние транзакции',
+  'Group': 'Группа',
+
   // Group
   'Groups': 'Группы',
   'No groups': 'Еще нет групп',

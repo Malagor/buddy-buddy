@@ -13,6 +13,9 @@ import { INewMessage, Messenger } from '../Pages/Messenger/Messenger';
 import { Contacts, ISearchUserData } from '../Pages/Contacts/Contacts';
 import { Currencies } from './Currencies';
 
+import { i18n } from '@lingui/core';
+
+
 export interface IHandlers {
   messages: any;
   groups: any;
@@ -53,8 +56,11 @@ export class App {
     // this.database.createBasicTables();
   }
 
-  isUserLogin(state: boolean, uid?: string) {
+  async isUserLogin(state: boolean, uid?: string) {
     if (state) {
+
+      await this.getUserLanguage();
+      
       // user signin
       this.layout = Layout.create('#app');
       this.layout.render();
@@ -80,6 +86,7 @@ export class App {
       this.accountPage.updateInfo = this.updateOnAccountPage.bind(this);
       this.accountPage.changeTheme = this.changeTheme.bind(this);
       this.accountPage.checkUserID = this.checkUserID.bind(this);
+      this.accountPage.onAccountPageChangeLang = this.onAccountPageChangeLang.bind(this);
 
       this.mainPage = Main.create('.main');
       this.mainPage.getBalanceForSliderGroup = this.getBalanceForSliderGroup.bind(this);
@@ -141,8 +148,14 @@ export class App {
   onSignOut(): any {
     this.deleteHandlers();
     this.database.signOut();
-    this.database.deleteUserInfoListener(this.userHandler);
+    this.database.deleteUserInfoListener(this.userHandler);    
     this.database.init();
+
+    // Alternative decision
+
+    // window.localStorage.clear();
+    // window.indexedDB.deleteDatabase('firebaseLocalStorageDb');
+    // window.location.reload();
   }
 
   onSignIn(email: string, password: string, name: string): void {
@@ -162,13 +175,22 @@ export class App {
     );
   }
 
+  setUserLanguage(lang: string) {
+    localStorage.setItem('languageCode', lang);
+    i18n.activate(lang);
+  }
+
+  async getUserLanguage() {
+    await this.database.getCurrentLang(this.database.uid, this.setUserLanguage);
+  }
+
   loadCurrentPage() {
     const currentPage: string = localStorage.getItem('currentPage') || 'Main';
     this[`on${currentPage}Page`]();
   }
 
   setCurrentPage(name: string): void {
-    localStorage.setItem('currentPage', name);
+    localStorage.setItem('currentPage', name);    
   }
 
   changeTheme(theme: string = 'light'): void {
@@ -201,6 +223,11 @@ export class App {
   updateOnAccountPage(data: any) {
     const uid: string = this.database.uid;
     this.database.updateUserInfo(uid, data);
+  }
+
+  onAccountPageChangeLang() {
+    this.accountPage.onlineChangingLang();
+    this.layout.onlineChangingLang();
   }
 
   async onAccountPage() {
