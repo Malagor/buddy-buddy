@@ -107,7 +107,7 @@ export class TransactionsList extends Page {
         this.detailsModal.show();
         this.renderOutTrans(detailsModalWrapper, transID, trans, owner, ownUID, selectState.value);
       }
-    });  
+    });
   }
 
   changeSelectState = (select: HTMLSelectElement, trans: HTMLElement, transID: string): void => {
@@ -117,10 +117,10 @@ export class TransactionsList extends Page {
     });
   }
 
-  changeCardStyle = (select:HTMLSelectElement, transaction: HTMLElement, selectValue: string) => {
+  changeCardStyle = (select: HTMLSelectElement, transaction: HTMLElement, selectValue: string) => {
     if (selectValue === 'approve') {
       transaction.classList.remove('border-success', 'border-danger');
-      select.classList.add('d-none');  
+      select.classList.add('d-none');
     } else if (selectValue === 'decline') {
       transaction.classList.remove('border-success');
       transaction.classList.add('border-danger');
@@ -164,7 +164,7 @@ export class TransactionsList extends Page {
       trans.photo = '';
     }
     wrapper.innerHTML = '';
-    
+
     const date: any = getDate(trans.date);
     const baseHTML = renderDetailsHTML(trans, date, styles);
     wrapper.insertAdjacentHTML('beforeend', baseHTML);
@@ -233,7 +233,7 @@ export class TransactionsList extends Page {
       const editData = this.getDataforEditTransaction(wrapper);
       this.onEditTransaction(editData, transID, trans);
       this.detailsModal.hide();
-      setTimeout(() => {this.changeBalance()}, 300);  
+      setTimeout(() => {this.changeBalance(); }, 300);
     });
 
     const btnDelete = wrapper.querySelector('.details__delete');
@@ -244,7 +244,7 @@ export class TransactionsList extends Page {
       const transCard = document.getElementById(transID);
       transCard.remove();
       this.onDeleteTransaction(groupID, transID);
-      this.changeBalance();   
+      this.changeBalance();
     });
   }
 
@@ -336,7 +336,7 @@ export class TransactionsList extends Page {
         member.querySelector('.details__member-state').classList.add('d-none');
         member.querySelector('.details__member-delete').innerHTML = '<i class="material-icons">add</i>';
         member.querySelector('.details__member-delete').classList.add('ms-3');
-      } 
+      }
       else {
         membersWrapper.append(member);
         member.classList.remove('details__memb--not-checked', 'justify-content-start');

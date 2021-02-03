@@ -28,13 +28,15 @@
 
 .card-group {
   width: 100%;
+  max-width: rem(740px);
   margin: auto;
   border: 2px solid rgba(0,0,0,.05);
   border-radius: .625rem;
   box-shadow: 0 3px 5px rgba(0,0,0,.25);
+  cursor: pointer;
 
   &--new-group {
-    border: 2px solid rgba(10, 226, 21, 0.50);
+    border: 2px solid $primary-alternate;
     box-shadow: 0 3px 5px rgba(0, 0, 0, 0.25);
   }
 
@@ -43,7 +45,8 @@
     margin-bottom: 0.5rem;
 
     &--current {
-      background: #a2a7a27a;
+      color: $color-white;
+      background: $primary-alternate;
       order: -1;
     }
   }
@@ -76,6 +79,12 @@
 .modal-top {
   margin: 1rem 0 0 0;
 }
+
+.modal-chart{
+  margin: 1rem 2rem 2rem 2rem;
+}
+
+
 
 .form-title {
   margin: 0;
@@ -112,7 +121,6 @@
 
 .modal-error-text{
   margin: rem(3px);
-  color: red;
 }
 
 .member {
@@ -174,9 +182,28 @@
   border: 2px solid rgba(0,0,0,.05);
   border-radius: .625rem;
   box-shadow: 0 3px 5px rgba(0,0,0,.25);
+  justify-content: space-between;
+
+  &__wrapper{
+    display: flex;
+    width: 100%;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  &__img-name {
+    display: flex;
+  }
+
+  &__name-account {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
 
   &--author{
-    background: #a2a7a27a;
+    color: $color-text;
+    background: rgba(128, 128, 128, 0.5);
   }
 
     &__img {
@@ -193,20 +220,11 @@
       margin: rem(5px);
     }
     &__button{
-      position: absolute;
-      right: 10px;
-      top: 35%;
+      margin: rem(5px);
     }
-    &__balance{
-      margin: 0 4rem 0 auto;
 
-      &--negative {
-        color: red;
-      }
-  
-      &--positive {
-        color: green;
-      }
+    &__balance{
+      text-align: end;
     } 
     
     &__button-container{
@@ -217,25 +235,32 @@
 
     &__button-confirmation{
       padding: 3px;
+      color: $color-white;
     }
 }
 
   .container-group-detail{
     width: 90%;
-    max-width: 50rem;
+    max-width: 90%;
     margin: rem(50px) auto  auto auto;  
   }
+  
+  .container-group{
+    padding: 0 rem(40px);
+  }
 
-@media(max-width: 450px) {
+@media (max-width: 450px) {
   .form-title {
     width: 60%;
   }
   .form-check-label {
     font-size: 0.7rem;
   }
-}
 
-@media (max-width: 430px) {
+  .modal-chart {
+    margin: 0.8rem 0.8rem 0.8rem; 
+  }
+
   .modal-dialog {
     max-width: 95%;
   }
@@ -257,9 +282,17 @@
       margin: rem(3px);
     }
 
+    &__balance {
+      font-size: 0.8rem;
+    }
   }
 
   .card-group {
+
+    &__img-avatar {
+      width: 3rem;
+      height: 3rem;
+    }
 
     &__title{
       font-size: rem(14px);
@@ -274,6 +307,8 @@
     &__balance {
       font-size: rem(12px);
     }
+
+
   }
 
   .card-detail {
@@ -313,6 +348,10 @@
     &__user-list {
       margin: 0.8rem;
     }
+  }
+
+  .container-group{
+    padding: 0 rem(20px);
   }
 
 }

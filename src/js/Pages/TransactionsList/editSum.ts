@@ -1,7 +1,7 @@
 export const editSum = (trans: any, wrapper: HTMLElement, membInput?: HTMLInputElement) => {
 
   const membersWrapper: HTMLElement = wrapper.querySelector('.details__members');
-  const fixedSums = membersWrapper.querySelectorAll('.fixed'); 
+  const fixedSums = membersWrapper.querySelectorAll('.fixed');
   const nonFixedSums = membersWrapper.querySelectorAll('.non-fixed');
   const btnSaveEdit = wrapper.querySelector('.details__save');
   if (nonFixedSums) {
