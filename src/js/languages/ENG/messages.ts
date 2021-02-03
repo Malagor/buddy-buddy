@@ -49,7 +49,7 @@ export const messagesENG = {
   'My last transactions': 'My last transactions',
 
   // Transactions
-  'Transactions List' : 'Transactions List',
+  'Transactions List' : 'Transactions list',
   'All' : 'All',
   'New transaction': 'New transaction',
   'Add check': 'Add check',
