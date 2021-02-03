@@ -1,13 +1,13 @@
 import { Page } from '../../Classes/Page';
 import { getFormData } from '../../Util/getFormData';
 
-export class AccountPage extends Page {
+export class Account extends Page {
   updateInfo: any;
   changeTheme: any;
   checkUserID: any;
 
-  static create(element: string): AccountPage {
-    return new AccountPage(element);
+  static create(element: string): Account {
+    return new Account(element);
   }
 
   renderLangOrTheme(data: any, currentOption: string): void {
