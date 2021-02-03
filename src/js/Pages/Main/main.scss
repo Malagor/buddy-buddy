@@ -9,19 +9,16 @@
   font-size: 1.1rem;
   text-align: end;
 
-@include phones {
+  @include phones {
     font-size: 1.35rem;
   }
-
-@include tablets {
+  @include tablets {
     font-size: 1.4rem;
   }
-
-@include laptop {
+  @include laptop {
     font-size: 1.8rem;
   }
-
-@include desktop {
+  @include desktop {
     font-size: 1.8rem;
   }
 }
@@ -30,19 +27,16 @@
 .main--font-size {
   font-size: 0.9rem;
 
-@include phones {
+  @include phones {
     font-size: 0.95rem;
   }
-
-@include tablets {
+  @include tablets {
     font-size: 1rem;
   }
-
-@include laptop {
+  @include laptop {
     font-size: 1rem;
   }
-
-@include desktop {
+  @include desktop {
     font-size: 1rem;
   }
 }
@@ -55,15 +49,13 @@
   font-size: 1.2rem;
   text-align: center;
 
-@include tablets {
+  @include tablets {
     font-size: 1.4rem;
   }
-
-@include laptop {
+  @include laptop {
     font-size: 1.5rem;
   }
-
-@include desktop {
+  @include desktop {
     font-size: 1.5rem;
   }
 }
@@ -90,11 +82,10 @@
   height: 12rem;
   padding: 0;
 
-@include laptop {
+  @include laptop {
     height: 12rem;
   }
-
-@include desktop {
+  @include desktop {
     height: 12rem;
   }
 }
@@ -247,11 +238,10 @@
     text-align: center;
     color: #ffffff;
 
-@include phones {
+    @include phones {
       font-size: 1rem;
     }
-
-@include laptop {
+    @include laptop {
       font-size: 1.1rem;
     }
   }
@@ -260,11 +250,10 @@
     font-size: 0.8rem;
     color: #000000;
 
-@include phones {
+    @include phones {
       font-size: 0.9rem;
     }
-
-@include laptop {
+    @include laptop {
       font-size: 1.05rem;
     }
   }
@@ -286,11 +275,10 @@
     text-align: center;
     color: #ffffff;
 
-@include phones {
+    @include phones {
       font-size: 0.75rem;
     }
-
-@include laptop {
+    @include laptop {
       font-size: 0.85rem;
     }
   }
@@ -370,13 +358,12 @@
   border: 1px solid rgba(0, 0, 0, 0.05);
   border-radius: 0.625rem;
 
-@include laptop {
+  @include laptop {
     flex-direction: row;
     flex-wrap: wrap;
     justify-content: flex-start;
   }
-
-@include desktop {
+  @include desktop {
     flex-direction: row;
     flex-wrap: wrap;
     justify-content: flex-start;
@@ -394,11 +381,10 @@
   border-radius: 5px;
   box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.25);
 
-@include laptop {
+  @include laptop {
     max-width: 49%;
   }
-
-@include desktop {
+  @include desktop {
     max-width: 49%;
   }
 }
