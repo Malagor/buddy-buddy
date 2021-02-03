@@ -923,7 +923,9 @@ export class Database {
     this.firebase.database()
       .ref(`User/${user}/contacts/${contactId}`)
       .remove(error => {
-        console.log(error.message);
+        if (error) {
+          console.log(error.message);
+        }
       });
 
   }
@@ -1351,12 +1353,16 @@ export class Database {
       if (!newUsers.includes(oldUser)) {
         transRef.child(`${transID}/toUserList/${oldUser}`)
           .remove(error => {
-            console.log(error.message);
+            if (error) {
+              console.log(error.message);
+            }
           });
 
         userRef.child(`${oldUser}/transactionList/${transID}`)
           .remove(error => {
-            console.log(error.message);
+            if (error) {
+              console.log(error.message);
+            }
           });
       }
     });
@@ -1411,7 +1417,9 @@ export class Database {
           userRef.child(`${userID}/transactionList/${transID}`)
             .remove()
             .catch(error => {
-              console.log(error.message);
+              if (error) {
+                console.log(error.message);
+              }
             });
         });
       });
@@ -1419,13 +1427,17 @@ export class Database {
     transRef.child(`${transID}`)
       .remove()
       .catch(error => {
+        if (error) {
           console.log(error.message);
+        }
       });
 
     userRef.child(`${this.uid}/transactionList/${transID}`)
       .remove()
       .catch(error => {
+        if (error) {
           console.log(error.message);
+        }
       });
 
     groupRef.child(`${groupID}/transactions`)
@@ -1785,34 +1797,7 @@ export class Database {
       themeBase2.set(themeData2);
     
     //  CURRENCY
-    const currencyArray = [
-      {
-        code: 'USD',
-        name: 'United States Dollar',
-      },
-      {
-        code: 'EUR',
-        name: 'Euro',
-      },
-      {
-        code: 'BYN',
-        name: 'Belarusian Ruble',
-      },
-      {
-        code: 'RUB',
-        name: 'Russian Ruble',
-      },
-    ];
-    currencyArray.forEach(cur => {
-      this.firebase.database()
-        .ref(`Currency/${cur.code}`)
-        .set({ name: cur.name })
-        .catch(error => {
-          console.log(error);
-        });
-    });
-
-    Currencies.getCurrenciesList(this.addCurrencyToBase);
+      Currencies.getCurrenciesList(this.addCurrencyToBase);
 
       // LANGUAGE
       const lang1 = {
