@@ -66,7 +66,6 @@ export class AuthPage extends Page {
     const submitBtn = document.getElementById('signIn');
 
     submitBtn.addEventListener('click', e => {
-      console.log('SignIn');
       e.preventDefault();
 
       const { email, password }: any = getFormData(form);
@@ -76,7 +75,6 @@ export class AuthPage extends Page {
     // LOGIN
     const login: Element = document.querySelector('#login');
     login.addEventListener('click', (e) => {
-      console.log('Event - Login');
       e.preventDefault();
       const { email, password }: any = getFormData(form);
       if (!email || !password) return;
@@ -86,7 +84,6 @@ export class AuthPage extends Page {
 
     const google: Element = document.querySelector('#googleReg');
     google.addEventListener('click', (e) => {
-      console.log('Registration Google');
       e.preventDefault();
 
       this.onGoogleReg();

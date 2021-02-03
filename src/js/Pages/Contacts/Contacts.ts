@@ -61,7 +61,6 @@ export class Contacts extends Page {
   }
 
   addContactToList = (data: any): void => {
-    // console.log('addContactToList - data', data);
     if (data && data.state !== 'decline') {
       const list = this.element.querySelector('.contacts-list');
       if (!list) return;
@@ -104,8 +103,6 @@ export class Contacts extends Page {
       select.addEventListener('change', (ev) => {
         const { target }: any = ev;
         const userId: string = target.closest('.contact').getAttribute('data-id-user');
-        console.log('userId', userId);
-        console.log('select.value', select.value);
 
         this.onChangeContactState(userId, select.value);
       });

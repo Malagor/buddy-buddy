@@ -67,19 +67,15 @@ export class RegistrationPage extends Page {
     const form: HTMLFormElement = document.querySelector('#authForm');
     const submitBtn = document.getElementById('signIn');
     submitBtn.addEventListener('click', e => {
-      console.log(form);
-      console.log('Event - signIn');
       e.preventDefault();
 
       const { email, password, name }: any = getFormData(form);
-      console.log(email, password, name);
       this.onSignIn(email, password, name);
     });
 
     // LOGIN
     const login: Element = document.querySelector('#login');
     login.addEventListener('click', (e) => {
-      console.log('Event - Login');
       e.preventDefault();
       // const { email, password }: any = getFormData(form);
       // if (!email || !password) return;
@@ -89,7 +85,6 @@ export class RegistrationPage extends Page {
 
     const google: Element = document.querySelector('#googleReg');
     google.addEventListener('click', (e) => {
-      console.log('Registration Google');
       e.preventDefault();
 
       this.onGoogleReg();

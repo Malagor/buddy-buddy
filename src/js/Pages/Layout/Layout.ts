@@ -228,7 +228,6 @@ export class Layout extends Page {
   protected events(): void {
     const myModal = document.getElementById('singOutModal');
 
-    // console.log('Modal', Modal);
     const signOutModal = new Modal(myModal);
 
     myModal.addEventListener('click', (event) => {
@@ -324,7 +323,6 @@ export class Layout extends Page {
   }
 
   setSidebarData(data: any): void {
-    console.log('setSidebarData', data);
     const menuAvatar: Element = document.querySelector(
       '.sidebar-avatar__image',
     );

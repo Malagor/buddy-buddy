@@ -3,9 +3,6 @@ export const editSum = (trans: any, wrapper: HTMLElement, membInput?: HTMLInputE
   const membersWrapper: HTMLElement = wrapper.querySelector('.details__members');
   const fixedSums = membersWrapper.querySelectorAll('.fixed');
   const nonFixedSums = membersWrapper.querySelectorAll('.non-fixed');
-  console.log ('fixedSums', fixedSums);
-  console.log ('nonfixedSums', nonFixedSums);
-  console.log ('totalcost', typeof trans.totalCost);
   const btnSaveEdit = wrapper.querySelector('.details__save');
   if (nonFixedSums) {
     const numb: number = nonFixedSums.length;
