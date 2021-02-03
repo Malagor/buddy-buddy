@@ -12,6 +12,7 @@ const defaultGroupLogo = require('../../../assets/images/default-group-logo.png'
 export class MyGroups extends Page {
   onCreateNewGroup: any;
   closeGroup: any;
+  clearCurrentGroup: any;
   onAddMember: any;
   addMemberInDetailGroup: any;
   fillContactsList: any;
@@ -667,9 +668,11 @@ export class MyGroups extends Page {
 
       const dataForCloseGroup = {
         userList: userList,
-        groupId: groupId
+        groupId: groupId,
+        currentGroup: data.user.currentGroup
       };
       this.closeGroup(dataForCloseGroup);
+      this.clearCurrentGroup(data.thisUid, data.user.currentGroup);
     });
   }
 

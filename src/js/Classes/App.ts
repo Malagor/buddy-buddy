@@ -95,6 +95,7 @@ export class App {
       this.groups.changeUserStatusInGroup = this.changeUserStatusInGroup.bind(this);
       this.groups.closeGroup = this.closeGroup.bind(this);
       this.groups.addMemberInDetailGroup = this.addMemberInDetailGroup.bind(this);
+      this.groups.clearCurrentGroup = this.clearCurrentGroup.bind(this);
 
       
       this.transactionsList = TransactionsList.create('.main');
@@ -255,6 +256,10 @@ export class App {
   changeUserStatusInGroup(data: IDataChangeStatus) {
     this.database.changeStatusUser(data);
     this.notifications.decreaseNotificationMark(TypeOfNotifications.Group);
+  }
+
+  clearCurrentGroup(userId: string, groupId: string) {
+    this.database.clearCurrentGroup(userId, groupId)
   }
 
   closeGroup(data: IDataCloseGroup) {

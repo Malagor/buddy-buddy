@@ -540,6 +540,21 @@ export class Database {
       .set({ state: state });
   }
 
+  clearCurrentGroup(userId: string, groupId: string) {
+    const dataBase =  this.firebase.database();
+       
+    dataBase
+    .ref(`User/${userId}/currentGroup/`)
+    .once('value', (snapshot) => {
+      const currentGroup = snapshot.val()
+      if (currentGroup === groupId) {
+        dataBase
+          .ref(`User/${userId}/currentGroup/`)
+          .set('')
+      }
+    })
+  }
+
   closeGroup(data: IDataCloseGroup, renderFunction: any) {
     const {userList, groupId} = data;
     const dataBase =  this.firebase.database();
