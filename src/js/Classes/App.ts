@@ -65,7 +65,7 @@ export class App {
 
   async isUserLogin(state: boolean, uid?: string) {
     if (state) {
-      
+
       await this.getUserTheme();
       await this.getUserLanguage();
 
@@ -281,7 +281,7 @@ export class App {
 
   addUserBalanceInModalCardUser(data: any) {
     const { userId, groupId, thisUid } = data;
-    this.database.getBalanceForUser(data, this.groups.addUserBalanceInModalDetailGroup)
+    this.database.getBalanceForUser(data, this.groups.addUserBalanceInModalDetailGroup);
   }
 
   getUserBalanceInGroup(data: any) {
@@ -295,7 +295,7 @@ export class App {
   }
 
   clearCurrentGroup(userId: string, groupId: string) {
-    this.database.clearCurrentGroup(userId, groupId)
+    this.database.clearCurrentGroup(userId, groupId);
   }
 
   closeGroup(data: IDataCloseGroup) {

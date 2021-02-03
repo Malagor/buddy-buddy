@@ -517,7 +517,7 @@ export class Database {
     });
   }
 
-  getBalanceForUser(data: any, fn) {
+  getBalanceForUser(data: any, fn: any) {
     const { userId, groupId, thisUid } = data;
     const base = this.firebase.database();
 
@@ -527,14 +527,15 @@ export class Database {
 
       Currencies.getCurrencyRateByCode(curr).then(coefficientCurr => {
         const getDataBalance = (data: any) => {
-          data.currency = curr
-          data.balance = coefficientCurr *  data.balance
-          fn(data)
-        }
-        this.getBalanceForUserInGroup(userId, groupId, getDataBalance)
+          data.currency = curr;
+          data.balance = coefficientCurr *  data.balance;
+          fn(data);
+        };
+        this.getBalanceForUserInGroup(userId, groupId, getDataBalance);
       });
     });
   }
+
   addCurrentGroup(data: any) {
     const userIdAuthor: string = data.userId;
     const groupKey = data.groupKey;
@@ -548,18 +549,16 @@ export class Database {
   changeStatusUser(data: IDataChangeStatus) {
     const { userId, groupId, state } = data;
     const dataBase = this.firebase.database();
-    console.log(1);
 
     this.firebase.database()
     .ref(`Groups/${groupId}/userList/${userId}/state/`)
-    .set(state)
+    .set(state);
 
     setTimeout(() => {
-      console.log(2);
       this.firebase.database()
       .ref(`User/${userId}/groupList/${groupId}/state/`)
-      .set(state)
-    },600)
+      .set(state);
+    }, 600);
 
   }
 
@@ -569,13 +568,14 @@ export class Database {
     dataBase
     .ref(`User/${userId}/currentGroup/`)
     .once('value', (snapshot) => {
-      const currentGroup = snapshot.val()
+      const currentGroup = snapshot.val();
+
       if (currentGroup === groupId) {
         dataBase
           .ref(`User/${userId}/currentGroup/`)
-          .set('')
+          .set('');
       }
-    })
+    });
   }
 
   closeGroup(data: IDataCloseGroup, renderFunction: any) {
@@ -641,11 +641,10 @@ export class Database {
 
         fn(true, groupId);
       } else {
-        const error = 'Balance is not zero - you do not close group';
-        fn(false, '.modal-error-text', error);
+        fn(false);
       }
     };
-    
+
     this.getBalanceInGroup(groupId, 1, closeGroupChangeDataBase);
   }
 

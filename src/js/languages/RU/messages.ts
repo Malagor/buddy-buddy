@@ -54,6 +54,7 @@ export const messagesRU = {
   'No groups': 'Еще нет групп',
   'Would': 'Вы хотите создать первую группу?',
   'Closed Group': 'Закрытые группы',
+  'Close group': 'Закрыть группу',
   'New group': 'Новая группа',
   'Balance': 'Баланс',
   'Create New Group': 'Создать новую группу',
@@ -64,11 +65,14 @@ export const messagesRU = {
   'Group Members': 'Участники группы',
   'Description': 'Описание',
   'Group details': 'Детали группы',
-  'Create date:': 'Дата создания:',
+  'Create date': 'Дата создания',
   'Close date': 'Дата закрытия',
   'group is active': 'группа открыта',
   'No description': 'Нет описания...',
   'Participants': 'Участники',
+  'User is missing': 'Пользователь отсутствует',
+  'The user is in the group': 'Пользователь уже в группе',
+  'The user account was entered incorrectly, for example: @account': 'Аккаунт пользователя был введен неправильно, попробуйте: @account',
 
   // transactions
   'Transactions List': 'Список транзакций',

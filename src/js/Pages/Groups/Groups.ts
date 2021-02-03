@@ -50,13 +50,13 @@ export class Groups extends Page {
           </div>
           <div class="block__main">
             <div id="contentGroup" class="container container-group">
-              <div id="divForListOpenGroups">
+              <div id="divForListOpenGroups" class="block--width-85 accordion-main">
                 <div class="card-body data-is-not">
                   <h5 class="card-title">${i18n._('No groups')}</h5>
                   <p class="card-text">${i18n._('Would')}</p>
                 </div>
               </div>
-              <div class="accordion accordion-main group-hidden" id="accordionForClosedGroup">
+              <div class="accordion accordion-main group-hidden block--width-85" id="accordionForClosedGroup">
                 <div class="accordion-item">
                   <h2 class="accordion-header" id="headingOne">
                     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
@@ -250,14 +250,14 @@ export class Groups extends Page {
             </div>
 
               <div class="row ">
-                <div class="dropdown col-10 modal-dropdown">
+                <div class="dropdown col-8 col-sm-9 modal-dropdown">
                   <input class="form-control dropdown-toggle" type="text" id="activeContact" data-bs-toggle="dropdown" aria-expanded="false" placeholder="${i18n._('Members')}" autocomplete="off" name="name">
                   <input type="text" name="key" class="contact-user-id" hidden>
                   <ul id="members-dropdown-menu" class="dropdown-menu contacts-user-list members-dropdown-menu" aria-labelledby="${i18n._('Group Members')}">
                   </ul>
                 </div>
 
-                <div class="col-2 modal-wrapper-btn">
+                <div class="col-4 col-sm-3 modal-wrapper-btn">
                   <button type="button" class="btn btn-primary modal-btn-primary btn-primary-alternate" id="addNewGroupMember"><span>${i18n._('Add')}</span></button>
                 </div>
               </div>
@@ -446,8 +446,6 @@ export class Groups extends Page {
   }
 
   addModalUserData = (data: any) => {
-    console.log('data', data);
-    
     const thisUser = data.thisUid;
     const userId = data.userId;
     const author = data.dataGroup.author;
@@ -526,7 +524,7 @@ export class Groups extends Page {
             <input class="form-control dropdown-toggle modal-input" type="text" id="activeContact" data-bs-toggle="dropdown" aria-expanded="false" placeholder="Members" autocomplete="off" name="name">
             <ul id="members-dropdown-menu" class="dropdown-menu contacts-user-list-detail members-dropdown-menu" aria-labelledby="Group Members">
             </ul>
-            <button type="button" class="btn btn-primary btn-primary-alternate modal-btn-primary" id="addNewGroupMemberInDetail"><span>add</span></button>
+            <button type="button" class="btn btn-primary btn-primary-alternate modal-btn-primary" id="addNewGroupMemberInDetail"><span>${i18n._('Add')}</span></button>
           </div>
 
           <div class="col modal-error-text text-danger">
@@ -563,7 +561,7 @@ export class Groups extends Page {
             userAccount =  userAccount.slice(0, -1);
           }
         } catch {
-          const textError = 'The user account was entered incorrectly, for example: @account';
+          const textError = `${i18n._('The user account was entered incorrectly, for example: @account')}`
           this.addTextInHtmlBlock('.modal-error-text', textError);
         }
 
@@ -588,7 +586,14 @@ export class Groups extends Page {
 
   addNewUserInDetailGroup = (data: any, errorData: string) => {
     if (errorData) {
-      this.addTextInHtmlBlock('.modal-error-text', errorData);
+      if(errorData === 'User is missing') {
+        const error = `${i18n._('User is missing')}`
+        this.addTextInHtmlBlock('.modal-error-text', error);
+      } else if (errorData === 'The user is in the group') {
+        const error = `${i18n._('The user is in the group')}`
+        this.addTextInHtmlBlock('.modal-error-text', error);
+      }
+      
     } else {
       document.querySelector('#modalUserListPending').classList.remove('group-hidden');
 
@@ -652,13 +657,14 @@ export class Groups extends Page {
     }
   }
 
-  answerDataBaseForClosedGroup = (isSuccess: boolean, selector: null | string = null, textError: null | string = null) => {
+  answerDataBaseForClosedGroup = (isSuccess: boolean, selector: null | string = null) => {
     if (isSuccess) {
       document.querySelector('.btn-close').click();
       document.querySelector(`#${selector}`).remove();
 
     } else {
-      this.addTextInHtmlBlock(selector, textError);
+      const error = 'Balance is not zero - you do not close group';
+      this.addTextInHtmlBlock('.modal-error-text', error);
     }
   }
 
@@ -669,7 +675,7 @@ export class Groups extends Page {
     const divFooterModal = document.querySelector('.modal-footer');
     const htmlBtnCloseGroup = `
     <div class="">
-      <button id="closeGroupBtn" type="button" class="btn btn-secondary">Close group</button>
+      <button id="closeGroupBtn" type="button" class="btn btn-secondary">${i18n._('Close group')}</button>
     </div>
     `;
     divFooterModal.insertAdjacentHTML('afterbegin', htmlBtnCloseGroup);
@@ -685,7 +691,7 @@ export class Groups extends Page {
         currentGroup: data.user.currentGroup
       };
       this.closeGroup(dataForCloseGroup);
-      this.clearCurrentGroup(data.thisUid, data.user.currentGroup);
+      this.clearCurrentGroup(data.thisUid, data.groupId);
     });
   }
 
