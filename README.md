@@ -4,7 +4,7 @@ Task: https://github.com/rolling-scopes-school/tasks/blob/master/tasks/rsclone/r
 Screenshot:
    ![]()
 
-Deploy: https://buddy-buddy.netlify.app/
+Deploy: https://buddy-buddy-8e497.web.app/
 
 Done 03.02.2020 / deadline 03.02.2021
 
