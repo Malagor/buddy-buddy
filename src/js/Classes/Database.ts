@@ -1006,12 +1006,9 @@ export class Database {
       .database()
       .ref(`User/${this.uid}`)
       .once('value', (snapshot) => {
-        let groupsIDList: string[];
-        let groupsState: any[];
-        if (snapshot.val().groupList) {
-          groupsIDList = Object.keys(snapshot.val().groupList);
-          groupsState = Object.values(snapshot.val().groupList);
-        } else return;
+        if (!snapshot.val().groupList) return;
+        const groupsIDList: string[] = Object.keys(snapshot.val().groupList);
+        const groupsState: any[] = Object.values(snapshot.val().groupList);      
         let currGroup = snapshot.val().currentGroup;
         if (!currGroup) {
           currGroup = groupsIDList[0];
