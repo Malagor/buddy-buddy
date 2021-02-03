@@ -330,16 +330,6 @@ export class Account extends Page {
           }
         });
       });
-
-      themeSelect.addEventListener('change', () => {
-        if (themeSelect.value === 'Dark') {
-          document.body.classList.add('theme--dark');
-          document.body.classList.remove('theme--light');
-        } else {
-          document.body.classList.remove('theme--dark');
-          document.body.classList.add('theme--light');
-        } 
-      });
   }
 
   onlineChangingLang() {
