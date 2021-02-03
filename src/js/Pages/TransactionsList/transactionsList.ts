@@ -13,6 +13,16 @@ import { renderNonCheckedMember } from './renderNonCheckedMember';
 import { changeBalanceStyle } from './changeBalanceStyle';
 import { Currencies } from '../../Classes/Currencies';
 
+import { i18n } from '@lingui/core';
+import { messagesRU } from '../../languages/RU/messages';
+import { messagesENG } from '../../languages/ENG/messages';
+import { loadLanguage } from '../../Util/saveLoadLanguage';
+i18n.load('RU', messagesRU);
+i18n.load('ENG', messagesENG);
+
+const locale = loadLanguage();
+i18n.activate(locale);
+
 export class TransactionsList extends Page {
   onChangeState: any;
   onGetTransInfo: any;
@@ -184,7 +194,7 @@ export class TransactionsList extends Page {
         opt.setAttribute('selected', '');
       }
       if (selectValue === 'approve') {
-        detailsSelectWrapper.innerHTML = 'Подтверждено';
+        detailsSelectWrapper.innerHTML = `${i18n._('Approved')}`;
       }
     });
 
@@ -264,7 +274,7 @@ export class TransactionsList extends Page {
     const titleElement: HTMLElement = modalWrapper.querySelector('.details__group');
     titleElement.setAttribute('groupID', groupID);
      titleElement.innerHTML = `
-       <div class="col-5 col-sm-4">Группа:</div>
+       <div class="col-5 col-sm-4">${i18n._('Group')}:</div>
        <div class="col-7 col-sm-8">${title}</div>
      `;
   }
@@ -291,7 +301,7 @@ export class TransactionsList extends Page {
 
       const state: HTMLElement = member.querySelector('.details__member-state');
       if (currUser[1].state === 'pending') {
-        state.innerHTML = 'ожидание';
+        state.innerHTML = `${i18n._('pending')}`;
       } else if (currUser[1].state === 'approve') {
         state.innerHTML = `<i class="material-icons text-success">done</i>`;
         member.querySelector('.details__member-delete').classList.add('invisible');
@@ -317,8 +327,8 @@ export class TransactionsList extends Page {
     const membInput: HTMLInputElement = member.querySelector('.details__member-cost');
     const membDeleteBtn: HTMLButtonElement = member.querySelector('.details__member-delete');
     const membComment: HTMLFormElement = member.querySelector('.details__member-comment');
-    const membState:HTMLElement = member.querySelector('.details__member-state');
-     
+    const membState: HTMLElement = member.querySelector('.details__member-state');
+
     membInput.addEventListener('input', () => {
       if (+membInput.value >= 0 ) {
         membInput.classList.add('fixed');
