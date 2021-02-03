@@ -376,14 +376,13 @@ export class App {
 
   onEditTransaction(editData: any, transID: string, trans: any) {
     const toUsd = Currencies.toUSD(trans.currency);
-    toUsd(trans.totalCost);
     const queryes = editData.map((user: { cost: any; }) => toUsd(user.cost));
     Promise.all(queryes)
       .then(curCost => {
         curCost.forEach((cost, index) => {
           editData[index].cost = cost;
         });
-        this.database.editTransaction(editData, transID, trans, this.transactionsList.addTransactionWrapper, this.transactionsList.addMyTransactions, this.transactionsList.addUserToList );
+        this.database.editTransaction(editData, transID, trans, this.transactionsList.addMyTransactions, this.transactionsList.addUserToList );
       });
   }
 
