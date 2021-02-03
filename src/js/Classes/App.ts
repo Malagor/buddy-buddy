@@ -17,6 +17,7 @@ import { TransactionsList } from '../Pages/TransactionsList/transactionsList';
 import { INotification, Notifications, TypeOfNotifications } from './Notifications';
 import { INewMessage, Messenger } from '../Pages/Messenger/Messenger';
 import { Contacts, ISearchUserData } from '../Pages/Contacts/Contacts';
+import { Help } from '../Pages/Help/Help';
 import { Currencies } from './Currencies';
 
 import { i18n } from '@lingui/core';
@@ -41,6 +42,7 @@ export class App {
   private notifications: Notifications;
   private messenger: Messenger;
   private contacts: Contacts;
+  private helpPage: Help;
   private contactsHandler: void;
   private messageHandler: (snapshot: any) => void;
   private transactionHandler: (snapshot: any) => void;
@@ -130,8 +132,11 @@ export class App {
       this.contacts.onChangeContactState = this.onChangeContactState.bind(this);
       this.contacts.onDeleteContact = this.onDeleteContact.bind(this);
 
+      this.helpPage = Help.create('.main');
+
       this.loadCurrentPage();
       this.changeTheme();
+
     } else {
       this.authPage = AuthPage.create('#app');
       this.authPage.onLoadSignInPage = this.loadSignInPage.bind(this);
@@ -328,7 +333,7 @@ export class App {
 
   onHelpPage() {
     this.deleteHandlers();
-
+    this.helpPage.render();
   }
 
   onGoogleReg() {
