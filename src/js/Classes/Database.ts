@@ -1046,7 +1046,7 @@ export class Database {
       .once('value', (snapshot) => {
         if (!snapshot.val().groupList) return;
         const groupsIDList: string[] = Object.keys(snapshot.val().groupList);
-        const groupsState: any[] = Object.values(snapshot.val().groupList);      
+        const groupsState: any[] = Object.values(snapshot.val().groupList);
         let currGroup = snapshot.val().currentGroup;
         if (!currGroup) {
           currGroup = groupsIDList[0];

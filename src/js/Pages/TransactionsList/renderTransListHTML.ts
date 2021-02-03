@@ -1,5 +1,5 @@
 
-import { i18n } from '@lingui/core'
+import { i18n } from '@lingui/core';
 import { messagesRU } from '../../languages/RU/messages';
 import { messagesENG } from '../../languages/ENG/messages';
 import { loadLanguage } from '../../Util/saveLoadLanguage';

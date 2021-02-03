@@ -561,7 +561,7 @@ export class Groups extends Page {
             userAccount =  userAccount.slice(0, -1);
           }
         } catch {
-          const textError = `${i18n._('The user account was entered incorrectly, for example: @account')}`
+          const textError = `${i18n._('The user account was entered incorrectly, for example: @account')}`;
           this.addTextInHtmlBlock('.modal-error-text', textError);
         }
 
@@ -586,14 +586,14 @@ export class Groups extends Page {
 
   addNewUserInDetailGroup = (data: any, errorData: string) => {
     if (errorData) {
-      if(errorData === 'User is missing') {
-        const error = `${i18n._('User is missing')}`
+      if (errorData === 'User is missing') {
+        const error = `${i18n._('User is missing')}`;
         this.addTextInHtmlBlock('.modal-error-text', error);
       } else if (errorData === 'The user is in the group') {
-        const error = `${i18n._('The user is in the group')}`
+        const error = `${i18n._('The user is in the group')}`;
         this.addTextInHtmlBlock('.modal-error-text', error);
       }
-      
+
     } else {
       document.querySelector('#modalUserListPending').classList.remove('group-hidden');
 
