@@ -6,12 +6,22 @@ import { Main } from '../Pages/Main/Main';
 import { Groups } from '../Pages/Groups/Groups';
 import { Account } from '../Pages/Account/Account';
 
-import { IGroupDataAll, IDataForCreateGroup, IDataChangeStatus, IDataAddMember, IDataCloseGroup } from '../Interfaces/IGroupData';
+import {
+  IGroupDataAll,
+  IDataForCreateGroup,
+  IDataChangeStatus,
+  IDataAddMember,
+  IDataCloseGroup,
+} from '../Interfaces/IGroupData';
 import { TransactionsList } from '../Pages/TransactionsList/transactionsList';
 import { INotification, Notifications, TypeOfNotifications } from './Notifications';
 import { INewMessage, Messenger } from '../Pages/Messenger/Messenger';
 import { Contacts, ISearchUserData } from '../Pages/Contacts/Contacts';
+import { Help } from '../Pages/Help/Help';
 import { Currencies } from './Currencies';
+
+import { i18n } from '@lingui/core';
+
 
 export interface IHandlers {
   messages: any;
@@ -32,6 +42,7 @@ export class App {
   private notifications: Notifications;
   private messenger: Messenger;
   private contacts: Contacts;
+  private helpPage: Help;
   private contactsHandler: void;
   private messageHandler: (snapshot: any) => void;
   private transactionHandler: (snapshot: any) => void;
@@ -50,11 +61,13 @@ export class App {
   init() {
     this.database.onUserIsLogin = this.isUserLogin.bind(this);
     this.database.init();
-    // this.database.createBasicTables();
   }
 
-  isUserLogin(state: boolean, uid?: string) {
+  async isUserLogin(state: boolean, uid?: string) {
     if (state) {
+
+      await this.getUserLanguage();
+
       // user signin
       this.layout = Layout.create('#app');
       this.layout.render();
@@ -63,11 +76,9 @@ export class App {
 
       // SIDEBAR
       this.layout.onSignOut = this.onSignOut.bind(this);
-      this.layout.onStatisticsPage = this.onStatisticsPage.bind(this);
       this.layout.onMainPage = this.onMainPage.bind(this);
       this.layout.onGroupsPage = this.onGroupsPage.bind(this);
       this.layout.onTransactionsPage = this.onTransactionsPage.bind(this);
-      this.layout.onSettingsPage = this.onSettingsPage.bind(this);
       this.layout.onHelpPage = this.onHelpPage.bind(this);
       this.layout.onAccountPage = this.onAccountPage.bind(this);
       this.layout.onMessagesPage = this.onMessagesPage.bind(this);
@@ -80,6 +91,7 @@ export class App {
       this.accountPage.updateInfo = this.updateOnAccountPage.bind(this);
       this.accountPage.changeTheme = this.changeTheme.bind(this);
       this.accountPage.checkUserID = this.checkUserID.bind(this);
+      this.accountPage.onAccountPageChangeLang = this.onAccountPageChangeLang.bind(this);
 
       this.mainPage = Main.create('.main');
       this.mainPage.getBalanceForSliderGroup = this.getBalanceForSliderGroup.bind(this);
@@ -88,7 +100,7 @@ export class App {
 
       this.groups = Groups.create('.main');
       this.groups.onCreateNewGroup = this.onCreateNewGroup.bind(this);
-      // this.groups.deleteGroup = this.deleteGroup.bind(this);
+
       this.groups.onAddMember = this.onAddGroupMember.bind(this);
       this.groups.fillContactsList = this.fillContactsList.bind(this);
       this.groups.onAddInfoForModalDetailGroup = this.onAddInfoForModalDetailGroup.bind(this);
@@ -120,10 +132,12 @@ export class App {
       this.contacts.onChangeContactState = this.onChangeContactState.bind(this);
       this.contacts.onDeleteContact = this.onDeleteContact.bind(this);
 
+      this.helpPage = Help.create('.main');
+
       this.loadCurrentPage();
       this.changeTheme();
+
     } else {
-      console.log(`isUserLogon = ${state}`);
       this.authPage = AuthPage.create('#app');
       this.authPage.onLoadSignInPage = this.loadSignInPage.bind(this);
       this.authPage.onGoogleReg = this.onGoogleReg.bind(this);
@@ -143,15 +157,16 @@ export class App {
     this.database.signOut();
     this.database.deleteUserInfoListener(this.userHandler);
     this.database.init();
+
+    // Alternative decision
+
+    // window.localStorage.clear();
+    // window.indexedDB.deleteDatabase('firebaseLocalStorageDb');
+    // window.location.reload();
   }
 
   onSignIn(email: string, password: string, name: string): void {
-    this.database.createUserByEmail(
-      email,
-      password,
-      name,
-      this.regPage.showErrorMessage,
-    );
+    this.database.createUserByEmail(email, password, name, this.regPage.showErrorMessage);
   }
 
   onLogin(email: string, password: string): void {
@@ -160,6 +175,15 @@ export class App {
       password,
       this.authPage.showErrorMessage,
     );
+  }
+
+  setUserLanguage(lang: string) {
+    localStorage.setItem('languageCode', lang);
+    i18n.activate(lang);
+  }
+
+  async getUserLanguage() {
+    await this.database.getCurrentLang(this.database.uid, this.setUserLanguage);
   }
 
   loadCurrentPage() {
@@ -203,6 +227,11 @@ export class App {
     this.database.updateUserInfo(uid, data);
   }
 
+  onAccountPageChangeLang() {
+    this.accountPage.onlineChangingLang();
+    this.layout.onlineChangingLang();
+  }
+
   async onAccountPage() {
     this.setCurrentPage('Account');
     this.deleteHandlers();
@@ -239,6 +268,7 @@ export class App {
   onAddInfoForModalDetailGroup(groupId: string, userId: string) {
     this.database.getGroup(groupId, this.groups.addInfoForModalDetailGroup, this.groups.addModalUserData);
     this.database.getBalanceForGroup(groupId, userId, this.groups.addBalanceForModalGroupDetail);
+    this.database.getDataForGraphGroupBalance(groupId, this.groups.renderChart());
   }
 
   addBalanceInGroupPage(groupId: string, userId: string) {
@@ -262,7 +292,6 @@ export class App {
 
   closeGroup(data: IDataCloseGroup) {
     this.database.closeGroup(data, this.groups.answerDataBaseForClosedGroup);
-    // .notifications.decreaseNotificationMark(TypeOfNotifications.Group);
   }
 
   addMemberInDetailGroup(data: IDataAddMember) {
@@ -302,19 +331,9 @@ export class App {
     this.database.getMessageList(this.messageHandler);
   }
 
-  onStatisticsPage() {
-    this.deleteHandlers();
-    console.log('Load Statistics Page!');
-  }
-
-  onSettingsPage() {
-    this.deleteHandlers();
-    console.log('Load Settings Page!');
-  }
-
   onHelpPage() {
     this.deleteHandlers();
-    console.log('Load Help Page!');
+    this.helpPage.render();
   }
 
   onGoogleReg() {
@@ -385,19 +404,18 @@ export class App {
 
   onGetTransInfo(transID: string, groupID: string) {
     this.database.getTransInfoModal(transID, groupID, this.transactionsList.addGroupTitle,
-    this.transactionsList.addMemberOfTransaction, this.transactionsList.addOwnerInfo);
+      this.transactionsList.addMemberOfTransaction, this.transactionsList.addOwnerInfo);
   }
 
   onEditTransaction(editData: any, transID: string, trans: any) {
     const toUsd = Currencies.toUSD(trans.currency);
-    toUsd(trans.totalCost);
     const queryes = editData.map((user: { cost: any; }) => toUsd(user.cost));
     Promise.all(queryes)
       .then(curCost => {
         curCost.forEach((cost, index) => {
           editData[index].cost = cost;
         });
-        this.database.editTransaction(editData, transID, trans, this.transactionsList.addTransactionWrapper, this.transactionsList.addMyTransactions, this.transactionsList.addUserToList );
+        this.database.editTransaction(editData, transID, trans, this.transactionsList.addMyTransactions, this.transactionsList.addUserToList);
       });
   }
 
@@ -487,36 +505,5 @@ export class App {
   onDeleteContact(contactId: string): void {
     this.database.deleteUserFromContactsList(contactId);
     this.database.deleteUserFromContactsList(this.database.uid, contactId);
-    this.notifications.decreaseNotificationMark(TypeOfNotifications.Contact);
   }
-
-  // createUser(uid: string) {
-  //   const form: HTMLFormElement = document.querySelector('#my-form');
-  //   const formData: { [k: string]: any } = getFormData(form);
-  //
-  //   const storageRef = firebase.storage().ref();
-  //   const userRef = firebase.database().ref(`User/${uid}`);
-  //   const file = document.querySelector('#avatar').files[0];
-  //
-  //   const metadata = {
-  //     'contentType': file.type,
-  //   };
-  //
-  //   storageRef.child('images/' + file.name).put(file, metadata).then(function(snapshot) {
-  //     snapshot.ref.getDownloadURL()
-  //       .then((url) => {
-  //         formData['avatar'] = url;
-  //       })
-  //       .then(formData => {
-  //         console.log('formData', formData);
-  //         userRef.set(formData);
-  //       })
-  //       .catch(error => {
-  //         console.log(error.code);
-  //         console.log(error.message);
-  //       });
-  //   });
-  // }
-
-
 }

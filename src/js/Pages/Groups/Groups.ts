@@ -1,10 +1,21 @@
 import { Page } from '../../Classes/Page';
 import { IGroupData, IGroupDataAll } from '../../Interfaces/IGroupData';
 import { getFormData } from '../../Util/getFormData';
+import { ChartBar } from '../../Classes/ChartBar';
 
 import { Modal } from 'bootstrap';
 import { eventForContactsList } from '../Contacts/eventForContactsList';
 import { onClickContactInContactsList } from '../Contacts/onClickContactInContactsList';
+
+import { i18n } from '@lingui/core';
+import { messagesRU } from '../../languages/RU/messages';
+import { messagesENG } from '../../languages/ENG/messages';
+import { loadLanguage } from '../../Util/saveLoadLanguage';
+i18n.load('RU', messagesRU);
+i18n.load('ENG', messagesENG);
+
+const locale = loadLanguage();
+i18n.activate(locale);
 
 const defaultGroupLogo = require('../../../assets/images/default-group-logo.png');
 
@@ -34,21 +45,21 @@ export class Groups extends Page {
       <div class="block__wrapper">
         <div class="block__content">
           <div class="block__header block__header--main">
-            <p class="block__title">Groups</p>
+            <p class="block__title">${i18n._('Groups')}</p>
           </div>
           <div class="block__main">
-            <div id="contentGroup" class="container">
+            <div id="contentGroup" class="container container-group">
               <div id="divForListOpenGroups" class="block__wrapper-card">
                 <div class="card-body data-is-not">
-                  <h5 class="card-title">No groups yet.</h5>
-                  <p class="card-text">Would you like to create the first group?</p>
+                  <h5 class="card-title">${i18n._('No groups')}</h5>
+                  <p class="card-text">${i18n._('Would')}</p>
                 </div>
               </div>
               <div class="accordion group-hidden" id="accordionForClosedGroup">
                 <div class="accordion-item">
                   <h2 class="accordion-header" id="headingOne">
                     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
-                      Closed Group
+                      ${i18n._('Closed Group')}
                     </button>
                   </h2>
                   <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionForClosedGroup">
@@ -60,7 +71,7 @@ export class Groups extends Page {
             </div>
           </div>
           <div class="block__footer">
-            <button type="button" class="btn btn-primary btn-primary-alternate add-new-group" data-bs-toggle="modal" data-bs-target="#addNewGroupModal">New group</button>
+            <button type="button" class="btn btn-primary btn-primary-alternate add-new-group" data-bs-toggle="modal" data-bs-target="#addNewGroupModal">${i18n._('New group')}</button>
           </div>
         </div>
       </div>
@@ -72,6 +83,11 @@ export class Groups extends Page {
     this.events();
   }
 
+  renderChart() {
+    const chart: any = ChartBar.create('.modal-chart');
+    return chart.buildingChart;
+  }
+
   createGroupList = (data: any) => {
     document.querySelector('.data-is-not').classList.add('group-hidden');
 
@@ -81,12 +97,11 @@ export class Groups extends Page {
     if (!data.dataGroup.dateClose) {
       HTMLListOpenGroups.insertAdjacentHTML('afterbegin', this.createCard(data));
       this.eventsAddEventListenerForGroup(data);
+      this.addBalanceInGroupPage(data.groupKey, data.thisUid);
     } else {
       document.querySelector('#accordionForClosedGroup').classList.remove('group-hidden');
       HTMLListClosedGroups.insertAdjacentHTML('afterbegin', this.createCard(data));
     }
-
-    this.addBalanceInGroupPage(data.groupKey, data.thisUid);
   }
 
   addUserInGroupCard(data: any) {
@@ -139,13 +154,19 @@ export class Groups extends Page {
     const divCardGroup = document.querySelector(`#${data.groupId}`);
     const divForBalanceInCardGroup = divCardGroup.querySelector(`#balanceGroup`);
 
-    const html = `<p>${data.balance.toFixed(2)} ${data.currencyName}</p>`;
+    const html = `<h5 class="card-group__date"">${data.balance.toFixed(2)} ${data.currencyName}</h5>`;
     divForBalanceInCardGroup.insertAdjacentHTML('afterbegin', html);
   }
 
   createCard(data: any) {
-    const date: Date = new Date(data.dataGroup.dateCreate);
-    const dataCreateGroup: string = date.toLocaleString();
+    const dateCreate: Date = new Date(data.dataGroup.dateCreate);
+    const dataCreateGroup: string = dateCreate.toLocaleString();
+    let dataCloseGroup: string | null = null;
+
+    if (data.dataGroup.dateClose) {
+      const dateClose: Date = new Date(data.dataGroup.dateClose);
+      dataCloseGroup = dateClose.toLocaleString();
+    }
 
     return `
       <div id=${data.groupKey} class="card mb-3 card-group">
@@ -170,7 +191,7 @@ export class Groups extends Page {
 
               </div>
               <div id="balanceGroup" class="col-5 card-group__balance">
-
+                <h5  class="card-group__date">${dataCloseGroup ? dataCloseGroup.slice(0, 10) : ''}</h5>
               </div>
             </div>
 
@@ -187,7 +208,7 @@ export class Groups extends Page {
       <div class="modal-dialog modal-dialog modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title">Create New Group</h5>
+            <h5 class="modal-title">${i18n._('Create New Group')}</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
@@ -211,16 +232,16 @@ export class Groups extends Page {
 
               <div class="col-9 form-title">
                 <div>
-                  <input type="text" class="form-control" id="formTitle" name="title" autocomplete="off" placeholder="Title*" required>
+                  <input type="text" class="form-control" id="formTitle" name="title" autocomplete="off" placeholder="${i18n._('Title*')}" required>
                   <div class="invalid-feedback">
-                    Please input title.
+                    ${i18n._('Please input title')}
                   </div>
                 </div>
 
                 <div>
                   <div class="form-check form-switch">
                     <input class="form-check-input" type="checkbox" id="currentGroup" checked>
-                    <label class="form-check-label" for="currentGroup">Make the group current</label>
+                    <label class="form-check-label" for="currentGroup">${i18n._('Make the group current')}</label>
                   </div>
                 </div>
               </div>
@@ -229,26 +250,26 @@ export class Groups extends Page {
 
               <div class="row ">
                 <div class="dropdown col-10 modal-dropdown">
-                  <input class="form-control dropdown-toggle" type="text" id="activeContact" data-bs-toggle="dropdown" aria-expanded="false" placeholder="Members" autocomplete="off" name="name">
+                  <input class="form-control dropdown-toggle" type="text" id="activeContact" data-bs-toggle="dropdown" aria-expanded="false" placeholder="${i18n._('Members')}" autocomplete="off" name="name">
                   <input type="text" name="key" class="contact-user-id" hidden>
-                  <ul id="members-dropdown-menu" class="dropdown-menu contacts-user-list members-dropdown-menu" aria-labelledby="Group Members">
+                  <ul id="members-dropdown-menu" class="dropdown-menu contacts-user-list members-dropdown-menu" aria-labelledby="${i18n._('Group Members')}">
                   </ul>
                 </div>
 
                 <div class="col-2 modal-wrapper-btn">
-                  <button type="button" class="btn btn-primary modal-btn-primary btn-primary-alternate" id="addNewGroupMember"><span>add</span></button>
+                  <button type="button" class="btn btn-primary modal-btn-primary btn-primary-alternate" id="addNewGroupMember"><span>${i18n._('Add')}</span></button>
                 </div>
               </div>
 
                <div class="row col-12 group-members-avatar"></div>
 
               <div class="col-12">
-                <textarea class="form-control" id="formDesc" rows="3" name="description" placeholder="Description"></textarea>
+                <textarea class="form-control" id="formDesc" rows="3" name="description" placeholder="${i18n._('Description')}"></textarea>
               </div>
 
               <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="submit" class="btn btn-primary btn-primary-alternate" id="createGroupBtn">Create New Group</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">${i18n._('Close')}</button>
+                <button type="submit" class="btn btn-primary btn-primary-alternate" id="createGroupBtn">${i18n._('Create New Group')}</button>
               </div>
 
             </form>
@@ -265,15 +286,25 @@ export class Groups extends Page {
         <div class="modal-dialog container-group-detail" role="document">
           <div class="modal-content">
             <div class="modal-header">
-              <h5 class="modal-title">Group details</h5>
+              <h5 class="modal-title">${i18n._('Group details')}</h5>
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div id="modalContent" class="modal-body">
-              <p>Modal body text goes here.</p>
+
+            <div class="row g-0 col modal-wrapper-content">
+              <div class="col-12 col-md-6">
+                <div id="modalContent" class="modal-body">
+                  <p>Modal body text goes here.</p>
+                </div>
+              </div>
+              <div class="col-12 col-md-6">
+                <div class="modal-chart">
+                </div>
+              </div>
             </div>
+
             <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            </div>
+            <button type="button" class="btn btn-primary btn-primary-alternate" data-bs-dismiss="modal">${i18n._('Close')}</button>
+          </div>
           </div>
         </div>
       </div>
@@ -385,20 +416,20 @@ export class Groups extends Page {
           </div>
           <div class="col-6 card-detail__box-logo-group">
             <h5 class="card-detail__title">${data.dataGroup.title}</h5>
-            <p class="card-detail__date">Create date: ${ dataCreateGroup.slice(0, 10) }</p>
-            <p class="card-detail__date">Close date:  ${ data.dataGroup.dateClose ? dataCloseGroup : 'group is active' }</p>
+            <p class="card-detail__date">${i18n._('Create date')}: ${ dataCreateGroup.slice(0, 10) }</p>
+            <p class="card-detail__date">${i18n._('Close date')}:  ${ data.dataGroup.dateClose ? dataCloseGroup : i18n._('group is active')}</p>
           </div>
           <div id="balanceModalGroup" class="col-3 card-detail__box-logo-group">
-          <h5 class="card-detail__balance">Balance</h5>
+          <h5 class="card-detail__balance">${i18n._('Balance')}</h5>
         </div>
         </div>
 
         <div class="row g-0 col card-detail__box-description">
-          <h5 class="card-detail__description">Description</h5>
-          <p class="card-text card-detail__text">${data.dataGroup.description ? data.dataGroup.description : 'No description...'}</p>
+          <h5 class="card-detail__description">${i18n._('Description')}</h5>
+          <p class="card-text card-detail__text">${data.dataGroup.description ? data.dataGroup.description : i18n._('No description')}</p>
         </div>
         <div id="modalUserListApprove" class="card-detail__user-list">
-          <h5 class="card-detail__participants">Participants</h5>
+          <h5 class="card-detail__participants">${i18n._('Participants')}</h5>
         </div>
         <div id="modalUserListPending" class="card-detail__user-list group-hidden">
           <p class="card-detail__pending">Pending</p>
@@ -443,10 +474,10 @@ export class Groups extends Page {
     const html = this._createUserCardForModalDetail(data, isBtmForDeleteUser);
 
     const htmlBtn = `
-      <div class="btn-group modal-detail__button-container" role="group" aria-label="Basic mixed styles example">
-        <button id="btn-prove" type="button" class="btn btn btn-success modal-detail__button-confirmation">Prove</button>
-        <button id="btn-disprove" type="button" class="btn btn-danger modal-detail__button-confirmation">Disprove</button>
-      </div>
+    <div class="modal-detail__button-container">
+      <button id="btn-prove" type="button" class="btn btn-primary-alternate modal-detail__button-confirmation">Prove</button>
+      <button id="btn-disprove" type="button" class="btn btn-secondary modal-detail__button-confirmation">Disprove</button>
+    </div>
     `;
 
     if (stateUser === 'approve') {
@@ -459,13 +490,13 @@ export class Groups extends Page {
       addEventListenerFromButtonDelUserInModal(data);
     }
 
-    // выделение автора группы при прорисовке
+    // Add author special
     if (userId === author) {
       const cardAuthor = document.querySelector(`[data-user-id-for-group="${userId}"]`);
       cardAuthor.classList.add('modal-detail--author');
     }
 
-    // если пользователь не подтвержден
+    // Add user card btn prove or disprove
     if (stateUser ===  'pending' &&  userId === thisUser) {
       const cardThisUser = document.querySelector(`[data-user-id-for-group="${userId}"]`);
       cardThisUser.insertAdjacentHTML('beforeend', htmlBtn);
@@ -491,10 +522,10 @@ export class Groups extends Page {
             <input class="form-control dropdown-toggle modal-input" type="text" id="activeContact" data-bs-toggle="dropdown" aria-expanded="false" placeholder="Members" autocomplete="off" name="name">
             <ul id="members-dropdown-menu" class="dropdown-menu contacts-user-list-detail members-dropdown-menu" aria-labelledby="Group Members">
             </ul>
-            <button type="button" class="btn btn-primary modal-btn-primary" id="addNewGroupMemberInDetail"><span>add</span></button>
+            <button type="button" class="btn btn-primary btn-primary-alternate modal-btn-primary" id="addNewGroupMemberInDetail"><span>add</span></button>
           </div>
 
-          <div class="col modal-error-text">
+          <div class="col modal-error-text text-danger">
           </div>
 
         </div>
@@ -518,7 +549,7 @@ export class Groups extends Page {
         ev.preventDefault();
         const member: HTMLFormElement = document.querySelector('#activeContact');
 
-        // проверки по введенным данным в интуп
+        // Check input
         let userAccount = null;
         const myRe = /@.+$/gm;
 
@@ -587,14 +618,25 @@ export class Groups extends Page {
 
     return `
         <div data-user-id-for-group=${data.userId} class="card modal-detail">
-          <img class="modal-detail__img" src="${data.user.avatar}" alt="avatar">
+
+          <div class="modal-detail__wrapper">
+            <div class="modal-detail__img-name">
+              <div>
+                <img class="modal-detail__img" src="${data.user.avatar}" alt="avatar">
+              </div>
+              <div class="modal-detail__name-account">
+                <p  class="modal-detail__name">${data.user.name}</p>
+                <p  class="modal-detail__account">${data.user.account}</p>
+              </div>
+            </div>
+          </div>
+
           <div>
-            <p  class="modal-detail__name">${data.user.name}</p>
-            <p  class="modal-detail__account">${data.user.account}</p>
+            <div class="modal-detail__button">
+              ${isBtn ? htmlButtonDeleteUser : ''}
+            </div>
           </div>
-          <div class="modal-detail__button">
-            ${isBtn ? htmlButtonDeleteUser : ''}
-          </div>
+
         </div>
       `;
   }
@@ -623,7 +665,7 @@ export class Groups extends Page {
     const divFooterModal = document.querySelector('.modal-footer');
     const htmlBtnCloseGroup = `
     <div class="">
-      <button id="closeGroupBtn" type="button" class="btn btn-warning">Close group</button>
+      <button id="closeGroupBtn" type="button" class="btn btn-secondary">Close group</button>
     </div>
     `;
     divFooterModal.insertAdjacentHTML('afterbegin', htmlBtnCloseGroup);
@@ -711,19 +753,20 @@ export class Groups extends Page {
 
   addUserBalanceInModalDetailGroup(data: any) {
     const divCardUser = document.querySelector(`[data-user-id-for-group="${data.userId}"]`);
+    const divForBtb = divCardUser.querySelector('.modal-detail__wrapper');
 
     const html = `
       <div class="modal-detail__balance">
         <span>${data.balance.toFixed(2)} ${data.currency}</span>
       </div>
     `;
-    divCardUser.insertAdjacentHTML('beforeend', html);
+    divForBtb.insertAdjacentHTML('beforeend', html);
 
     const divForBalance = divCardUser.querySelector('.modal-detail__balance');
     if (data.balance > 0) {
-      divForBalance.classList.add('modal-detail__balance--positive');
+      divForBalance.classList.add('text-danger');
     } else if (data.balance < 0) {
-      divForBalance.classList.add('modal-detail__balance--negative');
+      divForBalance.classList.add('text-success');
     }
   }
 
@@ -744,14 +787,15 @@ export class Groups extends Page {
     if (data) {
       const members = document.querySelector('.group-members-avatar');
 
-      members.insertAdjacentHTML('beforeend', `
-    <div class="col-3 col-sm-2 member" data-id="${data.key}">
-      <div class="member__avatar text-center">
-        <img class="member__img" src="${data.avatar}" alt="${data.name}">
-      </div>
-      <div class="member__name text-center">${data.name}</div>
-    </div>
-    `);
+      const html = `
+        <div class="col-3 col-sm-2 member" data-id="${data.key}">
+          <div class="member__avatar text-center">
+            <img class="member__img" src="${data.avatar}" alt="${data.name}">
+          </div>
+          <div class="member__name text-center">${data.name}</div>
+        </div>
+      `;
+      members.insertAdjacentHTML('beforeend', html);
       const input: HTMLFormElement = document.querySelector('#activeContact');
       input.value = '';
     }
