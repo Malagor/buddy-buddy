@@ -1783,6 +1783,14 @@ export class Database {
       });
   }
 
+  getUserTheme(callback: (theme: string) => void): void {
+    this.firebase.database()
+      .ref(`User/${this.uid}/theme`)
+      .once('value', async snapshot => {
+        callback(snapshot.val().toLowerCase());
+      });
+  }
+
   createBasicTables() {
       // THEMES
       const themeData1 = {

@@ -52,8 +52,10 @@ export class App {
     this.database.init();
   }
 
-  isUserLogin(state: boolean, uid?: string) {
+  async isUserLogin(state: boolean, uid?: string) {
     if (state) {
+      
+      await this.getUserTheme();
       // user signin
       this.layout = Layout.create('#app');
       this.layout.render();
@@ -118,7 +120,6 @@ export class App {
       this.contacts.onDeleteContact = this.onDeleteContact.bind(this);
 
       this.loadCurrentPage();
-      this.changeTheme();
     } else {
       this.authPage = AuthPage.create('#app');
       this.authPage.onLoadSignInPage = this.loadSignInPage.bind(this);
@@ -167,7 +168,11 @@ export class App {
     localStorage.setItem('currentPage', name);
   }
 
-  changeTheme(theme: string = 'light'): void {
+  getUserTheme() {
+    this.database.getUserTheme(this.changeTheme);
+  }
+
+  changeTheme(theme: string): void {
     const bodyClassList: any = document.querySelector('body').classList;
     if (!bodyClassList.length) {
       bodyClassList.add(`theme--${theme}`);
