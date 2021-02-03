@@ -16,7 +16,7 @@ html {
 body {
   min-height: 100vh;
   font-family: "Montserrat", sans-serif;
-  background: $color-bg;
+  background-color: $color-white;
 }
 
 .theme--dark {
@@ -92,6 +92,8 @@ body {
   height: rem(60px);
   overflow: hidden;
   border-radius: 50%;
+
+  object-fit: cover;
 }
 
 /*
