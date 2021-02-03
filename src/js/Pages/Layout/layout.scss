@@ -5,10 +5,11 @@ html {
   min-height: 100vh;
   font-size: 14px;
 
-  @include tablets {
+@include tablets {
     font-size: 15px;
   }
-  @include laptop {
+
+@include laptop {
     font-size: 16px;
   }
 }
@@ -30,11 +31,13 @@ body {
 .sidebar {
   position: fixed;
   top: 0;
-  /* rtl:raw:
+
+/* rtl:raw:
   right: 0;
   */
   bottom: 0;
-  /* rtl:remove */
+
+/* rtl:remove */
   left: 0;
   z-index: 100; /* Behind the navbar */
   padding: rem(53px) 0 0; /* Height of navbar */
@@ -88,6 +91,8 @@ body {
   height: rem(60px);
   overflow: hidden;
   border-radius: 50%;
+
+  object-fit: cover;
 }
 
 /*
@@ -168,7 +173,6 @@ main.main {
 
 footer.footer {
   height: 4rem;
-
   background: $color-navbar;
 
   p {
@@ -261,8 +265,8 @@ footer.footer {
 
   gap: 0.3rem;
   &:hover {
-    opacity: 1;
     color: rgba(255, 255, 255, 1);
+    opacity: 1;
   }
 
   @media screen and (max-width: 768px) {
@@ -294,31 +298,31 @@ footer.footer {
 }
 
 .btn-primary-alternate {
-  border-color: $primary-alternate;
   background: $primary-alternate;
+  border-color: $primary-alternate;
 
   .btn-check:focus + &,
   &:hover,
   &:focus {
     color: $color-white;
-    border-color: $primary-alternate-hover;
     background: $primary-alternate-hover;
+    border-color: $primary-alternate-hover;
   }
 
   &:disabled {
-    border-color: lighten($primary-alternate, 3%);
     background: lighten($primary-alternate, 3%);
+    border-color: lighten($primary-alternate, 3%);
   }
 }
 
 .btn-outline-primary-alternate {
-  border-color: $primary-alternate;
   color: $primary-alternate;
+  border-color: $primary-alternate;
 
   &:hover {
-    border-color: $primary-alternate-hover;
-    background: $primary-alternate-hover;
     color: $color-white;
+    background: $primary-alternate-hover;
+    border-color: $primary-alternate-hover;
   }
 }
 
