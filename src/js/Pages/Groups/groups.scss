@@ -178,7 +178,7 @@
 .card-detail {
   padding-top: rem(12px);
 
- 
+
   .theme--dark & {
     background: $middle-dark;
   }
@@ -248,7 +248,7 @@
     background: $ultramega-dark;
   }
 
-    
+
   }
 
   &__img {
@@ -292,7 +292,7 @@
 }
 
 .container-group {
-  max-width: rem(620px);
+  //max-width: rem(620px);
   padding: 0;
 }
 
@@ -393,11 +393,11 @@
       margin: 0.8rem;
     }
 
-  
+
   }
 
   .container-group {
-    padding: 0 rem(20px);
+    //padding: 0 rem(20px);
   }
 }
 
