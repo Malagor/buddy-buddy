@@ -34,7 +34,7 @@ export const divideSum = () => {
         });
       } else {
         memberSum.style.color = 'red';
-        membersSumInputs.forEach((input: HTMLFormElement) => {
+        membersSumEvenly.forEach((input: HTMLFormElement) => {
           input.setAttribute('placeholder', '0.00');
         });
       }
@@ -59,7 +59,7 @@ export const divideSum = () => {
       input.setAttribute('placeholder', `${(totalSum / numbOfmembers)}`);
     });
   } else {
-    membersSumInputs.forEach((input: HTMLFormElement) => {
+    membersSumEvenly.forEach((input: HTMLFormElement) => {
       input.setAttribute('placeholder', '0.00');
     });
   }
