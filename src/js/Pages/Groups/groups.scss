@@ -35,6 +35,12 @@
   box-shadow: 0 3px 5px rgba(0,0,0,0.25);
   cursor: pointer;
 
+
+.theme--dark & {
+  background: $middle-dark;
+  // color: $color-white;
+}
+
   &--new-group {
     border: 2px solid $primary-alternate;
     box-shadow: 0 3px 5px rgba(0, 0, 0, 0.25);
@@ -84,6 +90,12 @@
 
 .modal-chart {
   margin: 1rem 2rem 2rem 2rem;
+
+    .theme--dark & {
+    background: $ultra-light;
+  }
+
+
 }
 
 
@@ -152,6 +164,11 @@
 .card-detail {
   padding-top: rem(12px);
 
+ 
+  .theme--dark & {
+    background: $middle-dark;
+  }
+
   &__img-avatar {
     display: block;
     width: rem(85px);
@@ -186,6 +203,12 @@
   border-radius: 0.625rem;
   box-shadow: 0 3px 5px rgba(0,0,0,0.25);
 
+   .theme--dark & {
+    background: $super-dark;
+    box-shadow: 0 3px 5px rgba(255,255,255,0.25);
+    color: $color-white;
+  }
+
   &__wrapper {
     display: flex;
     justify-content: space-between;
@@ -206,6 +229,13 @@
   &--author {
     color: $color-text;
     background: rgba(128, 128, 128, 0.5);
+
+     .theme--dark & {
+    background: $ultramega-dark;
+
+  }
+
+
   }
 
   &__img {
@@ -290,6 +320,7 @@
   }
 
   .card-group {
+
     &__img-avatar {
       width: 3rem;
       height: 3rem;
@@ -311,6 +342,7 @@
   }
 
   .card-detail {
+
     &__title,
     &__description,
     &__participants,
@@ -346,6 +378,8 @@
     &__user-list {
       margin: 0.8rem;
     }
+
+  
   }
 
   .container-group {
@@ -358,4 +392,9 @@
     padding: 3px;
     font-size: rem(10px);
   }
+}
+
+.theme--dark .accordion-button{
+  background: $middle-dark;
+  color: $color-white;
 }

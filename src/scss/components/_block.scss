@@ -69,6 +69,10 @@
   padding: 0.5rem 1.5rem 0.5rem 2.3rem;
   border-bottom: 1px solid rgba(0, 0, 0, 0.05);
 
+  .theme--dark & {
+  background: $ultramega-dark;
+}
+
   @include laptop {
     padding: 0.5rem 2rem 0.5rem 2.5rem;
   }
@@ -189,7 +193,7 @@
   border-top: 1px solid rgba(0, 0, 0, 0.05);
 
   .theme--dark & {
-    background: $ultra-dark;
+    background: $ultramega-dark;
   }
 
   @include laptop {
@@ -209,6 +213,12 @@
   & > .main__balance {
     margin: 0;
   }
+
+  .theme--dark & {
+  border: 1px solid $middle-dark;
+}
+
+
 }
 
 .block__card--no-border {
