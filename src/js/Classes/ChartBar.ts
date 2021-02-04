@@ -56,9 +56,9 @@ export class ChartBar {
     const balancesArray: any[] = [];
     const query: any = Currencies.fromUSD(groupCurrency);
     const rightBalances: any[] = await data[0].map((item: userDataObject) => item.userBalance)
-    .map(async (sum: number) => {
+    .map(async (sum: number, index: number) => {
       await query(sum).then((bal: number) => {
-        balancesArray.push(bal.toFixed(2));
+        balancesArray[index] = bal.toFixed(2);
       });
     });
     await Promise.all(rightBalances).then((data: number[]) => data);
