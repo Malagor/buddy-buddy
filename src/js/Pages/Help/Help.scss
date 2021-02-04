@@ -13,10 +13,6 @@
   }
 }
 
-.help__menu > div > div > div {
-  & > p,
-  & > ul,
-  & > h3 {
-    text-align: justify;
-  }
+.help__menu {
+  text-align: justify;
 }

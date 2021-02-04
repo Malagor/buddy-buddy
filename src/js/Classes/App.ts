@@ -19,7 +19,6 @@ import { INewMessage, Messenger } from '../Pages/Messenger/Messenger';
 import { Contacts, ISearchUserData } from '../Pages/Contacts/Contacts';
 import { Help } from '../Pages/Help/Help';
 import { Currencies } from './Currencies';
-
 import { i18n } from '@lingui/core';
 
 

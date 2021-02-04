@@ -2,11 +2,6 @@ import { Page } from '../../Classes/Page';
 import { Modal } from 'bootstrap';
 import { currentYear } from '../../Util/currentYear';
 import { i18n } from '@lingui/core';
-import { messagesRU } from '../../languages/RU/messages';
-import { messagesENG } from '../../languages/ENG/messages';
-i18n.load('RU', messagesRU);
-i18n.load('ENG', messagesENG);
-i18n.activate('ENG');
 
 
 const defAvatar = require('../../../assets/images/default-user-avatar.jpg');

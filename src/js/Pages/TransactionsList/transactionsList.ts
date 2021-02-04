@@ -17,11 +17,11 @@ import { i18n } from '@lingui/core';
 import { messagesRU } from '../../languages/RU/messages';
 import { messagesENG } from '../../languages/ENG/messages';
 import { loadLanguage } from '../../Util/saveLoadLanguage';
-i18n.load('RU', messagesRU);
-i18n.load('ENG', messagesENG);
+// i18n.load('RU', messagesRU);
+// i18n.load('ENG', messagesENG);
 
-const locale = loadLanguage();
-i18n.activate(locale);
+// const locale = loadLanguage();
+// i18n.activate(locale);
 
 export class TransactionsList extends Page {
   onChangeState: any;
