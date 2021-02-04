@@ -39,7 +39,7 @@ export const helpHTML = () => {
           <h2>${i18n._('accountPage')}</h2>
           <p>${i18n._('On this page you can view or/and modify your personal data.')}</p>
           <h3>${i18n._('How can I modify the data?')}</h3>
-          <p>${i18n._('You should enter new data into inputs (user name, user id), choose another value in selects (currency, theme, language), upload a new avatar photo by clicking on the needed button.')}</p>
+          <p>${i18n._('You should enter new data into inputs (username, user account id), choose another value in selects (currency, theme, language), upload a new avatar photo by clicking on the needed button.')}</p>
           <h3>${i18n._('How can I save new data?')}</h3>
           <p>${i18n._('You should click on the "Save" button.')}</p>
           <p><strong>${i18n._('Attention!')}</strong> ${i18n._('New avatar photo will be saved only after saving data.')}</p>
@@ -79,7 +79,7 @@ export const helpHTML = () => {
           <p>${i18n._('The group displays the logo, name, description, total group balance, members and their balances in the group, graph.')}</p>
           <p>${i18n._('The creator of the group has exclusive rights: he/she can delete and add users, as well as close the group.')}</p>
           <ul>
-            <li>${i18n._('You can delete a user if he/she closed all transactions and his/her balance is 0.')}</li>
+            <li>${i18n._('You can delete a user if he/she closed all transactions and his/her balance is 0;')}</li>
             <li>${i18n._('You can add a user at any time: just enter his/her unique account id in the corresponding field in the @name format or select a user from the suggested list;')}</li>
             <li>${i18n._('You can close a group after all users of the group have closed transactions and the group balance is 0.')}</li>
           </ul>

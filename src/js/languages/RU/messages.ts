@@ -96,8 +96,8 @@ export const messagesRU = {
 
   // Help page
   'Help page': 'Помощь',
-  'On this page you can view': 'На данной странице можно просмотреть:',
-  'total balance in your current currency': 'общий баланс в текущей валюте;',
+  'On this page you can view:': 'На данной странице можно просмотреть:',
+  'total balance in your current currency;': 'общий баланс в текущей валюте;',
   'table of major currencies with the ability to view the total balance in these currencies;': 'таблицу курсов основных валют с возможностью просмотра общего баланса в любой из основных валют;',
   'groups with your': 'группы, участие в которых было',
   'participation': 'подтверждено',
@@ -109,7 +109,7 @@ export const messagesRU = {
   'How can I save new data?': 'Как сохранить данные',
   'You should click on the "Save" button.': 'Для сохранения данных необходимо нажать на кнопку "Сохранить".',
   'Attention!' : 'Внимание!',
-  'New avatar photo will be saved only after saving data.': 'New avatar photo will be saved only after saving data.',
+  'New avatar photo will be saved only after saving data.': 'Новое фото профиля будет загружено только после сохранения данных.',
   'How can I recover the data?': 'Как восстановить данные',
   'You can recover changed and unsaved data by leaving the page. However, if the data has been saved, you cannot recover the data.': 'Измененные данные можно не сохранять, просто покинув страницу (не нажимая кнопку "Сохранить"). Однако, если данные были сохранены, отменить изменения нельзя.',
 
