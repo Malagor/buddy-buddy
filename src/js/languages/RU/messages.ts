@@ -55,6 +55,7 @@ export const messagesRU = {
   'Closed Group': 'Закрытые группы',
   'Close group': 'Закрыть группу',
   'New group': 'Новая группа',
+  'Group': 'Группа',
   'Balance': 'Баланс',
   'Create New Group': 'Создать новую группу',
   'Title*': 'Название*',
@@ -136,7 +137,7 @@ export const messagesRU = {
   'pending"': '"В ожидании"',
   'you leave the current state of the contact.': ' вы оставляете текущее состояние контакта.',
   'Removing a contact': 'Удаление контакта',
-  'Contacts are removed mutually. By removing a contact from your contact list, you also exclude yourself from another user’s contacts.': 'Контакты удаляются взаимно. Удалив контакт у себя, вы так же исключаете себя из его списка контактов.',
+  'Contacts are removed mutually. By removing a contact from your contact list, you also exclude yourself from another user\'s contacts.': 'Контакты удаляются взаимно. Удалив контакт у себя, вы так же исключаете себя из его списка контактов.',
   'To remove a contact click on the cross in the upper right corner of the contact card. The app will ask for confirmation. If you confirm removal of the contact, the process will be irreversibly launched.': 'Для удаления контакта нажмите крестик в правом-верхнем углу карточки-контакта. Программа попросит подтверждения. Если вы подтвердите удаление контакта то собственно процесс будет необратимо запущен.',
   'But, you can re-invite users to your contact list, they will receive a notification about this and all will go according to the above scheme.': 'Но, можно повторно пригласить пользователя в свой список контактов, ему прийдет об этом оповещение и все пойдет по вышеуказанной схеме.',
 

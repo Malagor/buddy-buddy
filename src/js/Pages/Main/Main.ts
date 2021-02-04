@@ -230,10 +230,10 @@ export class Main extends Page {
               </p>
             </div>`;
 
-          Currencies.getCurrencyRateByCode(item.currency)
+          Currencies.getCurrencyRateByCode(item.currency) // rate
             .then(data => {
               let userCost: string;
-              if (item.uid === myUid) {
+              if (item.userID === myUid) {
                 userCost = `-${(item.totalCost * data).toFixed(2)} ${item.currency}`;
               } else {
                 userCost = `+${(item.toUserList.find((it: any) => it[0] === item.uid)[1].cost * data).toFixed(2)} ${item.currency}`;
