@@ -107,8 +107,11 @@
   overflow: hidden;
   background-color: rgba(0, 0, 0, 0.05);
   border-radius: rem(10px);
-
   gap: 0.4rem;
+
+      .theme--dark & {
+      background: $super-dark;
+    }
 }
 
 .slider__item__img {
@@ -232,11 +235,17 @@
   line-height: 1rem;
   line-height: 0.8rem;
 
+ 
   span {
     width: auto;
     font-size: 0.9rem;
     text-align: center;
     color: #ffffff;
+
+    .theme--dark & {
+    color: $color-white;
+}
+
 
     @include phones {
       font-size: 1rem;
@@ -381,6 +390,10 @@
   border-radius: 5px;
   box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.25);
 
+    .theme--dark & {
+    background: $super-dark;
+}
+
   @include laptop {
     max-width: 49%;
   }
@@ -419,11 +432,21 @@
 .plus-cost,
 p.plus-cost > span {
   color: $success;
+
+  .theme--dark & {
+  color:  $primary-alternate;
+  }
+
 }
 
 .minus-cost,
 p.minus-cost > span {
   color: $danger;
+
+   .theme--dark & {
+  color: $danger;
+  }
+  
 }
 
 .card-trans__main__loc {
@@ -444,3 +467,17 @@ p.minus-cost > span {
 .main-footer {
   height: 2rem;
 }
+
+.theme--dark table {
+  color: $color-white;  
+}
+
+.theme--dark .card-title {
+  color: $color-text;  
+}
+
+.theme--dark .main__slider__item span {
+    color: $color-white;
+}
+
+
