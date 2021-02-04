@@ -550,12 +550,12 @@ export class Database {
     const { userId, groupId, state } = data;
     const dataBase = this.firebase.database();
 
-    this.firebase.database()
+    dataBase
     .ref(`Groups/${groupId}/userList/${userId}/state/`)
     .set(state);
 
     setTimeout(() => {
-      this.firebase.database()
+      dataBase
       .ref(`User/${userId}/groupList/${groupId}/state/`)
       .set(state);
     }, 1200);
@@ -719,7 +719,7 @@ export class Database {
       .on('child_added', snapshot => {
         const userList = snapshot.val().userList;
         Object.keys(userList).forEach(user => {
-          if (user === this.uid && userList[user].state !== 'approve') {
+          if (user === this.uid && userList[user].state === 'pending') {
             setNotificationMark(TypeOfNotifications.Group, 1);
           }
         });
@@ -795,7 +795,7 @@ export class Database {
     }
 
     if (handlers.contacts) {
-      base.ref(`User/${this.uid}`)
+      base.ref(`User/${this.uid}/contacts`)
         .off('child_added', handlers.contacts);
     }
   }
