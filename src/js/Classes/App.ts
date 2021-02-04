@@ -289,7 +289,9 @@ export class App {
 
   changeUserStatusInGroup(data: IDataChangeStatus) {
     this.database.changeStatusUser(data);
-    this.notifications.decreaseNotificationMark(TypeOfNotifications.Group);
+    if(data.state === 'approve') {
+      this.notifications.decreaseNotificationMark(TypeOfNotifications.Group);
+    }
   }
 
   clearCurrentGroup(userId: string, groupId: string) {
