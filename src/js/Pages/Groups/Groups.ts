@@ -310,7 +310,7 @@ export class Groups extends Page {
     btnAddNewGroup.addEventListener('click', () => {
 
       document.querySelector('.contacts-user-list').innerHTML = '';
-      this.fillContactsList();
+      this.fillContactsList('.contacts-user-list');
       modalNewGroup.show();
     });
 

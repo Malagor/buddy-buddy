@@ -372,7 +372,7 @@ export class Database {
           this.firebase
             .database()
             .ref(`Groups/${groupKey}`)
-            .on('value', (group) => {
+            .once('value', (group) => {
               const users: any = group.val().userList;
 
               Object.keys(users).forEach((userId: any) => {
@@ -547,19 +547,14 @@ export class Database {
   }
 
   changeStatusUser(data: IDataChangeStatus) {
+    console.log('changeStatusUser');
     const { userId, groupId, state } = data;
-    const dataBase = this.firebase.database();
 
-    dataBase
-    .ref(`Groups/${groupId}/userList/${userId}/state/`)
-    .set(state);
+    const updates = {};
+    updates[`Groups/${groupId}/userList/${userId}/state/`] = state;
+    updates[`User/${userId}/groupList/${groupId}/state/`] = state;
 
-    setTimeout(() => {
-      dataBase
-      .ref(`User/${userId}/groupList/${groupId}/state/`)
-      .set(state);
-    }, 1200);
-
+    return firebase.database().ref().update(updates);
   }
 
   clearCurrentGroup(userId: string, groupId: string) {
@@ -649,8 +644,8 @@ export class Database {
   }
 
   addMemberInGroup(data: IDataAddMember, addNewUserInDetailGroup: any) {
-    const bace = this.firebase.database();
-    const userTable = bace.ref('User');
+    const base = this.firebase.database();
+    const userTable = base.ref('User');
     let errorData: string | null = null;
 
     const addUserInPageAndBD = (userKey: string) => {
@@ -661,7 +656,7 @@ export class Database {
       };
       this.changeStatusUser(dataForChangeStatusUser);
 
-      bace
+      base
         .ref(`User/${userKey}/`)
         .once('value', (userInfo) => {
           const userDetainInfo = {
@@ -683,21 +678,21 @@ export class Database {
           return false;
         });
 
-        const userKey = ArrayUserKey[0];
+        const userKey = ArrayUserKey[0]; // id user
 
         if (!userKey) {
           errorData = 'User is missing';
           addNewUserInDetailGroup(data, errorData);
         } else {
-          bace
+          base
             .ref(`Groups/${data.groupId}/userList/`)
             .once('value', (userList) => {
               const userListObj = userList.val();
-              const arrUsers = Object.keys(userListObj);
+              const arrUsersId = Object.keys(userListObj);
               const userInfo = userListObj[userKey];
 
-              if (arrUsers.includes(userKey)) {
-                const stateUser = userListObj[userKey].state;
+              if (arrUsersId.includes(userKey)) {
+                const stateUser = userInfo.state;
                 if (stateUser === 'approve' || stateUser === 'pending') {
                   errorData = 'The user is in the group';
                   addNewUserInDetailGroup(userInfo, errorData);
@@ -1029,7 +1024,7 @@ export class Database {
         this.firebase
           .database()
           .ref('Currency')
-          .on('value', (snapshot) => {
+          .once('value', (snapshot) => {
             const currList: string[] = Object.keys(snapshot.val());
             renderCurrencyList(currList, currCurrency);
           });
@@ -1170,9 +1165,9 @@ export class Database {
     });
 
     userRef.child(`${this.uid}/transactionList/${transKey}/state`)
-      .set('approve')
-      .catch(error => {
-        console.log('Error: ' + error.code);
+          .set('approve')
+          .catch(error => {
+            console.log('Error: ' + error.code);
       });
 
     groupRef.child(`${data.groupID}/transactions`)

@@ -278,7 +278,6 @@ export class App {
   }
 
   addUserBalanceInModalCardUser(data: any) {
-    const { userId, groupId, thisUid } = data;
     this.database.getBalanceForUser(data, this.groups.addUserBalanceInModalDetailGroup);
   }
 
@@ -289,7 +288,7 @@ export class App {
 
   changeUserStatusInGroup(data: IDataChangeStatus) {
     this.database.changeStatusUser(data);
-    if(data.state === 'approve') {
+    if (data.state === 'approve') {
       this.notifications.decreaseNotificationMark(TypeOfNotifications.Group);
     }
   }
