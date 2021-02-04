@@ -2,11 +2,6 @@ import { Page } from '../../Classes/Page';
 import { Modal } from 'bootstrap';
 import { currentYear } from '../../Util/currentYear';
 import { i18n } from '@lingui/core';
-import { messagesRU } from '../../languages/RU/messages';
-import { messagesENG } from '../../languages/ENG/messages';
-i18n.load('RU', messagesRU);
-i18n.load('ENG', messagesENG);
-i18n.activate('ENG');
 
 
 const defAvatar = require('../../../assets/images/default-user-avatar.jpg');
@@ -52,35 +47,35 @@ export class Layout extends Page {
           <hr>
           <ul class="nav flex-column">
               <li class="nav-item">
-                <a class="nav-link sidebarMainLink" href="#">
+                <a class="nav-link sidebarMainLink sidebar-nav-link" href="#">
                   <i class="material-icons">house</i><span class="nav-link__text">${i18n._('mainPage')}</span>
                 </a>
               </li>
               <li class="nav-item">
-                <a class="nav-link sidebarAccountLink" href="#" id="sidebarAccountLink">
+                <a class="nav-link sidebarAccountLink sidebar-nav-link" href="#" id="sidebarAccountLink">
                   <i class="material-icons">person</i><span class="nav-link__text">${i18n._('accountPage')}</span>
                 </a>
               </li>
               <li class="nav-item">
-                <a class="nav-link sidebarContactsLink" href="#">
+                <a class="nav-link sidebarContactsLink sidebar-nav-link" href="#">
                   <i class="material-icons">contacts</i><span class="nav-link__text">${i18n._('contactsPage')}</span>
                   <span class="badge bg-danger"></span>
                 </a>
               </li>
               <li class="nav-item">
-                <a class="nav-link sidebarGroupsLink" href="#">
+                <a class="nav-link sidebarGroupsLink sidebar-nav-link" href="#">
                   <i class="material-icons">groups</i><span class="nav-link__text">${i18n._('groupsPage')}</span>
                   <span class="badge bg-danger"></span>
                 </a>
               </li>
               <li class="nav-item">
-                <a class="nav-link sidebarTransactionsLink" href="#">
+                <a class="nav-link sidebarTransactionsLink sidebar-nav-link" href="#">
                   <i class="material-icons">receipt_long</i><span class="nav-link__text">${i18n._('transactionsPage')}</span>
                   <span class="badge bg-danger"></span>
                 </a>
               </li>
               <li class="nav-item">
-                <a class="nav-link sidebarMessagesLink" href="#">
+                <a class="nav-link sidebarMessagesLink sidebar-nav-link" href="#">
                   <i class="material-icons">speaker_notes</i><span class="nav-link__text">${i18n._('messagesPage')}</span>
                   <span class="badge bg-danger"></span>
                 </a>
@@ -89,13 +84,13 @@ export class Layout extends Page {
           <hr>
           <ul class="nav flex-column mb-2">
               <li class="nav-item">
-                <a class="nav-link sidebarHelpLink" href="#" id="sidebarHelpLink">
+                <a class="nav-link sidebarHelpLink sidebar-nav-link" href="#" id="sidebarHelpLink">
                   <i class="material-icons">help_outline</i>
                   <span class="nav-link__text">${i18n._('helpPage')}</span>
                 </a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="#" id="signOut" data-bs-toggle="modal" data-bs-target="#singOutModal">
+                <a class="nav-link sidebar-nav-link" href="#" id="signOut" data-bs-toggle="modal" data-bs-target="#singOutModal">
                   <i class="material-icons">power_settings_new</i>
                   <span class="nav-link__text signOut-text-link">${i18n._('signOut')}</span>
                 </a>
@@ -152,14 +147,14 @@ export class Layout extends Page {
       <div class="footer__content row align-items-center">
         <div class="footer__title col-3">
           <div class="nav-item">
-            <a class="nav-link sidebarMainLink" aria-current="page" href="#">
+            <a class="nav-link sidebarMainLink sidebar-nav-link" aria-current="page" href="#">
               <i class="material-icons">house</i><span class="d-none d-sm-block nav-link__text">${i18n._('mainPage')}</span>
             </a>
           </div>
         </div>
         <div class="footer__title col-3">
           <div class="nav-item">
-            <a class="nav-link sidebarGroupsLink" href="#">
+            <a class="nav-link sidebarGroupsLink sidebar-nav-link" href="#">
               <i class="material-icons">groups</i><span class="d-none d-sm-block nav-link__text">${i18n._('groupsPage')}</span>
               <span class="badge bg-danger"></span>
             </a>
@@ -167,7 +162,7 @@ export class Layout extends Page {
         </div>
         <div class="footer__title col-3">
           <div class="nav-item">
-            <a class="nav-link sidebarTransactionsLink" href="#">
+            <a class="nav-link sidebarTransactionsLink sidebar-nav-link" href="#">
               <i class="material-icons">receipt_long</i><span class="d-none d-sm-block nav-link__text">${i18n._('transactionsPage')}</span>
               <span class="badge bg-danger"></span>
             </a>
@@ -175,7 +170,7 @@ export class Layout extends Page {
         </div>
         <div class="footer__school col-3">
           <div class="nav-item">
-            <a class="nav-link sidebarMessagesLink" href="#">
+            <a class="nav-link sidebarMessagesLink sidebar-nav-link" href="#">
               <i class="material-icons">speaker_notes</i><span class="d-none d-sm-block nav-link__text">${i18n._('messagesPage')}</span>
               <span class="badge bg-danger"></span>
             </a>
@@ -354,7 +349,7 @@ export class Layout extends Page {
   }
 
   setCurrentPageInMenu(menuItem: HTMLElement): void {
-    const menuLinks: NodeListOf<HTMLElement> = document.querySelectorAll('.nav-link');
+    const menuLinks: NodeListOf<HTMLElement> = document.querySelectorAll('.sidebar-nav-link');
 
     menuLinks.forEach(item => {
       item.classList.remove('active');
