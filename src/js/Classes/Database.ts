@@ -517,6 +517,25 @@ export class Database {
     });
   }
 
+  getBalanceForUser(data: any, fn: any) {
+    const { userId, groupId, thisUid } = data;
+    const base = this.firebase.database();
+
+    base.ref(`User/${thisUid}/currency`)
+    .once('value', (snapshot) => {
+      const curr = snapshot.val();
+
+      Currencies.getCurrencyRateByCode(curr).then(coefficientCurr => {
+        const getDataBalance = (data: any) => {
+          data.currency = curr;
+          data.balance = coefficientCurr *  data.balance;
+          fn(data);
+        };
+        this.getBalanceForUserInGroup(userId, groupId, getDataBalance);
+      });
+    });
+  }
+
   addCurrentGroup(data: any) {
     const userIdAuthor: string = data.userId;
     const groupKey = data.groupKey;
@@ -531,13 +550,32 @@ export class Database {
     const { userId, groupId, state } = data;
     const dataBase = this.firebase.database();
 
-    dataBase
-      .ref(`Groups/${groupId}/userList/${userId}`)
-      .set({ state: state });
+    this.firebase.database()
+    .ref(`Groups/${groupId}/userList/${userId}/state/`)
+    .set(state);
+
+    setTimeout(() => {
+      this.firebase.database()
+      .ref(`User/${userId}/groupList/${groupId}/state/`)
+      .set(state);
+    }, 600);
+
+  }
+
+  clearCurrentGroup(userId: string, groupId: string) {
+    const dataBase =  this.firebase.database();
 
     dataBase
-      .ref(`User/${userId}/groupList/${groupId}`)
-      .set({ state: state });
+    .ref(`User/${userId}/currentGroup/`)
+    .once('value', (snapshot) => {
+      const currentGroup = snapshot.val();
+
+      if (currentGroup === groupId) {
+        dataBase
+          .ref(`User/${userId}/currentGroup/`)
+          .set('');
+      }
+    });
   }
 
   closeGroup(data: IDataCloseGroup, renderFunction: any) {
@@ -603,11 +641,11 @@ export class Database {
 
         fn(true, groupId);
       } else {
-        const error = 'Balance is not zero - you do not close group';
-        fn(false, '.modal-error-text', error);
+        fn(false);
       }
     };
-    // this.getBalanceInGroup(groupId, 1, closeGroupChangeDataBase);
+
+    this.getBalanceInGroup(groupId, 1, closeGroupChangeDataBase);
   }
 
   addMemberInGroup(data: IDataAddMember, addNewUserInDetailGroup: any) {
@@ -1006,6 +1044,7 @@ export class Database {
       .database()
       .ref(`User/${this.uid}`)
       .once('value', (snapshot) => {
+        if (!snapshot.val().groupList) return;
         const groupsIDList: string[] = Object.keys(snapshot.val().groupList);
         const groupsState: any[] = Object.values(snapshot.val().groupList);
         let currGroup = snapshot.val().currentGroup;
@@ -1036,6 +1075,7 @@ export class Database {
       .ref(`User/${this.uid}`)
       .once('value', (snapshot) => {
         let currGroup = snapshot.val().currentGroup;
+        if (!snapshot.val().groupList) return;
         if (!currGroup) {
           currGroup = Object.keys(snapshot.val().groupList)[0];
         }
@@ -1665,7 +1705,7 @@ export class Database {
       .once('value', snapshot => snapshot);
   }
 
-  getBalanceForUserInGroup(userId: string, groupId: string, funcForRender: (data: any) => void, errorHandler?: (message: string) => void) {
+  getBalanceForUserInGroup(userId: string, groupId: string, funcForRender: (data: any) => void, errorHandler?: (message: string) => void, ) {
     const base = this.firebase.database();
     let balance: number = 0;
     base.ref(`Groups/${groupId}/`)

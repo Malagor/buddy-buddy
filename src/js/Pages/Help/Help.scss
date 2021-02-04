@@ -1,0 +1,18 @@
+@import "../../../scss/_misc/variables";
+
+.help-nav-link {
+  color: $primary-alternate;
+
+  &.active.nav-link {
+    color: $color-white;
+    background-color: $primary-alternate;
+  }
+
+  &:hover {
+    color: $primary-alternate-hover;
+  }
+}
+
+.help__menu {
+  text-align: justify;
+}

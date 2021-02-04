@@ -6,22 +6,14 @@ import { ChartBar } from '../../Classes/ChartBar';
 import { Modal } from 'bootstrap';
 import { eventForContactsList } from '../Contacts/eventForContactsList';
 import { onClickContactInContactsList } from '../Contacts/onClickContactInContactsList';
-
 import { i18n } from '@lingui/core';
-import { messagesRU } from '../../languages/RU/messages';
-import { messagesENG } from '../../languages/ENG/messages';
-import { loadLanguage } from '../../Util/saveLoadLanguage';
-i18n.load('RU', messagesRU);
-i18n.load('ENG', messagesENG);
-
-const locale = loadLanguage();
-i18n.activate(locale);
 
 const defaultGroupLogo = require('../../../assets/images/default-group-logo.png');
 
 export class Groups extends Page {
   onCreateNewGroup: any;
   closeGroup: any;
+  clearCurrentGroup: any;
   onAddMember: any;
   addMemberInDetailGroup: any;
   fillContactsList: any;
@@ -49,13 +41,13 @@ export class Groups extends Page {
           </div>
           <div class="block__main">
             <div id="contentGroup" class="container container-group">
-              <div id="divForListOpenGroups" class="block__wrapper-card">
+              <div id="divForListOpenGroups" class="block--width-85 accordion-main">
                 <div class="card-body data-is-not">
                   <h5 class="card-title">${i18n._('No groups')}</h5>
                   <p class="card-text">${i18n._('Would')}</p>
                 </div>
               </div>
-              <div class="accordion group-hidden" id="accordionForClosedGroup">
+              <div class="accordion accordion-main group-hidden block--width-85" id="accordionForClosedGroup">
                 <div class="accordion-item">
                   <h2 class="accordion-header" id="headingOne">
                     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
@@ -169,7 +161,7 @@ export class Groups extends Page {
     }
 
     return `
-      <div id=${data.groupKey} class="card mb-3 card-group">
+      <div id=${data.groupKey} class="card mb-3 card-group block--width-85-md">
         <div class="row g-0 col">
           <div class="col-3 card-group__box-logo-group">
             <img class="card-group__img-avatar" src="${data.dataGroup.icon ? data.dataGroup.icon : defaultGroupLogo}" alt="icon-group">
@@ -249,14 +241,14 @@ export class Groups extends Page {
             </div>
 
               <div class="row ">
-                <div class="dropdown col-10 modal-dropdown">
+                <div class="dropdown col-8 col-sm-9 modal-dropdown">
                   <input class="form-control dropdown-toggle" type="text" id="activeContact" data-bs-toggle="dropdown" aria-expanded="false" placeholder="${i18n._('Members')}" autocomplete="off" name="name">
                   <input type="text" name="key" class="contact-user-id" hidden>
                   <ul id="members-dropdown-menu" class="dropdown-menu contacts-user-list members-dropdown-menu" aria-labelledby="${i18n._('Group Members')}">
                   </ul>
                 </div>
 
-                <div class="col-2 modal-wrapper-btn">
+                <div class="col-4 col-sm-3 modal-wrapper-btn">
                   <button type="button" class="btn btn-primary modal-btn-primary btn-primary-alternate" id="addNewGroupMember"><span>${i18n._('Add')}</span></button>
                 </div>
               </div>
@@ -417,7 +409,7 @@ export class Groups extends Page {
           <div class="col-6 card-detail__box-logo-group">
             <h5 class="card-detail__title">${data.dataGroup.title}</h5>
             <p class="card-detail__date">${i18n._('Create date')}: ${ dataCreateGroup.slice(0, 10) }</p>
-            <p class="card-detail__date">${i18n._('Close date')}:  ${ data.dataGroup.dateClose ? dataCloseGroup : i18n._('group is active')}</p>
+            <p class="card-detail__date">${i18n._('Close date')}: ${ data.dataGroup.dateClose ? dataCloseGroup : i18n._('group is active')}</p>
           </div>
           <div id="balanceModalGroup" class="col-3 card-detail__box-logo-group">
           <h5 class="card-detail__balance">${i18n._('Balance')}</h5>
@@ -454,7 +446,8 @@ export class Groups extends Page {
     const divModalContent = document.getElementById('modalContent');
     const dataForBalanceInModalCard = {
       groupId: data.groupId,
-      userId: data.userId
+      userId: data.userId,
+      thisUid: data.thisUid
     };
     let isBtmForDeleteUser = false;
 
@@ -522,7 +515,7 @@ export class Groups extends Page {
             <input class="form-control dropdown-toggle modal-input" type="text" id="activeContact" data-bs-toggle="dropdown" aria-expanded="false" placeholder="Members" autocomplete="off" name="name">
             <ul id="members-dropdown-menu" class="dropdown-menu contacts-user-list-detail members-dropdown-menu" aria-labelledby="Group Members">
             </ul>
-            <button type="button" class="btn btn-primary btn-primary-alternate modal-btn-primary" id="addNewGroupMemberInDetail"><span>add</span></button>
+            <button type="button" class="btn btn-primary btn-primary-alternate modal-btn-primary" id="addNewGroupMemberInDetail"><span>${i18n._('Add')}</span></button>
           </div>
 
           <div class="col modal-error-text text-danger">
@@ -559,7 +552,7 @@ export class Groups extends Page {
             userAccount =  userAccount.slice(0, -1);
           }
         } catch {
-          const textError = 'The user account was entered incorrectly, for example: @account';
+          const textError = `${i18n._('The user account was entered incorrectly, for example: @account')}`;
           this.addTextInHtmlBlock('.modal-error-text', textError);
         }
 
@@ -584,7 +577,14 @@ export class Groups extends Page {
 
   addNewUserInDetailGroup = (data: any, errorData: string) => {
     if (errorData) {
-      this.addTextInHtmlBlock('.modal-error-text', errorData);
+      if (errorData === 'User is missing') {
+        const error = `${i18n._('User is missing')}`;
+        this.addTextInHtmlBlock('.modal-error-text', error);
+      } else if (errorData === 'The user is in the group') {
+        const error = `${i18n._('The user is in the group')}`;
+        this.addTextInHtmlBlock('.modal-error-text', error);
+      }
+
     } else {
       document.querySelector('#modalUserListPending').classList.remove('group-hidden');
 
@@ -648,13 +648,14 @@ export class Groups extends Page {
     }
   }
 
-  answerDataBaseForClosedGroup = (isSuccess: boolean, selector: null | string = null, textError: null | string = null) => {
+  answerDataBaseForClosedGroup = (isSuccess: boolean, selector: null | string = null) => {
     if (isSuccess) {
       document.querySelector('.btn-close').click();
       document.querySelector(`#${selector}`).remove();
 
     } else {
-      this.addTextInHtmlBlock(selector, textError);
+      const error = 'Balance is not zero - you do not close group';
+      this.addTextInHtmlBlock('.modal-error-text', error);
     }
   }
 
@@ -665,7 +666,7 @@ export class Groups extends Page {
     const divFooterModal = document.querySelector('.modal-footer');
     const htmlBtnCloseGroup = `
     <div class="">
-      <button id="closeGroupBtn" type="button" class="btn btn-secondary">Close group</button>
+      <button id="closeGroupBtn" type="button" class="btn btn-secondary">${i18n._('Close group')}</button>
     </div>
     `;
     divFooterModal.insertAdjacentHTML('afterbegin', htmlBtnCloseGroup);
@@ -677,9 +678,11 @@ export class Groups extends Page {
 
       const dataForCloseGroup = {
         userList: userList,
-        groupId: groupId
+        groupId: groupId,
+        currentGroup: data.user.currentGroup
       };
       this.closeGroup(dataForCloseGroup);
+      this.clearCurrentGroup(data.thisUid, data.groupId);
     });
   }
 
@@ -764,9 +767,9 @@ export class Groups extends Page {
 
     const divForBalance = divCardUser.querySelector('.modal-detail__balance');
     if (data.balance > 0) {
-      divForBalance.classList.add('text-danger');
-    } else if (data.balance < 0) {
       divForBalance.classList.add('text-success');
+    } else if (data.balance < 0) {
+      divForBalance.classList.add('text-danger');
     }
   }
 

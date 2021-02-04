@@ -19,7 +19,6 @@ import { INewMessage, Messenger } from '../Pages/Messenger/Messenger';
 import { Contacts, ISearchUserData } from '../Pages/Contacts/Contacts';
 import { Help } from '../Pages/Help/Help';
 import { Currencies } from './Currencies';
-
 import { i18n } from '@lingui/core';
 
 
@@ -65,7 +64,7 @@ export class App {
 
   async isUserLogin(state: boolean, uid?: string) {
     if (state) {
-      
+
       await this.getUserTheme();
       await this.getUserLanguage();
 
@@ -111,6 +110,7 @@ export class App {
       this.groups.changeUserStatusInGroup = this.changeUserStatusInGroup.bind(this);
       this.groups.closeGroup = this.closeGroup.bind(this);
       this.groups.addMemberInDetailGroup = this.addMemberInDetailGroup.bind(this);
+      this.groups.clearCurrentGroup = this.clearCurrentGroup.bind(this);
 
 
       this.transactionsList = TransactionsList.create('.main');
@@ -152,16 +152,15 @@ export class App {
   }
 
   onSignOut(): any {
-    this.deleteHandlers();
-    this.database.signOut();
-    this.database.deleteUserInfoListener(this.userHandler);
-    this.database.init();
+    // this.deleteHandlers();
+    // this.database.signOut();
+    // this.database.deleteUserInfoListener(this.userHandler);
+    // this.database.init();
 
     // Alternative decision
-
-    // window.localStorage.clear();
-    // window.indexedDB.deleteDatabase('firebaseLocalStorageDb');
-    // window.location.reload();
+    window.localStorage.clear();
+    window.indexedDB.deleteDatabase('firebaseLocalStorageDb');
+    window.location.reload();
   }
 
   onSignIn(email: string, password: string, name: string): void {
@@ -271,7 +270,7 @@ export class App {
   onAddInfoForModalDetailGroup(groupId: string, userId: string) {
     this.database.getGroup(groupId, this.groups.addInfoForModalDetailGroup, this.groups.addModalUserData);
     this.database.getBalanceForGroup(groupId, userId, this.groups.addBalanceForModalGroupDetail);
-    this.database.getDataForGraphGroupBalance(groupId, this.groups.renderChart());
+    this.database.getDataForGraphGroupBalance(groupId, this.groups.renderChart(), userId);
   }
 
   addBalanceInGroupPage(groupId: string, userId: string) {
@@ -279,8 +278,8 @@ export class App {
   }
 
   addUserBalanceInModalCardUser(data: any) {
-    const { userId, groupId } = data;
-    this.database.getBalanceForUserInGroup(userId, groupId, this.groups.addUserBalanceInModalDetailGroup);
+    const { userId, groupId, thisUid } = data;
+    this.database.getBalanceForUser(data, this.groups.addUserBalanceInModalDetailGroup);
   }
 
   getUserBalanceInGroup(data: any) {
@@ -291,6 +290,10 @@ export class App {
   changeUserStatusInGroup(data: IDataChangeStatus) {
     this.database.changeStatusUser(data);
     this.notifications.decreaseNotificationMark(TypeOfNotifications.Group);
+  }
+
+  clearCurrentGroup(userId: string, groupId: string) {
+    this.database.clearCurrentGroup(userId, groupId);
   }
 
   closeGroup(data: IDataCloseGroup) {
@@ -335,6 +338,7 @@ export class App {
   }
 
   onHelpPage() {
+    this.setCurrentPage('Help');
     this.deleteHandlers();
     this.helpPage.render();
   }
