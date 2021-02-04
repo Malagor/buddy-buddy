@@ -1,6 +1,24 @@
 @import "./src/scss/_misc/mixins";
 @import "../_misc/variables.scss";
 
+.theme--dark input {
+  background: $ultra-light;
+}
+
+.theme--dark select {
+  background: $ultra-light;
+}
+
+.theme--dark textarea {
+  background: $ultra-light;
+}
+
+.theme--dark .modal-content {
+  background: $super-dark;
+  color: $color-white;
+  border-color: $middle-dark;
+}
+
 .block__wrapper {
   position: relative;
   display: flex;
@@ -35,6 +53,12 @@
   background-color: rgba(255, 255, 255, 1);
   border-radius: rem(15px);
   box-shadow: 0 0 10px 5px rgba(0, 0, 0, 0.075);
+
+  .theme--dark & {
+    background: $ultra-dark;
+    box-shadow: 0 0 10px 5px rgba(255, 255, 255, 0.075);
+    color: $color-white;
+  }
 }
 
 .block__header {
@@ -46,6 +70,10 @@
   width: 100%;
   padding: 0.5rem 1.5rem 0.5rem 2.3rem;
   border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+
+  .theme--dark & {
+    background: $ultramega-dark;
+  }
 
 @include laptop {
     padding: 0.5rem 2rem 0.5rem 2.5rem;
@@ -141,7 +169,13 @@
   font-size: 1.2rem;
   color: rgba(0, 0, 0, 1);
 
+  .theme--dark & {
+    color: $color-white;
+  }
+
+
 @include tablets {
+
     font-size: 1.4rem;
   }
 
@@ -165,6 +199,10 @@
   background-color: rgba(255, 255, 255, 1);
   border-top: 1px solid rgba(0, 0, 0, 0.05);
 
+  .theme--dark & {
+    background: $ultramega-dark;
+  }
+
 @include laptop {
     padding: 0.5rem 2rem;
   }
@@ -183,6 +221,12 @@
   & > .main__balance {
     margin: 0;
   }
+
+  .theme--dark & {
+  border: 1px solid $middle-dark;
+}
+
+
 }
 
 .block__card--no-border {

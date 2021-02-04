@@ -198,7 +198,7 @@ export class Database {
 
       await Promise.all(value).then((data) => {
         data.reverse();
-        callback(data);
+        callback(data, this.uid);
       });
     });
   }
