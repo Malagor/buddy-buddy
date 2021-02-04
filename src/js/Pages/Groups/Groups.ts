@@ -240,15 +240,15 @@ export class Groups extends Page {
 
             </div>
 
-              <div class="row ">
-                <div class="dropdown col-8 col-sm-9 modal-dropdown">
+              <div class="col-12 modal-wrapper-member-input">
+                <div class="dropdown modal-dropdown-new-group">
                   <input class="form-control dropdown-toggle" type="text" id="activeContact" data-bs-toggle="dropdown" aria-expanded="false" placeholder="${i18n._('Members')}" autocomplete="off" name="name">
                   <input type="text" name="key" class="contact-user-id" hidden>
                   <ul id="members-dropdown-menu" class="dropdown-menu contacts-user-list members-dropdown-menu" aria-labelledby="${i18n._('Group Members')}">
                   </ul>
                 </div>
 
-                <div class="col-4 col-sm-3 modal-wrapper-btn">
+                <div class="modal-wrapper-btn">
                   <button type="button" class="btn btn-primary modal-btn-primary btn-primary-alternate" id="addNewGroupMember"><span>${i18n._('Add')}</span></button>
                 </div>
               </div>
