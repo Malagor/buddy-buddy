@@ -38,7 +38,7 @@
 
 .theme--dark & {
   background: $ultramega-dark;
-  // color: $color-white;
+  box-shadow: 0 2px 5px rgba(200,200,200,0.25);
 }
 
   &--new-group {
@@ -57,7 +57,7 @@
 
       .theme--dark & {
         background: $middle-dark;
-        // color: $color-white;
+        box-shadow: 0 3px 5px rgba(0,0,0,0.25);
       }
     }
   }
