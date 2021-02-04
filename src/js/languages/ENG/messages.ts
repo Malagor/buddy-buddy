@@ -177,7 +177,7 @@ export const messagesENG = {
   'In the modal window with detailed information (see above), you can add participants to the transaction, as well as delete them by clicking on the "+" or "-" icon opposite the participant. After adding or removing participants, the total balance will be redistributed again among the participants.': 'In the modal window with detailed information (see above), you can add participants to the transaction, as well as delete them by clicking on the "+" or "-" icon opposite the participant. After adding or removing participants, the total balance will be redistributed again among the participants.',
   'To delete a transaction, you must click on the "Delete" button at the bottom of the modal window.': 'To delete a transaction, you must click on the "Delete" button at the bottom of the modal window.',
   'After all the changes, click Save. All changes, including the common balance, will be displayed in the app.': 'After all the changes, click Save. All changes, including the common balance, will be displayed in the app.',
-  
+
   'The app allows to exchange messages with': 'The app allows to exchange messages with',
   'your contacts': 'your contacts',
   'Incoming messages are located on the left side of the page. Outgoing on the right. Your incoming messages are also highlighted.': 'Incoming messages are located on the left side of the page. Outgoing on the right. Your incoming messages are also highlighted.',
@@ -188,8 +188,8 @@ export const messagesENG = {
   'When you sent some message, your recipient will receive a notification in the form of a marker in the menu.': 'When you sent some message, your recipient will receive a notification in the form of a marker in the menu.',
   'Reply to message': 'Reply to message',
   'For a quick reply to a message, you can press the corresponding "Answer" button in the message, the recipient will be added in the corresponding field automatically. All that remains is to write a message and send.': 'For a quick reply to a message, you can press the corresponding "Answer" button in the message, the recipient will be added in the corresponding field automatically. All that remains is to write a message and send.',
-  
-  
+
+
   'User is missing': 'User is missing',
   'The user is in the group': 'The user is in the group',
   'The user account was entered incorrectly, for example: @account': 'The user account was entered incorrectly, for example: @account'

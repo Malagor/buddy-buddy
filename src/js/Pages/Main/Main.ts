@@ -232,7 +232,7 @@ export class Main extends Page {
 
           Currencies.getCurrencyRateByCode(item.currency)
             .then(data => {
-              let userCost: string; 
+              let userCost: string;
               if (item.uid === myUid) {
                 userCost = `-${(item.totalCost * data).toFixed(2)} ${item.currency}`;
               } else {

@@ -384,21 +384,21 @@ export class Groups extends Page {
       modalNewGroup.hide();
     };
 
-    const inputForMember = document.querySelector('#activeContact')
-    const contactUserId = document.querySelector('.contact-user-id')
+    const inputForMember = document.querySelector('#activeContact');
+    const contactUserId = document.querySelector('.contact-user-id');
 
     const addGroupMember = document.querySelector('#addNewGroupMember');
     addGroupMember.addEventListener('click', (ev) => {
 
-      if(inputForMember.value) {
+      if (inputForMember.value) {
         const users: string[] = [];
         const members: NodeListOf<HTMLElement> = document.querySelectorAll('.member');
         members.forEach(member => {
           users.push(member.getAttribute('data-id'));
         });
-        if(users.includes(contactUserId.value)) {
-          inputForMember.value = ''
-        } else { 
+        if (users.includes(contactUserId.value)) {
+          inputForMember.value = '';
+        } else {
           ev.preventDefault();
           const member: HTMLFormElement = document.querySelector('.contact-user-id');
           this.onAddMember(member.value);
