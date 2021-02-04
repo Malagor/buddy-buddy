@@ -37,7 +37,7 @@
 
 
 .theme--dark & {
-  background: $middle-dark;
+  background: $ultramega-dark;
   // color: $color-white;
 }
 
@@ -54,6 +54,11 @@
       order: -1;
       color: $color-white;
       background: $primary-alternate;
+
+      .theme--dark & {
+        background: $middle-dark;
+        // color: $color-white;
+      }
     }
   }
 
@@ -94,8 +99,6 @@
     .theme--dark & {
     background: $ultra-light;
   }
-
-
 }
 
 
@@ -395,6 +398,6 @@
 }
 
 .theme--dark .accordion-button{
-  background: $middle-dark;
+  background: $ultramega-dark;
   color: $color-white;
 }

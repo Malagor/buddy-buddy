@@ -67,6 +67,10 @@ body {
   .theme--dark & {
     color: $color-white;
     background: $ultra-dark ;
+
+    &:hover {
+      background: $color-accent-1;
+    }
   }
 }
 
@@ -145,11 +149,9 @@ body {
   &:hover {
     background: $color-accent-1;
   }
-
-    .theme--dark &:hover {
-    background: $color-accent-1;
-  }
 }
+
+
 
 .nav-link {
   display: flex;
@@ -166,8 +168,6 @@ body {
   .footer & {
     color: inherit;
   }
-
-
 }
 
 
@@ -189,8 +189,8 @@ main.main {
 
 
 .theme--dark .footer {
-  background: $ultra-dark !important;
   color: $color-white;
+  background: $ultra-dark !important;
 }
 
 footer.footer {
@@ -263,8 +263,8 @@ footer.footer {
 
 
   .theme--dark & {
-    background: $ultra-dark;
     color: $color-white;
+    background: $ultra-dark;
   }
 }
 
