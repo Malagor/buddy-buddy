@@ -91,6 +91,7 @@ export const messagesENG = {
   'group is active': 'group is active',
   'No description': 'No description...',
   'Participants': 'Participants',
+  'Balance is not zero - you do not close group': 'Balance is not zero - you do not close group',
 
   // Help page
   'Help page': 'Help page',

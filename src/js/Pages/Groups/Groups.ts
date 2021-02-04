@@ -669,7 +669,7 @@ export class Groups extends Page {
       document.querySelector(`#${selector}`).remove();
 
     } else {
-      const error = 'Balance is not zero - you do not close group';
+      const error = `${i18n._('Balance is not zero - you do not close group')}`;
       this.addTextInHtmlBlock('.modal-error-text', error);
     }
   }
