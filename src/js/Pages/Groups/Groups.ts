@@ -711,7 +711,7 @@ export class Groups extends Page {
     const userAccount = divUserCard.querySelector('.modal-detail__account');
 
     const html = `
-      <div class="card modal-detail">
+      <div class="card modal-detail--add">
         ${userAvatar.outerHTML}
         <div>
           ${userName.outerHTML}
