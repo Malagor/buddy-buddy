@@ -1,5 +1,5 @@
 @import "./src/scss/_misc/variables";
-@import "../../../scss/_misc/variables.scss";
+@import "./src/scss/_misc/variables.scss";
 
 $color-text: #000000;
 
@@ -78,7 +78,7 @@ $color-text: #000000;
       }
 
       .checked {
-        border: 3px solid #297eff;
+        border: 3px solid $primary-alternate;
       }
 
       &__name {
