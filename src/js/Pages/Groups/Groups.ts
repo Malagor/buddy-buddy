@@ -40,7 +40,7 @@ export class Groups extends Page {
             <p class="block__title">${i18n._('Groups')}</p>
           </div>
           <div class="block__main">
-            <div id="contentGroup" class="container container-group">
+            <div id="contentGroup" class="container container-group block--width-85">
               <div id="divForListOpenGroups" class="block--width-85 accordion-main">
                 <div class="card-body data-is-not">
                   <h5 class="card-title">${i18n._('No groups')}</h5>
@@ -161,7 +161,7 @@ export class Groups extends Page {
     }
 
     return `
-      <div id=${data.groupKey} class="card mb-3 card-group block--width-85-md">
+      <div id=${data.groupKey} class="card mb-3 card-group block--width-85">
         <div class="row g-0 col">
           <div class="col-3 card-group__box-logo-group">
             <img class="card-group__img-avatar" src="${data.dataGroup.icon ? data.dataGroup.icon : defaultGroupLogo}" alt="icon-group">
@@ -240,15 +240,15 @@ export class Groups extends Page {
 
             </div>
 
-              <div class="row ">
-                <div class="dropdown col-8 col-sm-9 modal-dropdown">
+              <div class="col-12 modal-wrapper-member-input">
+                <div class="dropdown modal-dropdown-new-group">
                   <input class="form-control dropdown-toggle" type="text" id="activeContact" data-bs-toggle="dropdown" aria-expanded="false" placeholder="${i18n._('Members')}" autocomplete="off" name="name">
                   <input type="text" name="key" class="contact-user-id" hidden>
                   <ul id="members-dropdown-menu" class="dropdown-menu contacts-user-list members-dropdown-menu" aria-labelledby="${i18n._('Group Members')}">
                   </ul>
                 </div>
 
-                <div class="col-4 col-sm-3 modal-wrapper-btn">
+                <div class="modal-wrapper-btn">
                   <button type="button" class="btn btn-primary modal-btn-primary btn-primary-alternate" id="addNewGroupMember"><span>${i18n._('Add')}</span></button>
                 </div>
               </div>
@@ -384,11 +384,26 @@ export class Groups extends Page {
       modalNewGroup.hide();
     };
 
+    const inputForMember = document.querySelector('#activeContact');
+    const contactUserId = document.querySelector('.contact-user-id');
+
     const addGroupMember = document.querySelector('#addNewGroupMember');
     addGroupMember.addEventListener('click', (ev) => {
-      ev.preventDefault();
-      const member: HTMLFormElement = document.querySelector('.contact-user-id');
-      this.onAddMember(member.value);
+
+      if (inputForMember.value) {
+        const users: string[] = [];
+        const members: NodeListOf<HTMLElement> = document.querySelectorAll('.member');
+        members.forEach(member => {
+          users.push(member.getAttribute('data-id'));
+        });
+        if (users.includes(contactUserId.value)) {
+          inputForMember.value = '';
+        } else {
+          ev.preventDefault();
+          const member: HTMLFormElement = document.querySelector('.contact-user-id');
+          this.onAddMember(member.value);
+        }
+      }
     });
   }
 

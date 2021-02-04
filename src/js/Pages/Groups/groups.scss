@@ -22,10 +22,13 @@
 }
 
 .accordion-main{
+  display: flex;
+  flex-direction: column;
   width: 100%;
 }
 
 .card-group {
+  width: 100%;
   margin: auto;
   border: 2px solid rgba(0,0,0,0.05);
   border-radius: 0.625rem;
@@ -116,8 +119,18 @@
   opacity: 0;
 }
 
+.modal-wrapper-member-input{
+  display: flex;
+}
+
 .modal-dropdown {
   display: flex;
+  padding: rem(9px) rem(7px) rem(7px) rem(7px);
+}
+
+.modal-dropdown-new-group {
+  display: flex;
+  width: 90%;
   padding: rem(9px) rem(7px) rem(7px) rem(7px);
 }
 
@@ -127,7 +140,6 @@
 
 .modal-btn-primary {
   margin: rem(8px);
-  width: 100%;
 }
 
 .modal-wrapper-btn {
@@ -280,7 +292,8 @@
 }
 
 .container-group {
-  padding: 0 rem(40px);
+  max-width: rem(620px);
+  padding: 0;
 }
 
 @media (max-width: 450px) {

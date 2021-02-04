@@ -138,7 +138,7 @@ export const messagesRU = {
   'Contacts are removed mutually. By removing a contact from your contact list, you also exclude yourself from another user’s contacts.': 'Контакты удаляются взаимно. Удалив контакт у себя, вы так же исключаете себя из его списка контактов.',
   'To remove a contact click on the cross in the upper right corner of the contact card. The app will ask for confirmation. If you confirm removal of the contact, the process will be irreversibly launched.': 'Для удаления контакта нажмите крестик в правом-верхнем углу карточки-контакта. Программа попросит подтверждения. Если вы подтвердите удаление контакта то собственно процесс будет необратимо запущен.',
   'But, you can re-invite users to your contact list, they will receive a notification about this and all will go according to the above scheme.': 'Но, можно повторно пригласить пользователя в свой список контактов, ему прийдет об этом оповещение и все пойдет по вышеуказанной схеме.',
-  
+
   'This page displays a list of all user groups, on this page you can also create or edit a group.': 'На данной странице отображается список всех групп пользователя, а также можно создать или отредактировать группу.',
   'Private groups are located in the bottom drop-down window.': 'Закрытые группы распологаются в нижнем раскрывающемся окне.',
   'Group creation': 'Создание группы',

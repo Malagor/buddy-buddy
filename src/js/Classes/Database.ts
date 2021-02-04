@@ -573,7 +573,7 @@ export class Database {
       if (currentGroup === groupId) {
         dataBase
           .ref(`User/${userId}/currentGroup/`)
-          .set('');
+          .remove();
       }
     });
   }
