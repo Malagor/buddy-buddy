@@ -1,9 +1,9 @@
 ## RS-Clone
 1. Task: https://github.com/rolling-scopes-school/tasks/blob/master/tasks/rsclone/rsclone.md
 2. Screenshot:
-   ![]()
-3. Deploy: https://malagor-rsclone.netlify.app/
-4. Done 25.12.2020 / deadline 25.01.2021
+   ![](https://webpolygon.by/wp-content/uploads/2021/02/buddy-buddy.jpg)
+3. Deploy: https://buddy-buddy-8e497.web.app/
+4. Done 03.02.2021 / deadline 03.02.2021
 5. Authors:
 - [Александр @malagor](https://github.com/malagor) - TeamLead, Frontend developer
 - [Дарья @besovadevka](https://github.com/besovadevka) - Frontend developer
