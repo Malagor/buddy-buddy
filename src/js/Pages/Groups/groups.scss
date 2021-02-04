@@ -26,6 +26,7 @@
 }
 
 .card-group {
+  width: 100%;
   margin: auto;
   border: 2px solid rgba(0,0,0,0.05);
   border-radius: 0.625rem;
@@ -246,7 +247,7 @@
 }
 
 .container-group {
-  padding: 0 rem(40px);
+  padding: 0;
 }
 
 @media (max-width: 450px) {

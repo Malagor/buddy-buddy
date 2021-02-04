@@ -40,7 +40,7 @@ export class Groups extends Page {
             <p class="block__title">${i18n._('Groups')}</p>
           </div>
           <div class="block__main">
-            <div id="contentGroup" class="container container-group">
+            <div id="contentGroup" class="container container-group block--width-85">
               <div id="divForListOpenGroups" class="block--width-85 accordion-main">
                 <div class="card-body data-is-not">
                   <h5 class="card-title">${i18n._('No groups')}</h5>
@@ -161,7 +161,7 @@ export class Groups extends Page {
     }
 
     return `
-      <div id=${data.groupKey} class="card mb-3 card-group block--width-85-md">
+      <div id=${data.groupKey} class="card mb-3 card-group block--width-85">
         <div class="row g-0 col">
           <div class="col-3 card-group__box-logo-group">
             <img class="card-group__img-avatar" src="${data.dataGroup.icon ? data.dataGroup.icon : defaultGroupLogo}" alt="icon-group">
