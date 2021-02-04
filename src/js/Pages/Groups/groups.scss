@@ -206,6 +206,7 @@
   }
 }
 
+
 .modal-detail {
   position: relative;
   display: flex;
@@ -216,6 +217,17 @@
   border: 2px solid rgba(0,0,0,0.05);
   border-radius: 0.625rem;
   box-shadow: 0 3px 5px rgba(0,0,0,0.25);
+
+  &--add{
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin: rem(8px) 0 rem(16px) 0;
+    border: 2px solid rgba(0,0,0,0.05);
+    border-radius: 0.625rem;
+    box-shadow: 0 3px 5px rgba(0,0,0,0.25);
+  }
 
    .theme--dark & {
     background: $super-dark;

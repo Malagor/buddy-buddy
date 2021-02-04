@@ -558,7 +558,7 @@ export class Database {
       this.firebase.database()
       .ref(`User/${userId}/groupList/${groupId}/state/`)
       .set(state);
-    }, 600);
+    }, 1200);
 
   }
 
