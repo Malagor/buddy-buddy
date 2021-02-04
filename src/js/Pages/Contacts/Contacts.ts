@@ -165,7 +165,7 @@ export class Contacts extends Page {
 
   // Add contact to user list in Modal
   addContactsToList = (data: any): void => {
-    const list = document.querySelector(`${data.selector ? data.selector : '.contacts-list'}`);
+    const list = document.querySelector(`${data.selector ? data.selector : '.contacts-user-list'}`);
     const html = `
       <li class="contact-list__item" data-user-id="${data.key}">
         <img class="contact-list__avatar" src="${data.avatar}" alt="${data.name}">
