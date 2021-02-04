@@ -186,7 +186,7 @@ export class Main extends Page {
     }
   }
 
-  renderTransactions(data: any): void {
+  renderTransactions(data: any, myUid: string): void {
     if (!data.length) {
 
       document.querySelector('.main__group-transactions').innerHTML = `
@@ -232,9 +232,12 @@ export class Main extends Page {
 
           Currencies.getCurrencyRateByCode(item.currency)
             .then(data => {
-              const userCost: string = item.toUserList.find((it: any) => it[0] === item.uid)
-              ? `+${(item.toUserList.find((it: any) => it[0] === item.uid)[1].cost * data).toFixed(2)} ${item.currency}`
-              : `-${(item.totalCost * data).toFixed(2)} ${item.currency}`;
+              let userCost: string; 
+              if (item.uid === myUid) {
+                userCost = `-${(item.totalCost * data).toFixed(2)} ${item.currency}`;
+              } else {
+                userCost = `+${(item.toUserList.find((it: any) => it[0] === item.uid)[1].cost * data).toFixed(2)} ${item.currency}`;
+              }
               document.querySelectorAll('.card-trans__main__cost')[index].firstElementChild.textContent = userCost;
               if (document.querySelectorAll('.card-trans__main__cost')[index].firstElementChild.textContent.trim()[0] !== '+') {
                 document.querySelectorAll('.card-trans__main__cost')[index].firstElementChild.classList.add('minus-cost');
