@@ -229,18 +229,15 @@
 
   &--author {
     color: $color-text;
-<<<<<<< HEAD
     background: rgba(128, 128, 128, 0.5);
+    background: $color-neutral;
 
      .theme--dark & {
     background: $ultramega-dark;
 
   }
 
-
-=======
-    background: $color-neutral;
->>>>>>> develop
+    
   }
 
   &__img {
