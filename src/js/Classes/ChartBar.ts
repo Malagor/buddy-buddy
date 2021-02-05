@@ -184,6 +184,7 @@ export class ChartBar {
 
   eventsForChart(chart: any): void {
     window.addEventListener('resize', () => {
+      if (!document.querySelector('.images-for-canvas')) return;
       const avatars: any = document.querySelector('.images-for-canvas').querySelectorAll('.wr');
       const xAxis: any = chart.scales['x-axis-0'];
       xAxis.ticks.forEach((_: any, index: number) => {
