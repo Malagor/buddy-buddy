@@ -87,6 +87,7 @@ export class TransactionsList extends Page {
     const listOfTrans: HTMLElement = document.querySelector('.trans-list__list');
     const transaction: HTMLElement = document.createElement('div');
     transaction.setAttribute('id', transID);
+    transaction.className = `trans-item`;
     listOfTrans.prepend(transaction);
   }
 
