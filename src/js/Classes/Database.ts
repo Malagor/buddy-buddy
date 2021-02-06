@@ -547,7 +547,7 @@ export class Database {
   }
 
   changeStatusUser(data: IDataChangeStatus) {
-    console.log('changeStatusUser');
+    // console.log('changeStatusUser');
     const { userId, groupId, state } = data;
 
     const updates = {};
@@ -611,14 +611,16 @@ export class Database {
               .once('value', (transactions) => {
                 const transactionId = transactions.key;
                 const transactionInfo = transactions.val();
-
+                const transPayer = transactionInfo.userID;
                 const transactionUserList = Object.keys(transactionInfo.toUserList);
                 transactionUserList.forEach((userId: string) => {
                   dataBase
                     .ref(`User/${userId}/transactionList/${transactionId}/state`)
                     .set('closed');
                 });
-
+                dataBase
+                    .ref(`User/${transPayer}/transactionList/${transactionId}/state`)
+                    .set('closed');
               });
             });
           }
@@ -628,8 +630,8 @@ export class Database {
 
     const closeGroupChangeDataBase = (data: any, fn = renderFunction) => {
       const { balance, groupId } = data;
-
-      if (balance === 0) {
+      console.log ('balance', balance);
+      if (+balance <= 0.001) {
         changeStatusUserAndGroupListToClosed(userList);
         addDateClosedForGroup(groupId);
         closeTransactions(groupId);
@@ -1223,11 +1225,12 @@ export class Database {
     const transRef = base.ref('Transactions');
     return (snapshot: any) => {
       const transID = snapshot.key;
+      const transState = snapshot.val();
+      if (transState.state === 'closed') return;
       renderWrapper(transID);
       transRef.child(`${transID}`)
         .once('value', (snapshot) => {
           const trans = snapshot.val();
-          if (trans.state !== 'opened') return;
           const userIDList: string[] = Object.keys(snapshot.val().toUserList);
           const userList: any[] = Object.values(snapshot.val().toUserList);
           const fromUsd = Currencies.fromUSD(trans.currency);
@@ -1555,6 +1558,7 @@ export class Database {
             .then(data => data.map(transSnapshot => transSnapshot.val()))
             .then(transactionArray => {
               transactionArray.forEach(transactionData => {
+                console.log ('transdata', transactionData );
                 const fromUserId = transactionData.userID;
                 const fromCost = transactionData.totalCost;
 
