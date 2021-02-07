@@ -547,7 +547,6 @@ export class Database {
   }
 
   changeStatusUser(data: IDataChangeStatus) {
-    // console.log('changeStatusUser');
     const { userId, groupId, state } = data;
 
     const updates = {};
@@ -630,7 +629,6 @@ export class Database {
 
     const closeGroupChangeDataBase = (data: any, fn = renderFunction) => {
       const { balance, groupId } = data;
-      console.log ('balance', balance);
       if (+balance <= 0.001) {
         changeStatusUserAndGroupListToClosed(userList);
         addDateClosedForGroup(groupId);
@@ -1558,7 +1556,6 @@ export class Database {
             .then(data => data.map(transSnapshot => transSnapshot.val()))
             .then(transactionArray => {
               transactionArray.forEach(transactionData => {
-                console.log ('transdata', transactionData );
                 const fromUserId = transactionData.userID;
                 const fromCost = transactionData.totalCost;
 

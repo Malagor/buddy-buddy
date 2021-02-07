@@ -4,10 +4,7 @@ export const editSum = (trans: any, wrapper: HTMLElement, membInput?: HTMLInputE
   const fixedSums = membersWrapper.querySelectorAll('.fixed');
   const nonFixedSums = membersWrapper.querySelectorAll('.non-fixed');
   const btnSaveEdit = wrapper.querySelector('.details__save');
-  console.log ('fixed',fixedSums );
-  console.log ('nonfixed',nonFixedSums );
   if(membersWrapper.innerHTML === '') {
-    console.log ('true');
     btnSaveEdit.classList.add('disabled');
     return;
   } 
@@ -19,11 +16,13 @@ export const editSum = (trans: any, wrapper: HTMLElement, membInput?: HTMLInputE
     });
     const restSum: number = +((+trans.totalCost - sumOfFixed) / numb).toFixed(2);
     if (restSum > 0) {
-      console.log('rest', restSum);
       nonFixedSums.forEach((sum: HTMLFormElement) => {
         sum.value = +restSum.toFixed(2);
-        if (membInput && (trans.totalCost - (sumOfFixed + restSum * numb)) < 0.005) {
-          membInput.classList.remove('text-danger');
+      
+        if ((trans.totalCost - (sumOfFixed + restSum * numb)) < 0.005) {
+          if (membInput) {
+            membInput.classList.remove('text-danger');
+          }
           btnSaveEdit.classList.remove('disabled');
         }
       });
