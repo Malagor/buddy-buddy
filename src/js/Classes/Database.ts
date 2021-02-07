@@ -547,7 +547,6 @@ export class Database {
   }
 
   changeStatusUser(data: IDataChangeStatus) {
-    console.log('changeStatusUser');
     const { userId, groupId, state } = data;
 
     const updates = {};
@@ -611,14 +610,16 @@ export class Database {
               .once('value', (transactions) => {
                 const transactionId = transactions.key;
                 const transactionInfo = transactions.val();
-
+                const transPayer = transactionInfo.userID;
                 const transactionUserList = Object.keys(transactionInfo.toUserList);
                 transactionUserList.forEach((userId: string) => {
                   dataBase
                     .ref(`User/${userId}/transactionList/${transactionId}/state`)
                     .set('closed');
                 });
-
+                dataBase
+                    .ref(`User/${transPayer}/transactionList/${transactionId}/state`)
+                    .set('closed');
               });
             });
           }
@@ -628,8 +629,9 @@ export class Database {
 
     const closeGroupChangeDataBase = (data: any, fn = renderFunction) => {
       const { balance, groupId } = data;
-
-      if (balance === 0) {
+      console.log ('balance', balance.toFixed(2));
+      console.log (typeof balance.toFixed(2));
+      if (+balance.toFixed(2) === 0) {
         changeStatusUserAndGroupListToClosed(userList);
         addDateClosedForGroup(groupId);
         closeTransactions(groupId);
@@ -1072,7 +1074,8 @@ export class Database {
         let currGroup = snapshot.val().currentGroup;
         if (!snapshot.val().groupList) return;
         if (!currGroup) {
-          currGroup = Object.keys(snapshot.val().groupList)[0];
+          const currGroups = Object.entries(snapshot.val().groupList);
+          currGroup = currGroups.find((group: any) => group[1].state !== 'closed')[0];
         }
         this.firebase
           .database()
@@ -1082,6 +1085,7 @@ export class Database {
             const memberState: any[] = Object.values(snapshot.val().userList);
             memberList.forEach((userID, index) => {
               if (memberState[index].state === 'approve') {
+                console.log ('approve');
                 this.firebase
                   .database()
                   .ref(`User/${userID}`)
@@ -1223,11 +1227,12 @@ export class Database {
     const transRef = base.ref('Transactions');
     return (snapshot: any) => {
       const transID = snapshot.key;
+      const transState = snapshot.val();
+      if (transState.state === 'closed') return;
       renderWrapper(transID);
       transRef.child(`${transID}`)
         .once('value', (snapshot) => {
           const trans = snapshot.val();
-          if (trans.state !== 'opened') return;
           const userIDList: string[] = Object.keys(snapshot.val().toUserList);
           const userList: any[] = Object.values(snapshot.val().toUserList);
           const fromUsd = Currencies.fromUSD(trans.currency);

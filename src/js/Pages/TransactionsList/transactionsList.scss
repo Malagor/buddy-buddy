@@ -51,10 +51,6 @@
   font-size: rem(20px);
   line-height: 1rem;
 
-     .theme--dark & > div {
-      color: $primary-alternate;
-    }
-
   @include phones {
     width: 40%;
     margin-top: 0;
