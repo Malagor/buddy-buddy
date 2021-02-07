@@ -629,7 +629,9 @@ export class Database {
 
     const closeGroupChangeDataBase = (data: any, fn = renderFunction) => {
       const { balance, groupId } = data;
-      if (+balance <= 0.001) {
+      console.log ('balance', balance.toFixed(2));
+      console.log (typeof balance.toFixed(2));
+      if (+balance.toFixed(2) === 0) {
         changeStatusUserAndGroupListToClosed(userList);
         addDateClosedForGroup(groupId);
         closeTransactions(groupId);
@@ -1072,7 +1074,8 @@ export class Database {
         let currGroup = snapshot.val().currentGroup;
         if (!snapshot.val().groupList) return;
         if (!currGroup) {
-          currGroup = Object.keys(snapshot.val().groupList)[0];
+          const currGroups = Object.entries(snapshot.val().groupList);
+          currGroup = currGroups.find((group: any) => group[1].state !== 'closed')[0];
         }
         this.firebase
           .database()
@@ -1082,6 +1085,7 @@ export class Database {
             const memberState: any[] = Object.values(snapshot.val().userList);
             memberList.forEach((userID, index) => {
               if (memberState[index].state === 'approve') {
+                console.log ('approve');
                 this.firebase
                   .database()
                   .ref(`User/${userID}`)

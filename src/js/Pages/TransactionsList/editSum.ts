@@ -27,7 +27,9 @@ export const editSum = (trans: any, wrapper: HTMLElement, membInput?: HTMLInputE
         }
       });
     } else {
-      membInput.classList.add('text-danger');
+      if (membInput) {
+        membInput.classList.add('text-danger');
+      }
       btnSaveEdit.classList.add('disabled');
     }
   } else {
