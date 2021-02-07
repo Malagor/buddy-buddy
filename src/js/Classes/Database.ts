@@ -1085,7 +1085,6 @@ export class Database {
             const memberState: any[] = Object.values(snapshot.val().userList);
             memberList.forEach((userID, index) => {
               if (memberState[index].state === 'approve') {
-                console.log ('approve');
                 this.firebase
                   .database()
                   .ref(`User/${userID}`)
@@ -1887,5 +1886,40 @@ export class Database {
           console.log(error);
         });
     });
+  }
+
+  clearDataBase = () => {
+    const base = this.firebase.database();
+
+    base.ref('Transactions')
+    .remove()
+    .catch(error => {
+      console.log(error);
+    });
+
+    base.ref('Groups')
+    .remove()
+    .catch(error => {
+      console.log(error);
+    });
+
+    base.ref('User')
+      .once('value', (snapshot) => {
+      const usersID = Object.keys(snapshot.val());
+      usersID.forEach((user: any) => {
+        base.ref(`User/${user}/groupList`)
+        .remove()
+        base.ref(`User/${user}/currentGroup`)
+        .remove()
+        base.ref(`User/${user}/transactionList`)
+        .remove()
+      }) 
+    })
+    .catch(error => {
+      console.log(error);
+    });
+
+
+
   }
 }

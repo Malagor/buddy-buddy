@@ -310,6 +310,12 @@
 .container-group {
   //max-width: rem(620px);
   padding: 0;
+
+  .card-title {
+     .theme--dark & {
+      color: $color-white;
+    }  
+  }
 }
 
 @media (max-width: 450px) {

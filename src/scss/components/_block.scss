@@ -1,7 +1,7 @@
 @import "./src/scss/_misc/mixins";
 @import "../_misc/variables.scss";
 
-.theme--dark input {
+.theme--dark input[type="text"] {
   background: $ultra-light;
 }
 
