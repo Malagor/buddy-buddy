@@ -74,6 +74,8 @@ export const messagesRU = {
   'The user is in the group': 'Пользователь уже в группе',
   'The user account was entered incorrectly, for example: @account': 'Аккаунт пользователя был введен неправильно, попробуйте: @account',
   'Balance is not zero - you do not close group': 'Баланс группы должен быть ноль',
+  'Prove': 'Принять',
+  'Disprove': 'Отклонить',
 
   // transactions
   'Transactions List': 'Список транзакций',

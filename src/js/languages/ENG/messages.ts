@@ -92,6 +92,8 @@ export const messagesENG = {
   'No description': 'No description...',
   'Participants': 'Participants',
   'Balance is not zero - you do not close group': 'Balance is not zero - you do not close group',
+  'Prove': 'Prove',
+  'Disprove': 'Disprove',
 
   // Help page
   'Help page': 'Help page',
