@@ -81,16 +81,19 @@ export class Groups extends Page {
   }
 
   createGroupList = (data: any) => {
+    const thisUser = data.thisUid;
+    const thisUserStatus = data.dataGroup.userList[thisUser].state;
+
     document.querySelector('.data-is-not').classList.add('group-hidden');
 
     const HTMLListOpenGroups = document.getElementById('divForListOpenGroups');
     const HTMLListClosedGroups = document.getElementById('divForListClosedGroups');
 
-    if (!data.dataGroup.dateClose) {
+    if (thisUserStatus === 'approve' || thisUserStatus === 'pending') {
       HTMLListOpenGroups.insertAdjacentHTML('afterbegin', this.createCard(data));
       this.eventsAddEventListenerForGroup(data);
       this.addBalanceInGroupPage(data.groupKey, data.thisUid);
-    } else {
+    } else if (thisUserStatus === 'closed') {
       document.querySelector('#accordionForClosedGroup').classList.remove('group-hidden');
       HTMLListClosedGroups.insertAdjacentHTML('afterbegin', this.createCard(data));
     }
@@ -310,7 +313,7 @@ export class Groups extends Page {
     btnAddNewGroup.addEventListener('click', () => {
 
       document.querySelector('.contacts-user-list').innerHTML = '';
-      this.fillContactsList('.contacts-user-list');
+      this.fillContactsList();
       modalNewGroup.show();
     });
 
@@ -439,7 +442,7 @@ export class Groups extends Page {
           <h5 class="card-detail__participants">${i18n._('Participants')}</h5>
         </div>
         <div id="modalUserListPending" class="card-detail__user-list group-hidden">
-          <p class="card-detail__pending">${i18n._('Pending')}</p>
+          <p class="card-detail__pending">Pending</p>
         </div>
       </div>
     `;
@@ -483,8 +486,8 @@ export class Groups extends Page {
 
     const htmlBtn = `
     <div class="modal-detail__button-container">
-      <button id="btn-prove" type="button" class="btn btn-primary-alternate modal-detail__button-confirmation">${i18n._('Prove')}</button>
-      <button id="btn-disprove" type="button" class="btn btn-secondary modal-detail__button-confirmation">${i18n._('Disprove')}</button>
+      <button id="btn-prove" type="button" class="btn btn-primary-alternate modal-detail__button-confirmation">Prove</button>
+      <button id="btn-disprove" type="button" class="btn btn-secondary modal-detail__button-confirmation">Disprove</button>
     </div>
     `;
 
@@ -527,7 +530,7 @@ export class Groups extends Page {
       const htmlAddMember = `
         <div id="addUserInGroupDetail" class="row ">
           <div class="dropdown col-12 modal-dropdown">
-            <input class="form-control dropdown-toggle modal-input" type="text" id="activeContact" data-bs-toggle="dropdown" aria-expanded="false" placeholder=${i18n._('Members')} autocomplete="off" name="name">
+            <input class="form-control dropdown-toggle modal-input" type="text" id="activeContact" data-bs-toggle="dropdown" aria-expanded="false" placeholder="Members" autocomplete="off" name="name">
             <ul id="members-dropdown-menu" class="dropdown-menu contacts-user-list-detail members-dropdown-menu" aria-labelledby="Group Members">
             </ul>
             <button type="button" class="btn btn-primary btn-primary-alternate modal-btn-primary" id="addNewGroupMemberInDetail"><span>${i18n._('Add')}</span></button>
@@ -689,13 +692,21 @@ export class Groups extends Page {
     const closeGroupBtn = document.querySelector('#closeGroupBtn');
     closeGroupBtn.addEventListener('click', () => {
       document.querySelector('.modal-error-text').innerHTML = '';
+      let userListActiveUser: string[] = [];
       const userList = Object.keys(data.dataGroup.userList);
 
+      userList.forEach( user => {
+        if (!(data.dataGroup.userList[user].state === 'decline')) {
+          userListActiveUser.push(user);
+        }
+      });
+
       const dataForCloseGroup = {
-        userList: userList,
+        userList: userListActiveUser,
         groupId: groupId,
         currentGroup: data.user.currentGroup
       };
+
       this.closeGroup(dataForCloseGroup);
       this.clearCurrentGroup(data.thisUid, data.groupId);
     });
