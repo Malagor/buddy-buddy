@@ -82,15 +82,17 @@ export class Groups extends Page {
 
   createGroupList = (data: any) => {
     document.querySelector('.data-is-not').classList.add('group-hidden');
+    const thisUser = data.thisUid;
+    const thisUserStatus = data.dataGroup.userList[thisUser].state;
 
     const HTMLListOpenGroups = document.getElementById('divForListOpenGroups');
     const HTMLListClosedGroups = document.getElementById('divForListClosedGroups');
 
-    if (!data.dataGroup.dateClose) {
+    if (thisUserStatus === 'approve' || thisUserStatus === 'pending') {
       HTMLListOpenGroups.insertAdjacentHTML('afterbegin', this.createCard(data));
       this.eventsAddEventListenerForGroup(data);
       this.addBalanceInGroupPage(data.groupKey, data.thisUid);
-    } else {
+    } else if (thisUserStatus === 'closed') {
       document.querySelector('#accordionForClosedGroup').classList.remove('group-hidden');
       HTMLListClosedGroups.insertAdjacentHTML('afterbegin', this.createCard(data));
     }
@@ -689,10 +691,17 @@ export class Groups extends Page {
     const closeGroupBtn = document.querySelector('#closeGroupBtn');
     closeGroupBtn.addEventListener('click', () => {
       document.querySelector('.modal-error-text').innerHTML = '';
+      let userListActiveUser: string[] = [];
       const userList = Object.keys(data.dataGroup.userList);
 
+      userList.forEach( user => {
+        if (!(data.dataGroup.userList[user].state === 'decline')) {
+          userListActiveUser.push(user);
+        }
+      });
+
       const dataForCloseGroup = {
-        userList: userList,
+        userList: userListActiveUser,
         groupId: groupId,
         currentGroup: data.user.currentGroup
       };
